@@ -4,9 +4,7 @@
   "version": "1.1.0",
   "description": "POE2 Trade 페이지에 사이드바 추가 및 이력 관리 기능 제공",
   "permissions": [
-    "storage",
-    "scripting",
-    "activeTab"
+    "storage"
   ],
   "host_permissions": [
     "*://www.pathofexile.com/trade2/*",
