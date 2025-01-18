@@ -12,8 +12,6 @@ This extension collects and processes data locally on your browser. No personal 
 
 ### Permissions Used
 - **Storage**: To save your preferences and search history.
-- **Active Tab**: To interact with the content on the active tab.
-- **Scripting**: To modify the content for enhanced functionality.
 
 ## Data Usage
 - The data collected is used solely to provide the features described in the extension.
