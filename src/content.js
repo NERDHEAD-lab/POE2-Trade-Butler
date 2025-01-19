@@ -41,6 +41,17 @@ function initSidebar() {
     content.style.marginLeft = 'auto';
     content.style.width = 'calc(100% - 320px)'; // 사이드바 공간을 뺀 너비
 
+    document.getElementById('clear-history').addEventListener('click', () => {
+      if (!confirm('검색 기록을 모두 삭제하시겠습니까?')) {
+        return;
+      }
+      chrome.storage.local.set({ searchHistory: [] }, () => {
+        console.log('Search history cleared.');
+        loadHistory();
+        loadFavorites();
+      });
+    });
+
     initTabNavigation();
     initToggleSidebar(sidebar);
     loadHistory();
@@ -207,7 +218,11 @@ function createHistoryItem(entry) {
   });
 
   favoriteStar.addEventListener('click', () => {
+    if (entry.favorite && !confirm('즐겨찾기를 해제하시겠습니까?')) {
+      return;
+    }
     entry.favorite = !entry.favorite;
+
     favoriteStar.classList.toggle('active', entry.favorite);
     updateHistoryEntry(entry);
   });
@@ -239,9 +254,16 @@ function createHistoryItem(entry) {
     editButton.style.display = 'inline-block'; // 수정 버튼 보이기
     saveButton.style.display = 'none'; // 저장 버튼 숨기기
     cancelButton.style.display = 'none'; // 취소 버튼 숨기기
+
+    alert('이름이 변경되었습니다.');
   });
 
   cancelButton.addEventListener('click', () => {
+    const isNameChanged = nameInput.value !== nameSpan.textContent;
+    if (isNameChanged && !confirm('변경사항을 저장하지 않고 취소하시겠습니까?')) {
+      return;
+    }
+
     nameInput.value = nameSpan.textContent; // 입력창 초기화
     nameSpan.style.display = 'inline'; // 이름 텍스트 보이기
     nameInput.style.display = 'none'; // 입력창 숨기기
