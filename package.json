@@ -5,7 +5,7 @@
   "scripts": {
     "start": "webpack serve --mode development",
     "build": "webpack --mode production && npm run zip",
-    "dev": "webpack --mode production --watch",
+    "dev": "webpack --mode development --watch",
     "lint": "eslint .",
     "format": "prettier --write .",
     "zip": "node scripts/create-zip.js"
