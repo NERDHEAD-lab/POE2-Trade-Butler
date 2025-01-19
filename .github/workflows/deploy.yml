@@ -39,6 +39,14 @@ jobs:
           echo "Checking out tag $TAG"
           git checkout $TAG
 
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Build the project
+      - name: Build the project
+        run: npm run build
+
       # Extract release notes for the current version
       - name: Extract release notes
         id: release_notes
@@ -49,6 +57,7 @@ jobs:
 
       # Create GitHub Release
       - name: Create GitHub Release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -58,3 +67,14 @@ jobs:
           body_path: release_notes.txt
           draft: false
           prerelease: false
+
+      # Upload build artifact to GitHub Release
+      - name: Upload build artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: poe2-trade-butler.zip
+          asset_name: poe2-trade-butler.zip
+          asset_content_type: application/zip
