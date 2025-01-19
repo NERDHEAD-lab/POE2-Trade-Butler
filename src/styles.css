@@ -110,3 +110,43 @@
 .tab-content.active {
     display: block;
 }
+
+/* History item */
+.history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer; /* 마우스 커서 변경 */
+    transition: background-color 0.2s ease-in-out;
+}
+
+.history-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.history-info {
+    flex: 1;
+    padding-left: 10px;
+}
+
+/* Favorite star */
+.favorite-star {
+    font-size: 25px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.1);
+    transition: color 0.2s ease-in-out;
+}
+
+.favorite-star:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+.favorite-star.active {
+    color: gold;
+}
+
+.favorite-star.active:hover {
+    color: gold;
+}
