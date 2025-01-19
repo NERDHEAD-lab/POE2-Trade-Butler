@@ -1,39 +1,60 @@
-name: Build and Deploy
+name: Build and Release
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to build and release'
+        required: true
+        default: '1.0.0'
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
 
     steps:
       # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v4
-
-      # Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          fetch-depth: 0
 
-      # Install dependencies
-      - name: Install dependencies
-        run: npm ci
+      # Determine the tag to build
+      - name: Determine tag
+        id: determine_tag
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            TAG="${{ github.event.inputs.tag }}"
+          else
+            TAG="${{ github.ref_name }}"
+          fi
+          echo "TAG=$TAG" >> $GITHUB_ENV
 
-      # Build the project
-      - name: Build the extension
-        run: npm run build
+      # Checkout the specific tag
+      - name: Checkout tag
+        run: |
+          echo "Checking out tag $TAG"
+          git checkout $TAG
 
-      # Upload build artifact
-      - name: Upload build artifact to GitHub
-        uses: actions/upload-artifact@v4
+      # Extract release notes for the current version
+      - name: Extract release notes
+        id: release_notes
+        run: |
+          START="## $TAG"
+          END="^## "
+          awk "/^$START/,/^$END/" CHANGELOG.md | sed "1d;\$d" > release_notes.txt
+
+      # Create GitHub Release
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: build-zip
-          path: poe2-trade-butler.zip
+          tag_name: ${{ env.TAG }}
+          release_name: "Release ${{ env.TAG }}"
+          body_path: release_notes.txt
+          draft: false
+          prerelease: false
