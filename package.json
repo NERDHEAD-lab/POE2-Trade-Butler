@@ -1,6 +1,6 @@
 {
   "name": "poe2-trade-butler",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "index.js",
   "scripts": {
     "start": "webpack serve --mode development",
