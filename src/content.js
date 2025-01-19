@@ -68,28 +68,33 @@ function initTabNavigation() {
 
 function initToggleSidebar(sidebar) {
   const toggleButton = document.createElement('button');
-  toggleButton.id = 'poe2-trade-sidebar-toggle';
-  toggleButton.textContent = '⮜';
-  toggleButton.classList.add('poe2-toggle-button');
+  const content = document.querySelector('.content');
 
-  // 버튼을 body에 추가 (사이드바와 독립적으로 위치)
+  toggleButton.id = 'poe2-trade-sidebar-toggle';
+  toggleButton.classList.add('poe2-toggle-button');
+  toggleButton.style.position = 'fixed';
+  toggleButton.style.top = '8%'; // 사이드바와 동일한 상단 위치
+  toggleButton.style.marginRight = '10px'; // 버튼을 화면 오른쪽에 고정
+
+
+  toggleButton.textContent = '⮜';
+  toggleButton.style.right = '300px'; // 사이드바 왼쪽 바로 바깥
+  sidebar.style.right = '0';
+  content.style.marginRight = '300px'; // 사이드바가 나타나면 마진 추가
+  content.style.marginLeft = 'auto';
+
   document.body.appendChild(toggleButton);
 
-  // 버튼 위치 조정
-  toggleButton.style.position = 'fixed';
-  toggleButton.style.top = '7%'; // 사이드바와 동일한 상단 위치
-  toggleButton.style.right = '300px'; // 사이드바 왼쪽 바로 바깥
 
   // 애니메이션 클래스 추가
   toggleButton.classList.add('transition-toggle-button');
 
   toggleButton.addEventListener('click', () => {
-    const content = document.querySelector('.content');
     if (sidebar.style.right === '-300px' || sidebar.style.right === '') {
-      sidebar.style.right = '0';
-      toggleButton.style.right = '300px'; // 버튼 위치도 변경
       toggleButton.textContent = '⮜';
-      content.style.marginRight = '320px'; // 사이드바가 나타나면 마진 추가
+      toggleButton.style.right = '300px'; // 버튼 위치도 변경
+      sidebar.style.right = '0';
+      content.style.marginRight = '300px'; // 사이드바가 나타나면 마진 추가
       content.style.marginLeft = 'auto';
     } else {
       sidebar.style.right = '-300px';

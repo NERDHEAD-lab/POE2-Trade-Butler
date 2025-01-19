@@ -39,30 +39,72 @@
     transition: right 0.3s ease-in-out;
 }
 
+.poe2-toggle-button:hover {
+    background-color: #666;
+}
 
 
-
-/* 탭 스타일 */
-.menu-tab {
-    cursor: pointer;
+/* Sidebar header */
+#sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 10px;
-    background-color: #eaeaea;
+    border-bottom: 1px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#sidebar-header h2 {
+    margin: 0;
+}
+
+#sidebar-header button {
+    background-color: #444;
+    color: white;
     border: none;
-    outline: none;
-    width: 100%;
-    text-align: left;
-    font-size: 14px;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+#sidebar-header button:hover {
+    background-color: #666;
+}
+
+/* Sidebar menu */
+#sidebar-menu {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.menu-tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .menu-tab.active {
-    background-color: #ccc;
-    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
-/* 탭 콘텐츠 */
+.menu-tab:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Sidebar content */
+#sidebar-content {
+    padding: 10px;
+}
+
 .tab-content {
     display: none;
-    padding: 10px;
 }
 
 .tab-content.active {
