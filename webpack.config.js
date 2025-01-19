@@ -6,12 +6,10 @@ module.exports = (env, argv) => {
 
   return {
     mode: isDev ? "development" : "production",
-    entry: isDev
-      ? {} // 개발 모드에서는 번들링하지 않음
-      : {
+    entry: {
         background: "./src/background.js",
         content: "./src/content.js",
-        popup: "./src/popup/popup.js",
+        popup: "./src/popup.js",
       },
     output: {
       path: path.resolve(__dirname, "dist"),
@@ -36,14 +34,14 @@ module.exports = (env, argv) => {
         patterns: [
           { from: "src/styles.css", to: "styles.css" },
           { from: "src/manifest.json", to: "manifest.json" },
-          { from: "src/popup/popup.html", to: "popup.html" },
+          { from: "src/components/**/*.html", to: "components/[name].html" },
           { from: "src/icon.png", to: "icon.png" },
           ...(isDev
             ? [
               // 개발 모드에서 JS 파일 복사
               { from: "src/background.js", to: "background.js" },
               { from: "src/content.js", to: "content.js" },
-              { from: "src/popup/popup.js", to: "popup.js" },
+              { from: "src/popup.js", to: "popup.js" },
             ]
             : []),
         ],
