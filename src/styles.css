@@ -1,124 +1,152 @@
-#poe-sidebar {
+.content {
+    transition: margin-right 0.3s ease-in-out;
+}
+
+.poe2-sidebar {
     position: fixed;
+    top: 7%;
+    bottom: 20px;
     right: 0;
-    top: 0;
     width: 300px;
-    height: 100%;
-    background: #f4f4f4;
-    border-left: 1px solid #ddd;
-    padding: 10px;
-    z-index: 1000;
-    overflow-y: auto;
+    height: auto;
+    max-height: calc(100vh - 20px);
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px 0 0 10px;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: visible; /* 내부 요소가 잘리지 않도록 설정 */
+
+    transition: right 0.3s ease-in-out;
 }
 
-#poe-sidebar h2,
-#poe-sidebar h3 {
+.poe2-toggle-button {
+    position: fixed; /* 화면에 고정 */
+    top: 7%; /* 사이드바와 동일한 상단 위치 */
+    right: 300px; /* 사이드바 바로 바깥 위치 */
+    width: 30px;
+    height: 30px;
+    background-color: #eaeaea;
+    border: 1px solid #ccc;
+    border-radius: 50%;
     text-align: center;
-}
-
-#poe-sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-
-#poe-sidebar li {
-    margin: 5px 0;
-    padding: 5px;
-    background: #fff;
-    border: 1px solid #ddd;
+    line-height: 30px;
     cursor: pointer;
+    z-index: 10001; /* 항상 위에 표시 */
 }
 
-#clear-history {
-    display: block;
-    margin: 10px auto;
-    padding: 5px 10px;
-    background: #d9534f;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.transition-toggle-button {
+    transition: right 0.3s ease-in-out;
 }
 
-#clear-history:hover {
-    background: #c9302c;
+.poe2-toggle-button:hover {
+    background-color: #666;
 }
 
-.history-item {
+
+/* Sidebar header */
+#sidebar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    border: 1px solid #ddd;
+    border-bottom: 1px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#sidebar-header h2 {
+    margin: 0;
+}
+
+#sidebar-header button {
+    background-color: #444;
+    color: white;
+    border: none;
     border-radius: 5px;
-    margin-bottom: 5px;
-    background-color: #f9f9f9;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+#sidebar-header button:hover {
+    background-color: #666;
+}
+
+/* Sidebar menu */
+#sidebar-menu {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.menu-tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.menu-tab.active {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.menu-tab:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Sidebar content */
+#sidebar-content {
+    padding: 10px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* History item */
+.history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer; /* 마우스 커서 변경 */
+    transition: background-color 0.2s ease-in-out;
+}
+
+.history-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .history-info {
     flex: 1;
-    display: flex;
-    flex-direction: column;
+    padding-left: 10px;
 }
 
-.name-edit-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.history-name {
-    font-weight: bold;
-    margin-right: 5px;
-}
-
-.history-name-input {
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    display: none;
-}
-
-.last-searched {
-    color: #555;
-    font-size: 0.9em;
-}
-
-.total-searches {
-    font-size: 0.85em;
-    margin-top: 5px;
+/* Favorite star */
+.favorite-star {
+    font-size: 25px;
     cursor: pointer;
+    color: rgba(255, 255, 255, 0.1);
+    transition: color 0.2s ease-in-out;
 }
 
-.remove-history {
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    color: #555;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
+.favorite-star:hover {
+    color: rgba(255, 255, 255, 1);
 }
 
-.remove-history:hover {
-    background-color: #e60000;
-    color: #fff;
+.favorite-star.active {
+    color: gold;
 }
 
-.tooltip {
-    position: absolute;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 0.85em;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    white-space: pre-line;
-    z-index: 10000;
-    pointer-events: none;
+.favorite-star.active:hover {
+    color: gold;
 }

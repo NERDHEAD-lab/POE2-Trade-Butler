@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "POE2 Trade Butler",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "POE2 Trade 페이지에 사이드바 추가 및 이력 관리 기능 제공",
   "permissions": [
     "storage"
@@ -34,7 +34,10 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["styles.css"],
+      "resources": [
+        "components/*.html",
+        "styles.css"
+      ],
       "matches": ["<all_urls>"]
     }
   ]

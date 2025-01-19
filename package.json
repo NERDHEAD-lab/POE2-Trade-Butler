@@ -1,11 +1,11 @@
 {
   "name": "poe2-trade-butler",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "main": "index.js",
   "scripts": {
     "start": "webpack serve --mode development",
     "build": "webpack --mode production && npm run zip",
-    "dev": "webpack --mode production --watch",
+    "dev": "webpack --mode development --watch",
     "lint": "eslint .",
     "format": "prettier --write .",
     "zip": "node scripts/create-zip.js"

@@ -2,7 +2,7 @@ const poeServers = ["Standard", "Hardcore"];
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'URL_CHANGE') {
-    const { id, name, url, lastSearched, previousSearches } = message.data;
+    const { id, name, url, lastSearched } = message.data;
 
     if (id === "Standard" || id === "Hardcore") {
       console.warn(`Invalid ID detected: ${id}`);
@@ -15,10 +15,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const existingEntry = history.find((entry) => entry.id === id);
       if (existingEntry) {
         existingEntry.lastSearched = lastSearched;
-        existingEntry.name = name || id; // Update name if provided
-        if (!existingEntry.previousSearches) {
-          existingEntry.previousSearches = [];
-        }
         existingEntry.previousSearches.push(lastSearched);
       } else {
         history.push({
@@ -26,7 +22,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           name: name || id,
           url,
           lastSearched,
-          previousSearches,
+          previousSearches: [lastSearched],
+          favorite: false,
         });
       }
 
