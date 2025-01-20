@@ -18,7 +18,7 @@
     "history"
   ],
   "author": "NERDHEAD-lab",
-  "license": "ISC",
+  "license": "MIT",
   "description": "A Chrome Extension for POE2 Trade with a sidebar and history management.",
   "devDependencies": {
     "@babel/core": "^7.26.0",
