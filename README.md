@@ -2,7 +2,7 @@
 
 A Chrome extension that adds a sidebar to the POE2 Trade page and provides a history management feature for enhanced trading experience.
 
-![./src/icon.png](./src/icon.png)
+![./src/icon.png](src/assets/icon.png)
 ---
 [![Build Status](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/deploy.yml/badge.svg)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions)
 [![GitHub release](https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases)

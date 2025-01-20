@@ -32,16 +32,15 @@ module.exports = (env, argv) => {
     plugins: [
       new CopyWebpackPlugin({
         patterns: [
-          { from: "src/styles.css", to: "styles.css" },
           { from: "src/manifest.json", to: "manifest.json" },
-          { from: "src/components/**/*.html", to: "components/[name].html" },
-          { from: "src/icon.png", to: "icon.png" },
+          { from: "src/css/styles.css", to: "styles.css" }, // styles.css만 루트로 이동
+          { from: "src/css/*.css", to: "css/[name].css", filter: (resourcePath) => !resourcePath.endsWith("styles.css") },
+          { from: "src/components/*.html", to: "components/[name].html" },
+          { from: "src/assets/*.png", to: "assets/[name].png" },
           ...(isDev
             ? [
               // 개발 모드에서 JS 파일 복사
-              { from: "src/background.js", to: "background.js" },
-              { from: "src/content.js", to: "content.js" },
-              { from: "src/popup.js", to: "popup.js" },
+              { from: "src/*.js", to: "[name].js" },
             ]
             : []),
         ],
