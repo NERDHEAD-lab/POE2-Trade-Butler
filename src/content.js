@@ -218,10 +218,7 @@ function createHistoryItem(entry) {
       <div>
         <span class="last-searched">최근: ${formatDate(entry.lastSearched)}</span>
       </div>
-      <div>
-        <span class="total-searches" title="Previous Searches: ${entry.previousSearches
-          .map((timestamp) => new Date(timestamp).toLocaleString())
-          .join('\n')}"'>총 ${entry.previousSearches.length}회</span>
+      <div><span class="total-searches"></span>
       </div>
     </div>
     <button class="remove-history">🗑️</button>
@@ -234,6 +231,7 @@ function createHistoryItem(entry) {
   const saveButton = li.querySelector('.save-name');
   const cancelButton = li.querySelector('.cancel-edit');
   const removeButton = li.querySelector('.remove-history');
+  const totalSearches = li.querySelector('.total-searches');
 
   li.addEventListener('click', (event) => {
     // 클릭 이벤트가 수정/삭제 버튼에서 발생한 경우 무시
@@ -319,6 +317,14 @@ function createHistoryItem(entry) {
     }
     removeHistoryEntry(entry);
   });
+
+  try {
+    totalSearches.title = `Previous Searches: ${entry.previousSearches.map((timestamp) => formatDate(timestamp)).join('\n')}`;
+    totalSearches.textContent = `총 ${entry.previousSearches.length}회`;
+  } catch (error) {
+    console.error('Failed to set total searches:', error);
+  }
+
 
   return li;
 }
