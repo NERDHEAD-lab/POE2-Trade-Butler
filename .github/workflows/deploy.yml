@@ -47,13 +47,17 @@ jobs:
       - name: Build the project
         run: npm run build
 
+      # Determine the version
+      - name: Print TAG value
+        run: echo "TAG is $TAG"
+
       # Extract release notes for the current version
       - name: Extract release notes
         id: release_notes
         run: |
           START="## $TAG"
-          END="## "
-          awk "/^$START/,/^$END/" CHANGELOG.md | sed "1d;\$d" | grep -v "^$END" > release_notes.txt
+          END="## [0-9]+.[0-9]+.[0-9]+"
+          awk "/^$START/,/^$END/" CHANGELOG.md | sed "1d;\$d" | grep -v "^$END" > release_notes.txt || echo "No matching release notes found" > release_notes.txt
           echo "Release notes extracted:"
           cat release_notes.txt
 
