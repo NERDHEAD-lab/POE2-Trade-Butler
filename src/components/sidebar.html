@@ -10,11 +10,21 @@
 
 <div id="sidebar-content">
   <div id="history" class="tab-content active">
-    <h3>Search History</h3>
+    <h3>
+      <span>Search History</span>
+      <label class="switch">
+        <input type="checkbox" id="history-switch" checked />
+        <span class="slider"></span>
+      </label>
+    </h3>
+
     <ul id="history-list"></ul>
   </div>
   <div id="favorites" class="tab-content">
-    <h3>Favorites</h3>
+    <h3>
+      <span>Favorites</span>
+      <button id="add-favorite">Add Current page</button>
+    </h3>
     <ul id="favorites-list"></ul>
   </div>
 </div>

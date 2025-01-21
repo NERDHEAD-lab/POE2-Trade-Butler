@@ -52,8 +52,10 @@ jobs:
         id: release_notes
         run: |
           START="## $TAG"
-          END="^## "
-          awk "/^$START/,/^$END/" CHANGELOG.md | sed "1d;\$d" > release_notes.txt
+          END="## "
+          awk "/^$START/,/^$END/" CHANGELOG.md | sed "1d;\$d" | grep -v "^$END" > release_notes.txt
+          echo "Release notes extracted:"
+          cat release_notes.txt
 
       # Create GitHub Release
       - name: Create GitHub Release

@@ -1,4 +1,4 @@
-const poeServers = ["Standard", "Hardcore"];
+const poeServers = ['Standard', 'Hardcore'];
 const SIDEBAR_ID = 'poe2-trade-sidebar';
 
 function loadTemplate(filePath) {
@@ -42,18 +42,23 @@ function initSidebar() {
     content.style.width = 'calc(100% - 320px)'; // 사이드바 공간을 뺀 너비
 
     document.getElementById('clear-history').addEventListener('click', () => {
-      if (!confirm('검색 기록을 모두 삭제하시겠습니까?')) {
+      if (!confirm('검색 기록을 모두 삭제하시겠습니까? (즐겨찾기는 유지됩니다)')) {
         return;
       }
-      chrome.storage.local.set({ searchHistory: [] }, () => {
-        console.log('Search history cleared.');
-        loadHistory();
-        loadFavorites();
+
+      chrome.storage.local.get(['searchHistory'], (storage) => {
+        const history = storage.searchHistory || [];
+        const updatedHistory = history.filter((entry) => entry.favorite === true);
+        chrome.storage.local.set({ searchHistory: updatedHistory }, () => {
+          console.log('History removed:', updatedHistory);
+        });
       });
     });
 
     initTabNavigation();
     initToggleSidebar(sidebar);
+    initHistorySwitch();
+    initFavoritesButton();
     loadHistory();
     loadFavorites();
 
@@ -132,6 +137,39 @@ function initToggleSidebar(sidebar) {
   });
 }
 
+
+function initHistorySwitch() {
+  const historySwitch = document.getElementById('history-switch');
+
+  chrome.storage.local.get(['isHistoryEnabled'], (storage) => {
+    if (storage.isHistoryEnabled === undefined) {
+      chrome.storage.local.set({ isHistoryEnabled: true }, () => {
+        console.log('Search history is enabled by default');
+      });
+    }
+    historySwitch.checked = storage.isHistoryEnabled ?? true;
+  });
+
+  // 스위치 상태 변경 이벤트
+  historySwitch.addEventListener('change', (event) => {
+    const isEnabled = event.target.checked;
+    chrome.storage.local.set({ isHistoryEnabled: isEnabled }, () => {
+      console.log(`Search history is now ${isEnabled ? 'enabled' : 'disabled'}`);
+    });
+  });
+}
+
+function initFavoritesButton() {
+  const favoritesButton = document.getElementById('add-favorite');
+  favoritesButton.addEventListener('click', () => {
+    try {
+      addSearchHistory(location.href, true, true);
+    } catch (error) {
+      console.error('Failed to add favorite:', error);
+    }
+  });
+}
+
 function loadHistory() {
   const historyList = document.getElementById('history-list');
   if (!historyList) return;
@@ -180,10 +218,7 @@ function createHistoryItem(entry) {
       <div>
         <span class="last-searched">최근: ${formatDate(entry.lastSearched)}</span>
       </div>
-      <div>
-        <span class="total-searches" title="Previous Searches: ${entry.previousSearches
-          .map((timestamp) => new Date(timestamp).toLocaleString())
-          .join('\n')}"'>총 ${entry.previousSearches.length}회</span>
+      <div><span class="total-searches"></span>
       </div>
     </div>
     <button class="remove-history">🗑️</button>
@@ -196,6 +231,7 @@ function createHistoryItem(entry) {
   const saveButton = li.querySelector('.save-name');
   const cancelButton = li.querySelector('.cancel-edit');
   const removeButton = li.querySelector('.remove-history');
+  const totalSearches = li.querySelector('.total-searches');
 
   li.addEventListener('click', (event) => {
     // 클릭 이벤트가 수정/삭제 버튼에서 발생한 경우 무시
@@ -245,6 +281,9 @@ function createHistoryItem(entry) {
 
   saveButton.addEventListener('click', () => {
     const newName = nameInput.value.trim() || entry.id; // 빈 값이면 ID로 대체
+    if (newName === entry.name) {
+      return;
+    }
     entry.name = newName;
     updateHistoryEntry(entry);
     nameSpan.textContent = newName;
@@ -273,8 +312,19 @@ function createHistoryItem(entry) {
   });
 
   removeButton.addEventListener('click', () => {
+    if (!confirm('이 항목을 검색 기록에서 삭제하시겠습니까?')) {
+      return;
+    }
     removeHistoryEntry(entry);
   });
+
+  try {
+    totalSearches.title = `Previous Searches: ${entry.previousSearches.map((timestamp) => formatDate(timestamp)).join('\n')}`;
+    totalSearches.textContent = `총 ${entry.previousSearches.length}회`;
+  } catch (error) {
+    console.error('Failed to set total searches:', error);
+  }
+
 
   return li;
 }
@@ -322,33 +372,77 @@ function observeUrlChanges() {
   let previousUrl = location.href;
 
   new MutationObserver(() => {
-    const currentUrl = location.href;
-    if (currentUrl !== previousUrl) {
+    // 값이 없을 경우 true로 설정
+    chrome.storage.local.get(['isHistoryEnabled'], (storage) => {
+      const isHistoryEnabled = storage.isHistoryEnabled ?? true; // 기본값은 true
+
+      if (!isHistoryEnabled) {
+        return; // 히스토리가 비활성화된 경우 종료
+      }
+
+      const currentUrl = location.href;
+      if (currentUrl === previousUrl) {
+        return; // URL이 변경되지 않은 경우 종료
+      }
+
       previousUrl = currentUrl;
 
-      const url = new URL(currentUrl);
-      const parsedData = parseUrl(url);
-
-      if (parsedData) {
-        const { id, serverName } = parsedData;
-        const currentDate = Date.now();
-
-        chrome.runtime.sendMessage({
-          type: 'URL_CHANGE',
-          data: {
-            id,
-            name: id, // Default name is ID
-            url: currentUrl,
-            serverName,
-            lastSearched: currentDate,
-          },
-        }).then(() => {
-          console.log('URL change message sent:', parsedData);
-        })
-      }
-    }
+      addSearchHistory(currentUrl);
+    });
   }).observe(document.body, { childList: true, subtree: true });
 }
+
+
+function addSearchHistory(currentUrl, showAlert = false, isFavorite = false) {
+  const url = new URL(currentUrl);
+  const parsedData = parseUrl(url);
+
+  if (!parsedData) {
+    if (showAlert) {
+      alert('This page is not a valid trade page.');
+    }
+    return;
+  }
+
+  // parsedData에서 id와 serverName 추출
+  const { id, serverName } = parsedData;
+
+  chrome.storage.local.get(['searchHistory'], (storage) => {
+    const history = storage.searchHistory || [];
+
+    // 중복 체크
+    const isDuplicate = history.some((entry) => entry.id === id);
+    if (isDuplicate) {
+      if (isFavorite) {
+        const entry = history.find((entry) => entry.id === id);
+        entry.favorite = true;
+        updateHistoryEntry(entry);
+      } else if (showAlert) {
+        alert('This search is already in your history.');
+      }
+      return;
+    }
+
+    // 새 검색 기록 추가
+    const currentDate = Date.now();
+    chrome.runtime.sendMessage({
+      type: 'URL_CHANGE',
+      data: {
+        id,
+        name: id,
+        url: currentUrl,
+        serverName,
+        lastSearched: currentDate,
+        favorite: isFavorite,
+      },
+    }).then(() => {
+      if (showAlert) {
+        alert('Search successfully added to your history.');
+      }
+    });
+  });
+}
+
 
 function parseUrl(url) {
   const pathSegments = url.pathname.split('/');
