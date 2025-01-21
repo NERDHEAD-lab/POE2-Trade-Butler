@@ -1,4 +1,4 @@
-const poeServers = ["Standard", "Hardcore"];
+const poeServers = ['Standard', 'Hardcore'];
 const SIDEBAR_ID = 'poe2-trade-sidebar';
 
 function loadTemplate(filePath) {
@@ -58,6 +58,7 @@ function initSidebar() {
     initTabNavigation();
     initToggleSidebar(sidebar);
     initHistorySwitch();
+    initFavoritesButton();
     loadHistory();
     loadFavorites();
 
@@ -136,11 +137,17 @@ function initToggleSidebar(sidebar) {
   });
 }
 
+
 function initHistorySwitch() {
   const historySwitch = document.getElementById('history-switch');
 
   chrome.storage.local.get(['isHistoryEnabled'], (storage) => {
-    historySwitch.checked = storage.isHistoryEnabled !== false;
+    if (storage.isHistoryEnabled === undefined) {
+      chrome.storage.local.set({ isHistoryEnabled: true }, () => {
+        console.log('Search history is enabled by default');
+      });
+    }
+    historySwitch.checked = storage.isHistoryEnabled ?? true;
   });
 
   // 스위치 상태 변경 이벤트
@@ -149,6 +156,17 @@ function initHistorySwitch() {
     chrome.storage.local.set({ isHistoryEnabled: isEnabled }, () => {
       console.log(`Search history is now ${isEnabled ? 'enabled' : 'disabled'}`);
     });
+  });
+}
+
+function initFavoritesButton() {
+  const favoritesButton = document.getElementById('add-favorite');
+  favoritesButton.addEventListener('click', () => {
+    try {
+      addSearchHistory(location.href, true, true);
+    } catch (error) {
+      console.error('Failed to add favorite:', error);
+    }
   });
 }
 
@@ -348,38 +366,77 @@ function observeUrlChanges() {
   let previousUrl = location.href;
 
   new MutationObserver(() => {
-    const isHistoryEnabled = document.getElementById('history-switch').checked;
-    if (!isHistoryEnabled) {
+    // 값이 없을 경우 true로 설정
+    chrome.storage.local.get(['isHistoryEnabled'], (storage) => {
+      const isHistoryEnabled = storage.isHistoryEnabled ?? true; // 기본값은 true
+
+      if (!isHistoryEnabled) {
+        return; // 히스토리가 비활성화된 경우 종료
+      }
+
+      const currentUrl = location.href;
+      if (currentUrl === previousUrl) {
+        return; // URL이 변경되지 않은 경우 종료
+      }
+
+      previousUrl = currentUrl;
+
+      addSearchHistory(currentUrl);
+    });
+  }).observe(document.body, { childList: true, subtree: true });
+}
+
+
+function addSearchHistory(currentUrl, showAlert = false, isFavorite = false) {
+  const url = new URL(currentUrl);
+  const parsedData = parseUrl(url);
+
+  if (!parsedData) {
+    if (showAlert) {
+      alert('This page is not a valid trade page.');
+    }
+    return;
+  }
+
+  // parsedData에서 id와 serverName 추출
+  const { id, serverName } = parsedData;
+
+  chrome.storage.local.get(['searchHistory'], (storage) => {
+    const history = storage.searchHistory || [];
+
+    // 중복 체크
+    const isDuplicate = history.some((entry) => entry.id === id);
+    if (isDuplicate) {
+      if (isFavorite) {
+        const entry = history.find((entry) => entry.id === id);
+        entry.favorite = true;
+        updateHistoryEntry(entry);
+      } else if (showAlert) {
+        alert('This search is already in your history.');
+      }
       return;
     }
 
-    const currentUrl = location.href;
-    if (currentUrl !== previousUrl) {
-      previousUrl = currentUrl;
-
-      const url = new URL(currentUrl);
-      const parsedData = parseUrl(url);
-
-      if (parsedData) {
-        const { id, serverName } = parsedData;
-        const currentDate = Date.now();
-
-        chrome.runtime.sendMessage({
-          type: 'URL_CHANGE',
-          data: {
-            id,
-            name: id, // Default name is ID
-            url: currentUrl,
-            serverName,
-            lastSearched: currentDate,
-          },
-        }).then(() => {
-          console.log('URL change message sent:', parsedData);
-        })
+    // 새 검색 기록 추가
+    const currentDate = Date.now();
+    chrome.runtime.sendMessage({
+      type: 'URL_CHANGE',
+      data: {
+        id,
+        name: id,
+        url: currentUrl,
+        serverName,
+        lastSearched: currentDate,
+        favorite: isFavorite,
+      },
+    }).then(() => {
+      if (showAlert) {
+        alert('Search successfully added to your history.');
       }
-    }
-  }).observe(document.body, { childList: true, subtree: true });
+    });
+  });
 }
+
 
 function parseUrl(url) {
   const pathSegments = url.pathname.split('/');

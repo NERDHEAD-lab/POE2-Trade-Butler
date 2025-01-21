@@ -4,7 +4,8 @@
 ### FEATURES
 - Added a new feature to manage search history.
   - can disable history tracking.
-  
+- Added a new feature to manage favorites.
+  - can add directly from the search result.
 
 ### IMPROVEMENTS
 - improved alert and confirm event handling.
