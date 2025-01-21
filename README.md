@@ -6,9 +6,10 @@ A Chrome extension that adds a sidebar to the POE2 Trade page and provides a his
 ---
 [![Build Status](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/deploy.yml/badge.svg)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions)
 [![GitHub release](https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases)
+[![Chrome Web Store Last Updated](https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm)](https://chrome.google.com/webstore/detail/poe2-trade-butler/ipnemofnhodcgcplnnfekbfpmngeeocm)
+<br>
 [![GitHub license](https://img.shields.io/github/license/NERDHEAD-lab/POE2-Trade-Butler)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/LICENSE)
 [![GitHub privacy-policy](https://img.shields.io/badge/Privacy%20Policy-Read%20Here-blue)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/privacy-policy.md)
-![Chrome Web Store Last Updated](https://img.shields.io/chrome-web-store/last-updated/:storeId)
 
 ## Index
 1. [Introduction](#introduction)
@@ -84,4 +85,5 @@ For feedback or support, please contact:
 
 ---
 
-Enjoy seamless trading with **POE2-Trade-Butler**!
+Enjoy seamless trading with **POE2-Trade-Butler**!<br>
+`I'm not Frontend Developer. Just a Backend. 🥕🥕`
