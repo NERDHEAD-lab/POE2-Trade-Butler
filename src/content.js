@@ -245,6 +245,9 @@ function createHistoryItem(entry) {
 
   saveButton.addEventListener('click', () => {
     const newName = nameInput.value.trim() || entry.id; // 빈 값이면 ID로 대체
+    if (newName === entry.name) {
+      return;
+    }
     entry.name = newName;
     updateHistoryEntry(entry);
     nameSpan.textContent = newName;
@@ -273,6 +276,9 @@ function createHistoryItem(entry) {
   });
 
   removeButton.addEventListener('click', () => {
+    if (!confirm('이 항목을 검색 기록에서 삭제하시겠습니까?')) {
+      return;
+    }
     removeHistoryEntry(entry);
   });
 
