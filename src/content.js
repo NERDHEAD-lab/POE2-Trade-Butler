@@ -42,13 +42,16 @@ function initSidebar() {
     content.style.width = 'calc(100% - 320px)'; // 사이드바 공간을 뺀 너비
 
     document.getElementById('clear-history').addEventListener('click', () => {
-      if (!confirm('검색 기록을 모두 삭제하시겠습니까?')) {
+      if (!confirm('검색 기록을 모두 삭제하시겠습니까? (즐겨찾기는 유지됩니다)')) {
         return;
       }
-      chrome.storage.local.set({ searchHistory: [] }, () => {
-        console.log('Search history cleared.');
-        loadHistory();
-        loadFavorites();
+
+      chrome.storage.local.get(['searchHistory'], (storage) => {
+        const history = storage.searchHistory || [];
+        const updatedHistory = history.filter((entry) => entry.favorite === true);
+        chrome.storage.local.set({ searchHistory: updatedHistory }, () => {
+          console.log('History removed:', updatedHistory);
+        });
       });
     });
 

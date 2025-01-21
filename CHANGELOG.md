@@ -3,7 +3,8 @@
 ## 1.2.0
 ### IMPROVEMENTS
 - improved alert and confirm event handling.
-
+- improved remove history action.
+  - remove without favorites. 
 
 ## 1.1.3
 ### BUG FIXES
