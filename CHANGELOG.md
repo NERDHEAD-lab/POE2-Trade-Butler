@@ -23,7 +23,7 @@
 - refactor code & GUI.
 - Add a favorites list.
 
-## BUG FIXES
+### BUG FIXES
 - Fixed an intermittent issue where the specified history name was reset to its ID.
 
 ## 1.0.0
