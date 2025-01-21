@@ -1,6 +1,11 @@
 # CHANGE LOG
 
 ## 1.2.0
+### FEATURES
+- Added a new feature to manage search history.
+  - can disable history tracking.
+  
+
 ### IMPROVEMENTS
 - improved alert and confirm event handling.
 - improved remove history action.

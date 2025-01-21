@@ -57,6 +57,7 @@ function initSidebar() {
 
     initTabNavigation();
     initToggleSidebar(sidebar);
+    initHistorySwitch();
     loadHistory();
     loadFavorites();
 
@@ -132,6 +133,22 @@ function initToggleSidebar(sidebar) {
       content.style.marginLeft = 'auto';
       content.style.width = '100%'; // 원래 너비로 복원
     }
+  });
+}
+
+function initHistorySwitch() {
+  const historySwitch = document.getElementById('history-switch');
+
+  chrome.storage.local.get(['isHistoryEnabled'], (storage) => {
+    historySwitch.checked = storage.isHistoryEnabled !== false;
+  });
+
+  // 스위치 상태 변경 이벤트
+  historySwitch.addEventListener('change', (event) => {
+    const isEnabled = event.target.checked;
+    chrome.storage.local.set({ isHistoryEnabled: isEnabled }, () => {
+      console.log(`Search history is now ${isEnabled ? 'enabled' : 'disabled'}`);
+    });
   });
 }
 
@@ -331,6 +348,11 @@ function observeUrlChanges() {
   let previousUrl = location.href;
 
   new MutationObserver(() => {
+    const isHistoryEnabled = document.getElementById('history-switch').checked;
+    if (!isHistoryEnabled) {
+      return;
+    }
+
     const currentUrl = location.href;
     if (currentUrl !== previousUrl) {
       previousUrl = currentUrl;
