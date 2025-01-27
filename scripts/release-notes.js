@@ -18,7 +18,10 @@ function extractReleaseNotes(tag) {
   }
 
   const changelog = fs.readFileSync(changelogPath, 'utf-8');
+  console.log(`--------------------------------------------------\n\n`);
+  console.log(`--- Extracting release notes for version: ${tag} ---`);
   console.log(`DEBUG: CHANGELOG.md content:\n${changelog}`); // 디버깅: 파일 내용 확인
+  console.log(`--------------------------------------------------\n\n`);
 
   // 정규식 수정: 태그부터 다음 태그까지 매칭, 줄 끝 처리 강화
   const regex = new RegExp(`^## ${tag}[\\s\\S]*?(?=^## \\d|\\Z)`, 'gm');
@@ -29,8 +32,19 @@ function extractReleaseNotes(tag) {
     process.exit(1);
   }
 
-  console.log(`DEBUG: Matched content:\n${match[0]}`); // 디버깅: 매칭된 결과 확인
-  return match[0].trim(); // 결과를 반환하며, 앞뒤 공백 제거
+  let releaseNotes = match[0].trim(); // 결과를 반환하며, 앞뒤 공백 제거
+
+  // INTERNAL 섹션 제거
+  releaseNotes = releaseNotes
+    .replace(/### INTERNAL[\s\S]*?(?=\n###|$)/g, '')
+    .replace(/\n{2,}/g, '\n') // 빈 줄 2개 이상을 1개로 줄임
+    .trim();
+
+  console.log(`--------------------------------------------------\n\n`);
+  console.log(`DEBUG: Filtered content (without INTERNAL):\n${releaseNotes}`); // 디버깅: INTERNAL 제거 결과 확인
+  console.log(`--------------------------------------------------\n\n`);
+
+  return releaseNotes;
 }
 
 // 릴리스 노트 추출 및 파일 생성
