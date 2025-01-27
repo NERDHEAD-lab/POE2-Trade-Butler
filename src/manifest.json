@@ -39,7 +39,9 @@
         "styles.css",
         "css/*.css"
       ],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }
