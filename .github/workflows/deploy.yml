@@ -55,7 +55,9 @@ jobs:
       - name: Extract release notes
         id: release_notes
         run: |
+          cat -A CHANGELOG.md
           sed -i 's/\r$//' CHANGELOG.md
+          cat -A CHANGELOG.md
           echo "Running: awk \"/^## ${TAG}$/,/^## /\" CHANGELOG.md"
 
           awk "/^## ${TAG}$/,/^## [^#]/" CHANGELOG.md | sed '$d' > release_notes.txt
