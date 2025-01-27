@@ -55,15 +55,12 @@ jobs:
       - name: Extract release notes
         id: release_notes
         run: |
-          START="## $TAG"
-          END="^## [0-9]+\.[0-9]+\.[0-9]+"
-          awk "/$START/,/$END/" CHANGELOG.md | sed "1d;\$d" | grep -vE "$END" > release_notes.txt
-          
-          # 비어있는 경우 기본 메시지 추가
+          awk "/^## ${TAG}$/,/^## /{print}" CHANGELOG.md | sed '$d' > release_notes.txt
+        
           if [ ! -s release_notes.txt ]; then
-          echo "No matching release notes found for $TAG" > release_notes.txt
+            echo "No matching release notes found for $TAG" > release_notes.txt
           fi
-          
+        
           echo "Release notes extracted:"
           cat release_notes.txt
 
