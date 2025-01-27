@@ -56,7 +56,8 @@ jobs:
         id: release_notes
         run: |
           file CHANGELOG.md
-          awk "/^## ${TAG}(\r)?$/,/^## [^#]/" CHANGELOG.md | sed '$d' > release_notes.txt
+          grep -n "^## ${TAG}[[:space:]]*$" CHANGELOG.md || echo "Start condition not found"
+          awk "/^## ${TAG}[[:space:]]*$/,/^## [^#]/" CHANGELOG.md | sed '$d' > release_notes.txt
 
           if [ ! -s release_notes.txt ]; then
             echo "No matching release notes found for $TAG" > release_notes.txt
