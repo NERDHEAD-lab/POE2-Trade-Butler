@@ -9,6 +9,12 @@
 ---
 
 
+## 1.2.2
+### INTERNAL
+- Added change version automatically with script in package.json.
+- Improved GitHub release action.
+  - Set as the latest release when changelog exists without INTERNAL category.
+
 ## 1.2.1
 ### INTERNAL
 - Added RELEASE NOTE in GitHub action.
