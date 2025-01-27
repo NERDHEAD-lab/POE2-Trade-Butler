@@ -9,3 +9,6 @@ yarn-error.log
 
 # project
 poe2-trade-butler.zip
+
+# Ignore generated release notes
+release_notes_*.txt
