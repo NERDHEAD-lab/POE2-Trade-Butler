@@ -1,5 +1,9 @@
 # CHANGE LOG
 
+## 1.2.1
+### FEATURES
+- Added RELEASE NOTE in github action.
+
 ## 1.2.0
 ### FEATURES
 - Added a new feature to manage search history.
