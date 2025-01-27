@@ -55,6 +55,7 @@ jobs:
       - name: Extract release notes
         id: release_notes
         run: |
+          echo "awk \"/^## ${TAG}$/,/^## /{print}\" CHANGELOG.md"
           awk "/^## ${TAG}$/,/^## /{print}" CHANGELOG.md | sed '$d' > release_notes.txt
         
           if [ ! -s release_notes.txt ]; then
