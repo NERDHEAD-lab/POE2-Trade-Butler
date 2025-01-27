@@ -47,15 +47,9 @@ jobs:
       - name: Build the project
         run: npm run build
 
-      # Extract release notes for the current version
-      - name: Extract release notes
-        id: release_notes
-        run: |
-          START="## $TAG"
-          END="## "
-          awk "/^$START/,/^$END/" CHANGELOG.md | sed "1d;\$d" | grep -v "^$END" > release_notes.txt
-          echo "Release notes extracted:"
-          cat release_notes.txt
+      # Determine the version
+      - name: Print TAG value
+        run: echo "TAG is $TAG"
 
       # Create GitHub Release
       - name: Create GitHub Release
@@ -66,7 +60,7 @@ jobs:
         with:
           tag_name: ${{ env.TAG }}
           release_name: "Release ${{ env.TAG }}"
-          body_path: release_notes.txt
+          body_path: release_notes_${{ env.TAG }}.md
           draft: false
           prerelease: false
 
