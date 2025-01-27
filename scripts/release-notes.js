@@ -18,18 +18,15 @@ function extractReleaseNotes(tag) {
   }
 
   const changelog = fs.readFileSync(changelogPath, 'utf-8');
-  console.log(`--------------------------------------------------\n\n`);
-  console.log(`--- Extracting release notes for version: ${tag} ---`);
-  console.log(`DEBUG: CHANGELOG.md content:\n${changelog}`); // 디버깅: 파일 내용 확인
-  console.log(`--------------------------------------------------\n\n`);
+  console.log(`Extracting release notes for version: ${tag}`);
 
-  // 정규식 수정: 태그부터 다음 태그까지 매칭, 줄 끝 처리 강화
+  // 정규식: 태그부터 다음 태그까지 매칭, 파일 끝 처리 강화
   const regex = new RegExp(`^## ${tag}[\\s\\S]*?(?=^## \\d|\\Z)`, 'gm');
   const match = changelog.match(regex);
 
   if (!match) {
     console.error(`No release notes found for version: ${tag}`);
-    process.exit(1);
+    return null;
   }
 
   let releaseNotes = match[0].trim(); // 결과를 반환하며, 앞뒤 공백 제거
@@ -40,16 +37,25 @@ function extractReleaseNotes(tag) {
     .replace(/\n{2,}/g, '\n') // 빈 줄 2개 이상을 1개로 줄임
     .trim();
 
-  console.log(`--------------------------------------------------\n\n`);
-  console.log(`DEBUG: Filtered content (without INTERNAL):\n${releaseNotes}`); // 디버깅: INTERNAL 제거 결과 확인
-  console.log(`--------------------------------------------------\n\n`);
-
-  return releaseNotes;
+  // 유효한 내용이 없으면 null 반환
+  const hasContent = releaseNotes.replace(`## ${tag}`, '').trim().length > 0;
+  if (hasContent) {
+    console.log(`--------------------------------------------------`);
+    console.log(`${releaseNotes}`);
+    console.log(`--------------------------------------------------`);
+  }
+  return hasContent ? releaseNotes : null;
 }
 
 // 릴리스 노트 추출 및 파일 생성
 try {
   const releaseNotes = extractReleaseNotes(TAG);
+
+  if (!releaseNotes) {
+    console.log(`No valid release notes for version ${TAG}. File will not be created.`);
+    process.exit(0); // 정상 종료
+  }
+
   fs.writeFileSync(releaseNotesPath, releaseNotes);
   console.log(`Release notes for ${TAG} saved to: ${releaseNotesPath}`);
 } catch (err) {
