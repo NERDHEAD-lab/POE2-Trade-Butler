@@ -55,15 +55,15 @@ jobs:
       - name: Extract release notes
         id: release_notes
         run: |
-          cat -A CHANGELOG.md
-          
-          echo "awk \"/^## ${TAG}$/,/^## /{print}\" CHANGELOG.md"
-          awk "/^## ${TAG}$/,/^## /{print}" CHANGELOG.md | sed '$d' > release_notes.txt
-        
+          sed -i 's/\r$//' CHANGELOG.md
+          echo "Running: awk \"/^## ${TAG}$/,/^## /\" CHANGELOG.md"
+
+          awk "/^## ${TAG}$/,/^## [^#]/" CHANGELOG.md | sed '$d' > release_notes.txt
+
           if [ ! -s release_notes.txt ]; then
             echo "No matching release notes found for $TAG" > release_notes.txt
           fi
-        
+
           echo "Release notes extracted:"
           cat release_notes.txt
 
