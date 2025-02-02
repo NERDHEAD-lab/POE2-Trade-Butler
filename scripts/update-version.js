@@ -6,7 +6,21 @@ const args = process.argv.slice(2);
 const updateType = args[0];
 
 if (!['major', 'minor', 'patch'].includes(updateType)) {
-  console.error('Usage: npm run update_version -- <major|minor|patch>');
+  console.error('Invalid update type. Must be one of: major, minor, patch');
+  console.error('Usage: npm run update_version -- <major|minor|patch> <path-to-pr-body-file>');
+  process.exit(1);
+}
+
+const prBodyFilePath = args[1];
+if (!fs.existsSync(prBodyFilePath)) {
+  console.error(`File not found: ${prBodyFilePath}`);
+  console.error('Usage: npm run update_version -- <major|minor|patch> <path-to-pr-body-file>');
+  process.exit(1);
+}
+
+const prBody = fs.readFileSync(prBodyFilePath, 'utf-8');
+if (!prBody) {
+  console.error('Pull request body is empty.');
   process.exit(1);
 }
 
@@ -48,7 +62,8 @@ fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
 fs.writeFileSync(manifestJsonPath, JSON.stringify(manifestJson, null, 2) + '\n');
 
 // CHANGELOG.md 업데이트
-const newChangelogSection = `## ${newVersion}\n`;
+const newChangelogSection = `## ${newVersion}\n` + prBody + '\n';
+
 
 // 새 섹션을 마지막 버전 위에 추가
 const changelogLines = changelog.split('\n');
