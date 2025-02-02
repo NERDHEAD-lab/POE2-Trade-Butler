@@ -47,10 +47,12 @@ jobs:
 
       - name: Update package.json version
         run: |
+          echo "${{ github.event.pull_request.body }}" | sed '1{/^---$/d}; /^---$/,$d' > CHANGELOG_UPDATE.md
+          
           CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
           
-          npm run update_version:${{ env.VERSION_TYPE }}
+          npm run update_version:${{ env.VERSION_TYPE }} CHANGELOG_UPDATE.md
           
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
@@ -60,8 +62,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add package.json
+          got add CHANGELOG.md
           git add src/manifest.json
-          git commit -m "chore: update ${{ env.VERSION_TYPE }} version (${{ env.CURRENT_VERSION }} -> ${{ env.NEW_VERSION }})"
+          echo "chore: update ${{ env.VERSION_TYPE }} version (${{ env.CURRENT_VERSION }} -> ${{ env.NEW_VERSION }}) \n\n$(cat CHANGELOG_UPDATE.md)" > commit_message.txt
+          git commit -F commit_message.txt
           git tag ${{ env.NEW_VERSION }}
           git push origin HEAD:master
           git push origin --tags
