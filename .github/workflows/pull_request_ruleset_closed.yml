@@ -64,7 +64,11 @@ jobs:
           git add package.json
           got add CHANGELOG.md
           git add src/manifest.json
-          echo "chore: update ${{ env.VERSION_TYPE }} version (${{ env.CURRENT_VERSION }} -> ${{ env.NEW_VERSION }}) \n\n$(cat CHANGELOG_UPDATE.md)" > commit_message.txt
+          {
+            echo "chore: update ${{ env.VERSION_TYPE }} version (${{ env.CURRENT_VERSION }} -> ${{ env.NEW_VERSION }})"
+            echo ""
+            cat CHANGELOG_UPDATE.md
+          } > commit_message.txt
           git commit -F commit_message.txt
           git tag ${{ env.NEW_VERSION }}
           git push origin HEAD:master
