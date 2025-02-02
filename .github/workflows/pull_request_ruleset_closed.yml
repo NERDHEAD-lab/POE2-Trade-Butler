@@ -1,4 +1,7 @@
 name: Pull Request Ruleset (Closed)
+permissions:
+  contents: write
+  actions: write
 
 on:
   pull_request:
