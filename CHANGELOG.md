@@ -9,6 +9,20 @@
 ---
 
 
+## 1.2.5
+---
+> Each version is divided into one or more of the following categories:
+> - **FEATURES**: New features that enhance the project’s functionality.
+> - **IMPROVEMENTS**: Enhancements to existing features or performance improvements.
+> - **BUG FIXES**: Resolved issues or bugs that were present in previous versions.
+> - **INTERNAL**: Internal changes that do not affect the end-user.
+---
+
+### INTERNAL
+- fix workflow while generate commit message
+- improved changelog automatically from PR body
+
+
 ## 1.2.2
 ### INTERNAL
 - Added change version automatically with script in package.json.
