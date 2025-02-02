@@ -60,3 +60,4 @@ jobs:
           git commit -m "chore: update ${{ env.VERSION_TYPE }} version (${{ env.CURRENT_VERSION }} -> ${{ env.NEW_VERSION }})"
           git tag ${{ env.NEW_VERSION }}
           git push origin HEAD:master
+          git push origin --tags
