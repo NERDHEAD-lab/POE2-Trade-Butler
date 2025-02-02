@@ -19,6 +19,7 @@ jobs:
       - name: Determine version type
         id: determine_version
         run: |
+          REQUIRED_LABELS=("major" "minor" "patch")
           VERSION_TYPE=""
           
           echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name'
