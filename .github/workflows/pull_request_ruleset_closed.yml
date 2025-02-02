@@ -19,13 +19,17 @@ jobs:
       - name: Determine version type
         id: determine_version
         run: |
+          REQUIRED_LABELS=("major" "minor" "patch")
           VERSION_TYPE=""
-          
-          echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name'
+
+          LABELS=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name')
+          echo "Debugging : Extracted labels"
+          echo "$LABELS"
           
           for label in "${REQUIRED_LABELS[@]}"; do
-            if echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name' | grep -q "^$label$"; then
+            if echo "$LABELS" | grep -qw "$label"; then
               VERSION_TYPE=$label
+              break
             fi
           done
           
