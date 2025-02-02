@@ -10,7 +10,10 @@ on:
         description: 'Tag to build and release'
         required: true
         default: '1.0.0'
-
+  workflow_run:
+    workflows: ["Pull Request Ruleset (Closed)"]
+    types:
+      - completed
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -28,9 +31,13 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             TAG="${{ github.event.inputs.tag }}"
+          elif [ "${{ github.event_name }}" == "workflow_run" ]; then
+            git fetch --tags
+            TAG=$(git describe --tags --abbrev=0)
           else
             TAG="${{ github.ref_name }}"
           fi
+          
           echo "TAG=$TAG" >> $GITHUB_ENV
 
       # Checkout the specific tag
