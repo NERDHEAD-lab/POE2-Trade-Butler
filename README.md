@@ -1,4 +1,4 @@
-# POE2-Trade-Butler
+# POE2-Trade-Butler TEST
 
 A Chrome extension that adds a sidebar to the POE2 Trade page and provides a history management feature for enhanced trading experience.
 
