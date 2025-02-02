@@ -20,10 +20,10 @@ jobs:
           REQUIRED_LABELS=("major" "minor" "patch")
           HAS_LABEL=false
           
-          echo "PR labels: ${{ toJson(github.event.pull_request.labels) }}"
+          echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name'
 
           for label in "${REQUIRED_LABELS[@]}"; do
-            if [[ "${{ github.event.pull_request.labels[*] }}" == *"$label"* ]]; then
+            if echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name' | grep -q "^$label$"; then
               HAS_LABEL=true
             fi
           done
