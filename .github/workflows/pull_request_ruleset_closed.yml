@@ -24,7 +24,9 @@ jobs:
 
           LABELS=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name')
           echo "Debugging : Extracted labels"
-          echo "$LABELS"
+          for label in "$LABELS"; do
+            echo "ㄴ $label"
+          done
           
           for label in "${REQUIRED_LABELS[@]}"; do
             if echo "$LABELS" | grep -qw "$label"; then
@@ -45,7 +47,7 @@ jobs:
           CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
           
-          npm update_version:${{ env.VERSION_TYPE }}
+          npm run update_version:${{ env.VERSION_TYPE }}
           
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
