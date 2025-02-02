@@ -62,7 +62,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add package.json
-          got add CHANGELOG.md
+          git add CHANGELOG.md
           git add src/manifest.json
           {
             echo "chore: update ${{ env.VERSION_TYPE }} version (${{ env.CURRENT_VERSION }} -> ${{ env.NEW_VERSION }})"
