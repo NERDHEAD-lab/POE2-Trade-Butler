@@ -9,6 +9,11 @@
 ---
 
 
+## 1.2.6
+### INTERNAL
+- fix logic in PR close workflow when writing CHANGELOG_UPDATE.md
+
+
 ## 1.2.5
 ---
 > Each version is divided into one or more of the following categories:
