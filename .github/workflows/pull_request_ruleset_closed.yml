@@ -1,4 +1,4 @@
-name: Pull Request Ruleset (Update Version on Merge)
+name: Pull Request Ruleset (Closed)
 
 on:
   pull_request:
@@ -21,16 +21,15 @@ jobs:
         run: |
           VERSION_TYPE=""
           
-          if [[ "${{ github.event.pull_request.labels[*] }}" == *"major"* ]]; then
-              VERSION_TYPE="major"
-          elif [[ "${{ github.event.pull_request.labels[*] }}" == *"minor"* ]]; then
-              VERSION_TYPE="minor"
-          elif [[ "${{ github.event.pull_request.labels[*] }}" == *"patch"* ]]; then
-              VERSION_TYPE="patch"
-          fi
+          echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name'
+          
+          for label in "${REQUIRED_LABELS[@]}"; do
+            if echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name' | grep -q "^$label$"; then
+              VERSION_TYPE=$label
+            fi
+          done
           
           if [[ -z "$VERSION_TYPE" ]]; then
-          
             echo "Error: Pull request must have one of the following labels: major, minor, patch"
             exit 1
           fi
