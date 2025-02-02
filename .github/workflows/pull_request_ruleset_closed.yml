@@ -24,7 +24,9 @@ jobs:
 
           LABELS=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name')
           echo "Debugging : Extracted labels"
-          echo "$LABELS"
+          for label in "$LABELS"; do
+            echo "ㄴ $label"
+          done
           
           for label in "${REQUIRED_LABELS[@]}"; do
             if echo "$LABELS" | grep -qw "$label"; then
