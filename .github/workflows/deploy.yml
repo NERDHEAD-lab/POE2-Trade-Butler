@@ -51,7 +51,18 @@ jobs:
       - name: Print TAG value
         run: echo "TAG is $TAG"
 
-      # Create GitHub Release
+      # Check if release notes exist
+      - name: Check release notes
+        id: check_notes
+        run: |
+          if [ -s release_notes_${{ env.TAG }}.md ]; then
+            echo "Release notes exist."
+            echo "HAS_RELEASE_NOTES=true" >> $GITHUB_ENV
+          else
+            echo "Release notes do not exist."
+            echo "HAS_RELEASE_NOTES=false" >> $GITHUB_ENV
+
+      # Create GitHub Release (only if release notes exist)
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -63,6 +74,8 @@ jobs:
           body_path: release_notes_${{ env.TAG }}.md
           draft: false
           prerelease: false
+          is_prerelease: ${{ env.HAS_RELEASE_NOTES }} == 'false'
+
 
       # Upload build artifact to GitHub Release
       - name: Upload build artifact

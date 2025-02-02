@@ -1,6 +1,6 @@
 {
   "name": "poe2-trade-butler",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "main": "index.js",
   "scripts": {
     "start": "webpack serve --mode development",
@@ -9,7 +9,11 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "zip": "node scripts/create-zip.js",
-    "release_notes": "node scripts/release-notes.js"
+    "release_notes": "node scripts/release-notes.js",
+    "update_version": "node scripts/update-version.js",
+    "update_version:patch": "node scripts/update-version.js patch",
+    "update_version:minor": "node scripts/update-version.js minor",
+    "update_version:major": "node scripts/update-version.js major"
   },
   "keywords": [
     "chrome-extension",

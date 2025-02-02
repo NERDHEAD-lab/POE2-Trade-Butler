@@ -1,0 +1,57 @@
+name: Pull Request Ruleset (Update Version on Merge)
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - closed
+
+jobs:
+  update-version:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Determine version type
+        id: determine_version
+        run: |
+          VERSION_TYPE=""
+          
+          if [[ "${{ github.event.pull_request.labels[*] }}" == *"major"* ]]; then
+              VERSION_TYPE="major"
+          elif [[ "${{ github.event.pull_request.labels[*] }}" == *"minor"* ]]; then
+              VERSION_TYPE="minor"
+          elif [[ "${{ github.event.pull_request.labels[*] }}" == *"patch"* ]]; then
+              VERSION_TYPE="patch"
+          fi
+          
+          if [[ -z "$VERSION_TYPE" ]]; then
+          
+            echo "Error: Pull request must have one of the following labels: major, minor, patch"
+            exit 1
+          fi
+          
+          echo "VERSION_TYPE=$VERSION_TYPE" >> $GITHUB_ENV
+
+      - name: Update package.json version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+          
+          npm update_version:${{ env.VERSION_TYPE }}
+          
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Commit updated package.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json
+          git commit -m "chore: update ${{ env.VERSION_TYPE }} version (${{ env.CURRENT_VERSION }} -> ${{ env.NEW_VERSION }})"
+          git tag ${{ env.NEW_VERSION }}
+          git push origin HEAD:master

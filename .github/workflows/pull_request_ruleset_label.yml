@@ -1,0 +1,36 @@
+name: Pull Request Ruleset (Update Version on Merge)
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - edited
+      - labeled
+      - unassigned
+
+jobs:
+  enforce-label:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check for required labels
+        run: |
+          REQUIRED_LABELS=("major" "minor" "patch")
+          HAS_LABEL=false
+          
+          echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name'
+
+          for label in "${REQUIRED_LABELS[@]}"; do
+            if echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name' | grep -q "^$label$"; then
+              HAS_LABEL=true
+            fi
+          done
+
+          if [[ "$HAS_LABEL" == "false" ]]; then
+            echo "Error: Pull request must have one of the following labels: ${REQUIRED_LABELS[*]}"
+            exit 1
+          else
+            echo "PR contains a required label."
+          fi
