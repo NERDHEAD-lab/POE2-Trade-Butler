@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/chrome-manifest",
+  "manifest_version": 3,
+  "name": "POE2 Trade Butler",
+  "version": "2.0.0",
+  "description": "A Chrome Extension for POE2 Trade with a sidebar and history management.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon.png",
+      "128": "assets/icons/icon(128x128).png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "*://www.pathofexile.com/trade2/*",
+    "*://poe.game.daum.net/trade2/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.pathofexile.com/trade2/*",
+        "*://poe.game.daum.net/trade2/*"
+      ],
+      "js": ["content-script.js"]
+    }
+  ],
+  "icons": {
+    "16": "assets/icons/icon.png",
+    "128": "assets/icons/icon(128x128).png"
+  }
+}
