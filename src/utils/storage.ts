@@ -1,5 +1,4 @@
-
-const STORAGE_KEY = "searchHistory";
+const STORAGE_KEY = 'searchHistory';
 
 export interface SearchHistoryEntity {
   id: string;
@@ -10,9 +9,16 @@ export interface SearchHistoryEntity {
   favorite: boolean;
 }
 
-export async function findHistoryById(id: string): Promise<SearchHistoryEntity | undefined> {
-  const history = await getAllHistory();
-  return history.find((item) => item.id === id);
+type SearchHistoryChangedListener = (newEntries: SearchHistoryEntity[]) => void;
+
+const searchHistoryChangedListener: SearchHistoryChangedListener[] = [];
+
+export function addSearchHistoryChangedListener(fn: SearchHistoryChangedListener) {
+  searchHistoryChangedListener.push(fn);
+}
+
+function notifySearchHistoryChangedListener(newEntries: SearchHistoryEntity[]) {
+  searchHistoryChangedListener.forEach(fn => fn(newEntries));
 }
 
 export async function getAllHistory(): Promise<SearchHistoryEntity[]> {
@@ -23,7 +29,11 @@ export async function getAllHistory(): Promise<SearchHistoryEntity[]> {
   });
 }
 
-export async function addOrUpdateHistory(entry: Partial<SearchHistoryEntity> & { id: string; url: string; lastSearched: string }): Promise<void> {
+export async function addOrUpdateHistory(entry: Partial<SearchHistoryEntity> & {
+  id: string;
+  url: string;
+  lastSearched: string
+}): Promise<void> {
   const history = await getAllHistory();
   const index = history.findIndex((item) => item.id === entry.id);
 
@@ -46,6 +56,8 @@ export async function addOrUpdateHistory(entry: Partial<SearchHistoryEntity> & {
 
   await new Promise<void>((resolve) => {
     chrome.storage.local.set({ [STORAGE_KEY]: history }, () => resolve());
+
+    notifySearchHistoryChangedListener(history);
   });
 }
 
@@ -53,4 +65,6 @@ export async function deleteHistoryById(id: string): Promise<void> {
   const history = await getAllHistory();
   const updated = history.filter(entry => entry.id !== id);
   await chrome.storage.local.set({ [STORAGE_KEY]: updated });
+
+  notifySearchHistoryChangedListener(updated);
 }
