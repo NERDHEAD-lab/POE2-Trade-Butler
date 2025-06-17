@@ -1,6 +1,8 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+
 
 module.exports = (env, argv = {}) => {
   const mode = argv.mode || "production";
@@ -11,7 +13,8 @@ module.exports = (env, argv = {}) => {
     entry: {
       popup: "./src/popup.ts",
       background: "./src/background.ts",
-      "content-script": "./src/content-script.ts"
+      "content-script": "./src/content-script.ts",
+      ...(isDev ? { development: "./src/development.ts" } : {})
     },
     output: {
       filename: "[name].js",
@@ -40,11 +43,30 @@ module.exports = (env, argv = {}) => {
           { from: "src/manifest.json", to: "." },
           { from: "src/assets", to: "assets" },
           { from: "src/popup.html", to: "." },
-          ...(isDev ? [{ from: "src/development.html", to: "." }] : [])
         ]
       }),
+      ...(isDev ? [
+        new HtmlWebpackPlugin({
+          filename: "development.html",
+          template: "src/development.html",
+          chunks: ["development"],
+          inject: "body",
+          favicon: "src/assets/icon.png"
+        })
+      ] : []),
       new MiniCssExtractPlugin()
     ],
-    devtool: isDev ? "eval-cheap-module-source-map" : false
+    devtool: isDev ? "eval-cheap-module-source-map" : false,
+    ...(isDev && {
+      devServer: {
+        static: {
+          directory: path.join(__dirname, "dist"),
+        },
+        open: ['/development.html'],
+        hot: true,
+        compress: true,
+        port: 8080
+      }
+    })
   };
 };
