@@ -7,8 +7,8 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "assets/icons/icon.png",
-      "128": "assets/icons/icon(128x128).png"
+      "16": "assets/icon.png",
+      "128": "assets/icon(128x128).png"
     }
   },
   "background": {
@@ -29,7 +29,7 @@
     }
   ],
   "icons": {
-    "16": "assets/icons/icon.png",
-    "128": "assets/icons/icon(128x128).png"
+    "16": "assets/icon.png",
+    "128": "assets/icon(128x128).png"
   }
 }
