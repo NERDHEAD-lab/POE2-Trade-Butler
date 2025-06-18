@@ -1,4 +1,9 @@
 /*********************** Test Functions ***********************/
+const testHeaderElement = document.getElementById('test-header');
+if (!testHeaderElement) {
+  console.error('Could not find #test-header element');
+}
+
 const testsElement = document.getElementById('tests');
 if (!testsElement) {
   console.error('Could not find #tests element');
@@ -38,7 +43,7 @@ export function createTest(testName: string, defaultValue: string = '', callback
   testsElement?.appendChild(testElement);
 }
 
-function createTestWithoutInput(testName: string, defaultValue: string = '', callback: () => string) {
+export function createTestWithoutInput(testName: string, defaultValue: string = '', callback: () => string) {
   console.log(`Creating test without input: ${testName} with default value: ${defaultValue}`);
   const testElement = document.createElement('div');
   testElement.innerHTML = testTemplate;
@@ -55,6 +60,14 @@ function createTestWithoutInput(testName: string, defaultValue: string = '', cal
   });
 
   testsElement?.appendChild(testElement);
+}
+
+export function createButton(buttonText: string, callback: () => void) {
+  const button = document.createElement('button');
+  button.textContent = buttonText;
+  button.addEventListener('click', callback);
+
+  testHeaderElement?.appendChild(button);
 }
 
 function runAllTests() {
