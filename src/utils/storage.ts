@@ -1,3 +1,24 @@
+const isChromeAvailable = typeof chrome !== 'undefined' && chrome.storage?.local;
+const storage = isChromeAvailable
+  ? chrome.storage.local
+  : {
+    get: (keys: string[] | string, callback: (result: any) => void) => {
+      console.warn('⚠️ Mock storage.get called');
+      callback({});
+    },
+    set: (items: object, callback?: () => void) => {
+      console.warn('⚠️ Mock storage.set called', items);
+      callback?.();
+    },
+    remove: (keys: string | string[], callback?: () => void) => {
+      console.warn('⚠️ Mock storage.remove called', keys);
+      callback?.();
+    },
+    clear: (callback?: () => void) => {
+      console.warn('⚠️ Mock storage.clear called');
+      callback?.();
+    }
+  };
 const STORAGE_KEY = 'searchHistory';
 
 export interface SearchHistoryEntity {
@@ -23,7 +44,7 @@ function notifySearchHistoryChangedListener(newEntries: SearchHistoryEntity[]) {
 
 export async function getAllHistory(): Promise<SearchHistoryEntity[]> {
   return new Promise((resolve) => {
-    chrome.storage.local.get([STORAGE_KEY], (storage) => {
+    storage.get([STORAGE_KEY], (storage) => {
       resolve(storage[STORAGE_KEY] || []);
     });
   });
@@ -55,7 +76,7 @@ export async function addOrUpdateHistory(entry: Partial<SearchHistoryEntity> & {
   }
 
   await new Promise<void>((resolve) => {
-    chrome.storage.local.set({ [STORAGE_KEY]: history }, () => resolve());
+    storage.set({ [STORAGE_KEY]: history }, () => resolve());
 
     notifySearchHistoryChangedListener(history);
   });
@@ -64,7 +85,12 @@ export async function addOrUpdateHistory(entry: Partial<SearchHistoryEntity> & {
 export async function deleteHistoryById(id: string): Promise<void> {
   const history = await getAllHistory();
   const updated = history.filter(entry => entry.id !== id);
-  await chrome.storage.local.set({ [STORAGE_KEY]: updated });
+  await storage.set({ [STORAGE_KEY]: updated });
 
   notifySearchHistoryChangedListener(updated);
+}
+
+export async function clearHistory(): Promise<void> {
+  await storage.remove(STORAGE_KEY);
+  notifySearchHistoryChangedListener([]);
 }
