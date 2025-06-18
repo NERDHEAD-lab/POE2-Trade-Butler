@@ -1,4 +1,10 @@
-// import { renderSidebar } from "./components/history";
+import { renderSidebar } from "./components/sidebar";
 import "./styles/sidebar.css";
 
-// renderSidebar();`
+
+const content = document.querySelector('.content')as HTMLElement;
+if (!content) {
+  console.error('Could not find .content element');
+}
+
+renderSidebar(content);
