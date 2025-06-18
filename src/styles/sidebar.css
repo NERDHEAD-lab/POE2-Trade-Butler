@@ -1,6 +1,6 @@
 #poe2-sidebar {
     position: fixed;
-    top: 7%;
+    top: 80px;
     bottom: 20px;
     right: 0;
     width: 300px;
@@ -61,6 +61,19 @@
     padding: 10px;
     border-bottom: 1px solid #ccc;
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: #d7c185;
+    text-shadow:
+            1px 1px 0 #000,
+            2px 2px 2px #000,
+            0 0 5px #a97c50;
+    text-transform: uppercase;
 }
 
 

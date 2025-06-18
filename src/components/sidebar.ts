@@ -5,7 +5,7 @@ const POE2_CONTENT_WRAPPER_ID = "poe2-content-wrapper";
 
 const sidebarHtml = `
 <div id="sidebar-header">
-  <h2>Trade Butler</h2>
+  <h2 class="sidebar-header-title">Trade Butler</h2>
   <button id="clear-history">Clear History</button>
 </div>
 
