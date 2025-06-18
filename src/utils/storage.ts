@@ -1,3 +1,5 @@
+import { showToast } from './api';
+
 const isChromeAvailable = typeof chrome !== 'undefined' && chrome.storage?.local;
 const storage = isChromeAvailable
   ? chrome.storage.local
@@ -19,6 +21,10 @@ const storage = isChromeAvailable
       callback?.();
     }
   };
+if (!isChromeAvailable) {
+  showToast('Chrome storage API not available, using mock storage', 5000);
+}
+
 const STORAGE_KEY = 'searchHistory';
 
 export interface SearchHistoryEntity {
