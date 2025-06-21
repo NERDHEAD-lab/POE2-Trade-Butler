@@ -89,7 +89,7 @@ export function renderSidebar(container: HTMLElement): void {
   });
 
   loadHistoryList(storage.getAllHistory());
-  storage.addSearchHistoryChangedListener((newEntries) => {
+  storage.addSearchHistoryChangedListener(ON_SEARCH_HISTORY_CHANGED, (newEntries) => {
     loadHistoryList(Promise.resolve(newEntries));
   });
 
@@ -174,6 +174,7 @@ function observeUrlChange() {
 }
 
 let latestSearchUrl = window.location.href;
+
 async function handleUrlChange(currentUrl: string) {
   try {
     const entity = api.getSearchHistoryFromUrl(currentUrl);
@@ -192,4 +193,3 @@ async function handleUrlChange(currentUrl: string) {
     console.info(`Ignoring URL change, not a valid search URL: ${currentUrl}`);
   }
 }
-
