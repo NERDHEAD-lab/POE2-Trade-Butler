@@ -90,3 +90,114 @@ export function showToast(message: string, color = '#fff', duration = 3000) {
     setTimeout(() => toast.remove(), 300);
   }, duration);
 }
+
+/**
+ * 모달 버튼 클릭 시 호출되는 리스너 타입
+ * @param modal - 모달 요소
+ * @return true를 반환하면 모달이 닫히고, false를 반환하면 모달이 닫히지 않습니다.
+ */
+type ButtonListener = (modal: HTMLDivElement) => Promise<boolean>;
+
+interface ModalOptions {
+  div: HTMLDivElement;
+  confirm?: string;
+  cancel?: string;
+  onConfirmListener?: ButtonListener;
+  onCancelListener?: ButtonListener;
+  etcButtons?: {
+    name: string;
+    listener: ButtonListener;
+  }[];
+  hideCancel?: boolean;
+}
+
+export function showModal(options: ModalOptions): void {
+  const {
+    div,
+    confirm = '확인',
+    cancel = '취소',
+    onConfirmListener,
+    onCancelListener,
+    etcButtons = [],
+    hideCancel = false
+  } = options;
+
+  const overlay = document.createElement('div');
+  Object.assign(overlay.style, {
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: '10001'
+  });
+
+  const modal = document.createElement('div');
+  modal.className = 'poe2-modal';
+  Object.assign(modal.style, {
+    backgroundColor: '#222',
+    color: '#fff',
+    padding: '20px',
+    borderRadius: '8px',
+    width: '300px',
+    maxWidth: '90%',
+    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4)',
+    textAlign: 'center'
+  });
+
+  modal.appendChild(div);
+
+  const btnWrapper = document.createElement('div');
+  Object.assign(btnWrapper.style, {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: '10px',
+    marginTop: '20px'
+  });
+
+  function makeButton(label: string, listener?: ButtonListener) {
+    const btn = document.createElement('button');
+    btn.textContent = label;
+    Object.assign(btn.style, {
+      flex: '1',
+      padding: '6px 12px',
+      backgroundColor: '#444',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer'
+    });
+    btn.onclick = () => {
+      // listener가 없을 경우 or listener가 true를 반환할 경우 모달을 닫는다.
+      if (!listener) {
+        overlay.remove();
+      } else {
+        listener(modal).then((close) => {
+          if (close) {
+            overlay.remove();
+          }
+        });
+      }
+    };
+    return btn;
+  }
+
+  btnWrapper.appendChild(makeButton(confirm, onConfirmListener));
+  if (!hideCancel) {
+    btnWrapper.appendChild(makeButton(cancel, onCancelListener));
+  }
+
+  for (const btn of etcButtons) {
+    btnWrapper.appendChild(
+      makeButton(btn.name, btn.listener) // 기본 false
+    );
+  }
+
+  modal.appendChild(btnWrapper);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+}
