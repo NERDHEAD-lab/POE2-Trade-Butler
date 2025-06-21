@@ -64,9 +64,16 @@ export interface SearchHistoryEntity {
 }
 
 export interface FavoriteFolderRoot {
+  name?: string;
   folders: FavoriteFolder[];
   items: FavoriteItem[];
 }
+
+const favoriteFolderRoot: FavoriteFolderRoot = {
+  name: '/',
+  folders: [],
+  items: []
+};
 
 export interface FavoriteItem {
   id: string;       // SearchHistoryEntity.id
@@ -174,7 +181,7 @@ export async function clearHistory(): Promise<void> {
 export async function getFavoriteFolderRoot(): Promise<FavoriteFolderRoot> {
   return new Promise(resolve => {
     storage.get([STORAGE_FAVORITE_KEY], (result) => {
-      resolve(result[STORAGE_FAVORITE_KEY] || { folders: [], items: [] });
+      resolve(result[STORAGE_FAVORITE_KEY] || favoriteFolderRoot);
     });
   });
 }
@@ -189,13 +196,16 @@ async function saveFavoriteFolderRoot(root: FavoriteFolderRoot): Promise<void> {
 }
 
 export async function hasAnyItemInPath(path: string): Promise<boolean> {
-  const root = await getFavoriteFolderRoot(); // STORAGE_FAVORITE_KEY에서 읽기
-  const folder = findFolderByPath(root, path);
-  if (!folder) {
-    throw new Error(`Folder path not found: ${path}`);
-  }
+  const root = await getFavoriteFolderRoot();
+  return hasAnyItemInPathInternal(root, path);
+}
 
-  return (folder.items || []).length > 0;
+function hasAnyItemInPathInternal(root: FavoriteFolderRoot, path: string): boolean {
+  const folder = findFolderByPath(root, path);
+  if (!folder) return false;
+  if (folder.items?.length) return true;
+
+  return false;
 }
 
 function findFolderByPath(root: FavoriteFolderRoot, path: string): FavoriteFolder | FavoriteFolderRoot | null {
@@ -316,6 +326,7 @@ export async function deleteFavoriteFolder(path: string): Promise<boolean> {
     return true;
   }
 
-  return false; // 삭제 실패
+  return false;
+}
 }
 
