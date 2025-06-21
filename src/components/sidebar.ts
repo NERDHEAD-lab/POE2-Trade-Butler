@@ -1,7 +1,7 @@
-import "../styles/sidebar.css";
+import '../styles/sidebar.css';
 
-const POE2_SIDEBAR_ID = "poe2-sidebar";
-const POE2_CONTENT_WRAPPER_ID = "poe2-content-wrapper";
+const POE2_SIDEBAR_ID = 'poe2-sidebar';
+const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
 
 const sidebarHtml = `
 <div id="sidebar-header">
@@ -42,13 +42,13 @@ export function renderSidebar(container: HTMLElement): void {
   if (document.getElementById(POE2_SIDEBAR_ID)) return;
 
   // 기존 콘텐츠를 감싸는 wrapper 생성
-  const wrapper = document.createElement("div");
+  const wrapper = document.createElement('div');
   wrapper.id = POE2_CONTENT_WRAPPER_ID;
   while (container.firstChild) wrapper.appendChild(container.firstChild);
   container.appendChild(wrapper);
 
   // 사이드바 생성
-  const sidebar = document.createElement("div");
+  const sidebar = document.createElement('div');
   sidebar.id = POE2_SIDEBAR_ID;
   sidebar.innerHTML = sidebarHtml;
   container.appendChild(sidebar);
@@ -60,10 +60,10 @@ export function renderSidebar(container: HTMLElement): void {
   const toggleButton = sidebar.querySelector<HTMLButtonElement>(`#poe2-sidebar-toggle-button`);
   let isOpen = true;
 
-  toggleButton?.addEventListener("click", () => {
+  toggleButton?.addEventListener('click', () => {
     isOpen = !isOpen;
-    sidebar.classList.toggle("collapsed", !isOpen);
-    wrapper.classList.toggle("collapsed", !isOpen);
-    toggleButton.textContent = isOpen ? "⮜" : "⮞";
+    sidebar.classList.toggle('collapsed', !isOpen);
+    wrapper.classList.toggle('collapsed', !isOpen);
+    toggleButton.textContent = isOpen ? '⮜' : '⮞';
   });
 }
