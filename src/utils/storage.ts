@@ -203,7 +203,16 @@ export async function hasAnyItemInPath(path: string): Promise<boolean> {
 function hasAnyItemInPathInternal(root: FavoriteFolderRoot, path: string): boolean {
   const folder = findFolderByPath(root, path);
   if (!folder) return false;
+
   if (folder.items?.length) return true;
+
+  if (folder.folders?.length) {
+    for (const sub of folder.folders) {
+      if (hasAnyItemInPathInternal(root, `${path}/${sub.name}`)) {
+        return true;
+      }
+    }
+  }
 
   return false;
 }
@@ -225,21 +234,6 @@ function findFolderByPath(root: FavoriteFolderRoot, path: string): FavoriteFolde
   return current;
 }
 
-
-export async function getAllFavoritePaths(): Promise<string[]> {
-  const root = await getFavoriteFolderRoot(); // STORAGE_FAVORITE_KEY에서 읽기
-  const paths: string[] = [];
-
-  function traverse(folder: FavoriteFolder, currentPath: string) {
-    const path = currentPath + '/' + folder.name;
-    paths.push(path);
-    (folder.folders || []).forEach(sub => traverse(sub, path));
-  }
-
-  paths.push('/'); // 루트 포함
-  (root.folders || []).forEach(folder => traverse(folder, ''));
-  return paths;
-}
 
 export async function createFavoriteFolder(parentPath: string, name: string): Promise<boolean> {
   const root = await getFavoriteFolderRoot();
@@ -328,5 +322,10 @@ export async function deleteFavoriteFolder(path: string): Promise<boolean> {
 
   return false;
 }
+
+export async function flushFavoriteFolder(): Promise<void> {
+  await storage.remove(STORAGE_FAVORITE_KEY);
+  notifyFavoriteFolderChangedListener(favoriteFolderRoot);
+  showToast('즐겨찾기 폴더가 초기화되었습니다.', '#0f0');
 }
 

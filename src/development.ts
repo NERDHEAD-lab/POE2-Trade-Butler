@@ -2,7 +2,8 @@ import * as test from './utils/testTemplate';
 import * as sidebar from './components/sidebar';
 import * as storage from './utils/storage';
 import * as api from './utils/api';
-import { showToast } from './utils/api';
+import { showModal, showToast } from './utils/api';
+import * as folderUI from './ui/favoriteFolderUI';
 
 /*
   * This script is used for development.
@@ -57,6 +58,37 @@ test.createButton(
     storage.addOrUpdateHistory(searchHistory).then(
       () => showToast('Search history added successfully!'),
       (error) => showToast(`Error adding search history: ${error.message}`)
+    );
+  }
+);
+
+test.createButton(
+  'Flush Favorite Folder',
+  () => {
+    storage.flushFavoriteFolder().then(
+      () => showToast('Favorite folder flushed successfully!'),
+      (error) => showToast(`Error flushing favorite folder: ${error.message}`)
+    );
+  }
+);
+
+
+test.createButton(
+  'Show Favorite Folder',
+  () => {
+    storage.getFavoriteFolderRoot().then(
+      (folder) => {
+        const div = document.createElement('div');
+        const htmlUListElement = folderUI.generate(true, Promise.resolve(folder));
+        div.appendChild(htmlUListElement);
+
+        showModal({
+          div: div,
+          confirm: 'Close',
+          hideCancel: true
+        });
+      },
+      (error) => showToast(`Error fetching favorite folder: ${error.message}`)
     );
   }
 );
