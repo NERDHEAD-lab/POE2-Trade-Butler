@@ -56,11 +56,9 @@ const STORAGE_KEY = 'searchHistory';
 
 export interface SearchHistoryEntity {
   id: string;
-  name: string;
   url: string;
   lastSearched: string;
   previousSearches: string[];
-  favorite: boolean;
 }
 
 type SearchHistoryChangedListener = (newEntries: SearchHistoryEntity[]) => void;
@@ -83,36 +81,37 @@ export async function getAllHistory(): Promise<SearchHistoryEntity[]> {
   });
 }
 
-export async function addOrUpdateHistory(entry: Partial<SearchHistoryEntity> & {
+/**
+ * Adds a new search history entry or updates an existing one.
+ * @param entry
+ * @returns {Promise<Boolean>} Returns true if a new entry was added, false if an existing entry was updated.
+ */
+export async function addOrUpdateHistory(entry: {
   id: string;
   url: string;
-  lastSearched: string
-}): Promise<void> {
+}): Promise<Boolean> {
   const history = await getAllHistory();
   const index = history.findIndex((item) => item.id === entry.id);
 
-  if (index >= 0) {
-    const existing = history[index];
-    existing.lastSearched = entry.lastSearched;
-    existing.previousSearches.push(entry.lastSearched);
-    existing.favorite = entry.favorite ?? existing.favorite;
-    existing.name = entry.name || existing.name;
-  } else {
+  const isNewEntry = index < 0;
+
+  if (isNewEntry) {
     history.push({
       id: entry.id,
-      name: entry.name || entry.id,
       url: entry.url,
-      lastSearched: entry.lastSearched,
-      previousSearches: [entry.lastSearched],
-      favorite: entry.favorite ?? false
+      lastSearched: new Date().toISOString(),
+      previousSearches: []
     });
+  } else {
+    const existing = history[index];
+    existing.previousSearches.push(existing.lastSearched);
+    existing.lastSearched = new Date().toISOString();
   }
 
-  await new Promise<void>((resolve) => {
-    storage.set({ [STORAGE_KEY]: history }, () => resolve());
+  await storage.set({ [STORAGE_KEY]: history });
+  notifySearchHistoryChangedListener(history);
 
-    notifySearchHistoryChangedListener(history);
-  });
+  return isNewEntry;
 }
 
 export async function deleteHistoryById(id: string): Promise<void> {
@@ -123,7 +122,13 @@ export async function deleteHistoryById(id: string): Promise<void> {
   notifySearchHistoryChangedListener(updated);
 }
 
+export async function isExistingHistory(id: string): Promise<boolean> {
+  const history = await getAllHistory();
+  return history.some(entry => entry.id === id);
+}
+
 export async function clearHistory(): Promise<void> {
   await storage.remove(STORAGE_KEY);
+
   notifySearchHistoryChangedListener([]);
 }
