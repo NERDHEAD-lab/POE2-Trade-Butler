@@ -265,3 +265,24 @@ input:checked + .slider {
 input:checked + .slider:before {
     transform: translateX(14px);
 }
+
+/* Folder tree */
+.favorite-folder-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.favorite-folder-list li {
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.favorite-folder-list li:hover {
+    background-color: #333;
+}
+
+/*span selected */
+.favorite-folder-list span.selected {
+    background-color: #555;
+    color: white;
+}
