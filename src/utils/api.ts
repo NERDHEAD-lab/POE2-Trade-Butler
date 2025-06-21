@@ -104,6 +104,7 @@ interface ModalOptions {
   cancel?: string;
   onConfirmListener?: ButtonListener;
   onCancelListener?: ButtonListener;
+  onOverlayClickListener?: (overlay: HTMLDivElement) => Promise<boolean>;
   etcButtons?: {
     name: string;
     listener: ButtonListener;
@@ -118,6 +119,7 @@ export function showModal(options: ModalOptions): void {
     cancel = '취소',
     onConfirmListener,
     onCancelListener,
+    onOverlayClickListener,
     etcButtons = [],
     hideCancel = false
   } = options;
@@ -135,6 +137,18 @@ export function showModal(options: ModalOptions): void {
     justifyContent: 'center',
     zIndex: '10001'
   });
+
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
+      if (onOverlayClickListener) {
+        onOverlayClickListener(overlay).then(close => {
+          if (close) overlay.remove();
+        });
+      } else {
+        overlay.remove();
+      }
+    }
+  };
 
   const modal = document.createElement('div');
   modal.className = 'poe2-modal';

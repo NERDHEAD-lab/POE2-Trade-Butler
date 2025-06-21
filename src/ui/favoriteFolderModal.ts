@@ -56,6 +56,13 @@ export async function openCreateFavoriteFolderModal(entry: SearchHistoryEntity):
       return true;
     },
 
+    onOverlayClickListener: async (overlay): Promise<boolean> => {
+      showToast('즐겨찾기 등록 취소됨.', '#999');
+      storage.removeFavoriteFolderChangedListener(ON_OPEN_FAVORITE_MODAL);
+      overlay.remove();
+      return true;
+    },
+
     etcButtons: [
       {
         name: '📁 새 폴더',
