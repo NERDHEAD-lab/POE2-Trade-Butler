@@ -113,10 +113,28 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
   // li.title = entry.metadata;
   nameSpan.textContent = entry.id;
   //    existing.lastSearched = new Date().toISOString();
-  lastSearchedSpan.textContent = `Last searched: ${new Date(entry.lastSearched).toLocaleString()}`;
+  // YYYY.MM.DD HH:mm 형식으로 표시
+  lastSearchedSpan.textContent = `Last searched: ${new Date(entry.lastSearched).toLocaleString('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  })}`;
+
   totalSearchesSpan.textContent = `Total searches: ${entry.previousSearches.length + 1}`;
   if (entry.previousSearches.length > 0) {
-    totalSearchesSpan.title = `Previous searches: ${entry.previousSearches.join('\n')}`;
+    totalSearchesSpan.title = `Previous searches: ${entry.previousSearches
+      .map(search => new Date(search).toLocaleString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }))
+      .join('\n')}`;
   }
 
   storage.isFavoriteContains(entry.id)

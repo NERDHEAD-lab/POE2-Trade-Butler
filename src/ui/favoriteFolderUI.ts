@@ -1,5 +1,4 @@
 import * as storage from '../utils/storage';
-import { FavoriteFolder, FavoriteFolderRoot } from '../utils/storage';
 import { showToast } from '../utils/api';
 
 /**

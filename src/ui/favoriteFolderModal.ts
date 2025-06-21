@@ -9,10 +9,8 @@ export async function openCreateFavoriteFolderModal(entry: SearchHistoryEntity):
   const wrapper = document.createElement('div');
 
   const nameInput = document.createElement('input');
-  nameInput.id = 'favorite-name';
+  nameInput.className = 'favorite-name';
   nameInput.type = 'text';
-  nameInput.style.width = '100%';
-  nameInput.style.marginBottom = '10px';
   nameInput.placeholder = `항목 이름 (기본값: ${entry.id})`;
 
 

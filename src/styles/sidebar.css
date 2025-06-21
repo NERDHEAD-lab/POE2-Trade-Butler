@@ -196,6 +196,11 @@
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+.history-item .last-searched,
+.history-item .total-searches {
+    font-size: 12px;
+}
+
 .history-info {
     flex: 1;
     padding-left: 10px;
@@ -267,6 +272,28 @@ input:checked + .slider:before {
 }
 
 /* Folder tree */
+.favorite-name {
+    width: 100%;
+    min-width: 300px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    background-color: #1e1e1e;
+    color: #ccc;
+    padding: 8px 10px;
+    border: 1px solid #3c3c3c;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: inherit;
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+/* favorite-name에 텍스트가 있을때 */
+.favorite-name:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
 .favorite-folder-list {
     list-style: none;
     padding-left: 0;
