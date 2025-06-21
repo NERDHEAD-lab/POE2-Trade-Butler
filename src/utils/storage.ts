@@ -1,5 +1,6 @@
 import { showToast } from './api';
 
+// TODO: 종류 별로 별도 Repository 클래스로 분리 필요
 /********************* MockSafety Check *********************/
 const isChromeAvailable = typeof chrome !== 'undefined' && chrome.storage?.local;
 
@@ -52,7 +53,7 @@ if (!isChromeAvailable) {
   showToast('Chrome storage API not available, using mock storage');
 }
 
-const STORAGE_KEY = 'searchHistory';
+const STORAGE_SEARCH_HISTORY_KEY = 'searchHistory';
 
 export interface SearchHistoryEntity {
   id: string;
@@ -62,11 +63,14 @@ export interface SearchHistoryEntity {
 }
 
 type SearchHistoryChangedListener = (newEntries: SearchHistoryEntity[]) => void;
+const searchHistoryChangedListener = new Map<string, SearchHistoryChangedListener>();
 
-const searchHistoryChangedListener: SearchHistoryChangedListener[] = [];
+export function addSearchHistoryChangedListener(key: string, fn: SearchHistoryChangedListener): void {
+  searchHistoryChangedListener.set(key, fn);
+}
 
-export function addSearchHistoryChangedListener(fn: SearchHistoryChangedListener) {
-  searchHistoryChangedListener.push(fn);
+export function removeSearchHistoryChangedListener(key: string): void {
+  searchHistoryChangedListener.delete(key);
 }
 
 function notifySearchHistoryChangedListener(newEntries: SearchHistoryEntity[]) {
@@ -75,8 +79,8 @@ function notifySearchHistoryChangedListener(newEntries: SearchHistoryEntity[]) {
 
 export async function getAllHistory(): Promise<SearchHistoryEntity[]> {
   return new Promise((resolve) => {
-    storage.get([STORAGE_KEY], (storage) => {
-      resolve(storage[STORAGE_KEY] || []);
+    storage.get([STORAGE_SEARCH_HISTORY_KEY], (storage) => {
+      resolve(storage[STORAGE_SEARCH_HISTORY_KEY] || []);
     });
   });
 }
@@ -108,7 +112,7 @@ export async function addOrUpdateHistory(entry: {
     existing.lastSearched = new Date().toISOString();
   }
 
-  await storage.set({ [STORAGE_KEY]: history });
+  await storage.set({ [STORAGE_SEARCH_HISTORY_KEY]: history });
   notifySearchHistoryChangedListener(history);
 
   return isNewEntry;
@@ -117,7 +121,7 @@ export async function addOrUpdateHistory(entry: {
 export async function deleteHistoryById(id: string): Promise<void> {
   const history = await getAllHistory();
   const updated = history.filter(entry => entry.id !== id);
-  await storage.set({ [STORAGE_KEY]: updated });
+  await storage.set({ [STORAGE_SEARCH_HISTORY_KEY]: updated });
 
   notifySearchHistoryChangedListener(updated);
 }
@@ -128,7 +132,6 @@ export async function isExistingHistory(id: string): Promise<boolean> {
 }
 
 export async function clearHistory(): Promise<void> {
-  await storage.remove(STORAGE_KEY);
+  await storage.remove(STORAGE_SEARCH_HISTORY_KEY);
 
   notifySearchHistoryChangedListener([]);
-}
