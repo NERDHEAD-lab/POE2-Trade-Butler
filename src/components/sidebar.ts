@@ -92,6 +92,8 @@ export function renderSidebar(container: HTMLElement): void {
   storage.addSearchHistoryChangedListener((newEntries) => {
     loadHistoryList(Promise.resolve(newEntries));
   });
+
+  observeUrlChange();
 }
 
 //history-name-input -> placeHolder=${entry.id}
@@ -161,3 +163,33 @@ function loadHistoryList(historyList: Promise<storage.SearchHistoryEntity[]>): v
     });
   });
 }
+
+function observeUrlChange() {
+  new MutationObserver(() => {
+    handleUrlChange(window.location.href).catch(console.debug);
+  }).observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+}
+
+let latestSearchUrl = window.location.href;
+async function handleUrlChange(currentUrl: string) {
+  try {
+    const entity = api.getSearchHistoryFromUrl(currentUrl);
+    const exists = await storage.isExistingHistory(entity.id);
+
+    if (exists && latestSearchUrl === currentUrl) {
+      console.info(`Ignoring URL change, it's just refreshing: ${currentUrl}`);
+      return;
+    }
+
+    await storage.addOrUpdateHistory(entity);
+    console.log(`Search history updated for URL: ${currentUrl}`);
+    latestSearchUrl = currentUrl;
+
+  } catch (err) {
+    console.info(`Ignoring URL change, not a valid search URL: ${currentUrl}`);
+  }
+}
+
