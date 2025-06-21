@@ -1,6 +1,6 @@
 #poe2-sidebar {
     position: fixed;
-    top: 80px;
+    top: 0;
     bottom: 20px;
     right: 0;
     width: 300px;
@@ -64,8 +64,9 @@
 }
 
 .sidebar-header-title {
+    /*bold*/
     font-family: 'Cinzel', serif;
-    font-weight: 700;
+    font-weight: 900;
     font-size: 20px;
     letter-spacing: 1px;
     color: #d7c185;
@@ -169,6 +170,15 @@
 
 .tab-content.active {
     display: block;
+}
+
+#history-list {
+    max-height: calc(100vh - 180px); /* 최대 높이 설정 TODO: 정밀하게 */
+    overflow-y: auto;
+    margin-top: 10px;
+    padding-left: 0;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
 }
 
 /* History item */
