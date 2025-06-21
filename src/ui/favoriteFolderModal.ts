@@ -27,6 +27,7 @@ export async function openCreateFavoriteFolderModal(entry: SearchHistoryEntity):
 
   // 2. 모달 실행
   showModal({
+    title: '즐겨찾기 폴더에 추가',
     div: wrapper,
     confirm: '저장',
     cancel: '취소',

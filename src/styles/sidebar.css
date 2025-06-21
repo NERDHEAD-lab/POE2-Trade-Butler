@@ -15,7 +15,6 @@
     will-change: transform;
 }
 
-
 #poe2-sidebar.collapsed {
     transform: translateX(100%);
 }
@@ -312,4 +311,70 @@ input:checked + .slider:before {
 .favorite-folder-list span.selected {
     background-color: #555;
     color: white;
+}
+
+.poe2-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+}
+.poe2-modal {
+    background-color: rgba(34,34,34, 0.9);
+    color: #fff;
+    padding: 10px 20px 20px;
+    border-radius: 8px;
+    width: 450px;
+    max-width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    text-align: center;
+}
+
+
+.poe2-modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.poe2-modal-title {
+    background-color: rgba(0, 0, 0, 0.5);
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #d7c185;
+    text-shadow:
+            1px 1px 0 #000,
+            2px 2px 2px #000,
+            0 0 5px #a97c50;
+}
+
+
+#poe2-sidebar * {
+    user-select: none;
+}
+
+#poe2-sidebar textarea,
+#poe2-sidebar input[type="text"],
+#poe2-sidebar input[type="search"] {
+    user-select: text;
+}
+
+.poe2-modal * {
+    user-select: none;
+}
+
+.poe2-modal textarea,
+.poe2-modal input[type="text"],
+.poe2-modal input[type="search"] {
+    user-select: text;
 }

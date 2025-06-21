@@ -28,7 +28,8 @@ export function generate(
     });
 
     const icon = document.createElement('span');
-    icon.textContent = expanded ? '📁' : '📂';
+    icon.textContent = expanded ? '📂' : '📁';
+    icon.dataset.expanded = String(expanded);
     icon.style.cursor = 'pointer';
     icon.style.marginRight = '4px';
 
@@ -72,7 +73,8 @@ export function generate(
 
     const toggleChildrenVisibility = () => {
       expanded = !expanded;
-      icon.textContent = expanded ? '📁' : '📂';
+      icon.dataset.expanded = String(expanded);
+      icon.textContent = expanded ? '📂' : '📁';
       for (const el of childElements) {
         el.style.display = expanded ? 'list-item' : 'none';
       }
@@ -83,7 +85,12 @@ export function generate(
       toggleChildrenVisibility();
     });
 
-    nameSpan.addEventListener('click', () => {
+    li.addEventListener('click', () => {
+      const expanded = icon.dataset.expanded === 'true';
+      if (!expanded) {
+        toggleChildrenVisibility();
+      }
+
       const selected = ul.querySelector('li > span.folder-name.selected');
       if (selected) selected.classList.remove('selected');
       nameSpan.classList.add('selected');
@@ -102,15 +109,40 @@ export function generate(
 
   root.then((data) => {
     const rootLi = document.createElement('li');
+    const icon = document.createElement('span');
+    const span = document.createElement('span');
     rootLi.className = 'folder-item';
     rootLi.dataset.path = '/';
-    rootLi.textContent = '📁 /';
+    // rootLi.textContent = '📁 /';
     Object.assign(rootLi.style, {
       marginLeft: '0px',
       listStyleType: 'none',
       textAlign: 'left',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      display: 'list-item',
     });
+
+    icon.textContent = '📁';
+    icon.style.cursor = 'pointer';
+    icon.style.marginRight = '4px';
+    rootLi.appendChild(icon);
+
+    span.textContent = '/';
+    span.className = 'folder-name';
+    span.dataset.path = '/';
+    rootLi.appendChild(span);
+
+    rootLi.addEventListener('click', () => {
+      // 폴더가 닫혀있다면 열기
+      const selected = ul.querySelector('li > span.folder-name.selected');
+      if (selected) selected.classList.remove('selected');
+      rootLi.querySelector('span.folder-name')?.classList.add('selected');
+      if (process.env.NODE_ENV === 'development') {
+        showToast(`폴더 선택됨: /`, '#0f0');
+      }
+    });
+
     ul.appendChild(rootLi);
 
     if (data.folders) {

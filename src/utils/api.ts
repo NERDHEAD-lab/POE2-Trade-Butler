@@ -99,6 +99,7 @@ export function showToast(message: string, color = '#fff', duration = 3000) {
 type ButtonListener = (modal: HTMLDivElement) => Promise<boolean>;
 
 interface ModalOptions {
+  title?: string;
   div: HTMLDivElement;
   confirm?: string;
   cancel?: string;
@@ -114,6 +115,7 @@ interface ModalOptions {
 
 export function showModal(options: ModalOptions): void {
   const {
+    title = null,
     div,
     confirm = '확인',
     cancel = '취소',
@@ -125,18 +127,7 @@ export function showModal(options: ModalOptions): void {
   } = options;
 
   const overlay = document.createElement('div');
-  Object.assign(overlay.style, {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: '10001'
-  });
+  overlay.className = 'poe2-modal-overlay';
 
   overlay.onclick = (e) => {
     if (e.target === overlay) {
@@ -152,27 +143,18 @@ export function showModal(options: ModalOptions): void {
 
   const modal = document.createElement('div');
   modal.className = 'poe2-modal';
-  Object.assign(modal.style, {
-    backgroundColor: 'rgba(34,34,34, 0.9)',
-    color: '#fff',
-    padding: '20px',
-    borderRadius: '8px',
-    width: '450px',
-    maxWidth: '90%',
-    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4)',
-    textAlign: 'center'
-  });
 
+  if (title !== null && title !== '') {
+    const titleElement = document.createElement('h2');
+    titleElement.textContent = title;
+    titleElement.className = 'poe2-modal-title';
+
+    modal.appendChild(titleElement);
+  }
   modal.appendChild(div);
 
   const btnWrapper = document.createElement('div');
-  Object.assign(btnWrapper.style, {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    gap: '10px',
-    marginTop: '20px'
-  });
+  btnWrapper.className = 'poe2-modal-buttons';
 
   // 왼쪽 버튼 컨테이너 (보조 버튼용)
   const leftBtnGroup = document.createElement('div');
