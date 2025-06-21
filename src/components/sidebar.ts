@@ -1,10 +1,11 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
 import * as storage from '../utils/storage';
-import sources = chrome.devtools.panels.sources;
+import { openCreateFavoriteFolderModal } from '../ui/favoriteFolderModal';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
+const ON_SEARCH_HISTORY_CHANGED = 'onSearchHistoryChanged';
 
 const sidebarHtml = `
 <div id="sidebar-header">
@@ -118,6 +119,16 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
     totalSearchesSpan.title = `Previous searches: ${entry.previousSearches.join('\n')}`;
   }
 
+  storage.isFavoriteContains(entry.id)
+    .then(isFavorite => {
+      if (isFavorite) {
+        favoriteStar.classList.add('active');
+      }
+    })
+    .catch(error => {
+      console.error('Error checking favorite status:', error);
+    });
+
   // history-item 클릭 시
   li.addEventListener('click', () => {
     window.location.href = api.getUrlFromSearchHistory(entry);
@@ -127,11 +138,16 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
     e.stopPropagation();
     const isFavorite = favoriteStar.classList.contains('active');
     if (isFavorite) {
-      return;
+      //이미 즐겨찾기 인 경우 추가로 등록 할 지 확인
+      if (!confirm('이미 즐겨찾기에 추가된 항목입니다. 다시 추가하시겠습니까?')) {
+        return;
+      }
     }
 
     favoriteStar.classList.add('active');
-    //TODO : 즐겨찾기 기능 구현
+    openCreateFavoriteFolderModal(entry).catch((error) => {
+      console.error('Error opening favorite modal:', error);
+    });
   });
 
   removeButton.addEventListener('click', (e) => {
