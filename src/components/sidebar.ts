@@ -52,6 +52,10 @@ export function renderSidebar(container: HTMLElement): void {
   sidebar.id = POE2_SIDEBAR_ID;
   sidebar.innerHTML = sidebarHtml;
   container.appendChild(sidebar);
+  if (api.isKoreanServer()) {
+    //poe2-sidebar top 80px 설정
+    sidebar.style.top = '80px';
+  }
 
   const toggleButton = sidebar.querySelector<HTMLButtonElement>(`#poe2-sidebar-toggle-button`);
   let isOpen = true;
