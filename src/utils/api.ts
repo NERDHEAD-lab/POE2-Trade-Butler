@@ -139,11 +139,11 @@ export function showModal(options: ModalOptions): void {
   const modal = document.createElement('div');
   modal.className = 'poe2-modal';
   Object.assign(modal.style, {
-    backgroundColor: '#222',
+    backgroundColor: 'rgba(34,34,34, 0.9)',
     color: '#fff',
     padding: '20px',
     borderRadius: '8px',
-    width: '300px',
+    width: '450px',
     maxWidth: '90%',
     boxShadow: '0 4px 10px rgba(0, 0, 0, 0.4)',
     textAlign: 'center'
@@ -155,47 +155,92 @@ export function showModal(options: ModalOptions): void {
   Object.assign(btnWrapper.style, {
     display: 'flex',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
     gap: '10px',
     marginTop: '20px'
   });
 
-  function makeButton(label: string, listener?: ButtonListener) {
+  // 왼쪽 버튼 컨테이너 (보조 버튼용)
+  const leftBtnGroup = document.createElement('div');
+  leftBtnGroup.style.display = 'flex';
+  leftBtnGroup.style.gap = '8px';
+
+  // 오른쪽 버튼 컨테이너 (확인/취소용)
+  const rightBtnGroup = document.createElement('div');
+  rightBtnGroup.style.display = 'flex';
+  rightBtnGroup.style.gap = '8px';
+
+  function makeButton(
+    label: string,
+    listener?: ButtonListener,
+    styleType: 'normal' | 'confirm' | 'cancel' = 'normal'
+  ) {
     const btn = document.createElement('button');
     btn.textContent = label;
-    Object.assign(btn.style, {
-      flex: '1',
+
+    const baseStyle = {
       padding: '6px 12px',
-      backgroundColor: '#444',
-      color: '#fff',
-      border: 'none',
+      fontSize: '14px',
       borderRadius: '4px',
-      cursor: 'pointer'
-    });
+      border: '1px solid transparent',
+      backgroundColor: 'transparent',
+      color: '#ccc',
+      cursor: 'pointer',
+      whiteSpace: 'nowrap',
+      lineHeight: '1.4',
+      fontFamily: 'inherit'
+    };
+
+    const styleMap = {
+      normal: {
+        backgroundColor: '#1a1a1a',
+        color: '#ddd',
+        border: '1px solid #3a3a3a'
+      },
+      confirm: {
+        backgroundColor: '#b1862c',
+        color: '#fff',
+        border: '1px solid #d4b060'
+      },
+      cancel: {
+        backgroundColor: '#2a2a2a',
+        color: '#ccc',
+        border: '1px solid #555'
+      }
+    };
+
+    Object.assign(btn.style, baseStyle, styleMap[styleType]);
+
     btn.onclick = () => {
-      // listener가 없을 경우 or listener가 true를 반환할 경우 모달을 닫는다.
       if (!listener) {
         overlay.remove();
       } else {
-        listener(modal).then((close) => {
-          if (close) {
-            overlay.remove();
-          }
-        });
+        const result = listener(modal);
+        if (result instanceof Promise) {
+          result.then(close => { if (close) overlay.remove(); });
+        } else if (result) {
+          overlay.remove();
+        }
       }
     };
+
     return btn;
   }
 
-  btnWrapper.appendChild(makeButton(confirm, onConfirmListener));
-  if (!hideCancel) {
-    btnWrapper.appendChild(makeButton(cancel, onCancelListener));
-  }
-
   for (const btn of etcButtons) {
-    btnWrapper.appendChild(
-      makeButton(btn.name, btn.listener) // 기본 false
+    leftBtnGroup.appendChild(
+      makeButton(btn.name, btn.listener, 'normal') // 예: 폴더 삭제 같은 위험 행동
     );
   }
+
+// 오른쪽 버튼들
+  rightBtnGroup.appendChild(makeButton(confirm, onConfirmListener, 'confirm'));
+  if (!hideCancel) {
+    rightBtnGroup.appendChild(makeButton(cancel, onCancelListener, 'cancel'));
+  }
+
+  btnWrapper.appendChild(leftBtnGroup);
+  btnWrapper.appendChild(rightBtnGroup);
 
   modal.appendChild(btnWrapper);
   overlay.appendChild(modal);
