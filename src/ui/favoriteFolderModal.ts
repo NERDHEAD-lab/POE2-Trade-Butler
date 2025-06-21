@@ -79,8 +79,7 @@ export async function openCreateFavoriteFolderModal(entry: SearchHistoryEntity):
 
           if (await storage.createFavoriteFolder(path, name)) {
             showToast(`폴더 "${name}"이 생성되었습니다.`);
-            //해당 폴더 클릭
-            folderUI.selectFolderByPath(folderElement, path + '/' + name);
+            folderUI.selectFolderByPath(folderElement, path ? `${path}/${name}` : name);
           } else {
             showToast(`폴더 "${name}" 생성 실패. 중복된 이름일 수 있습니다.`, '#f66');
           }
@@ -98,7 +97,7 @@ export async function openCreateFavoriteFolderModal(entry: SearchHistoryEntity):
           }
 
           if (await storage.hasAnyItemInPath(path)) {
-            if (!confirm(`폴더 "${path}"에 항목이 있습니다. 정말로 삭제하시겠습니까? 이 폴더 내의 모든 항목이 삭제됩니다.`)) {
+            if (!confirm(`폴더 "${path}" 하위 경로에 항목이 있습니다. 정말로 삭제하시겠습니까? 이 폴더 내의 모든 항목이 삭제됩니다.`)) {
               return false;
             }
           }
