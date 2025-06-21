@@ -79,7 +79,7 @@ test.createButton(
     storage.getFavoriteFolderRoot().then(
       (folder) => {
         const div = document.createElement('div');
-        const htmlUListElement = folderUI.generate(true, Promise.resolve(folder));
+        const htmlUListElement = folderUI.generate(Promise.resolve(folder));
         div.appendChild(htmlUListElement);
 
         showModal({

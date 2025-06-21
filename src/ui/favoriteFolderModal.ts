@@ -17,12 +17,12 @@ export async function openCreateFavoriteFolderModal(entry: SearchHistoryEntity):
 
 
   wrapper.appendChild(nameInput);
-  const folderElement = folderUI.generate(false);
+  const folderElement = folderUI.generate(storage.getFavoriteFolderRoot(), false);
   wrapper.appendChild(folderElement);
 
   storage.addFavoriteFolderChangedListener(ON_OPEN_FAVORITE_MODAL, (root) => {
     // 폴더 UI 업데이트
-    const ul = folderUI.generate(false, Promise.resolve(root));
+    const ul = folderUI.generate(Promise.resolve(root), false);
     folderElement.innerHTML = ''; // 기존 내용 제거
     folderElement.appendChild(ul);
   });
