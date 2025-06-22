@@ -208,8 +208,15 @@ function observeUrlChange() {
 }
 
 let latestSearchUrl = window.location.href;
+let currentHandleUrl = '';
 
 async function handleUrlChange(currentUrl: string) {
+  if (currentHandleUrl === currentUrl) {
+    console.debug('Already handling URL change, skipping:', currentUrl);
+    return;
+  }
+  currentHandleUrl = currentUrl;
+
   try {
     const entity = api.getSearchHistoryFromUrl(currentUrl);
     const exists = await storage.isExistingHistory(entity.id);
@@ -225,5 +232,7 @@ async function handleUrlChange(currentUrl: string) {
 
   } catch (err) {
     console.info(`Ignoring URL change, not a valid search URL: ${currentUrl}`);
+  } finally {
+    currentHandleUrl = '';
   }
 }
