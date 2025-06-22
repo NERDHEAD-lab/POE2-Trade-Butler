@@ -2,6 +2,8 @@ import '../styles/sidebar.css';
 import * as api from '../utils/api';
 import * as storage from '../utils/storage';
 import { openCreateFavoriteFolderModal } from '../ui/favoriteFolderModal';
+import { TradePreviewInjector } from '../utils/tradePreviewInjector';
+import { tradePreviewData } from '../utils/tradePreviewInjector';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
@@ -199,6 +201,11 @@ function loadHistoryList(historyList: Promise<storage.SearchHistoryEntity[]>): v
 }
 
 function observeUrlChange() {
+  if (process.env.NODE_ENV === 'development') {
+    console.debug('disabled URL change observer in development mode');
+    return;
+  }
+
   new MutationObserver(() => {
     handleUrlChange(window.location.href).catch(console.debug);
   }).observe(document.body, {
@@ -227,12 +234,27 @@ async function handleUrlChange(currentUrl: string) {
     }
 
     await storage.addOrUpdateHistory(entity);
+
+    //generatePreviewInfo을 callbackValue로 전달
+    await storage.putIfAbsentEtc(
+      entity.id, 'previewInfo', () => generatePreviewInfo()
+    );
     console.log(`Search history updated for URL: ${currentUrl}`);
     latestSearchUrl = currentUrl;
 
   } catch (err) {
     console.info(`Ignoring URL change, not a valid search URL: ${currentUrl}`);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error handling URL change:', err);
+    }
   } finally {
     currentHandleUrl = '';
   }
+}
+
+export function generatePreviewInfo(): tradePreviewData {
+  const tradePreviewData = TradePreviewInjector.extractTradePreviewData();
+  console.log('Generated trade preview data:', tradePreviewData);
+
+  return tradePreviewData;
 }
