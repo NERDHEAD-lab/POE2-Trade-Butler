@@ -22,16 +22,47 @@ export interface tradePreviewData {
  * @param history SearchHistoryEntity
  */
 export class TradePreviewInjector {
-  private originalPanel = document.querySelector('#trade .search-panel') as HTMLDivElement;
-  private readonly backupPanel: HTMLDivElement | null = null;
+  private backupPanel: HTMLDivElement | null = null;
+
+  private get currentPanel(): HTMLDivElement {
+    return TradePreviewInjector.currentPanel;
+  }
+
+  private static get currentPanel(): HTMLDivElement {
+    return document.querySelector('#trade .search-panel') as HTMLDivElement;
+  }
 
   constructor() {
-    if (!this.originalPanel) {
+    if (!this.currentPanel) {
       console.error('Trade preview element not found. Make sure you are on the trade page.');
       throw new Error('Trade preview element not found');
     }
+  }
 
-    this.backupPanel = this.originalPanel.cloneNode(true) as HTMLDivElement;
+  public static waitWhileCurrentPanelExists(count: number = 20, interval: number = 100): Promise<void> {
+    if (process.env.NODE_ENV === 'development') {
+      return Promise.reject('Skipping waitWhileCurrentPanelExists in development mode');
+    }
+
+    //search-panel이 존재 할 때 까지 대기
+    return new Promise((resolve, reject) => {
+      const checkPanel = () => {
+        const panel = TradePreviewInjector.currentPanel;
+        if (panel || count <= 0) {
+          if (panel) {
+            console.info('Trade preview panel is now available.');
+            resolve();
+          } else {
+            console.warn('Trade preview panel not found after waiting.');
+            reject(new Error('Trade preview panel not found'));
+          }
+        } else {
+          count--;
+          setTimeout(checkPanel, interval);
+        }
+      };
+      checkPanel();
+    });
   }
 
   public static extractTradePreviewData(): tradePreviewData {
@@ -44,10 +75,45 @@ export class TradePreviewInjector {
     };
   }
 
-  public rollback(): void {
+  public applyTradePreviewData(data: tradePreviewData): void {
+    this.backupTradePreviewPanel();
+
+    console.log('Applying trade preview data:', data);
+    this.showTradePreviewPanelWhenClosed();
+
+    // 검색어 설정
+    this.setSearchLeftValue(data.searchLeft);
+
+    // 블루 필터 정보 설정
+    this.setAdvancedFilterInfo_Blue(data.advancedFilterInfo_Blue);
+
+    // 브라운 필터 정보 설정 (현재는 사용하지 않음)
+    // this.setAdvancedFilterInfo_Brown(data.advancedFilterInfo_Brown);
+  }
+
+  private backupTradePreviewPanel(): void {
+    if (!this.backupPanel) {
+      this.backupPanel = this.currentPanel.cloneNode(true) as HTMLDivElement;
+      console.info('Backup of trade preview panel created.');
+    } else {
+      console.warn('Backup of trade preview panel already exists.');
+    }
+  }
+
+  private showTradePreviewPanelWhenClosed(): void {
+    const showPanelBtn = document.querySelector('.search-panel .controls .toggle-search-btn') as HTMLButtonElement | null;
+    if (showPanelBtn?.querySelector('.chevron')?.classList.contains('collapsed')) {
+      showPanelBtn.click();
+      console.info('Trade preview panel was closed, now opened.');
+    }
+  }
+
+  public rollbackTradePreviewPanel(): void {
     if (this.backupPanel) {
-      this.originalPanel.replaceWith(this.backupPanel);
-      console.info('Trade preview rolled back to original panel.');
+      this.currentPanel.innerHTML = this.backupPanel.innerHTML;
+      console.info('Trade preview rolled back to original panel.', this.backupPanel);
+
+      this.backupPanel = null;
     } else {
       console.warn('No backup panel found to rollback.');
     }
@@ -58,7 +124,7 @@ export class TradePreviewInjector {
    * .searchPanel -> .search-bar -> .search-left -> input
    * @private
    */
-  private static getSearchLeftValue() : string {
+  private static getSearchLeftValue(): string {
     const searchLeft = document.querySelector('.search-bar .search-left input') as HTMLInputElement | null;
     if (!searchLeft || !searchLeft.value) {
       return '';
@@ -68,8 +134,9 @@ export class TradePreviewInjector {
   }
 
   private setSearchLeftValue(value: string): void {
-    const searchLeft = document.querySelector('.search-left input') as HTMLInputElement | null;
+    const searchLeft = document.querySelector('.search-bar .search-left input') as HTMLInputElement | null;
     if (!searchLeft) {
+      console.error('Search left input not found. Cannot set search value.');
       return;
     }
 
@@ -125,6 +192,10 @@ export class TradePreviewInjector {
       if (!group) continue;
 
       const inputs = group.querySelectorAll('input');
+      if (!inputs) {
+        console.warn(`No inputs found in filter group ${i}. Skipping...`, group, filterInfos[i]);
+        continue;
+      }
       filterInfos[i].inputs.forEach((value, index) => {
         if (inputs[index]) {
           (inputs[index] as HTMLInputElement).value = value;
