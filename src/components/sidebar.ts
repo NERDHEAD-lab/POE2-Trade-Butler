@@ -4,6 +4,7 @@ import * as storage from '../utils/storage';
 import { openCreateFavoriteFolderModal } from '../ui/favoriteFolderModal';
 import { showToast } from '../utils/api';
 import { PreviewPanelSnapshot, TradePreviewer } from '../utils/tradePreviewInjector';
+import * as folderUI from '../ui/favoriteFolderUI';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
@@ -247,7 +248,72 @@ function loadHistoryList(historyList: Promise<storage.SearchHistoryEntity[]>): v
 }
 
 function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void {
+  const wrapper = document.getElementById('favorites-list') as HTMLDivElement;
+  if (!wrapper) {
+    console.error('Could not find #favorites-list element');
+    return;
+  }
+
+  const onComplete = (ul: HTMLUListElement) => {
+    ul.querySelectorAll('.favorite-item')
+      .forEach(item => {
+        const li = item as HTMLLIElement;
+        const id = li.dataset.id;
+        if (!id) {
+          console.warn('Favorite item without ID:', li);
+          return;
+        }
+
+        favorites.then(root => {
+          //root 내부 folders도 재귀 검색 필요
+          const entry = findFavoriteItemById(root, id);
+
+          if (!entry) {
+            console.warn(`Favorite item not found in root: ${id}`);
+            return;
+          }
+          attachPreviewHoverEvents(li, entry);
+
+          li.addEventListener('click', () => {
+            window.location.href = api.getUrlFromSearchHistory(entry);
+          });
+        });
+      });
+
+  };
+
+  const folderElement = folderUI.generate(favorites, true, true, onComplete);
+  wrapper.innerHTML = ''; // Clear existing content
+  wrapper.appendChild(folderElement);
 }
+
+function findFavoriteItemById(root: storage.FavoriteFolderRoot, id: string): storage.FavoriteItem | undefined {
+  // 1. 루트의 items에서 먼저 찾음
+  const directMatch = root.items.find(item => item.id === id);
+  if (directMatch) return directMatch;
+
+  // 2. 폴더를 재귀 탐색
+  for (const folder of root.folders) {
+    const match = findItemInFolderById(folder, id);
+    if (match) return match;
+  }
+
+  return undefined;
+}
+
+function findItemInFolderById(folder: storage.FavoriteFolder, id: string): storage.FavoriteItem | undefined {
+  const item = folder.items?.find(i => i.id === id);
+  if (item) return item;
+
+  for (const subFolder of folder.folders || []) {
+    const match = findItemInFolderById(subFolder, id);
+    if (match) return match;
+  }
+
+  return undefined;
+}
+
+
 function observeUrlChange() {
   if (process.env.NODE_ENV === 'development') {
     console.debug('disabled URL change observer in development mode');
