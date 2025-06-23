@@ -24,7 +24,7 @@ sidebar.renderSidebar(document.body);
 test.createButton(
   'Clear History',
   () => {
-    storage.clearHistory().then(
+    storage.clearAllHistory().then(
       () => showToast('History cleared successfully!'),
       (error) => showToast(`Error clearing history: ${error.message}`)
     );

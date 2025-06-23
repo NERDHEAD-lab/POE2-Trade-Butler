@@ -135,6 +135,7 @@ export async function getAllHistory(): Promise<SearchHistoryEntity[]> {
 export async function addOrUpdateHistory(entry: {
   id: string;
   url: string;
+  etc?: Record<string, any>;
 }): Promise<Boolean> {
   const history = await getAllHistory();
   const index = history.findIndex((item) => item.id === entry.id);
@@ -147,7 +148,7 @@ export async function addOrUpdateHistory(entry: {
       url: entry.url,
       lastSearched: new Date().toISOString(),
       previousSearches: [],
-      etc: {}
+      etc: entry.etc || {}
     });
   } else {
     const existing = history[index];
@@ -175,8 +176,11 @@ export async function putIfAbsentEtc(id: string, key: string, callbackValue: () 
 
   if (!(key in entry.etc)) {
     try {
-      entry.etc[key] = callbackValue();
+      const callbackValueResult = callbackValue();
+      entry.etc[key] = (callbackValueResult instanceof Promise) ? await callbackValueResult : callbackValueResult;
       await storage.set({ [STORAGE_SEARCH_HISTORY_KEY]: history });
+
+      notifySearchHistoryChangedListener(history);
     } catch (error) {
       console.error(`Error setting etc.${key} for id ${id}:`, error);
       throw new Error(`Failed to set etc.${key} for id ${id}`);
@@ -208,7 +212,7 @@ export async function isExistingHistory(id: string): Promise<boolean> {
   return history.some(entry => entry.id === id);
 }
 
-export async function clearHistory(): Promise<void> {
+export async function clearAllHistory(): Promise<void> {
   await storage.remove(STORAGE_SEARCH_HISTORY_KEY);
 
   notifySearchHistoryChangedListener([]);
