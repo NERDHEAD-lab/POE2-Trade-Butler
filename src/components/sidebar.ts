@@ -254,18 +254,11 @@ async function handleUrlChange(currentUrl: string) {
       return;
     }
 
-    await TradePreviewer.extractCurrentPanel()
-      .then(previewInfo => {
-        storage.addOrUpdateHistory({
-          ...entity,
-          etc: {
-            previewInfo: previewInfo
-          }
-        });
-      })
-      .catch(error => {
-        console.error('Error extracting current panel:', error);
-        throw error;
+    await storage.addOrUpdateHistory(entity);
+    await storage.putIfAbsentEtc(
+      entity.id, 'previewInfo', () => {
+        console.log(`previewInfo not found for ${entity.id}, extracting current panel...`);
+        return TradePreviewer.extractCurrentPanel()
       });
 
     console.log(`Search history updated for URL: ${currentUrl}`);
