@@ -2,8 +2,7 @@ import '../styles/sidebar.css';
 import * as api from '../utils/api';
 import * as storage from '../utils/storage';
 import { openCreateFavoriteFolderModal } from '../ui/favoriteFolderModal';
-import { TradePreviewInjector } from '../utils/tradePreviewInjector';
-import { tradePreviewData } from '../utils/tradePreviewInjector';
+import { PreviewPanelSnapshot, TradePreviewer } from '../utils/tradePreviewInjector';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
@@ -149,6 +148,28 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
       console.error('Error checking favorite status:', error);
     });
 
+  TradePreviewer.waitWhileCurrentPanelExists()
+    .then(() => {
+      // history-item에 hover 시
+      li.addEventListener('mouseenter', () => {
+        li.classList.add('hovered');
+        const previewInfo = entry.etc?.previewInfo as PreviewPanelSnapshot;
+        if (!previewInfo) {
+          console.warn('No preview info found for entry:', entry.id);
+          return;
+        }
+        TradePreviewer.showAsPreviewPanel(previewInfo);
+      });
+      // hisory-item에서 hover 해제 시
+      li.addEventListener('mouseleave', () => {
+        li.classList.remove('hovered');
+        TradePreviewer.hidePreviewPanel();
+      });
+    })
+    .catch(error => {
+      console.error('Failed to wait for TradePreviewInjector:', error);
+    });
+
   // history-item 클릭 시
   li.addEventListener('click', () => {
     window.location.href = api.getUrlFromSearchHistory(entry);
@@ -233,12 +254,20 @@ async function handleUrlChange(currentUrl: string) {
       return;
     }
 
-    await storage.addOrUpdateHistory(entity);
+    await TradePreviewer.extractCurrentPanel()
+      .then(previewInfo => {
+        storage.addOrUpdateHistory({
+          ...entity,
+          etc: {
+            previewInfo: previewInfo
+          }
+        });
+      })
+      .catch(error => {
+        console.error('Error extracting current panel:', error);
+        throw error;
+      });
 
-    //generatePreviewInfo을 callbackValue로 전달
-    await storage.putIfAbsentEtc(
-      entity.id, 'previewInfo', () => generatePreviewInfo()
-    );
     console.log(`Search history updated for URL: ${currentUrl}`);
     latestSearchUrl = currentUrl;
 
@@ -250,11 +279,4 @@ async function handleUrlChange(currentUrl: string) {
   } finally {
     currentHandleUrl = '';
   }
-}
-
-export function generatePreviewInfo(): tradePreviewData {
-  const tradePreviewData = TradePreviewInjector.extractTradePreviewData();
-  console.log('Generated trade preview data:', tradePreviewData);
-
-  return tradePreviewData;
 }

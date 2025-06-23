@@ -154,7 +154,6 @@ export class TradePreviewer {
   }
 
 
-
   public static collapsePanel(): void {
     const btn = TradePreviewer.currentPanel?.querySelector('.controls .toggle-search-btn') as HTMLButtonElement | null;
     if (btn && !TradePreviewer.isPanelCollapsed()) {
