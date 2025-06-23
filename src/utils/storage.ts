@@ -382,3 +382,11 @@ export function getLatestTab(): LatestTab {
   return tab || 'history'; // 기본값은 'history'
 }
 
+export function setHistoryAutoAddEnabled(enabled: boolean): void {
+  localStorage.setItem('historyAutoAddEnabled', String(enabled));
+}
+
+export function isHistoryAutoAddEnabled(): boolean {
+  const value = localStorage.getItem('historyAutoAddEnabled');
+  return value !== null ? value === 'true' : true;
+}

@@ -5,6 +5,7 @@ import { openFavoriteFolderModal } from '../ui/favoriteFolderModal';
 import { showToast } from '../utils/api';
 import { PreviewPanelSnapshot, TradePreviewer } from '../utils/tradePreviewInjector';
 import * as folderUI from '../ui/favoriteFolderUI';
+import sources = chrome.devtools.panels.sources;
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
@@ -93,6 +94,14 @@ export function renderSidebar(container: HTMLElement): void {
         showToast('Failed to clear search history.', '#f00');
       });
     }
+  });
+
+  //history-switch history 자동 추가 활성/비활성화
+  const historySwitch = sidebar.querySelector<HTMLInputElement>('#history-switch');
+  historySwitch?.addEventListener('change', (e) => {
+    const isChecked = (e.target as HTMLInputElement).checked;
+    storage.setHistoryAutoAddEnabled(isChecked);
+    showToast(`History auto-add ${isChecked ? 'enabled' : 'disabled'}.`);
   });
 
   // sidebar 여닫기
@@ -320,6 +329,10 @@ function observeUrlChange() {
   }
 
   new MutationObserver(() => {
+    if (!storage.isHistoryAutoAddEnabled()) {
+      console.debug('History auto-add is disabled, skipping URL change handling');
+      return;
+    }
     handleUrlChange(window.location.href).catch(console.debug);
   }).observe(document.body, {
     childList: true,
