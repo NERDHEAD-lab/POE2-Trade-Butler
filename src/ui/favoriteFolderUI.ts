@@ -36,7 +36,7 @@ export function generate(
     icon.style.marginRight = '4px';
 
     const nameSpan = document.createElement('span');
-    nameSpan.textContent = folder.name;
+    nameSpan.textContent = expanded ? folder.name : `${folder.name} (${folder.items?.length || 0})`;
     nameSpan.dataset.path = path;
     nameSpan.classList.add('folder-name');
 
@@ -55,7 +55,7 @@ export function generate(
       }
     }
 
-    if (showItems && folder.items) {
+    if (folder.items) {
       for (const item of folder.items) {
         const itemLi = document.createElement('li');
         itemLi.className = 'favorite-item';
@@ -71,6 +71,10 @@ export function generate(
         itemSpan.textContent = `⭐ ${item.name || item.id}`;
         itemLi.appendChild(itemSpan);
         childElements.push(itemLi);
+
+        if (!showItems) {
+          itemLi.style.display = 'none';
+        }
       }
     }
 
@@ -81,6 +85,7 @@ export function generate(
       for (const el of childElements) {
         el.style.display = expanded ? 'list-item' : 'none';
       }
+      nameSpan.textContent = expanded ? folder.name : `${folder.name} (${childElements.length})`;
     };
 
     icon.addEventListener('click', (e) => {
@@ -157,7 +162,7 @@ export function generate(
       }
     }
 
-    if (showItems && data.items) {
+    if (data.items) {
       for (const item of data.items) {
         const itemLi = document.createElement('li');
         itemLi.className = 'favorite-item';
@@ -173,6 +178,10 @@ export function generate(
         itemSpan.textContent = `⭐ ${item.name || item.id}`;
         itemLi.appendChild(itemSpan);
         ul.appendChild(itemLi);
+
+        if (!showItems) {
+          itemLi.style.display = 'none';
+        }
       }
     }
 

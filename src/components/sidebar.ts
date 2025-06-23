@@ -1,7 +1,7 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
 import * as storage from '../utils/storage';
-import { openCreateFavoriteFolderModal } from '../ui/favoriteFolderModal';
+import { openFavoriteFolderModal } from '../ui/favoriteFolderModal';
 import { showToast } from '../utils/api';
 import { PreviewPanelSnapshot, TradePreviewer } from '../utils/tradePreviewInjector';
 import * as folderUI from '../ui/favoriteFolderUI';
@@ -212,7 +212,7 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
     }
 
     favoriteStar.classList.add('active');
-    openCreateFavoriteFolderModal(entry).catch((error) => {
+    openFavoriteFolderModal('create', entry).catch((error) => {
       console.error('Error opening favorite modal:', error);
     });
   });
@@ -279,7 +279,6 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
           });
         });
       });
-
   };
 
   const folderElement = folderUI.generate(favorites, true, true, onComplete);

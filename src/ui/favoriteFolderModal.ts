@@ -5,34 +5,33 @@ import { SearchHistoryEntity } from '../utils/storage';
 
 const ON_OPEN_FAVORITE_MODAL = 'openCreateFavoriteFolderModal';
 
-export async function openCreateFavoriteFolderModal(entry: SearchHistoryEntity): Promise<void> {
+export async function openFavoriteFolderModal(
+  type: 'create' | 'edit' = 'create',
+  entry?: SearchHistoryEntity,
+): Promise<void> {
   const wrapper = document.createElement('div');
+  const title = (() => {
+    switch (type) {
+      case 'create': return '즐겨찾기 폴더에 추가';
+      case 'edit': return '즐겨찾기 폴더 편집';
+      default: throw new Error(`Unknown type: ${type}`);
+    }
+  })();
+  let onConfirmListener = async () => true;
 
-  const nameInput = document.createElement('input');
-  nameInput.className = 'favorite-name';
-  nameInput.type = 'text';
-  nameInput.placeholder = `항목 이름 (기본값: ${entry.id})`;
+  if (type === 'create') {
+    if (!entry) {
+      console.error('즐겨찾기 추가를 위한 항목이 제공되지 않았습니다.');
+      showToast('즐겨찾기 추가를 위한 항목이 제공되지 않았습니다.', '#f66');
+      return;
+    }
+    const nameInput = document.createElement('input');
+    nameInput.className = 'favorite-name';
+    nameInput.type = 'text';
+    nameInput.placeholder = `항목 이름 (기본값: ${entry.id})`;
+    wrapper.appendChild(nameInput);
 
-
-  wrapper.appendChild(nameInput);
-  const folderElement = folderUI.generate(storage.getFavoriteFolderRoot(), false);
-  wrapper.appendChild(folderElement);
-
-  storage.addFavoriteFolderChangedListener(ON_OPEN_FAVORITE_MODAL, (root) => {
-    // 폴더 UI 업데이트
-    const ul = folderUI.generate(Promise.resolve(root), false);
-    folderElement.innerHTML = ''; // 기존 내용 제거
-    folderElement.appendChild(ul);
-  });
-
-  // 2. 모달 실행
-  showModal({
-    title: '즐겨찾기 폴더에 추가',
-    div: wrapper,
-    confirm: '저장',
-    cancel: '취소',
-
-    onConfirmListener: async (): Promise<boolean> => {
+    onConfirmListener = async (): Promise<boolean> => {
       const name = nameInput.value.trim();
       const path = folderUI.getSelectedFolderPath(folderElement);
 
@@ -51,18 +50,35 @@ export async function openCreateFavoriteFolderModal(entry: SearchHistoryEntity):
       showToast(`즐겨찾기에 추가되었습니다.`);
       storage.removeFavoriteFolderChangedListener(ON_OPEN_FAVORITE_MODAL);
       return true;
-    },
+    };
+  }
+
+  const folderElement = folderUI.generate(storage.getFavoriteFolderRoot(), false);
+  wrapper.appendChild(folderElement);
+
+  storage.addFavoriteFolderChangedListener(ON_OPEN_FAVORITE_MODAL, (root) => {
+    // 폴더 UI 업데이트
+    const ul = folderUI.generate(Promise.resolve(root), false);
+    folderElement.innerHTML = ''; // 기존 내용 제거
+    folderElement.appendChild(ul);
+  });
+
+  // 2. 모달 실행
+  showModal({
+    title: title,
+    div: wrapper,
+    confirm: '저장',
+    cancel: '취소',
+
+    onConfirmListener: onConfirmListener,
 
     onCancelListener: async (): Promise<boolean> => {
-      showToast('즐겨찾기 등록 취소됨.', '#999');
       storage.removeFavoriteFolderChangedListener(ON_OPEN_FAVORITE_MODAL);
       return true;
     },
 
     onOverlayClickListener: async (overlay): Promise<boolean> => {
-      showToast('즐겨찾기 등록 취소됨.', '#999');
       storage.removeFavoriteFolderChangedListener(ON_OPEN_FAVORITE_MODAL);
-      overlay.remove();
       return true;
     },
 
