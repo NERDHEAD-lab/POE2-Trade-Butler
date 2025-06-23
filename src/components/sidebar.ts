@@ -2,6 +2,7 @@ import '../styles/sidebar.css';
 import * as api from '../utils/api';
 import * as storage from '../utils/storage';
 import { openCreateFavoriteFolderModal } from '../ui/favoriteFolderModal';
+import { showToast } from '../utils/api';
 import { PreviewPanelSnapshot, TradePreviewer } from '../utils/tradePreviewInjector';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
