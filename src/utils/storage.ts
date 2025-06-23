@@ -371,3 +371,14 @@ export async function flushFavoriteFolder(): Promise<void> {
   showToast('즐겨찾기 폴더가 초기화되었습니다.', '#0f0');
 }
 
+export type LatestTab = 'history' | 'favorites';
+
+export function setLatestTab(dataTab: LatestTab): void {
+  localStorage.setItem('latestTab', dataTab);
+}
+
+export function getLatestTab(): LatestTab {
+  const tab = localStorage.getItem('latestTab') as LatestTab | null;
+  return tab || 'history'; // 기본값은 'history'
+}
+

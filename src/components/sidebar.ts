@@ -8,6 +8,7 @@ import { PreviewPanelSnapshot, TradePreviewer } from '../utils/tradePreviewInjec
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
 const ON_SEARCH_HISTORY_CHANGED = 'onSearchHistoryChanged';
+const ON_FAVORITE_FOLDER_CHANGED = 'onFavoriteFolderChanged';
 
 const sidebarHtml = `
 <div id="sidebar-header">
@@ -37,7 +38,7 @@ const sidebarHtml = `
       <span>Favorites</span>
       <button id="add-favorite">Add Current page</button>
     </h3>
-    <ul id="favorites-list"></ul>
+    <div id="favorites-list"></div>
   </div>
 </div>
 
@@ -105,9 +106,34 @@ export function renderSidebar(container: HTMLElement): void {
   });
 
   loadHistoryList(storage.getAllHistory());
+  loadFavoritesList(storage.getFavoriteFolderRoot());
   storage.addSearchHistoryChangedListener(ON_SEARCH_HISTORY_CHANGED, (newEntries) => {
     loadHistoryList(Promise.resolve(newEntries));
   });
+  storage.addFavoriteFolderChangedListener(ON_FAVORITE_FOLDER_CHANGED, (root) => {
+    loadFavoritesList(Promise.resolve(root));
+  });
+
+  // 탭 전환 이벤트
+  const tabs = sidebar.querySelectorAll('.menu-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      const contents = sidebar.querySelectorAll('.tab-content');
+      contents.forEach(c => c.classList.remove('active'));
+
+      tab.classList.add('active');
+      const activeTab = tab.getAttribute('data-tab') as storage.LatestTab;
+      if (activeTab) {
+        sidebar.querySelector(`.tab-content#${activeTab}`)?.classList.add('active');
+        storage.setLatestTab(activeTab);
+      }
+    });
+  });
+
+  const tabName = storage.getLatestTab();
+  const tab = sidebar.querySelector(`.menu-tab[data-tab="${tabName}"]`) as HTMLButtonElement | null;
+  tab?.click();
 
   observeUrlChange();
 }
@@ -124,8 +150,6 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
   const removeButton = li.querySelector('.remove-history') as HTMLButtonElement;
   const favoriteStar = li.querySelector('.favorite-star') as HTMLSpanElement;
 
-  // TODO: 이력 저장 시 메타데이터를 저장할 수 있도록 수정
-  // li.title = entry.metadata;
   const previewInfo = entry.etc?.previewInfo as PreviewPanelSnapshot;
   if (previewInfo && previewInfo.searchKeyword) {
     nameSpan.textContent = previewInfo.searchKeyword;
@@ -241,6 +265,8 @@ function loadHistoryList(historyList: Promise<storage.SearchHistoryEntity[]>): v
   });
 }
 
+function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void {
+}
 function observeUrlChange() {
   if (process.env.NODE_ENV === 'development') {
     console.debug('disabled URL change observer in development mode');
@@ -278,7 +304,7 @@ async function handleUrlChange(currentUrl: string) {
     await storage.putIfAbsentEtc(
       entity.id, 'previewInfo', () => {
         console.log(`previewInfo not found for ${entity.id}, extracting current panel...`);
-        return TradePreviewer.extractCurrentPanel()
+        return TradePreviewer.extractCurrentPanel();
       });
 
     console.log(`Search history updated for URL: ${currentUrl}`);
