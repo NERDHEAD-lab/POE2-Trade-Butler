@@ -6,11 +6,13 @@ import { showToast } from '../utils/api';
  * @param root - A promise that resolves to the root favorite folder data.
  * @param showItems - Whether to show items in the folder. (default: true)
  * @param defaultExpanded - Whether the folders should be expanded by default. (default: true)
+ * @param onComplete - Callback function to execute when the list is generated. (default: empty function)
  */
 export function generate(
   root: Promise<storage.FavoriteFolderRoot> = storage.getFavoriteFolderRoot(),
   showItems: boolean = true,
-  defaultExpanded: boolean = true
+  defaultExpanded: boolean = true,
+  onComplete: (ul: HTMLUListElement) => void = () => {},
 ): HTMLUListElement {
   const ul = document.createElement('ul');
   ul.className = 'favorite-folder-list';
@@ -57,6 +59,7 @@ export function generate(
       for (const item of folder.items) {
         const itemLi = document.createElement('li');
         itemLi.className = 'favorite-item';
+        itemLi.dataset.id = item.id;
         itemLi.dataset.path = `${path}/${item.id}`;
         Object.assign(itemLi.style, {
           marginLeft: `${(path.split('/').length + 1) * 10}px`,
@@ -107,7 +110,7 @@ export function generate(
     return elements;
   }
 
-  root.then((data) => {
+  const setup = root.then((data) => {
     const rootLi = document.createElement('li');
     const icon = document.createElement('span');
     const span = document.createElement('span');
@@ -158,6 +161,7 @@ export function generate(
       for (const item of data.items) {
         const itemLi = document.createElement('li');
         itemLi.className = 'favorite-item';
+        itemLi.dataset.id = item.id;
         itemLi.dataset.path = `/${item.id}`;
         Object.assign(itemLi.style, {
           marginLeft: `10px`,
@@ -171,6 +175,8 @@ export function generate(
         ul.appendChild(itemLi);
       }
     }
+
+    onComplete(ul);
   });
 
   return ul;
