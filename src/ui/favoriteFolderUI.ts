@@ -70,11 +70,10 @@ export function generate(
         const itemSpan = document.createElement('span');
         itemSpan.textContent = `⭐ ${item.name || item.id}`;
         itemLi.appendChild(itemSpan);
-        childElements.push(itemLi);
-
         if (!showItems) {
           itemLi.style.display = 'none';
         }
+        childElements.push(itemLi);
       }
     }
 
@@ -82,10 +81,18 @@ export function generate(
       expanded = !expanded;
       icon.dataset.expanded = String(expanded);
       icon.textContent = expanded ? '📂' : '📁';
+      let count = childElements.length;
       for (const el of childElements) {
+        if (!showItems && el.classList.contains('favorite-item')) {
+          // showItems이 false인 경우, 즐겨찾기 아이템은 숨김
+          count--;
+          continue;
+        }
+
         el.style.display = expanded ? 'list-item' : 'none';
       }
-      nameSpan.textContent = expanded ? folder.name : `${folder.name} (${childElements.length})`;
+      // showItems가 false인 경우, 폴더 이름에 아이템 수를 표시하지 않음
+      nameSpan.textContent = (expanded || count === 0) ? folder.name : `${folder.name} (${count})`;
     };
 
     icon.addEventListener('click', (e) => {
@@ -108,6 +115,10 @@ export function generate(
     });
 
     for (const el of childElements) {
+      if (!showItems && el.classList.contains('favorite-item')) {
+        el.style.display = 'none';
+        continue;
+      }
       el.style.display = expanded ? 'list-item' : 'none';
     }
 
