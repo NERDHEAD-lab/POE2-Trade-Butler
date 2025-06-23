@@ -192,27 +192,8 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
       console.error('Error checking favorite status:', error);
     });
 
-  TradePreviewer.waitWhileCurrentPanelExists()
-    .then(() => {
-      // history-item에 hover 시
-      li.addEventListener('mouseenter', () => {
-        li.classList.add('hovered');
-        const previewInfo = entry.etc?.previewInfo as PreviewPanelSnapshot;
-        if (!previewInfo) {
-          console.warn('No preview info found for entry:', entry.id);
-          return;
-        }
-        TradePreviewer.showAsPreviewPanel(previewInfo);
-      });
-      // hisory-item에서 hover 해제 시
-      li.addEventListener('mouseleave', () => {
-        li.classList.remove('hovered');
-        TradePreviewer.hidePreviewPanel();
-      });
-    })
-    .catch(error => {
-      console.error('Failed to wait for TradePreviewInjector:', error);
-    });
+  // hover 시 미리보기 패널 표시
+  attachPreviewHoverEvents(li, entry);
 
   // history-item 클릭 시
   li.addEventListener('click', () => {
@@ -318,4 +299,32 @@ async function handleUrlChange(currentUrl: string) {
   } finally {
     currentHandleUrl = '';
   }
+}
+
+export function attachPreviewHoverEvents(
+  element: HTMLElement,
+  entry: {
+    id: string;
+    etc?: Record<string, any>
+  }): void {
+  TradePreviewer.waitWhileCurrentPanelExists()
+    .then(() => {
+      element.addEventListener('mouseenter', () => {
+        element.classList.add('hovered');
+        const previewInfo = entry.etc?.previewInfo as PreviewPanelSnapshot;
+        if (!previewInfo) {
+          console.warn('No preview info found for entry:', entry.id);
+          return;
+        }
+        TradePreviewer.showAsPreviewPanel(previewInfo);
+      });
+
+      element.addEventListener('mouseleave', () => {
+        element.classList.remove('hovered');
+        TradePreviewer.hidePreviewPanel();
+      });
+    })
+    .catch(error => {
+      console.error('Failed to wait for TradePreviewInjector:', error);
+    });
 }
