@@ -35,15 +35,16 @@ export function getUrlFromSearchHistory(
   history: SearchHistoryEntity,
   currentUrl: string = window.location.href
 ): string {
-  // const regex = /^https?:\/\/(www\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)(?:\/[^/]+)?\/?$/;
-  const regex = /^https?:\/\/(www\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)\/([^/]+)$/;
+  const regex = /^https?:\/\/(www\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)(?:\/[^/]+)?\/?$/;
 
   const match = currentUrl.match(regex);
   if (!match) {
-    showToast(`Invalid current URL format(${currentUrl}), will use history URL instead.`, '#f00');
+    console.error(`Invalid current URL format(${currentUrl}), will use history URL instead.`, '#f00');
     return history.url;
   }
-  return `${match[0].replace(/\/[^/]+$/, '')}/${history.id}`;
+
+  const base = `https://${match[1]}/trade2/search/poe2/${match[2]}`;
+  return `${base}/${history.id}`;
 }
 
 export function isKoreanServer(): boolean {
