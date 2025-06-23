@@ -2,7 +2,7 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-
+const webpack = require("webpack");
 
 module.exports = (env, argv = {}) => {
   const mode = argv.mode || "production";
@@ -21,6 +21,17 @@ module.exports = (env, argv = {}) => {
       path: path.resolve(__dirname, "dist"),
       clean: true
     },
+    ...(mode === "none" && {
+      optimization: {
+        minimize: false,
+        splitChunks: {
+          cacheGroups: {
+            default: false,
+            vendors: false
+          }
+        }
+      }
+    }),
     resolve: {
       extensions: [".ts", ".js"]
     },
@@ -43,6 +54,9 @@ module.exports = (env, argv = {}) => {
       ]
     },
     plugins: [
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'none'),
+      }),
       new CopyPlugin({
         patterns: [
           { from: "src/manifest.json", to: "." },

@@ -5,6 +5,7 @@
   "scripts": {
     "start": "webpack serve --mode development",
     "build": "webpack --mode production && npm run zip",
+    "build:test": "webpack --mode none",
     "dev": "webpack serve --mode development --watch",
     "lint": "eslint .",
     "format": "prettier --write .",
