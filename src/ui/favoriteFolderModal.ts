@@ -43,7 +43,9 @@ export async function openCreateFavoriteFolderModal(entry: SearchHistoryEntity):
 
       await storage.addFavoriteItem(path, {
         id: entry.id,
-        name: name || entry.id
+        name: name || entry.id,
+        url: entry.url,
+        etc: entry.etc
       });
 
       showToast(`즐겨찾기에 추가되었습니다.`);
