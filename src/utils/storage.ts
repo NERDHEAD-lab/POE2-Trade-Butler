@@ -365,6 +365,51 @@ export async function deleteFavoriteFolder(path: string): Promise<boolean> {
   return false;
 }
 
+export async function renameFavoriteElement(
+  type: 'folder' | 'item',
+  path: string,
+  newName: string
+): Promise<boolean> {
+  const root = await getFavoriteFolderRoot();
+
+  if (type === 'folder') {
+    const folder = findFolderByPath(root, path);
+    if (!folder || !folder.name) return false;
+
+    // 동일 경로 상위 폴더 내에서 이름 중복 검사
+    const parent = findFolderByPath(root, path.substring(0, path.lastIndexOf('/')));
+    const siblingFolders = parent?.folders ?? root.folders;
+
+    if (siblingFolders.some(f => f.name === newName)) return false;
+
+    folder.name = newName;
+  }
+
+  else if (type === 'item') {
+    const segments = path.split('/');
+    const id = segments[segments.length - 1];
+    const parentPath = segments.slice(0, -1).join('/');
+    const parentFolder = findFolderByPath(root, parentPath);
+
+    const targetList = parentFolder?.items ?? root.items;
+    const targetItem = targetList.find(item => item.id === id);
+    if (!targetItem) return false;
+
+    // 동일 폴더 내에서 이름 중복 검사
+    if (targetList.some(item => item.name === newName)) return false;
+
+    targetItem.name = newName;
+  }
+
+  else {
+    return false;
+  }
+
+  await saveFavoriteFolderRoot(root);
+  return true;
+}
+
+
 export async function flushFavoriteFolder(): Promise<void> {
   await storage.remove(STORAGE_FAVORITE_KEY);
   notifyFavoriteFolderChangedListener(favoriteFolderRoot);

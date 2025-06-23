@@ -7,7 +7,11 @@ const ON_OPEN_FAVORITE_MODAL = 'openCreateFavoriteFolderModal';
 
 export async function openFavoriteFolderModal(
   type: 'create' | 'edit' = 'create',
-  entry?: SearchHistoryEntity,
+  entry?: {
+    id: string;
+    url: string;
+    etc?: SearchHistoryEntity['etc'];
+  },
 ): Promise<void> {
   const wrapper = document.createElement('div');
   const title = (() => {
@@ -131,6 +135,39 @@ export async function openFavoriteFolderModal(
             showToast(`폴더 "${path}"이(가) 삭제되었습니다.`);
           } else {
             showToast(`폴더 "${path}" 삭제 실패.`, '#f66');
+          }
+
+          return false;
+        }
+      },
+      {
+        name: '📝 폴더 이름 변경',
+        listener: async (modal): Promise<boolean> => {
+          const path = folderUI.getSelectedFolderPath(folderElement);
+          if (!path || path === '/') {
+            showToast('루트 폴더는 이름을 변경할 수 없습니다.', '#f66');
+            return false;
+          }
+
+          const newName = prompt('새 폴더 이름을 입력하세요:')?.trim();
+          const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
+
+          if (!newName) {
+            showToast('폴더 이름을 입력하지 않았습니다.', '#f66');
+            return false; // 모달을 닫지 않음
+          } else if (newName.length > 20) {
+            showToast('폴더 이름은 20자 이하여야 합니다.', '#f66');
+            return false; // 모달을 닫지 않음
+          } else if (exceptions.some(exception => newName.includes(exception))) {
+            showToast(`폴더 이름에 ${exceptions.join(', ')} 문자를 포함할 수 없습니다.`, '#f66');
+            return false; // 모달을 닫지 않음
+          }
+
+          if (await storage.renameFavoriteElement('folder', path, newName)) {
+            showToast(`폴더 이름이 "${newName}"(으)로 변경되었습니다.`);
+            folderUI.selectFolderByPath(folderElement, path ? `${path}/${newName}` : newName);
+          } else {
+            showToast(`폴더 이름 "${newName}" 변경 실패. 중복된 이름일 수 있습니다.`, '#f66');
           }
 
           return false;

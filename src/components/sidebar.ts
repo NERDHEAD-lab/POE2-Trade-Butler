@@ -263,6 +263,32 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
   }
 
   const onComplete = (ul: HTMLUListElement) => {
+    ul.querySelectorAll('.folder-item')
+      .forEach(item => {
+        const li = item as HTMLLIElement;
+        li.addEventListener('dblclick', (e) => {
+          e.stopPropagation();
+          const path = folderUI.getSelectedFolderPath(folderElement);
+          const currentName = li.querySelector('.folder-name')?.textContent || '';
+          const newName = prompt('Enter new name for favorite folder:', currentName);
+          const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
+
+          if (newName && !exceptions.some(char => newName.includes(char))) {
+            storage.renameFavoriteElement('folder', path, newName)
+              .then(() => {
+                showToast(`Favorite folder renamed to "${newName}"`);
+              })
+              .catch(error => {
+                console.error('Error renaming favorite folder:', error);
+                showToast('Failed to rename favorite folder.', '#f00');
+              });
+          } else {
+            alert(`Invalid name. Please avoid using these characters: ${exceptions.join(' ')}`);
+          }
+        });
+
+      });
+
     ul.querySelectorAll('.favorite-item')
       .forEach(item => {
         const li = item as HTMLLIElement;
@@ -282,8 +308,43 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
           }
           attachPreviewHoverEvents(li, entry);
 
+
+          let clickTimer: ReturnType<typeof setTimeout> | null = null;
+          // 클릭 이벤트 리스너 추가
           li.addEventListener('click', () => {
-            window.location.href = api.getUrlFromSearchHistory(entry);
+            // window.location.href = api.getUrlFromSearchHistory(entry);
+            if (clickTimer) return;
+
+            clickTimer = setTimeout(() => {
+              clickTimer = null;
+              window.location.href = api.getUrlFromSearchHistory(entry);
+            }, 200);
+          });
+
+          // 더블 클릭 이벤트 리스너 추가
+          li.addEventListener('dblclick', (e) => {
+            e.stopPropagation();
+            if (clickTimer) {
+              clearTimeout(clickTimer);
+              clickTimer = null;
+            }
+
+            const newName = prompt('Enter new name for favorite item:', entry.name);
+            const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
+
+            if (newName && !exceptions.some(char => newName.includes(char))) {
+              const path = li.dataset.path || '';
+              storage.renameFavoriteElement('item', path, newName)
+                .then(() => {
+                  showToast(`Favorite item renamed to "${newName}"`);
+                })
+                .catch(error => {
+                  console.error('Error renaming favorite item:', error);
+                  showToast('Failed to rename favorite item.', '#f00');
+                });
+            } else {
+              alert(`Invalid name. Please avoid using these characters: ${exceptions.join(' ')}`);
+            }
           });
         });
       });
