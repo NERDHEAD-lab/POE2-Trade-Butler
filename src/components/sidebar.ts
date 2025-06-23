@@ -79,6 +79,19 @@ export function renderSidebar(container: HTMLElement): void {
     sidebar.style.top = '80px';
   }
 
+  // sidebar history 삭제
+  const clearHistoryButton = sidebar.querySelector<HTMLButtonElement>('#clear-history');
+  clearHistoryButton?.addEventListener('click', () => {
+    if (confirm('Are you sure you want to clear all search history?')) {
+      storage.clearAllHistory().then(() => {
+        showToast('Search history cleared successfully.');
+      }).catch(error => {
+        console.error('Error clearing search history:', error);
+        showToast('Failed to clear search history.', '#f00');
+      });
+    }
+  });
+
   // sidebar 여닫기
   const toggleButton = sidebar.querySelector<HTMLButtonElement>(`#poe2-sidebar-toggle-button`);
   let isOpen = true;
