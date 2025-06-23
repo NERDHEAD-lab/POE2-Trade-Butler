@@ -125,7 +125,13 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
 
   // TODO: 이력 저장 시 메타데이터를 저장할 수 있도록 수정
   // li.title = entry.metadata;
-  nameSpan.textContent = entry.id;
+  const previewInfo = entry.etc?.previewInfo as PreviewPanelSnapshot;
+  if (previewInfo && previewInfo.searchKeyword) {
+    nameSpan.textContent = previewInfo.searchKeyword;
+  } else {
+    nameSpan.textContent = entry.id;
+  }
+
   //    existing.lastSearched = new Date().toISOString();
   // YYYY.MM.DD HH:mm 형식으로 표시
   lastSearchedSpan.textContent = `Last searched: ${new Date(entry.lastSearched).toLocaleString('ko-KR', {
