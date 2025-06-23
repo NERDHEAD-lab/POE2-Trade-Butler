@@ -5,7 +5,7 @@ import { openFavoriteFolderModal } from '../ui/favoriteFolderModal';
 import { showToast } from '../utils/api';
 import { PreviewPanelSnapshot, TradePreviewer } from '../utils/tradePreviewInjector';
 import * as folderUI from '../ui/favoriteFolderUI';
-import sources = chrome.devtools.panels.sources;
+import { SearchHistoryEntity } from '../utils/storage';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
@@ -104,6 +104,18 @@ export function renderSidebar(container: HTMLElement): void {
     showToast(`History auto-add ${isChecked ? 'enabled' : 'disabled'}.`);
   });
 
+  const addFavoriteButton = sidebar.querySelector<HTMLButtonElement>('#add-favorite') as HTMLButtonElement;
+  attachCreateFavoriteEvent(addFavoriteButton, () => {
+      const searchHistoryFromUrl = api.getSearchHistoryFromUrl(window.location.href);
+
+      return {
+        id: searchHistoryFromUrl.id,
+        url: searchHistoryFromUrl.url,
+        etc: { previewInfo: TradePreviewer.extractCurrentPanel() }
+      };
+    }
+  );
+
   // sidebar 여닫기
   const toggleButton = sidebar.querySelector<HTMLButtonElement>(`#poe2-sidebar-toggle-button`);
   let isOpen = true;
@@ -121,6 +133,7 @@ export function renderSidebar(container: HTMLElement): void {
     loadHistoryList(Promise.resolve(newEntries));
   });
   storage.addFavoriteFolderChangedListener(ON_FAVORITE_FOLDER_CHANGED, (root) => {
+    loadHistoryList(storage.getAllHistory());
     loadFavoritesList(Promise.resolve(root));
   });
 
@@ -210,21 +223,7 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
     window.location.href = api.getUrlFromSearchHistory(entry);
   });
 
-  favoriteStar.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isFavorite = favoriteStar.classList.contains('active');
-    if (isFavorite) {
-      //이미 즐겨찾기 인 경우 추가로 등록 할 지 확인
-      if (!confirm('이미 즐겨찾기에 추가된 항목입니다. 다시 추가하시겠습니까?')) {
-        return;
-      }
-    }
-
-    favoriteStar.classList.add('active');
-    openFavoriteFolderModal('create', entry).catch((error) => {
-      console.error('Error opening favorite modal:', error);
-    });
-  });
+  attachCreateFavoriteEvent(favoriteStar, () => entry);
 
   removeButton.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -405,4 +404,32 @@ export function attachPreviewHoverEvents(
     .catch(error => {
       console.error('Failed to wait for TradePreviewInjector:', error);
     });
+}
+
+export function attachCreateFavoriteEvent(
+  element: HTMLElement,
+  entrySupplier: () => {
+    id: string;
+    url: string;
+    etc?: SearchHistoryEntity['etc'];
+  }
+): void {
+  element.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const entry = entrySupplier();
+
+    storage.isFavoriteContains(entry.id)
+      .then(isFavorite => {
+        if (isFavorite) {
+          // 이미 즐겨찾기인 경우 추가로 등록할 지 확인
+          if (!confirm('이미 즐겨찾기에 추가된 항목입니다. 다시 추가하시겠습니까?')) {
+            return;
+          }
+        }
+      })
+      .then(() => openFavoriteFolderModal('create', entry))
+      .catch((error) => {
+        console.error('Error opening favorite modal:', error);
+      });
+  });
 }
