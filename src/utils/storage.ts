@@ -448,3 +448,12 @@ export function setLatestSearchUrl(url: string): void {
 export function getLatestSearchUrl(): string | null {
   return localStorage.getItem('latestSearchUrl');
 }
+
+export function isSidebarCollapsed() : boolean {
+  const value = localStorage.getItem('sidebarCollapsed');
+  return value !== null ? value === 'true' : false; // 기본값은 false
+}
+
+export function setSidebarCollapsed(collapsed: boolean): void {
+  localStorage.setItem('sidebarCollapsed', String(collapsed));
+}

@@ -125,7 +125,12 @@ export function renderSidebar(container: HTMLElement): void {
     sidebar.classList.toggle('collapsed', !isOpen);
     wrapper.classList.toggle('collapsed', !isOpen);
     toggleButton.textContent = isOpen ? '⮜' : '⮞';
+    storage.setSidebarCollapsed(!isOpen);
   });
+
+  if (storage.isSidebarCollapsed()) {
+    toggleButton?.click();
+  }
 
   loadHistoryList(storage.getAllHistory());
   loadFavoritesList(storage.getFavoriteFolderRoot());
