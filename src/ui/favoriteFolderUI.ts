@@ -12,7 +12,8 @@ export function generate(
   root: Promise<storage.FavoriteFolderRoot> = storage.getFavoriteFolderRoot(),
   showItems: boolean = true,
   defaultExpanded: boolean = true,
-  onComplete: (ul: HTMLUListElement) => void = () => {},
+  onComplete: (ul: HTMLUListElement) => void = () => {
+  }
 ): HTMLUListElement {
   const ul = document.createElement('ul');
   ul.className = 'favorite-folder-list';
@@ -64,12 +65,21 @@ export function generate(
         Object.assign(itemLi.style, {
           marginLeft: `${(path.split('/').length + 1) * 10}px`,
           listStyleType: 'none',
-          textAlign: 'left',
+          textAlign: 'left'
         });
 
-        const itemSpan = document.createElement('span');
-        itemSpan.textContent = `⭐ ${item.name || item.id}`;
-        itemLi.appendChild(itemSpan);
+        const itemName = document.createElement('span');
+        itemName.textContent = item.name || item.id;
+        itemName.className = 'file-name';
+
+        const starIcon = document.createElement('span');
+        starIcon.textContent = '⭐';
+        starIcon.className = 'file-icon';
+        starIcon.style.marginRight = '4px';
+
+        itemLi.appendChild(starIcon);
+        itemLi.appendChild(itemName);
+
         if (!showItems) {
           itemLi.style.display = 'none';
         }
@@ -84,14 +94,11 @@ export function generate(
       let count = childElements.length;
       for (const el of childElements) {
         if (!showItems && el.classList.contains('favorite-item')) {
-          // showItems이 false인 경우, 즐겨찾기 아이템은 숨김
           count--;
           continue;
         }
-
         el.style.display = expanded ? 'list-item' : 'none';
       }
-      // showItems가 false인 경우, 폴더 이름에 아이템 수를 표시하지 않음
       nameSpan.textContent = (expanded || count === 0) ? folder.name : `${folder.name} (${count})`;
     };
 
@@ -132,14 +139,13 @@ export function generate(
     const span = document.createElement('span');
     rootLi.className = 'folder-item';
     rootLi.dataset.path = '/';
-    // rootLi.textContent = '📁 /';
     Object.assign(rootLi.style, {
       marginLeft: '0px',
       listStyleType: 'none',
       textAlign: 'left',
       fontWeight: 'bold',
       cursor: 'pointer',
-      display: 'list-item',
+      display: 'list-item'
     });
 
     icon.textContent = '📁';
@@ -153,7 +159,6 @@ export function generate(
     rootLi.appendChild(span);
 
     rootLi.addEventListener('click', () => {
-      // 폴더가 닫혀있다면 열기
       const selected = ul.querySelector('li > span.folder-name.selected');
       if (selected) selected.classList.remove('selected');
       rootLi.querySelector('span.folder-name')?.classList.add('selected');
@@ -182,12 +187,21 @@ export function generate(
         Object.assign(itemLi.style, {
           marginLeft: `10px`,
           listStyleType: 'none',
-          textAlign: 'left',
+          textAlign: 'left'
         });
 
-        const itemSpan = document.createElement('span');
-        itemSpan.textContent = `⭐ ${item.name || item.id}`;
-        itemLi.appendChild(itemSpan);
+        const itemName = document.createElement('span');
+        itemName.textContent = item.name || item.id;
+        itemName.className = 'file-name';
+
+        const starIcon = document.createElement('span');
+        starIcon.textContent = '⭐';
+        starIcon.className = 'file-icon';
+        starIcon.style.marginRight = '4px';
+
+        itemLi.appendChild(starIcon);
+        itemLi.appendChild(itemName);
+
         ul.appendChild(itemLi);
 
         if (!showItems) {
