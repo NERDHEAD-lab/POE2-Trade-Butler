@@ -8,6 +8,20 @@
 > - **INTERNAL**: Internal changes that do not affect the end-user.
 ---
 
+## 2.0.0
+### FEATURES
+- Breaking changes
+  - Refactored the codebase to use TypeScript.
+  - Updated the project structure to follow best practices.
+  - Removed deprecated features and APIs.
+  - Updated dependencies to their latest versions.
+  - Improved error handling and logging.
+  - Improved functionality to manage search history and favorites.
+  - Improved UI/UX.
+    - Now favorites tab can manage with folder UI.
+    - All most of the UI components status are saved in local storage.
+  - Will provide a new feature soon.
+    - favorites can be export and import.
 
 ## 1.2.6
 ### INTERNAL
@@ -51,7 +65,7 @@
 ### IMPROVEMENTS
 - improved alert and confirm event handling.
 - improved remove history action.
-  - remove without favorites. 
+  - remove without favorites.
 
 ## 1.1.3
 ### INTERNAL

@@ -1,19 +1,15 @@
 {
   "name": "poe2-trade-butler",
-  "version": "1.2.6",
+  "version": "2.0.0",
   "main": "index.js",
   "scripts": {
     "start": "webpack serve --mode development",
-    "build": "webpack --mode production && npm run zip && npm run release_notes",
-    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production && npm run zip",
+    "build:test": "webpack --mode none",
+    "dev": "webpack serve --mode development --watch",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "zip": "node scripts/create-zip.js",
-    "release_notes": "node scripts/release-notes.js",
-    "update_version": "node scripts/update-version.js",
-    "update_version:patch": "node scripts/update-version.js patch",
-    "update_version:minor": "node scripts/update-version.js minor",
-    "update_version:major": "node scripts/update-version.js major"
+    "zip": "node scripts/create-zip.js"
   },
   "keywords": [
     "chrome-extension",
@@ -28,10 +24,13 @@
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
+    "@babel/preset-typescript": "^7.27.1",
     "@types/chrome": "^0.0.293",
+    "@types/node": "^24.0.3",
     "archiver": "^7.0.1",
     "babel-loader": "^9.2.1",
     "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^7.1.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",

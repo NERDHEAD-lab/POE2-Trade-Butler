@@ -1,55 +1,91 @@
 const path = require("path");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 
-module.exports = (env, argv) => {
-  const isDev = argv.mode === "development";
+module.exports = (env, argv = {}) => {
+  const mode = argv.mode || "production";
+  const isDev = mode === "development";
 
   return {
-    mode: isDev ? "development" : "production",
+    mode,
     entry: {
-        background: "./src/background.js",
-        content: "./src/content.js",
-        popup: "./src/popup.js",
-      },
-    output: {
-      path: path.resolve(__dirname, "dist"),
-      filename: "[name].js",
+      popup: "./src/popup.ts",
+      background: "./src/background.ts",
+      "content-script": "./src/content-script.ts",
+      ...(isDev ? { development: "./src/development.ts" } : {})
     },
-    devtool: isDev ? "inline-source-map" : "source-map",
+    output: {
+      filename: "[name].js",
+      path: path.resolve(__dirname, "dist"),
+      clean: true
+    },
+    ...(mode === "none" && {
+      optimization: {
+        minimize: false,
+        splitChunks: {
+          cacheGroups: {
+            default: false,
+            vendors: false
+          }
+        }
+      }
+    }),
+    resolve: {
+      extensions: [".ts", ".js"]
+    },
     module: {
-      rules: isDev
-        ? [] // 개발 모드에서는 로더 비활성화
-        : [
-          {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            use: {
-              loader: "babel-loader",
-            },
+      rules: [
+        {
+          test: /\.ts$/,
+          use: {
+            loader: "babel-loader",
+            options: {
+              presets: ["@babel/preset-env", "@babel/preset-typescript"]
+            }
           },
-        ],
+          exclude: /node_modules/
+        },
+        {
+          test: /\.css$/i,
+          use: [MiniCssExtractPlugin.loader, "css-loader"]
+        }
+      ]
     },
     plugins: [
-      new CopyWebpackPlugin({
-        patterns: [
-          { from: "src/manifest.json", to: "manifest.json" },
-          { from: "src/css/styles.css", to: "styles.css" }, // styles.css만 루트로 이동
-          { from: "src/css/*.css", to: "css/[name].css", filter: (resourcePath) => !resourcePath.endsWith("styles.css") },
-          { from: "src/components/*.html", to: "components/[name].html" },
-          { from: "src/assets/*.png", to: "assets/[name].png" },
-          ...(isDev
-            ? [
-              // 개발 모드에서 JS 파일 복사
-              { from: "src/*.js", to: "[name].js" },
-            ]
-            : []),
-        ],
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'none'),
       }),
+      new CopyPlugin({
+        patterns: [
+          { from: "src/manifest.json", to: "." },
+          { from: "src/assets", to: "assets" },
+          { from: "src/popup.html", to: "." },
+        ]
+      }),
+      ...(isDev ? [
+        new HtmlWebpackPlugin({
+          filename: "development.html",
+          template: "src/development.html",
+          chunks: ["development"],
+          inject: "body",
+          favicon: "src/assets/icon.png"
+        })
+      ] : []),
+      new MiniCssExtractPlugin()
     ],
-    optimization: {
-      minimize: !isDev, // 개발 모드에서는 코드 최소화 비활성화
-      splitChunks: false, // 코드 분할 비활성화
-    },
-    watch: isDev,
+    devtool: isDev ? "eval-cheap-module-source-map" : false,
+    ...(isDev && {
+      devServer: {
+        static: {
+          directory: path.join(__dirname, "dist"),
+        },
+        open: ['/development.html'],
+        hot: true,
+        compress: true,
+        port: 8080
+      }
+    })
   };
 };

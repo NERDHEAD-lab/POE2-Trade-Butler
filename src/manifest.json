@@ -1,47 +1,36 @@
 {
+  "$schema": "https://json.schemastore.org/chrome-manifest",
   "manifest_version": 3,
   "name": "POE2 Trade Butler",
-  "version": "1.2.6",
-  "description": "POE2 Trade 페이지에 사이드바 추가 및 이력 관리 기능 제공",
-  "permissions": [
-    "storage"
-  ],
+  "version": "2.0.0",
+  "description": "A Chrome Extension for POE2 Trade with a sidebar and history management.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "assets/icon.png",
+      "128": "assets/icon(128x128).png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage"],
   "host_permissions": [
     "*://www.pathofexile.com/trade2/*",
     "*://poe.game.daum.net/trade2/*"
   ],
-  "background": {
-    "service_worker": "background.js"
-  },
   "content_scripts": [
     {
       "matches": [
         "*://www.pathofexile.com/trade2/*",
         "*://poe.game.daum.net/trade2/*"
       ],
-      "js": [
-        "content.js"
-      ],
-      "css": [
-        "styles.css"
-      ],
-      "run_at": "document_end"
+      "js": ["content-script.js"],
+      "css": ["content-script.css"]
     }
   ],
-  "action": {
-    "default_popup": "components/popup.html",
-    "default_icon": "assets/icon.png"
-  },
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "components/*.html",
-        "styles.css",
-        "css/*.css"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
-    }
-  ]
+  "icons": {
+    "16": "assets/icon.png",
+    "128": "assets/icon(128x128).png"
+  }
 }
