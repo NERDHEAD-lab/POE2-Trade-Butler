@@ -296,7 +296,6 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
             alert(`Invalid name. Please avoid using these characters: ${exceptions.join(' ')}`);
           }
         });
-
       });
 
     ul.querySelectorAll('.favorite-item')
@@ -317,7 +316,6 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
             return;
           }
           attachPreviewHoverEvents(li, entry);
-
 
           let clickTimer: ReturnType<typeof setTimeout> | null = null;
           // 클릭 이벤트 리스너 추가
@@ -349,7 +347,7 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
             } else if (exceptions.some(char => newName.includes(char))) {
               alert(`Invalid name. Please avoid using these characters: ${exceptions.join(' ')}`);
             } else {
-              const path = li.dataset.path || '';
+              const path = li.dataset.path || '/';
               storage.renameFavoriteElement('item', path, newName)
                 .then(() => {
                   showToast(`Favorite item renamed to "${newName}"`);
@@ -357,6 +355,28 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
                 .catch(error => {
                   console.error('Error renaming favorite item:', error);
                   showToast('Failed to rename favorite item.', '#f00');
+                });
+            }
+          });
+
+          const fileIcon = li.querySelector('.file-icon') as HTMLSpanElement;
+          if (!fileIcon) {
+            console.warn('File icon not found in favorite item:', li);
+            return;
+          }
+
+          // 즐겨찾기 아이콘 클릭 이벤트 리스너 추가 - 클릭 시 즐겨찾기에서 제거 확인창
+          fileIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const path = li.dataset.path || '/';
+            if (confirm(`Are you sure you want to remove "${path}" from favorites?`)) {
+              storage.removeFavoriteItem(path)
+                .then(() => {
+                  showToast(`"${entry.name}" has been removed from favorites.`);
+                })
+                .catch(error => {
+                  console.error('Error removing favorite item:', error);
+                  showToast('Failed to remove favorite item.', '#f00');
                 });
             }
           });

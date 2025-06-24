@@ -341,6 +341,31 @@ export async function addFavoriteItem(path: string, item: FavoriteItem): Promise
   await saveFavoriteFolderRoot(root);
 }
 
+export async function removeFavoriteItem(path: string): Promise<boolean> {
+  const root: FavoriteFolderRoot = await getFavoriteFolderRoot();
+  const segments = path.split('/').filter(Boolean); // remove empty strings
+  if (segments.length < 1) return false;
+
+  const itemId = segments.pop()!;
+
+  let current: FavoriteFolderRoot | FavoriteFolder = root;
+  for (const folderName of segments) {
+    const next: FavoriteFolder | undefined = (current.folders || []).find((f: FavoriteFolder) => f.name === folderName);
+    if (!next) return false;
+    current = next;
+  }
+
+  const originalLength = current.items?.length || 0;
+  current.items = (current.items || []).filter(item => item.id !== itemId);
+  const changed = current.items.length !== originalLength;
+
+  if (changed) {
+    await saveFavoriteFolderRoot(root);
+  }
+
+  return changed;
+}
+
 export async function deleteFavoriteFolder(path: string): Promise<boolean> {
   const root = await getFavoriteFolderRoot();
   const parts = path.split('/').filter(Boolean);
@@ -388,9 +413,7 @@ export async function renameFavoriteElement(
     if (siblingFolders.some(f => f.name === newName)) return false;
 
     folder.name = newName;
-  }
-
-  else if (type === 'item') {
+  } else if (type === 'item') {
     const segments = path.split('/');
     const id = segments[segments.length - 1];
     const parentPath = segments.slice(0, -1).join('/');
@@ -404,9 +427,7 @@ export async function renameFavoriteElement(
     if (targetList.some(item => item.name === newName)) return false;
 
     targetItem.name = newName;
-  }
-
-  else {
+  } else {
     return false;
   }
 
@@ -449,7 +470,7 @@ export function getLatestSearchUrl(): string | null {
   return localStorage.getItem('latestSearchUrl');
 }
 
-export function isSidebarCollapsed() : boolean {
+export function isSidebarCollapsed(): boolean {
   const value = localStorage.getItem('sidebarCollapsed');
   return value !== null ? value === 'true' : false; // 기본값은 false
 }
