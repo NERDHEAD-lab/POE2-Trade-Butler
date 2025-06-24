@@ -370,6 +370,11 @@ export async function renameFavoriteElement(
   path: string,
   newName: string
 ): Promise<boolean> {
+  if (newName === '' || newName.includes('/')) {
+    console.error('Invalid name for renaming:', newName);
+    return false; // 이름이 비어있거나 슬래시 포함 시 실패
+  }
+
   const root = await getFavoriteFolderRoot();
 
   if (type === 'folder') {

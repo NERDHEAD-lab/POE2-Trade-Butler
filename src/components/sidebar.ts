@@ -332,7 +332,13 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
             const newName = prompt('Enter new name for favorite item:', entry.name);
             const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
 
-            if (newName && !exceptions.some(char => newName.includes(char))) {
+            if (newName === null) {
+              showToast('Canceled renaming favorite item.', '#f66');
+            } else if (newName === '') {
+              showToast('Name cannot be empty.', '#f66');
+            } else if (exceptions.some(char => newName.includes(char))) {
+              alert(`Invalid name. Please avoid using these characters: ${exceptions.join(' ')}`);
+            } else {
               const path = li.dataset.path || '';
               storage.renameFavoriteElement('item', path, newName)
                 .then(() => {
@@ -342,8 +348,6 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
                   console.error('Error renaming favorite item:', error);
                   showToast('Failed to rename favorite item.', '#f00');
                 });
-            } else {
-              alert(`Invalid name. Please avoid using these characters: ${exceptions.join(' ')}`);
             }
           });
         });
