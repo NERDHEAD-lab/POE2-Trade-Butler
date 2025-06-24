@@ -98,11 +98,16 @@ export function renderSidebar(container: HTMLElement): void {
 
   //history-switch history 자동 추가 활성/비활성화
   const historySwitch = sidebar.querySelector<HTMLInputElement>('#history-switch');
+  if (historySwitch) {
+    historySwitch.checked = storage.isHistoryAutoAddEnabled();
+  }
+
   historySwitch?.addEventListener('change', (e) => {
-    const isChecked = (e.target as HTMLInputElement).checked;
+    const isChecked = historySwitch.checked;
     storage.setHistoryAutoAddEnabled(isChecked);
     showToast(`History auto-add ${isChecked ? 'enabled' : 'disabled'}.`);
   });
+
 
   const addFavoriteButton = sidebar.querySelector<HTMLButtonElement>('#add-favorite') as HTMLButtonElement;
   attachCreateFavoriteEvent(addFavoriteButton, () => {
