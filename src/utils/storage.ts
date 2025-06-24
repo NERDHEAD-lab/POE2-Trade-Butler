@@ -440,3 +440,11 @@ export function isHistoryAutoAddEnabled(): boolean {
   const value = localStorage.getItem('historyAutoAddEnabled');
   return value !== null ? value === 'true' : true;
 }
+
+export function setLatestSearchUrl(url: string): void {
+  localStorage.setItem('latestSearchUrl', url);
+}
+
+export function getLatestSearchUrl(): string | null {
+  return localStorage.getItem('latestSearchUrl');
+}

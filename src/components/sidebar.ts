@@ -393,25 +393,33 @@ function observeUrlChange() {
   }
 
   new MutationObserver(() => {
-    if (!storage.isHistoryAutoAddEnabled()) {
-      console.debug('History auto-add is disabled, skipping URL change handling');
-      return;
-    }
-    handleUrlChange(window.location.href).catch(console.debug);
+    updateHistoryFromUrl(window.location.href).catch(console.debug);
   }).observe(document.body, {
     childList: true,
     subtree: true
   });
 }
 
-let latestSearchUrl = window.location.href;
 let currentHandleUrl = '';
 
-async function handleUrlChange(currentUrl: string) {
+async function updateHistoryFromUrl(currentUrl: string) {
+  const latestSearchUrl = storage.getLatestSearchUrl();
+
+  if (!storage.isHistoryAutoAddEnabled()) {
+    console.debug('History auto-add is disabled, skipping URL change handling');
+    return;
+  }
+
   if (currentHandleUrl === currentUrl) {
     console.debug('Already handling URL change, skipping:', currentUrl);
     return;
   }
+
+  if (api.parseSearchUrl(currentUrl) === null) {
+    console.debug(`Ignoring URL change, not a valid search URL: ${currentUrl}`);
+    return;
+  }
+
   currentHandleUrl = currentUrl;
 
   try {
@@ -431,10 +439,11 @@ async function handleUrlChange(currentUrl: string) {
       });
 
     console.log(`Search history updated for URL: ${currentUrl}`);
-    latestSearchUrl = currentUrl;
+    // latestSearchUrl = currentUrl;
+    storage.setLatestSearchUrl(currentUrl);
 
   } catch (err) {
-    console.info(`Ignoring URL change, not a valid search URL: ${currentUrl}`);
+    console.info(`Unexpected error while handling URL change: ${currentUrl}`, err);
     if (process.env.NODE_ENV === 'development') {
       console.error('Error handling URL change:', err);
     }
