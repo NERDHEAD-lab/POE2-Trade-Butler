@@ -54,9 +54,11 @@ module.exports = (env, argv = {}) => {
       ]
     },
     plugins: [
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'none'),
-      }),
+      ...(mode === 'none' ? [
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'none')
+        })
+      ] : []),
       new CopyPlugin({
         patterns: [
           { from: "src/manifest.json", to: "." },
