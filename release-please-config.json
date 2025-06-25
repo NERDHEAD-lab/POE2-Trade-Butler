@@ -8,11 +8,11 @@
       "release-type": "node",
       "changelog-path": "CHANGELOG.md",
       "changelog-sections": [
-        { "type": "feat", "title": "Features" },
-        { "type": "fix", "title": "Bug Fixes" },
-        { "type": "refactor", "title": "Code Refactoring" },
-        { "type": "internal", "title": "Internal Changes" },
-        { "type": "chore", "title": "Chores" }
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Bug Fixes" },
+        { "type": "refactor", "section": "Code Refactoring" },
+        { "type": "internal", "section": "Internal Changes" },
+        { "type": "chore", "section": "Chores" }
       ],
       "extra-files": [
         {
