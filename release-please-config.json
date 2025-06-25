@@ -3,6 +3,7 @@
   "release-type": "node",
   "pull-request-title-pattern": "chore(release): release ${version}",
   "include-v-in-tag": false,
+  "include-component-in-tag": false,
   "packages": {
     ".": {
       "release-type": "node",
@@ -11,8 +12,8 @@
         { "type": "feat", "section": "Features" },
         { "type": "fix", "section": "Bug Fixes" },
         { "type": "refactor", "section": "Code Refactoring" },
-        { "type": "internal", "section": "Internal Changes" },
-        { "type": "chore", "section": "Chores" }
+        { "type": "internal", "section": "Internal Changes", "hidden" : true },
+        { "type": "chore", "section": "Chores", "hidden": true }
       ],
       "extra-files": [
         {
