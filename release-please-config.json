@@ -13,14 +13,14 @@
         { "type": "refactor", "section": "Code Refactoring" },
         { "type": "internal", "section": "Internal Changes" },
         { "type": "chore", "section": "Chores" }
+      ],
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "src/manifest.json",
+          "jsonpath": "$.version"
+        }
       ]
     }
-  },
-  "extra-files": [
-    {
-      "type": "json",
-      "path": "src/manifest.json",
-      "jsonpath": "$.version"
-    }
-  ]
+  }
 }
