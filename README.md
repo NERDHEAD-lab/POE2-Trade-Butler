@@ -4,7 +4,7 @@ A Chrome extension that adds a sidebar to the POE2 Trade page and provides a his
 
 ![./src/icon.png](src/assets/icon.png)
 ---
-[![Build Status](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/deploy.yml/badge.svg)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions)
+[![Build Status](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/release-please.yml/badge.svg)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions)
 [![GitHub release](https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases)
 [![Chrome Web Store Last Updated](https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm)](https://chrome.google.com/webstore/detail/poe2-trade-butler/ipnemofnhodcgcplnnfekbfpmngeeocm)
 <br>
