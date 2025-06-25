@@ -1,5 +1,17 @@
 # CHANGE LOG
 
+## [2.1.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.0.0...v2.1.0) (2025-06-25)
+
+
+### Features
+
+* webpack.config.js 정렬 ([91ba8c2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/91ba8c2b8998fa5bd5ec18c9f68321d1e55312bc))
+
+
+### Bug Fixes
+
+* build 시 경고 조치 ([76f25f8](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/76f25f8ab88ac35f462e5499c8b154987e9e63a9))
+
 ## 2.0.0
 ### FEATURES
 - Breaking changes
