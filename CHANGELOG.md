@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## [2.1.1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/v2.1.0...v2.1.1) (2025-06-25)
+
+
+### Bug Fixes
+
+* fix release-please config to correctly apply extra-files and tag formatting ([4782f11](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/4782f1139297c632a57913455b5f878a1b1aca6a))
+
 ## [2.1.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.0.0...v2.1.0) (2025-06-25)
 
 
