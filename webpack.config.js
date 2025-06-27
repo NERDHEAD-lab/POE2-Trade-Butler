@@ -10,10 +10,9 @@ module.exports = (env, argv = {}) => {
   return {
     mode,
     entry: {
-      popup: './src/popup.ts',
+      popup: './src/components/popup.ts',
       background: './src/background.ts',
-      'content-script': './src/content-script.ts',
-      ...(isDev ? { development: './src/development.ts' } : {})
+      'content-script': './src/content-script.ts'
     },
     output: {
       filename: '[name].js',
@@ -53,6 +52,11 @@ module.exports = (env, argv = {}) => {
       ]
     },
     plugins: [
+      new HtmlWebpackPlugin({
+        filename: 'popup.html',
+        template: 'src/popup.html',
+        chunks: ['popup']
+      }),
       ...(mode === 'none' ? [
         new webpack.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'none')
@@ -61,8 +65,7 @@ module.exports = (env, argv = {}) => {
       new CopyPlugin({
         patterns: [
           { from: 'src/manifest.json', to: '.' },
-          { from: 'src/assets', to: 'assets' },
-          { from: 'src/popup.html', to: '.' }
+          { from: 'src/assets', to: 'assets' }
         ]
       }),
       new MiniCssExtractPlugin()
