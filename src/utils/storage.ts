@@ -1,57 +1,8 @@
 import { showToast } from './api';
+import { storage } from '../storage/storageLoader';
 
 // TODO: 종류 별로 별도 Repository 클래스로 분리 필요
-/********************* MockSafety Check *********************/
-const isChromeAvailable = typeof chrome !== 'undefined' && chrome.storage?.local;
 
-const storage = isChromeAvailable
-  ? chrome.storage.local
-  : {
-    get: (keys: string[] | string, callback: (result: any) => void) => {
-      console.warn('⚠️ Mock storage.get called', keys);
-      const result: Record<string, any> = {};
-
-      if (Array.isArray(keys)) {
-        keys.forEach(key => {
-          const raw = localStorage.getItem(key);
-          result[key] = raw ? JSON.parse(raw) : undefined;
-        });
-      } else {
-        const raw = localStorage.getItem(keys);
-        result[keys] = raw ? JSON.parse(raw) : undefined;
-      }
-
-      callback(result);
-    },
-
-    set: (items: Record<string, any>, callback?: () => void) => {
-      console.warn('⚠️ Mock storage.set called', items);
-      Object.entries(items).forEach(([key, value]) => {
-        localStorage.setItem(key, JSON.stringify(value));
-      });
-      callback?.();
-    },
-
-    remove: (keys: string | string[], callback?: () => void) => {
-      console.warn('⚠️ Mock storage.remove called', keys);
-      if (Array.isArray(keys)) {
-        keys.forEach(key => localStorage.removeItem(key));
-      } else {
-        localStorage.removeItem(keys);
-      }
-      callback?.();
-    },
-
-    clear: (callback?: () => void) => {
-      console.warn('⚠️ Mock storage.clear called');
-      localStorage.clear();
-      callback?.();
-    }
-  };
-
-if (!isChromeAvailable) {
-  showToast('Chrome storage API not available, using mock storage');
-}
 
 const STORAGE_SEARCH_HISTORY_KEY = 'searchHistory';
 const STORAGE_FAVORITE_KEY = 'favoriteFolders';
@@ -477,4 +428,49 @@ export function isSidebarCollapsed(): boolean {
 
 export function setSidebarCollapsed(collapsed: boolean): void {
   localStorage.setItem('sidebarCollapsed', String(collapsed));
+}
+
+interface CachedData<T> {
+  timestamp: number;
+  data: T;
+}
+
+export async function getOrFetchCache<T>(
+  key: string,
+  maxAge: number,
+  supplier: () => Promise<T>
+): Promise<T> {
+  const cached = await getCachedData<T>(key, maxAge);
+  if (cached !== null) {
+    return cached;
+  }
+
+  const fresh = await supplier();
+  await setCachedData(key, fresh);
+  return fresh;
+}
+
+async function getCachedData<T>(key: string, maxAge: number): Promise<T | null> {
+  return new Promise((resolve) => {
+    storage.get([key], (result) => {
+      const cached = result[key] as CachedData<T> | undefined;
+      if (cached && (Date.now() - cached.timestamp < maxAge)) {
+        resolve(cached.data);
+      } else {
+        resolve(null);
+      }
+    });
+  });
+}
+
+async function setCachedData<T>(key: string, data: T): Promise<void> {
+  const cachedData: CachedData<T> = {
+    timestamp: Date.now(),
+    data
+  };
+  return new Promise((resolve) => {
+    storage.set({ [key]: cachedData }, () => {
+      resolve();
+    });
+  });
 }
