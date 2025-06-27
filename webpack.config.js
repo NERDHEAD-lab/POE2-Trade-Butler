@@ -6,7 +6,6 @@ const webpack = require('webpack');
 
 module.exports = (env, argv = {}) => {
   const mode = argv.mode || 'production';
-  const isDev = mode === 'development';
 
   return {
     mode,
@@ -66,28 +65,7 @@ module.exports = (env, argv = {}) => {
           { from: 'src/popup.html', to: '.' }
         ]
       }),
-      ...(isDev ? [
-        new HtmlWebpackPlugin({
-          filename: 'development.html',
-          template: 'src/development.html',
-          chunks: ['development'],
-          inject: 'body',
-          favicon: 'src/assets/icon.png'
-        })
-      ] : []),
       new MiniCssExtractPlugin()
-    ],
-    devtool: isDev ? 'eval-cheap-module-source-map' : false,
-    ...(isDev && {
-      devServer: {
-        static: {
-          directory: path.join(__dirname, 'dist')
-        },
-        open: ['/development.html'],
-        hot: true,
-        compress: true,
-        port: 8080
-      }
-    })
+    ]
   };
 };

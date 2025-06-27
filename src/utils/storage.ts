@@ -1,5 +1,5 @@
 import { showToast } from './api';
-import { storage } from '../storage/storageLoader';
+import { localStorage } from '../storage/storageLoader';
 
 // TODO: 종류 별로 별도 Repository 클래스로 분리 필요
 
@@ -74,7 +74,7 @@ function notifyFavoriteFolderChangedListener(root: FavoriteFolderRoot) {
 
 export async function getAllHistory(): Promise<SearchHistoryEntity[]> {
   return new Promise((resolve) => {
-    storage.get([STORAGE_SEARCH_HISTORY_KEY], (storage) => {
+    localStorage.get([STORAGE_SEARCH_HISTORY_KEY], (storage) => {
       resolve(storage[STORAGE_SEARCH_HISTORY_KEY] || []);
     });
   });
@@ -109,7 +109,7 @@ export async function addOrUpdateHistory(entry: {
     existing.lastSearched = new Date().toISOString();
   }
 
-  await storage.set({ [STORAGE_SEARCH_HISTORY_KEY]: history });
+  await localStorage.set({ [STORAGE_SEARCH_HISTORY_KEY]: history });
   notifySearchHistoryChangedListener(history);
 
   return isNewEntry;
@@ -131,7 +131,7 @@ export async function putIfAbsentEtc(id: string, key: string, callbackValue: () 
     try {
       const callbackValueResult = callbackValue();
       entry.etc[key] = (callbackValueResult instanceof Promise) ? await callbackValueResult : callbackValueResult;
-      await storage.set({ [STORAGE_SEARCH_HISTORY_KEY]: history });
+      await localStorage.set({ [STORAGE_SEARCH_HISTORY_KEY]: history });
 
       notifySearchHistoryChangedListener(history);
     } catch (error) {
@@ -155,7 +155,7 @@ export async function getEtcValue(id: string, key: string): Promise<any> {
 export async function deleteHistoryById(id: string): Promise<void> {
   const history = await getAllHistory();
   const updated = history.filter(entry => entry.id !== id);
-  await storage.set({ [STORAGE_SEARCH_HISTORY_KEY]: updated });
+  await localStorage.set({ [STORAGE_SEARCH_HISTORY_KEY]: updated });
 
   notifySearchHistoryChangedListener(updated);
 }
@@ -166,14 +166,14 @@ export async function isExistingHistory(id: string): Promise<boolean> {
 }
 
 export async function clearAllHistory(): Promise<void> {
-  await storage.remove(STORAGE_SEARCH_HISTORY_KEY);
+  await localStorage.remove(STORAGE_SEARCH_HISTORY_KEY);
 
   notifySearchHistoryChangedListener([]);
 }
 
 export async function getFavoriteFolderRoot(): Promise<FavoriteFolderRoot> {
   return new Promise(resolve => {
-    storage.get([STORAGE_FAVORITE_KEY], (result) => {
+    localStorage.get([STORAGE_FAVORITE_KEY], (result) => {
       resolve(result[STORAGE_FAVORITE_KEY] || favoriteFolderRoot);
     });
   });
@@ -181,7 +181,7 @@ export async function getFavoriteFolderRoot(): Promise<FavoriteFolderRoot> {
 
 async function saveFavoriteFolderRoot(root: FavoriteFolderRoot): Promise<void> {
   return new Promise(resolve => {
-    storage.set({ [STORAGE_FAVORITE_KEY]: root }, () => {
+    localStorage.set({ [STORAGE_FAVORITE_KEY]: root }, () => {
       resolve();
       notifyFavoriteFolderChangedListener(root);
     });
@@ -254,7 +254,7 @@ export async function createFavoriteFolder(parentPath: string, name: string): Pr
 
 export async function isFavoriteContains(id: string): Promise<boolean> {
   return new Promise((resolve) => {
-    storage.get([STORAGE_FAVORITE_KEY], (storage) => {
+    localStorage.get([STORAGE_FAVORITE_KEY], (storage) => {
       const favorites: FavoriteFolderRoot = storage[STORAGE_FAVORITE_KEY] || { folders: [], items: [] };
 
       //root 및 folder 내 재귀한다.
@@ -388,7 +388,7 @@ export async function renameFavoriteElement(
 
 
 export async function flushFavoriteFolder(): Promise<void> {
-  await storage.remove(STORAGE_FAVORITE_KEY);
+  await localStorage.remove(STORAGE_FAVORITE_KEY);
   notifyFavoriteFolderChangedListener(favoriteFolderRoot);
   showToast('즐겨찾기 폴더가 초기화되었습니다.', '#0f0');
 }
@@ -396,7 +396,7 @@ export async function flushFavoriteFolder(): Promise<void> {
 export type LatestTab = 'history' | 'favorites';
 
 export function setLatestTab(dataTab: LatestTab): void {
-  localStorage.setItem('latestTab', dataTab);
+  localStorage.set({ latestTab: dataTab });
 }
 
 export function getLatestTab(): LatestTab {
@@ -452,7 +452,7 @@ export async function getOrFetchCache<T>(
 
 async function getCachedData<T>(key: string, maxAge: number): Promise<T | null> {
   return new Promise((resolve) => {
-    storage.get([key], (result) => {
+    localStorage.get([key], (result) => {
       const cached = result[key] as CachedData<T> | undefined;
       if (cached && (Date.now() - cached.timestamp < maxAge)) {
         resolve(cached.data);
@@ -469,7 +469,7 @@ async function setCachedData<T>(key: string, data: T): Promise<void> {
     data
   };
   return new Promise((resolve) => {
-    storage.set({ [key]: cachedData }, () => {
+    localStorage.set({ [key]: cachedData }, () => {
       resolve();
     });
   });
