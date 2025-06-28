@@ -1,24 +1,30 @@
+import { syncStorage } from './storageLoader';
 import { localStorage } from './storageLoader';
 
 const KEY_PREFIX = 'poe2trade_settings_';
 
-function setSetting(key: string, value: boolean, defaultValue: boolean = false) : Promise<void> {
+function setSetting(storage: 'local' | 'sync', key: string, value: any): Promise<void> {
   return new Promise((resolve, reject) => {
-    localStorage.get(KEY_PREFIX, (result) => {
-      const settings: Record<string, boolean> = result[KEY_PREFIX] || {};
-      settings[key] = value !== undefined ? value : defaultValue;
-      localStorage.set({ [KEY_PREFIX]: settings }, () => {
+    const storageObj = storage === 'local' ? localStorage : syncStorage;
+    storageObj.set({ [KEY_PREFIX + key]: value }, () => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
         resolve();
-      });
+      }
     });
   });
 }
 
-function getSetting(key: string, defaultValue: boolean = false): Promise<boolean> {
+function getSetting(storage: 'local' | 'sync', key: string, defaultValue: any = false): Promise<typeof defaultValue> {
   return new Promise((resolve, reject) => {
-    localStorage.get(KEY_PREFIX, (result) => {
-      const settings: Record<string, boolean> = result[KEY_PREFIX] || {};
-      resolve(settings[key] !== undefined ? settings[key] : defaultValue);
+    const storageObj = storage === 'local' ? localStorage : syncStorage;
+    storageObj.get(KEY_PREFIX + key, (result) => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(result[KEY_PREFIX + key] !== undefined ? result[KEY_PREFIX + key] : defaultValue);
+      }
     });
   });
 }
