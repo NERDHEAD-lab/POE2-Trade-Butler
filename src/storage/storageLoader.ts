@@ -5,16 +5,16 @@ export const sessionStorage = chrome.storage.session;
 const StorageTypeEnum = {
   local: {
     module: chrome.storage.local,
-    description: 'Local storage',
+    description: 'Local storage'
   },
   sync: {
     module: chrome.storage.sync,
-    description: 'Sync storage',
+    description: 'Sync storage'
   },
   session: {
     module: chrome.storage.session,
-    description: 'Session-only storage',
-  },
+    description: 'Session-only storage'
+  }
 } as const;
 
 export type StorageType = keyof typeof StorageTypeEnum;
@@ -50,16 +50,17 @@ export function getSetting<T>(
   });
 }
 
-export function addOnChangeListener(
+export function addOnChangeListener<T>(
   storage: StorageType,
   key: string,
-  listener: (newValue: any, oldValue: any) => void
+  listener: (newValue: T, oldValue: T) => void
 ): () => void {
   const storageObj = StorageTypeEnum[storage].module;
 
   const changeListener = (changes: { [key: string]: chrome.storage.StorageChange }) => {
-    if (changes[key]) {
-      listener(changes[key].newValue, changes[key].oldValue);
+    const change = changes[key];
+    if (change) {
+      listener(change.newValue as T, change.oldValue as T);
     }
   };
 
