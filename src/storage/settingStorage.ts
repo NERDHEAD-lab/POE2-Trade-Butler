@@ -28,3 +28,48 @@ function getSetting(storage: 'local' | 'sync', key: string, defaultValue: any = 
     });
   });
 }
+
+// LatestTap
+export type LatestTab = 'history' | 'favorites';
+const defaultLatestTab: LatestTab = 'history';
+
+export function setLatestTab(tap: LatestTab): Promise<void> {
+  return setSetting('sync', 'latestTap', tap);
+}
+
+export function getLatestTab(): Promise<LatestTab> {
+  return getSetting('sync', 'latestTap', defaultLatestTab);
+}
+
+// historyAutoAddEnabled
+const defaultHistoryAutoAddEnabled = true;
+
+export function setHistoryAutoAddEnabled(enabled: boolean): Promise<void> {
+  return setSetting('sync', 'historyAutoAddEnabled', enabled);
+}
+
+export function isHistoryAutoAddEnabled(): Promise<boolean> {
+  return getSetting('sync', 'historyAutoAddEnabled', defaultHistoryAutoAddEnabled);
+}
+
+// LatestSearchUrl
+const defaultLatestSearchUrl = document.location.href;
+
+export function setLatestSearchUrl(url: string): Promise<void> {
+  return setSetting('local', 'latestSearchUrl', url);
+}
+
+export function getLatestSearchUrl(): Promise<string> {
+  return getSetting('local', 'latestSearchUrl', defaultLatestSearchUrl);
+}
+
+// SidebarCollapsed
+const defaultSidebarCollapsed = false;
+
+export function setSidebarCollapsed(collapsed: boolean): Promise<void> {
+  return setSetting('local', 'sidebarCollapsed', collapsed);
+}
+
+export function isSidebarCollapsed(): Promise<boolean> {
+  return getSetting('local', 'sidebarCollapsed', defaultSidebarCollapsed);
+}

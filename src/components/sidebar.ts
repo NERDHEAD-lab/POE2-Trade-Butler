@@ -1,11 +1,12 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
-import * as storage from '../utils/storage';
-import { openFavoriteFolderModal } from '../ui/favoriteFolderModal';
 import { showToast } from '../utils/api';
+import * as storage from '../utils/storage';
+import { SearchHistoryEntity } from '../utils/storage';
+import * as settingStorage from '../storage/settingStorage';
+import { openFavoriteFolderModal } from '../ui/favoriteFolderModal';
 import { PreviewPanelSnapshot, TradePreviewer } from '../utils/tradePreviewInjector';
 import * as folderUI from '../ui/favoriteFolderUI';
-import { SearchHistoryEntity } from '../utils/storage';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
@@ -97,16 +98,19 @@ export function renderSidebar(container: HTMLElement): void {
   });
 
   //history-switch history 자동 추가 활성/비활성화
-  const historySwitch = sidebar.querySelector<HTMLInputElement>('#history-switch');
-  if (historySwitch) {
-    historySwitch.checked = storage.isHistoryAutoAddEnabled();
-  }
+  (async () => {
+    const historySwitch = sidebar.querySelector<HTMLInputElement>('#history-switch');
+    if (!historySwitch) throw new Error('history-switch not found');
 
-  historySwitch?.addEventListener('change', (e) => {
-    const isChecked = historySwitch.checked;
-    storage.setHistoryAutoAddEnabled(isChecked);
-    showToast(`History auto-add ${isChecked ? 'enabled' : 'disabled'}.`);
-  });
+    historySwitch.checked = await settingStorage.isHistoryAutoAddEnabled();
+
+    historySwitch.addEventListener('change', () => {
+      const isChecked = historySwitch.checked;
+      settingStorage.setHistoryAutoAddEnabled(isChecked);
+      showToast(`History auto-add ${isChecked ? 'enabled' : 'disabled'}.`);
+    });
+  })();
+
 
 
   const addFavoriteButton = sidebar.querySelector<HTMLButtonElement>('#add-favorite') as HTMLButtonElement;
@@ -122,20 +126,26 @@ export function renderSidebar(container: HTMLElement): void {
   );
 
   // sidebar 여닫기
-  const toggleButton = sidebar.querySelector<HTMLButtonElement>(`#poe2-sidebar-toggle-button`);
-  let isOpen = true;
+  (async () => {
+    const toggleButton = sidebar.querySelector<HTMLButtonElement>('#poe2-sidebar-toggle-button');
+    if (!toggleButton) throw new Error('toggle button not found');
 
-  toggleButton?.addEventListener('click', () => {
-    isOpen = !isOpen;
-    sidebar.classList.toggle('collapsed', !isOpen);
-    wrapper.classList.toggle('collapsed', !isOpen);
-    toggleButton.textContent = isOpen ? '⮜' : '⮞';
-    storage.setSidebarCollapsed(!isOpen);
-  });
+    let isOpen = true;
 
-  if (storage.isSidebarCollapsed()) {
-    toggleButton?.click();
-  }
+    toggleButton.addEventListener('click', () => {
+      isOpen = !isOpen;
+      sidebar.classList.toggle('collapsed', !isOpen);
+      wrapper.classList.toggle('collapsed', !isOpen);
+      toggleButton.textContent = isOpen ? '⮜' : '⮞';
+      settingStorage.setSidebarCollapsed(!isOpen);
+    });
+
+    const isCollapsed = await settingStorage.isSidebarCollapsed();
+    if (isCollapsed) {
+      toggleButton.click(); // 초기 상태 동기화
+    }
+  })();
+
 
   loadHistoryList(storage.getAllHistory());
   loadFavoritesList(storage.getFavoriteFolderRoot());
@@ -148,25 +158,28 @@ export function renderSidebar(container: HTMLElement): void {
   });
 
   // 탭 전환 이벤트
-  const tabs = sidebar.querySelectorAll('.menu-tab');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      const contents = sidebar.querySelectorAll('.tab-content');
-      contents.forEach(c => c.classList.remove('active'));
+  (async () => {
+    const tabs = sidebar.querySelectorAll<HTMLButtonElement>('.menu-tab');
 
-      tab.classList.add('active');
-      const activeTab = tab.getAttribute('data-tab') as storage.LatestTab;
-      if (activeTab) {
-        sidebar.querySelector(`.tab-content#${activeTab}`)?.classList.add('active');
-        storage.setLatestTab(activeTab);
-      }
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        const contents = sidebar.querySelectorAll('.tab-content');
+        contents.forEach(c => c.classList.remove('active'));
+
+        tab.classList.add('active');
+        const activeTab = tab.getAttribute('data-tab') as settingStorage.LatestTab;
+        if (activeTab) {
+          sidebar.querySelector(`.tab-content#${activeTab}`)?.classList.add('active');
+          settingStorage.setLatestTab(activeTab);
+        }
+      });
     });
-  });
 
-  const tabName = storage.getLatestTab();
-  const tab = sidebar.querySelector(`.menu-tab[data-tab="${tabName}"]`) as HTMLButtonElement | null;
-  tab?.click();
+    const latestTab = await settingStorage.getLatestTab(); // 비동기에서 탭 이름 불러오기
+    const tab = sidebar.querySelector<HTMLButtonElement>(`.menu-tab[data-tab="${latestTab}"]`);
+    tab?.click(); // 초기 탭 활성화
+  })();
 
   observeUrlChange();
 }
@@ -432,10 +445,11 @@ function observeUrlChange() {
 
 let currentHandleUrl = '';
 
-async function updateHistoryFromUrl(currentUrl: string) {
-  const latestSearchUrl = storage.getLatestSearchUrl();
+async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
+  const latestSearchUrl = await settingStorage.getLatestSearchUrl();
 
-  if (!storage.isHistoryAutoAddEnabled()) {
+  const autoAddEnabled = await settingStorage.isHistoryAutoAddEnabled();
+  if (!autoAddEnabled) {
     console.debug('History auto-add is disabled, skipping URL change handling');
     return;
   }
@@ -444,7 +458,6 @@ async function updateHistoryFromUrl(currentUrl: string) {
     console.debug('Already handling URL change, skipping:', currentUrl);
     return;
   }
-
   if (api.parseSearchUrl(currentUrl) === null) {
     console.debug(`Ignoring URL change, not a valid search URL: ${currentUrl}`);
     return;
@@ -453,8 +466,8 @@ async function updateHistoryFromUrl(currentUrl: string) {
   currentHandleUrl = currentUrl;
 
   try {
-    const entity = api.getSearchHistoryFromUrl(currentUrl);
-    const exists = await storage.isExistingHistory(entity.id);
+    const entity  = api.getSearchHistoryFromUrl(currentUrl);
+    const exists  = await storage.isExistingHistory(entity.id);
 
     if (exists && latestSearchUrl === currentUrl) {
       console.info(`Ignoring URL change, it's just refreshing: ${currentUrl}`);
@@ -463,14 +476,17 @@ async function updateHistoryFromUrl(currentUrl: string) {
 
     await storage.addOrUpdateHistory(entity);
     await storage.putIfAbsentEtc(
-      entity.id, 'previewInfo', () => {
+      entity.id,
+      'previewInfo',
+      () => {
         console.log(`previewInfo not found for ${entity.id}, extracting current panel...`);
         return TradePreviewer.extractCurrentPanel();
-      });
+      }
+    );
 
     console.log(`Search history updated for URL: ${currentUrl}`);
-    // latestSearchUrl = currentUrl;
-    storage.setLatestSearchUrl(currentUrl);
+
+    await settingStorage.setLatestSearchUrl(currentUrl);
 
   } catch (err) {
     console.info(`Unexpected error while handling URL change: ${currentUrl}`, err);
@@ -481,6 +497,7 @@ async function updateHistoryFromUrl(currentUrl: string) {
     currentHandleUrl = '';
   }
 }
+
 
 export function attachPreviewHoverEvents(
   element: HTMLElement,
