@@ -1,4 +1,4 @@
-import { SearchHistoryEntity } from './storage';
+import { SearchHistoryEntity } from '../storage/favoriteStorage';
 
 /*
   http(s)://www.pathofexile.com/trade2/search/poe2/{serverName}/{id}

@@ -1,4 +1,4 @@
-import * as storage from '../utils/storage';
+import * as storage from '../storage/favoriteStorage';
 import { showToast } from '../utils/api';
 
 /**

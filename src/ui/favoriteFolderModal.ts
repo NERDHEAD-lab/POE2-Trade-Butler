@@ -1,7 +1,7 @@
 import { showModal, showToast } from '../utils/api';
-import * as storage from '../utils/storage';
+import * as storage from '../storage/favoriteStorage';
 import * as folderUI from './favoriteFolderUI';
-import { SearchHistoryEntity } from '../utils/storage';
+import { SearchHistoryEntity } from '../storage/favoriteStorage';
 
 const ON_OPEN_FAVORITE_MODAL = 'openCreateFavoriteFolderModal';
 

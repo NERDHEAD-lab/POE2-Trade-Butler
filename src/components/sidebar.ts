@@ -1,7 +1,7 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
 import { showToast } from '../utils/api';
-import * as storage from '../utils/storage';
+import * as favoriteStorage from '../storage/favoriteStorage';
 import * as searchHistoryStorage from '../storage/searchHistoryStorage';
 import * as settingStorage from '../storage/settingStorage';
 import { openFavoriteFolderModal } from '../ui/favoriteFolderModal';
@@ -148,11 +148,11 @@ export function renderSidebar(container: HTMLElement): void {
 
 
   loadHistoryList(searchHistoryStorage.getAllHistory());
-  loadFavoritesList(storage.getFavoriteFolderRoot());
+  loadFavoritesList(favoriteStorage.getFavoriteFolderRoot());
   searchHistoryStorage.addSearchHistoryChangedListener(ON_SEARCH_HISTORY_CHANGED, (newEntries) => {
     loadHistoryList(Promise.resolve(newEntries));
   });
-  storage.addFavoriteFolderChangedListener(ON_FAVORITE_FOLDER_CHANGED, (root) => {
+  favoriteStorage.addFavoriteFolderChangedListener(ON_FAVORITE_FOLDER_CHANGED, (root) => {
     loadHistoryList(searchHistoryStorage.getAllHistory());
     loadFavoritesList(Promise.resolve(root));
   });
@@ -228,7 +228,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
       .join('\n')}`;
   }
 
-  storage.isFavoriteContains(entry.id)
+  favoriteStorage.isFavoriteContains(entry.id)
     .then(isFavorite => {
       if (isFavorite) {
         favoriteStar.classList.add('active');
@@ -278,7 +278,7 @@ function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistory
   });
 }
 
-function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void {
+function loadFavoritesList(favorites: Promise<favoriteStorage.FavoriteFolderRoot>): void {
   const wrapper = document.getElementById('favorites-list') as HTMLDivElement;
   if (!wrapper) {
     console.error('Could not find #favorites-list element');
@@ -297,7 +297,7 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
           const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
 
           if (newName && !exceptions.some(char => newName.includes(char))) {
-            storage.renameFavoriteElement('folder', path, newName)
+            favoriteStorage.renameFavoriteElement('folder', path, newName)
               .then(() => {
                 showToast(`Favorite folder renamed to "${newName}"`);
               })
@@ -361,7 +361,7 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
               alert(`Invalid name. Please avoid using these characters: ${exceptions.join(' ')}`);
             } else {
               const path = li.dataset.path || '/';
-              storage.renameFavoriteElement('item', path, newName)
+              favoriteStorage.renameFavoriteElement('item', path, newName)
                 .then(() => {
                   showToast(`Favorite item renamed to "${newName}"`);
                 })
@@ -383,7 +383,7 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
             e.stopPropagation();
             const path = li.dataset.path || '/';
             if (confirm(`Are you sure you want to remove "${path}" from favorites?`)) {
-              storage.removeFavoriteItem(path)
+              favoriteStorage.removeFavoriteItem(path)
                 .then(() => {
                   showToast(`"${entry.name}" has been removed from favorites.`);
                 })
@@ -402,7 +402,7 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
   wrapper.appendChild(folderElement);
 }
 
-function findFavoriteItemById(root: storage.FavoriteFolderRoot, id: string): storage.FavoriteItem | undefined {
+function findFavoriteItemById(root: favoriteStorage.FavoriteFolderRoot, id: string): favoriteStorage.FavoriteItem | undefined {
   // 1. 루트의 items에서 먼저 찾음
   const directMatch = root.items.find(item => item.id === id);
   if (directMatch) return directMatch;
@@ -416,7 +416,7 @@ function findFavoriteItemById(root: storage.FavoriteFolderRoot, id: string): sto
   return undefined;
 }
 
-function findItemInFolderById(folder: storage.FavoriteFolder, id: string): storage.FavoriteItem | undefined {
+function findItemInFolderById(folder: favoriteStorage.FavoriteFolder, id: string): favoriteStorage.FavoriteItem | undefined {
   const item = folder.items?.find(i => i.id === id);
   if (item) return item;
 
@@ -539,7 +539,7 @@ export function attachCreateFavoriteEvent(
     e.stopPropagation();
     const entry = entrySupplier();
 
-    storage.isFavoriteContains(entry.id)
+    favoriteStorage.isFavoriteContains(entry.id)
       .then(isFavorite => {
         if (isFavorite) {
           // 이미 즐겨찾기인 경우 추가로 등록할 지 확인
