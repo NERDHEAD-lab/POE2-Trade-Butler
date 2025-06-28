@@ -73,3 +73,14 @@ export function setSidebarCollapsed(collapsed: boolean): Promise<void> {
 export function isSidebarCollapsed(): Promise<boolean> {
   return getSetting('local', 'sidebarCollapsed', defaultSidebarCollapsed);
 }
+
+// RedirectPoe2TradeEnabled
+const defaultRedirectPoe2TradeEnabled = true;
+
+export function setRedirectPoe2TradeEnabled(enabled: boolean): Promise<void> {
+  return setSetting('sync', 'redirectPoe2TradeEnabled', enabled);
+}
+
+export function isRedirectPoe2TradeEnabled(): Promise<boolean> {
+  return getSetting('sync', 'redirectPoe2TradeEnabled', defaultRedirectPoe2TradeEnabled);
+}
