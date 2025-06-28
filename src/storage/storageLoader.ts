@@ -1,26 +1,28 @@
-/********************* MockSafety Check *********************/
 export const localStorage = chrome.storage.local;
 export const syncStorage = chrome.storage.sync;
 export const sessionStorage = chrome.storage.session;
 
-export type StorageType = 'local' | 'sync' | 'session';
+const StorageTypeEnum = {
+  local: {
+    module: chrome.storage.local,
+    description: 'Local storage',
+  },
+  sync: {
+    module: chrome.storage.sync,
+    description: 'Sync storage',
+  },
+  session: {
+    module: chrome.storage.session,
+    description: 'Session-only storage',
+  },
+} as const;
 
-function getStorageModule(storage: StorageType): chrome.storage.StorageArea {
-  switch (storage) {
-    case 'local':
-      return chrome.storage.local;
-    case 'sync':
-      return chrome.storage.sync;
-    case 'session':
-      return chrome.storage.session;
-    default:
-      throw new Error(`Invalid storage type: ${storage}`);
-  }
-}
+export type StorageType = keyof typeof StorageTypeEnum;
+
 
 export function setSetting<T>(storage: StorageType, key: string, value: T): Promise<void> {
   return new Promise((resolve, reject) => {
-    const storageObj = getStorageModule(storage).module;
+    const storageObj = StorageTypeEnum[storage].module;
     storageObj.set({ [key]: value }, () => {
       if (chrome.runtime.lastError) {
         reject(chrome.runtime.lastError);
@@ -37,7 +39,7 @@ export function getSetting<T>(
   defaultValue: T
 ): Promise<T> {
   return new Promise((resolve, reject) => {
-    const storageObj = storageType === getStorageModule(storageType);
+    const storageObj = StorageTypeEnum[storageType].module;
     storageObj.get(key, (result) => {
       if (chrome.runtime.lastError) {
         reject(chrome.runtime.lastError);
@@ -53,7 +55,7 @@ export function addOnChangeListener(
   key: string,
   listener: (newValue: any, oldValue: any) => void
 ): () => void {
-  const storageObj = storage === 'local' ? localStorage : syncStorage;
+  const storageObj = StorageTypeEnum[storage].module;
 
   const changeListener = (changes: { [key: string]: chrome.storage.StorageChange }) => {
     if (changes[key]) {
