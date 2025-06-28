@@ -20,7 +20,7 @@ const StorageTypeEnum = {
 export type StorageType = keyof typeof StorageTypeEnum;
 
 
-export function setSetting<T>(storage: StorageType, key: string, value: T): Promise<void> {
+export function set<T>(storage: StorageType, key: string, value: T): Promise<void> {
   return new Promise((resolve, reject) => {
     const storageObj = StorageTypeEnum[storage].module;
     storageObj.set({ [key]: value }, () => {
@@ -33,7 +33,7 @@ export function setSetting<T>(storage: StorageType, key: string, value: T): Prom
   });
 }
 
-export function getSetting<T>(
+export function get<T>(
   storageType: StorageType,
   key: string,
   defaultValue: T

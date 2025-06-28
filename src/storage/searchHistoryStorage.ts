@@ -1,4 +1,5 @@
-import { getSetting, setSetting, addOnChangeListener, StorageType, localStorage } from './storageLoader';
+import { get, set, StorageType } from './storage';
+import * as storage from './storage';
 
 const STORAGE_SEARCH_HISTORY_KEY = 'searchHistory';
 

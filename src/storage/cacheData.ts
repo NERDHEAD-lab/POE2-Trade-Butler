@@ -1,4 +1,4 @@
-import { localStorage } from './storageLoader';
+import { localStorage } from './storage';
 
 interface CachedData<T> {
   timestamp: number;

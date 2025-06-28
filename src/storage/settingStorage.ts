@@ -1,14 +1,23 @@
-import { getSetting, setSetting, StorageType } from './storageLoader';
+import { get, set, StorageType } from './storage';
+import * as storageLoader from './storage';
 
 const KEY_PREFIX = 'poe2trade_settings_';
 
 //override the default storage methods to include a prefix
-function setSettingWithPrefix(storageType: StorageType, key: string, value: any): Promise<void> {
-  return setSetting(storageType, `${KEY_PREFIX}${key}`, value);
+function setSetting(storageType: StorageType, key: string, value: any): Promise<void> {
+  return set(storageType, `${KEY_PREFIX}${key}`, value);
 }
 
-function getSettingWithPrefix(storage: StorageType, key: string, defaultValue: any = false): Promise<typeof defaultValue> {
-  return getSetting(storage, `${KEY_PREFIX}${key}`, defaultValue);
+function getSetting(storage: StorageType, key: string, defaultValue: any = false): Promise<typeof defaultValue> {
+  return get(storage, `${KEY_PREFIX}${key}`, defaultValue);
+}
+
+function addOnChangeListener(
+  storage: StorageType,
+  key: string,
+  listener: (newValue: any, oldValue: any) => void
+): () => void {
+  return storageLoader.addOnChangeListener(storage, `${KEY_PREFIX}${key}`, listener);
 }
 
 /* **************************************************************************************** */
@@ -19,53 +28,59 @@ export type LatestTab = 'history' | 'favorites';
 const defaultLatestTab: LatestTab = 'history';
 
 export function setLatestTab(tap: LatestTab): Promise<void> {
-  return setSettingWithPrefix('sync', 'latestTap', tap);
+  return setSetting('sync', 'latestTap', tap);
 }
 
 export function getLatestTab(): Promise<LatestTab> {
-  return getSettingWithPrefix('sync', 'latestTap', defaultLatestTab);
+  return getSetting('sync', 'latestTap', defaultLatestTab);
 }
 
 // historyAutoAddEnabled
 const defaultHistoryAutoAddEnabled = true;
 
 export function setHistoryAutoAddEnabled(enabled: boolean): Promise<void> {
-  return setSettingWithPrefix('sync', 'historyAutoAddEnabled', enabled);
+  return setSetting('sync', 'historyAutoAddEnabled', enabled);
 }
 
 export function isHistoryAutoAddEnabled(): Promise<boolean> {
-  return getSettingWithPrefix('sync', 'historyAutoAddEnabled', defaultHistoryAutoAddEnabled);
+  return getSetting('sync', 'historyAutoAddEnabled', defaultHistoryAutoAddEnabled);
 }
 
 // LatestSearchUrl
 const defaultLatestSearchUrl = document.location.href;
 
 export function setLatestSearchUrl(url: string): Promise<void> {
-  return setSettingWithPrefix('local', 'latestSearchUrl', url);
+  return setSetting('local', 'latestSearchUrl', url);
 }
 
 export function getLatestSearchUrl(): Promise<string> {
-  return getSettingWithPrefix('local', 'latestSearchUrl', defaultLatestSearchUrl);
+  return getSetting('local', 'latestSearchUrl', defaultLatestSearchUrl);
 }
 
 // SidebarCollapsed
 const defaultSidebarCollapsed = false;
 
 export function setSidebarCollapsed(collapsed: boolean): Promise<void> {
-  return setSettingWithPrefix('local', 'sidebarCollapsed', collapsed);
+  return setSetting('local', 'sidebarCollapsed', collapsed);
 }
 
 export function isSidebarCollapsed(): Promise<boolean> {
-  return getSettingWithPrefix('local', 'sidebarCollapsed', defaultSidebarCollapsed);
+  return getSetting('local', 'sidebarCollapsed', defaultSidebarCollapsed);
 }
 
 // RedirectPoe2TradeEnabled
 const defaultRedirectPoe2TradeEnabled = true;
 
 export function setRedirectPoe2TradeEnabled(enabled: boolean): Promise<void> {
-  return setSettingWithPrefix('sync', 'redirectPoe2TradeEnabled', enabled);
+  return setSetting('sync', 'redirectPoe2TradeEnabled', enabled);
 }
 
 export function isRedirectPoe2TradeEnabled(): Promise<boolean> {
-  return getSettingWithPrefix('sync', 'redirectPoe2TradeEnabled', defaultRedirectPoe2TradeEnabled);
+  return getSetting('sync', 'redirectPoe2TradeEnabled', defaultRedirectPoe2TradeEnabled);
+}
+
+export function addRedirectPoe2TradeEnabledChangeListener(
+  listener: (newValue: boolean, oldValue: boolean) => void
+): () => void {
+  return addOnChangeListener('sync', 'redirectPoe2TradeEnabled', listener);
 }

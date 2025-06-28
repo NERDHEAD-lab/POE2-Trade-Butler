@@ -67,8 +67,9 @@ function appendPopupMenuItem(target: HTMLElement, item: popupMenuItem) {
 }
 
 
-
-
+/* **************************************************************************************** */
+/* ********************************** Render Popup Menu *********************************** */
+/* **************************************************************************************** */
 (async function renderPopup(container: HTMLDivElement) {
   container.innerHTML = '';
 

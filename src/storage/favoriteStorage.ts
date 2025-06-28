@@ -1,5 +1,5 @@
 import { showToast } from '../utils/api';
-import { localStorage } from './storageLoader';
+import { localStorage } from './storage';
 
 // TODO: 종류 별로 별도 Repository 클래스로 분리 필요
 
