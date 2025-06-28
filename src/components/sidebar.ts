@@ -2,7 +2,7 @@ import '../styles/sidebar.css';
 import * as api from '../utils/api';
 import { showToast } from '../utils/api';
 import * as storage from '../utils/storage';
-import { SearchHistoryEntity } from '../utils/storage';
+import * as searchHistoryStorage from '../storage/searchHistoryStorage';
 import * as settingStorage from '../storage/settingStorage';
 import { openFavoriteFolderModal } from '../ui/favoriteFolderModal';
 import { PreviewPanelSnapshot, TradePreviewer } from '../utils/tradePreviewInjector';
@@ -88,7 +88,7 @@ export function renderSidebar(container: HTMLElement): void {
   const clearHistoryButton = sidebar.querySelector<HTMLButtonElement>('#clear-history');
   clearHistoryButton?.addEventListener('click', () => {
     if (confirm('Are you sure you want to clear all search history?')) {
-      storage.clearAllHistory().then(() => {
+      searchHistoryStorage.clearAllHistory().then(() => {
         showToast('Search history cleared successfully.');
       }).catch(error => {
         console.error('Error clearing search history:', error);
@@ -147,13 +147,13 @@ export function renderSidebar(container: HTMLElement): void {
   })();
 
 
-  loadHistoryList(storage.getAllHistory());
+  loadHistoryList(searchHistoryStorage.getAllHistory());
   loadFavoritesList(storage.getFavoriteFolderRoot());
-  storage.addSearchHistoryChangedListener(ON_SEARCH_HISTORY_CHANGED, (newEntries) => {
+  searchHistoryStorage.addSearchHistoryChangedListener(ON_SEARCH_HISTORY_CHANGED, (newEntries) => {
     loadHistoryList(Promise.resolve(newEntries));
   });
   storage.addFavoriteFolderChangedListener(ON_FAVORITE_FOLDER_CHANGED, (root) => {
-    loadHistoryList(storage.getAllHistory());
+    loadHistoryList(searchHistoryStorage.getAllHistory());
     loadFavoritesList(Promise.resolve(root));
   });
 
@@ -185,7 +185,7 @@ export function renderSidebar(container: HTMLElement): void {
 }
 
 //history-name-input -> placeHolder=${entry.id}
-function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
+function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTMLElement {
   const li = document.createElement('li');
   li.className = 'history-item';
   li.innerHTML = historyItem;
@@ -250,7 +250,7 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
 
   removeButton.addEventListener('click', (e) => {
     e.stopPropagation();
-    storage.deleteHistoryById(entry.id).catch((error) => {
+    searchHistoryStorage.deleteHistoryById(entry.id).catch((error) => {
       console.error('Error deleting history:', error);
     });
     li.remove();
@@ -259,7 +259,7 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
   return li;
 }
 
-function loadHistoryList(historyList: Promise<storage.SearchHistoryEntity[]>): void {
+function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistoryEntity[]>): void {
   historyList.then(entries => {
     const historyListElement = document.getElementById('history-list');
     if (!historyListElement) {
@@ -467,15 +467,15 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
 
   try {
     const entity  = api.getSearchHistoryFromUrl(currentUrl);
-    const exists  = await storage.isExistingHistory(entity.id);
+    const exists  = await searchHistoryStorage.isExistingHistory(entity.id);
 
     if (exists && latestSearchUrl === currentUrl) {
       console.info(`Ignoring URL change, it's just refreshing: ${currentUrl}`);
       return;
     }
 
-    await storage.addOrUpdateHistory(entity);
-    await storage.putIfAbsentEtc(
+    await searchHistoryStorage.addOrUpdateHistory(entity);
+    await searchHistoryStorage.putIfAbsentEtc(
       entity.id,
       'previewInfo',
       () => {
@@ -532,7 +532,7 @@ export function attachCreateFavoriteEvent(
   entrySupplier: () => {
     id: string;
     url: string;
-    etc?: SearchHistoryEntity['etc'];
+    etc?: searchHistoryStorage.SearchHistoryEntity['etc'];
   }
 ): void {
   element.addEventListener('click', (e) => {
