@@ -54,7 +54,7 @@ export function addOnChangeListener<T>(
   storage: StorageType,
   key: string,
   listener: (newValue: T, oldValue: T) => void
-): () => void {
+): void {
   const storageObj = StorageTypeEnum[storage].module;
 
   const changeListener = (changes: { [key: string]: chrome.storage.StorageChange }) => {
@@ -65,8 +65,4 @@ export function addOnChangeListener<T>(
   };
 
   storageObj.onChanged.addListener(changeListener);
-
-  return () => {
-    storageObj.onChanged.removeListener(changeListener);
-  };
 }

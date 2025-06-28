@@ -16,8 +16,8 @@ function addOnChangeListener(
   storage: StorageType,
   key: string,
   listener: (newValue: any, oldValue: any) => void
-): () => void {
-  return storageLoader.addOnChangeListener(storage, `${KEY_PREFIX}${key}`, listener);
+): void {
+  storageLoader.addOnChangeListener(storage, `${KEY_PREFIX}${key}`, listener);
 }
 
 /* **************************************************************************************** */
@@ -81,6 +81,6 @@ export function isRedirectPoe2TradeEnabled(): Promise<boolean> {
 
 export function addRedirectPoe2TradeEnabledChangeListener(
   listener: (newValue: boolean, oldValue: boolean) => void
-): () => void {
-  return addOnChangeListener('sync', 'redirectPoe2TradeEnabled', listener);
+): void {
+  addOnChangeListener('sync', 'redirectPoe2TradeEnabled', listener);
 }

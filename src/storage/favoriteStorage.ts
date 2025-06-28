@@ -22,7 +22,6 @@ export interface FavoriteItem {
   id: string;       // SearchHistoryEntity.id
   name?: string;    // 사용자 지정 별칭 (기본값: id)
   url: string;      // SearchHistoryEntity.url
-  etc?: Record<string, any>; // 기타 정보 (예: 프리뷰 데이터 등)
 }
 
 export interface FavoriteFolder {

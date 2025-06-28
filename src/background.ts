@@ -1,3 +1,7 @@
+import * as searchHistory from './storage/searchHistoryStorage';
+import * as favorite from './storage/favoriteStorage';
+import * as previewStorage from './storage/previewStorage';
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // reload the extension when a development script sends a message
   if (message.type === 'RELOAD_EXTENSION') {
@@ -20,3 +24,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 });
+
+searchHistory.addOnDeletedListener((deletedId) => {
+  void previewStorage.deleteIfOrphaned(deletedId, 'searchHistory');
+});
+
+//TODO: favoriteStorage에 삭제 리스너 추가
+// favorite.addOnDeletedListener((deletedId) => {
+//   void previewStorage.deleteIfOrphaned(deletedId, 'favorite');
+// });

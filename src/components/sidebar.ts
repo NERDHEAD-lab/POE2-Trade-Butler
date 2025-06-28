@@ -5,7 +5,9 @@ import * as favoriteStorage from '../storage/favoriteStorage';
 import * as searchHistoryStorage from '../storage/searchHistoryStorage';
 import * as settingStorage from '../storage/settingStorage';
 import { openFavoriteFolderModal } from '../ui/favoriteFolderModal';
-import { PreviewPanelSnapshot, TradePreviewer } from '../utils/tradePreviewInjector';
+import { TradePreviewer } from '../utils/tradePreviewInjector';
+import * as previewStorage from '../storage/previewStorage';
+import { PreviewPanelSnapshot } from '../storage/previewStorage';
 import * as folderUI from '../ui/favoriteFolderUI';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
@@ -88,7 +90,7 @@ export function renderSidebar(container: HTMLElement): void {
   const clearHistoryButton = sidebar.querySelector<HTMLButtonElement>('#clear-history');
   clearHistoryButton?.addEventListener('click', () => {
     if (confirm('Are you sure you want to clear all search history?')) {
-      searchHistoryStorage.clearAllHistory().then(() => {
+      searchHistoryStorage.removeAll().then(() => {
         showToast('Search history cleared successfully.');
       }).catch(error => {
         console.error('Error clearing search history:', error);
@@ -112,7 +114,6 @@ export function renderSidebar(container: HTMLElement): void {
   })();
 
 
-
   const addFavoriteButton = sidebar.querySelector<HTMLButtonElement>('#add-favorite') as HTMLButtonElement;
   attachCreateFavoriteEvent(addFavoriteButton, () => {
       const searchHistoryFromUrl = api.getSearchHistoryFromUrl(window.location.href);
@@ -120,7 +121,7 @@ export function renderSidebar(container: HTMLElement): void {
       return {
         id: searchHistoryFromUrl.id,
         url: searchHistoryFromUrl.url,
-        etc: { previewInfo: TradePreviewer.extractCurrentPanel() }
+        preview: TradePreviewer.extractCurrentPanel()
       };
     }
   );
@@ -147,13 +148,12 @@ export function renderSidebar(container: HTMLElement): void {
   })();
 
 
-  loadHistoryList(searchHistoryStorage.getAllHistory());
+  loadHistoryList(searchHistoryStorage.getAll());
   loadFavoritesList(favoriteStorage.getFavoriteFolderRoot());
-  searchHistoryStorage.addSearchHistoryChangedListener(ON_SEARCH_HISTORY_CHANGED, (newEntries) => {
-    loadHistoryList(Promise.resolve(newEntries));
-  });
+  searchHistoryStorage.addOnChangeListener((newValue) => loadHistoryList(Promise.resolve(newValue)));
+
   favoriteStorage.addFavoriteFolderChangedListener(ON_FAVORITE_FOLDER_CHANGED, (root) => {
-    loadHistoryList(searchHistoryStorage.getAllHistory());
+    loadHistoryList(searchHistoryStorage.getAll());
     loadFavoritesList(Promise.resolve(root));
   });
 
@@ -196,12 +196,14 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   const removeButton = li.querySelector('.remove-history') as HTMLButtonElement;
   const favoriteStar = li.querySelector('.favorite-star') as HTMLSpanElement;
 
-  const previewInfo = entry.etc?.previewInfo as PreviewPanelSnapshot;
-  if (previewInfo && previewInfo.searchKeyword) {
-    nameSpan.textContent = previewInfo.searchKeyword;
-  } else {
-    nameSpan.textContent = entry.id;
-  }
+  previewStorage.getById(entry.id)
+    .then(previewInfo => {
+      if (previewInfo && previewInfo.searchKeyword) {
+        nameSpan.textContent = previewInfo.searchKeyword;
+      } else {
+        nameSpan.textContent = entry.id;
+      }
+    });
 
   //    existing.lastSearched = new Date().toISOString();
   // YYYY.MM.DD HH:mm 형식으로 표시
@@ -246,11 +248,16 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
     window.location.href = api.getUrlFromSearchHistory(entry);
   });
 
-  attachCreateFavoriteEvent(favoriteStar, () => entry);
+
+  attachCreateFavoriteEvent(favoriteStar, () => ({
+    id: entry.id,
+    url: entry.url,
+    preview: previewStorage.getById(entry.id).then(preview => preview || TradePreviewer.extractCurrentPanel())
+  }));
 
   removeButton.addEventListener('click', (e) => {
     e.stopPropagation();
-    searchHistoryStorage.deleteHistoryById(entry.id).catch((error) => {
+    searchHistoryStorage.deleteById(entry.id).catch((error) => {
       console.error('Error deleting history:', error);
     });
     li.remove();
@@ -466,27 +473,19 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
   currentHandleUrl = currentUrl;
 
   try {
-    const entity  = api.getSearchHistoryFromUrl(currentUrl);
-    const exists  = await searchHistoryStorage.isExistingHistory(entity.id);
+    const entity = api.getSearchHistoryFromUrl(currentUrl);
+    const exists = await searchHistoryStorage.exists(entity.id);
 
     if (exists && latestSearchUrl === currentUrl) {
       console.info(`Ignoring URL change, it's just refreshing: ${currentUrl}`);
       return;
     }
 
-    await searchHistoryStorage.addOrUpdateHistory(entity);
-    await searchHistoryStorage.putIfAbsentEtc(
-      entity.id,
-      'previewInfo',
-      () => {
-        console.log(`previewInfo not found for ${entity.id}, extracting current panel...`);
-        return TradePreviewer.extractCurrentPanel();
-      }
-    );
-
-    console.log(`Search history updated for URL: ${currentUrl}`);
-
-    await settingStorage.setLatestSearchUrl(currentUrl);
+    await searchHistoryStorage.addOrUpdate(entity.id, entity.url)
+      .then(() => TradePreviewer.extractCurrentPanel())
+      .then(previewInfo => previewStorage.addOrUpdateById(entity.id, previewInfo))
+      .then(() => settingStorage.setLatestSearchUrl(currentUrl))
+      .then(() => console.log(`Search history updated for URL: ${currentUrl}`));
 
   } catch (err) {
     console.info(`Unexpected error while handling URL change: ${currentUrl}`, err);
@@ -532,7 +531,7 @@ export function attachCreateFavoriteEvent(
   entrySupplier: () => {
     id: string;
     url: string;
-    etc?: searchHistoryStorage.SearchHistoryEntity['etc'];
+    preview: Promise<PreviewPanelSnapshot>;
   }
 ): void {
   element.addEventListener('click', (e) => {
@@ -549,8 +548,6 @@ export function attachCreateFavoriteEvent(
         }
       })
       .then(() => openFavoriteFolderModal('create', entry))
-      .catch((error) => {
-        console.error('Error opening favorite modal:', error);
-      });
+      .catch((error) => console.error('Error opening favorite modal:', error));
   });
 }
