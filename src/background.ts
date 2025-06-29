@@ -40,7 +40,6 @@ searchHistory.addOnDeletedListener((deletedId) => {
   void previewStorage.deleteIfOrphaned(deletedId, 'searchHistory');
 });
 
-//TODO: favoriteStorage에 삭제 리스너 추가
-// favorite.addOnDeletedListener((deletedId) => {
-//   void previewStorage.deleteIfOrphaned(deletedId, 'favorite');
-// });
+favorite.addOnDeletedListener((deletedId) => {
+  void previewStorage.deleteIfOrphaned(deletedId, 'favorite');
+});

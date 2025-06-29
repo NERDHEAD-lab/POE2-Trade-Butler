@@ -4,11 +4,9 @@ import { showToast } from '../utils/api';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as searchHistoryStorage from '../storage/searchHistoryStorage';
 import * as settingStorage from '../storage/settingStorage';
-import { openFavoriteFolderModal } from '../ui/favoriteFolderModal';
 import { TradePreviewer } from '../utils/tradePreviewInjector';
 import * as previewStorage from '../storage/previewStorage';
 import { PreviewPanelSnapshot } from '../storage/previewStorage';
-import * as folderUI from '../ui/favoriteFolderUI';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
