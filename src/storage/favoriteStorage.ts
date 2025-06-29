@@ -18,6 +18,10 @@ export async function getAll(): Promise<FileSystemEntry[]> {
   return get<FileSystemEntry[]>(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, DEFAULT_FAVORITE_MAP());
 }
 
+export async function saveAll(favorites: FileSystemEntry[]): Promise<void> {
+  await set(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, favorites);
+}
+
 export async function exists(id: string): Promise<boolean> {
   const favorites = await getAll();
   return favorites

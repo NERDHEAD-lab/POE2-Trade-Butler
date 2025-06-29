@@ -1,5 +1,7 @@
 export type FileSystemEntry = FileEntry | FolderEntry;
 
+type SortType = 'name' | 'createdAt' | 'modifiedAt';
+
 export interface BaseEntry {
   readonly id: string;
   name: string;
@@ -23,11 +25,83 @@ export function isFileEntry(entry: FileSystemEntry): entry is FileEntry {
   return entry.type === 'file';
 }
 
-export function sortEntries(entries: FileSystemEntry[]): FileSystemEntry[] {
-  return entries.sort((a, b) => {
-    if (a.type === b.type) {
-      return a.name.localeCompare(b.name);
+export function sortEntries(
+  entries: FileSystemEntry[],
+  sortType: SortType = 'name',
+  ascending: boolean = true
+): FileSystemEntry[] {
+  const sorted: FileSystemEntry[] = [];
+
+  function sortGroup(parentId: string | null) {
+    const group = entries.filter(entry => entry.parentId === parentId);
+
+    group.sort((a, b) => {
+      if (a.type !== b.type) {
+        return a.type === 'folder' ? -1 : 1;
+      }
+
+      let aValue = a[sortType] ?? '';
+      let bValue = b[sortType] ?? '';
+
+      if (sortType === 'createdAt' || sortType === 'modifiedAt') {
+        aValue = aValue || '';
+        bValue = bValue || '';
+      }
+
+      const result = String(aValue).localeCompare(String(bValue));
+      return ascending ? result : -result;
+    });
+
+    for (const entry of group) {
+      sorted.push(entry);
+      if (entry.type === 'folder') {
+        sortGroup(entry.id);
+      }
     }
-    return a.type === 'folder' ? -1 : 1; // 폴더가 파일보다 먼저 오도록
-  });
+  }
+
+  sortGroup(null);
+
+  return sorted;
+}
+
+export function moveEntry(
+  entries: FileSystemEntry[],
+  entryId: string,
+  targetParentId: string | null
+): FileSystemEntry[] {
+  const entry = entries.find(e => e.id === entryId);
+  if (!entry) {
+    throw new Error(`Entry with id ${entryId} not found`);
+  }
+
+  if (entryId === targetParentId) {
+    throw new Error(`Cannot move an entry into itself`);
+  }
+
+  // 재귀적으로 후손인지 검사
+  function isDescendant(parentId: string, potentialDescendantId: string): boolean {
+    const children = entries.filter(e => e.parentId === parentId);
+    for (const child of children) {
+      if (child.id === potentialDescendantId) return true;
+      if (child.type === 'folder' && isDescendant(child.id, potentialDescendantId)) return true;
+    }
+    return false;
+  }
+
+  if (targetParentId !== null) {
+    const target = entries.find(e => e.id === targetParentId);
+    if (!target || target.type !== 'folder') {
+      throw new Error(`Target parent with id ${targetParentId} is not a folder`);
+    }
+
+    if (isDescendant(entryId, targetParentId)) {
+      throw new Error(`Cannot move entry into its own descendant`);
+    }
+  }
+
+  // 새 배열 반환 (불변성 유지)
+  return entries.map(e =>
+    e.id === entryId ? { ...e, parentId: targetParentId } : e
+  );
 }

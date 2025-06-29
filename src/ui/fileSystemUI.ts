@@ -23,4 +23,19 @@ class FileSystemUIBuilder {
   public build(): FileSystemUI {
     return (FileSystemUI as any).createInstance(this.fileSystemMap);
   }
+
+  public addOnClickListener(event: (entry: FileSystemEntry) => void): this {
+    //TODO
+    return this;
+  }
+
+  public addOnDoubleClickListener(event: (entry: FileSystemEntry) => void): this {
+    //TODO
+    return this;
+  }
+
+  public addOnDragAndDropListener(event: (entry: FileSystemEntry, target: FileSystemEntry) => void): this {
+    //TODO
+    return this;
+  }
 }
