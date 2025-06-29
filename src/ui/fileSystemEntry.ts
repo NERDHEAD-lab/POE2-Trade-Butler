@@ -1,5 +1,4 @@
 export type FileSystemEntry = FileEntry | FolderEntry;
-
 type SortType = 'name' | 'createdAt' | 'modifiedAt';
 
 export interface BaseEntry {
@@ -7,14 +6,14 @@ export interface BaseEntry {
   name: string;
   readonly type: 'file' | 'folder';
   parentId: string | null;  // null이면 루트
-  createdAt?: string;
-  modifiedAt?: string;
+  createdAt: string;
+  modifiedAt: string;
 }
 
 export interface FileEntry extends BaseEntry {
   readonly type: 'file';
   content?: string;
-  metadata?: Record<string, any>;
+  metadata: Record<string, any>;
 }
 
 export interface FolderEntry extends BaseEntry {
@@ -100,8 +99,8 @@ export function moveEntry(
     }
   }
 
-  // 새 배열 반환 (불변성 유지)
+  // entry의 parentId를 변경 + modifiedAt 업데이트 후 새 배열 반환 (불변성 유지)
   return entries.map(e =>
-    e.id === entryId ? { ...e, parentId: targetParentId } : e
+    e.id === entryId ? { ...e, parentId: targetParentId, modifiedAt: new Date().toISOString() } : e
   );
 }

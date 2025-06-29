@@ -19,6 +19,27 @@ export async function getAll(): Promise<FileSystemEntry[]> {
 }
 
 export async function saveAll(favorites: FileSystemEntry[]): Promise<void> {
+  if (!Array.isArray(favorites)) {
+    throw new Error('Favorites must be an array of FileSystemEntry objects');
+  }
+  favorites.forEach(entry => {
+    if (!entry.id || !entry.name || !entry.type || !entry.createdAt || !entry.modifiedAt) {
+      throw new Error('Each favorite must be a valid FileSystemEntry object');
+    }
+  });
+
+  // Ensure the root entry is always present
+  if (!favorites.some(entry => entry.id === 'root')) {
+    favorites.unshift({
+      id: 'root',
+      name: '/',
+      type: 'folder',
+      parentId: null,
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString()
+    });
+  }
+
   await set(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, favorites);
 }
 

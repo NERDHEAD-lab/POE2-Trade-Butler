@@ -1,40 +1,56 @@
 import * as fs from './fileSystemEntry';
 import { FileSystemEntry } from './fileSystemEntry';
 
-export class FileSystemUI {
-  private fileSystemMap: Record<string, FileSystemEntry>;
+type EventType = 'click' | 'dblclick' | 'dragover' | 'drop';
 
-  private constructor(fileSystemMap: Record<string, FileSystemEntry>) {
-    this.fileSystemMap = fileSystemMap;
+export class FileSystemUI {
+  private fileSystemEntries: FileSystemEntry[];
+
+  private constructor(fileSystemEntries: FileSystemEntry[]) {
+    this.fileSystemEntries = fileSystemEntries;
   }
 
-  public static builder(fileSystemMap: Record<string, FileSystemEntry>): FileSystemUIBuilder {
-    return new FileSystemUIBuilder(fileSystemMap);
+  public create(): FileSystemUI {
+    //TODO
+    return this;
+  }
+
+  public update(fileSystemEntries: FileSystemEntry[]): FileSystemUI {
+    //TODO
+    return this;
+  }
+
+  public destroy(): FileSystemUI {
+    //TODO
+    return this;
+  }
+
+  public static builder(fileSystemEntries: FileSystemEntry[]): FileSystemUIBuilder {
+    return new FileSystemUIBuilder(fileSystemEntries);
   }
 }
 
 class FileSystemUIBuilder {
-  private readonly fileSystemMap: Record<string, FileSystemEntry>;
+  private readonly fileSystemEntries: FileSystemEntry[];
 
-  constructor(fileSystemMap: Record<string, FileSystemEntry>) {
-    this.fileSystemMap = fileSystemMap;
+  constructor(fileSystemEntries: FileSystemEntry[]) {
+    this.fileSystemEntries = fileSystemEntries;
   }
 
   public build(): FileSystemUI {
-    return (FileSystemUI as any).createInstance(this.fileSystemMap);
+    //TODO
+    return (FileSystemUI as any).createInstance(this.fileSystemEntries);
   }
 
-  public addOnClickListener(event: (entry: FileSystemEntry) => void): this {
+  public htmlLiElement(handler: (fileSystemEntries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement): this {
     //TODO
     return this;
   }
 
-  public addOnDoubleClickListener(event: (entry: FileSystemEntry) => void): this {
-    //TODO
-    return this;
-  }
-
-  public addOnDragAndDropListener(event: (entry: FileSystemEntry, target: FileSystemEntry) => void): this {
+  public attachTo(
+    parent: HTMLElement,
+    options?: { className?: string; style?: Partial<CSSStyleDeclaration> }
+  ): this {
     //TODO
     return this;
   }
