@@ -19,17 +19,6 @@ module.exports = (env, argv = {}) => {
       path: path.resolve(__dirname, 'dist'),
       clean: true
     },
-    ...(mode === 'none' && {
-      optimization: {
-        minimize: false,
-        splitChunks: {
-          cacheGroups: {
-            default: false,
-            vendors: false
-          }
-        }
-      }
-    }),
     resolve: {
       extensions: ['.ts', '.js']
     },
@@ -57,11 +46,6 @@ module.exports = (env, argv = {}) => {
         template: 'src/popup.html',
         chunks: ['popup']
       }),
-      ...(mode === 'none' ? [
-        new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'none')
-        })
-      ] : []),
       new CopyPlugin({
         patterns: [
           { from: 'src/manifest.json', to: '.' },

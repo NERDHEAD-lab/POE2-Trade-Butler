@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production && npm run zip",
-    "build:test": "webpack --mode none",
+    "build:dev": "webpack --mode development",
     "lint": "eslint .",
     "format": "prettier --write .",
     "zip": "node scripts/create-zip.js"
