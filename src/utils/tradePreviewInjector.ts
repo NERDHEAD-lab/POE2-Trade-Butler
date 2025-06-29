@@ -1,9 +1,4 @@
-export interface PreviewPanelSnapshot {
-  searchKeyword: string;
-  outerHTML: string;
-  attributes: { [key: string]: string };
-  timestamp: number;
-}
+import { PreviewPanelSnapshot } from '../storage/previewStorage';
 
 export class TradePreviewer {
   private static readonly PREVIEW_PANEL_ID = 'trade-preview-panel';

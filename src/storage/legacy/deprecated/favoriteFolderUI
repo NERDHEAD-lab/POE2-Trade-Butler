@@ -1,5 +1,5 @@
-import * as storage from '../utils/storage';
-import { showToast } from '../utils/api';
+import * as storage from './favoriteStorage';
+import { showToast } from '../../../utils/api';
 
 /**
  * Generate a favorite folder list UI element.

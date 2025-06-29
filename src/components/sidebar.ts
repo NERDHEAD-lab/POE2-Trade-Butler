@@ -1,15 +1,15 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
-import * as storage from '../utils/storage';
-import { openFavoriteFolderModal } from '../ui/favoriteFolderModal';
 import { showToast } from '../utils/api';
-import { PreviewPanelSnapshot, TradePreviewer } from '../utils/tradePreviewInjector';
-import * as folderUI from '../ui/favoriteFolderUI';
-import { SearchHistoryEntity } from '../utils/storage';
+import * as favoriteStorage from '../storage/favoriteStorage';
+import * as searchHistoryStorage from '../storage/searchHistoryStorage';
+import * as settingStorage from '../storage/settingStorage';
+import { TradePreviewer } from '../utils/tradePreviewInjector';
+import * as previewStorage from '../storage/previewStorage';
+import { PreviewPanelSnapshot } from '../storage/previewStorage';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
-const ON_SEARCH_HISTORY_CHANGED = 'onSearchHistoryChanged';
 const ON_FAVORITE_FOLDER_CHANGED = 'onFavoriteFolderChanged';
 
 const sidebarHtml = `
@@ -87,7 +87,7 @@ export function renderSidebar(container: HTMLElement): void {
   const clearHistoryButton = sidebar.querySelector<HTMLButtonElement>('#clear-history');
   clearHistoryButton?.addEventListener('click', () => {
     if (confirm('Are you sure you want to clear all search history?')) {
-      storage.clearAllHistory().then(() => {
+      searchHistoryStorage.removeAll().then(() => {
         showToast('Search history cleared successfully.');
       }).catch(error => {
         console.error('Error clearing search history:', error);
@@ -97,16 +97,18 @@ export function renderSidebar(container: HTMLElement): void {
   });
 
   //history-switch history 자동 추가 활성/비활성화
-  const historySwitch = sidebar.querySelector<HTMLInputElement>('#history-switch');
-  if (historySwitch) {
-    historySwitch.checked = storage.isHistoryAutoAddEnabled();
-  }
+  (async () => {
+    const historySwitch = sidebar.querySelector<HTMLInputElement>('#history-switch');
+    if (!historySwitch) throw new Error('history-switch not found');
 
-  historySwitch?.addEventListener('change', (e) => {
-    const isChecked = historySwitch.checked;
-    storage.setHistoryAutoAddEnabled(isChecked);
-    showToast(`History auto-add ${isChecked ? 'enabled' : 'disabled'}.`);
-  });
+    historySwitch.checked = await settingStorage.isHistoryAutoAddEnabled();
+
+    historySwitch.addEventListener('change', () => {
+      const isChecked = historySwitch.checked;
+      settingStorage.setHistoryAutoAddEnabled(isChecked);
+      showToast(`History auto-add ${isChecked ? 'enabled' : 'disabled'}.`);
+    });
+  })();
 
 
   const addFavoriteButton = sidebar.querySelector<HTMLButtonElement>('#add-favorite') as HTMLButtonElement;
@@ -116,63 +118,71 @@ export function renderSidebar(container: HTMLElement): void {
       return {
         id: searchHistoryFromUrl.id,
         url: searchHistoryFromUrl.url,
-        etc: { previewInfo: TradePreviewer.extractCurrentPanel() }
+        preview: TradePreviewer.extractCurrentPanel()
       };
     }
   );
 
   // sidebar 여닫기
-  const toggleButton = sidebar.querySelector<HTMLButtonElement>(`#poe2-sidebar-toggle-button`);
-  let isOpen = true;
+  (async () => {
+    const toggleButton = sidebar.querySelector<HTMLButtonElement>('#poe2-sidebar-toggle-button');
+    if (!toggleButton) throw new Error('toggle button not found');
 
-  toggleButton?.addEventListener('click', () => {
-    isOpen = !isOpen;
-    sidebar.classList.toggle('collapsed', !isOpen);
-    wrapper.classList.toggle('collapsed', !isOpen);
-    toggleButton.textContent = isOpen ? '⮜' : '⮞';
-    storage.setSidebarCollapsed(!isOpen);
-  });
+    let isOpen = true;
 
-  if (storage.isSidebarCollapsed()) {
-    toggleButton?.click();
-  }
+    toggleButton.addEventListener('click', () => {
+      isOpen = !isOpen;
+      sidebar.classList.toggle('collapsed', !isOpen);
+      wrapper.classList.toggle('collapsed', !isOpen);
+      toggleButton.textContent = isOpen ? '⮜' : '⮞';
+      settingStorage.setSidebarCollapsed(!isOpen);
+    });
 
-  loadHistoryList(storage.getAllHistory());
-  loadFavoritesList(storage.getFavoriteFolderRoot());
-  storage.addSearchHistoryChangedListener(ON_SEARCH_HISTORY_CHANGED, (newEntries) => {
-    loadHistoryList(Promise.resolve(newEntries));
-  });
-  storage.addFavoriteFolderChangedListener(ON_FAVORITE_FOLDER_CHANGED, (root) => {
-    loadHistoryList(storage.getAllHistory());
+    const isCollapsed = await settingStorage.isSidebarCollapsed();
+    if (isCollapsed) {
+      toggleButton.click(); // 초기 상태 동기화
+    }
+  })();
+
+
+  loadHistoryList(searchHistoryStorage.getAll());
+  loadFavoritesList(favoriteStorage.getFavoriteFolderRoot());
+  searchHistoryStorage.addOnChangeListener((newValue) => loadHistoryList(Promise.resolve(newValue)));
+
+  favoriteStorage.addFavoriteFolderChangedListener(ON_FAVORITE_FOLDER_CHANGED, (root) => {
+    loadHistoryList(searchHistoryStorage.getAll());
     loadFavoritesList(Promise.resolve(root));
   });
 
   // 탭 전환 이벤트
-  const tabs = sidebar.querySelectorAll('.menu-tab');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      const contents = sidebar.querySelectorAll('.tab-content');
-      contents.forEach(c => c.classList.remove('active'));
+  (async () => {
+    const tabs = sidebar.querySelectorAll<HTMLButtonElement>('.menu-tab');
 
-      tab.classList.add('active');
-      const activeTab = tab.getAttribute('data-tab') as storage.LatestTab;
-      if (activeTab) {
-        sidebar.querySelector(`.tab-content#${activeTab}`)?.classList.add('active');
-        storage.setLatestTab(activeTab);
-      }
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        const contents = sidebar.querySelectorAll('.tab-content');
+        contents.forEach(c => c.classList.remove('active'));
+
+        tab.classList.add('active');
+        const activeTab = tab.getAttribute('data-tab') as settingStorage.LatestTab;
+        if (activeTab) {
+          sidebar.querySelector(`.tab-content#${activeTab}`)?.classList.add('active');
+          settingStorage.setLatestTab(activeTab);
+        }
+      });
     });
-  });
 
-  const tabName = storage.getLatestTab();
-  const tab = sidebar.querySelector(`.menu-tab[data-tab="${tabName}"]`) as HTMLButtonElement | null;
-  tab?.click();
+    const latestTab = await settingStorage.getLatestTab(); // 비동기에서 탭 이름 불러오기
+    const tab = sidebar.querySelector<HTMLButtonElement>(`.menu-tab[data-tab="${latestTab}"]`);
+    tab?.click(); // 초기 탭 활성화
+  })();
 
   observeUrlChange();
 }
 
 //history-name-input -> placeHolder=${entry.id}
-function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
+function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTMLElement {
   const li = document.createElement('li');
   li.className = 'history-item';
   li.innerHTML = historyItem;
@@ -183,12 +193,14 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
   const removeButton = li.querySelector('.remove-history') as HTMLButtonElement;
   const favoriteStar = li.querySelector('.favorite-star') as HTMLSpanElement;
 
-  const previewInfo = entry.etc?.previewInfo as PreviewPanelSnapshot;
-  if (previewInfo && previewInfo.searchKeyword) {
-    nameSpan.textContent = previewInfo.searchKeyword;
-  } else {
-    nameSpan.textContent = entry.id;
-  }
+  previewStorage.getById(entry.id)
+    .then(previewInfo => {
+      if (previewInfo && previewInfo.searchKeyword) {
+        nameSpan.textContent = previewInfo.searchKeyword;
+      } else {
+        nameSpan.textContent = entry.id;
+      }
+    });
 
   //    existing.lastSearched = new Date().toISOString();
   // YYYY.MM.DD HH:mm 형식으로 표시
@@ -215,7 +227,7 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
       .join('\n')}`;
   }
 
-  storage.isFavoriteContains(entry.id)
+  favoriteStorage.isFavoriteContains(entry.id)
     .then(isFavorite => {
       if (isFavorite) {
         favoriteStar.classList.add('active');
@@ -233,11 +245,16 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
     window.location.href = api.getUrlFromSearchHistory(entry);
   });
 
-  attachCreateFavoriteEvent(favoriteStar, () => entry);
+
+  attachCreateFavoriteEvent(favoriteStar, () => ({
+    id: entry.id,
+    url: entry.url,
+    preview: previewStorage.getById(entry.id).then(preview => preview || TradePreviewer.extractCurrentPanel())
+  }));
 
   removeButton.addEventListener('click', (e) => {
     e.stopPropagation();
-    storage.deleteHistoryById(entry.id).catch((error) => {
+    searchHistoryStorage.deleteById(entry.id).catch((error) => {
       console.error('Error deleting history:', error);
     });
     li.remove();
@@ -246,7 +263,7 @@ function createHistoryItem(entry: storage.SearchHistoryEntity): HTMLElement {
   return li;
 }
 
-function loadHistoryList(historyList: Promise<storage.SearchHistoryEntity[]>): void {
+function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistoryEntity[]>): void {
   historyList.then(entries => {
     const historyListElement = document.getElementById('history-list');
     if (!historyListElement) {
@@ -265,7 +282,7 @@ function loadHistoryList(historyList: Promise<storage.SearchHistoryEntity[]>): v
   });
 }
 
-function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void {
+function loadFavoritesList(favorites: Promise<favoriteStorage.FavoriteFolderRoot>): void {
   const wrapper = document.getElementById('favorites-list') as HTMLDivElement;
   if (!wrapper) {
     console.error('Could not find #favorites-list element');
@@ -284,7 +301,7 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
           const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
 
           if (newName && !exceptions.some(char => newName.includes(char))) {
-            storage.renameFavoriteElement('folder', path, newName)
+            favoriteStorage.renameFavoriteElement('folder', path, newName)
               .then(() => {
                 showToast(`Favorite folder renamed to "${newName}"`);
               })
@@ -348,7 +365,7 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
               alert(`Invalid name. Please avoid using these characters: ${exceptions.join(' ')}`);
             } else {
               const path = li.dataset.path || '/';
-              storage.renameFavoriteElement('item', path, newName)
+              favoriteStorage.renameFavoriteElement('item', path, newName)
                 .then(() => {
                   showToast(`Favorite item renamed to "${newName}"`);
                 })
@@ -370,7 +387,7 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
             e.stopPropagation();
             const path = li.dataset.path || '/';
             if (confirm(`Are you sure you want to remove "${path}" from favorites?`)) {
-              storage.removeFavoriteItem(path)
+              favoriteStorage.removeFavoriteItem(path)
                 .then(() => {
                   showToast(`"${entry.name}" has been removed from favorites.`);
                 })
@@ -389,7 +406,7 @@ function loadFavoritesList(favorites: Promise<storage.FavoriteFolderRoot>): void
   wrapper.appendChild(folderElement);
 }
 
-function findFavoriteItemById(root: storage.FavoriteFolderRoot, id: string): storage.FavoriteItem | undefined {
+function findFavoriteItemById(root: favoriteStorage.FavoriteFolderRoot, id: string): favoriteStorage.FavoriteItem | undefined {
   // 1. 루트의 items에서 먼저 찾음
   const directMatch = root.items.find(item => item.id === id);
   if (directMatch) return directMatch;
@@ -403,7 +420,7 @@ function findFavoriteItemById(root: storage.FavoriteFolderRoot, id: string): sto
   return undefined;
 }
 
-function findItemInFolderById(folder: storage.FavoriteFolder, id: string): storage.FavoriteItem | undefined {
+function findItemInFolderById(folder: favoriteStorage.FavoriteFolder, id: string): favoriteStorage.FavoriteItem | undefined {
   const item = folder.items?.find(i => i.id === id);
   if (item) return item;
 
@@ -432,10 +449,11 @@ function observeUrlChange() {
 
 let currentHandleUrl = '';
 
-async function updateHistoryFromUrl(currentUrl: string) {
-  const latestSearchUrl = storage.getLatestSearchUrl();
+async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
+  const latestSearchUrl = await settingStorage.getLatestSearchUrl();
 
-  if (!storage.isHistoryAutoAddEnabled()) {
+  const autoAddEnabled = await settingStorage.isHistoryAutoAddEnabled();
+  if (!autoAddEnabled) {
     console.debug('History auto-add is disabled, skipping URL change handling');
     return;
   }
@@ -444,7 +462,6 @@ async function updateHistoryFromUrl(currentUrl: string) {
     console.debug('Already handling URL change, skipping:', currentUrl);
     return;
   }
-
   if (api.parseSearchUrl(currentUrl) === null) {
     console.debug(`Ignoring URL change, not a valid search URL: ${currentUrl}`);
     return;
@@ -454,23 +471,18 @@ async function updateHistoryFromUrl(currentUrl: string) {
 
   try {
     const entity = api.getSearchHistoryFromUrl(currentUrl);
-    const exists = await storage.isExistingHistory(entity.id);
+    const exists = await searchHistoryStorage.exists(entity.id);
 
     if (exists && latestSearchUrl === currentUrl) {
       console.info(`Ignoring URL change, it's just refreshing: ${currentUrl}`);
       return;
     }
 
-    await storage.addOrUpdateHistory(entity);
-    await storage.putIfAbsentEtc(
-      entity.id, 'previewInfo', () => {
-        console.log(`previewInfo not found for ${entity.id}, extracting current panel...`);
-        return TradePreviewer.extractCurrentPanel();
-      });
-
-    console.log(`Search history updated for URL: ${currentUrl}`);
-    // latestSearchUrl = currentUrl;
-    storage.setLatestSearchUrl(currentUrl);
+    await searchHistoryStorage.addOrUpdate(entity.id, entity.url)
+      .then(() => TradePreviewer.extractCurrentPanel())
+      .then(previewInfo => previewStorage.addOrUpdateById(entity.id, previewInfo))
+      .then(() => settingStorage.setLatestSearchUrl(currentUrl))
+      .then(() => console.log(`Search history updated for URL: ${currentUrl}`));
 
   } catch (err) {
     console.info(`Unexpected error while handling URL change: ${currentUrl}`, err);
@@ -481,6 +493,7 @@ async function updateHistoryFromUrl(currentUrl: string) {
     currentHandleUrl = '';
   }
 }
+
 
 export function attachPreviewHoverEvents(
   element: HTMLElement,
@@ -515,14 +528,14 @@ export function attachCreateFavoriteEvent(
   entrySupplier: () => {
     id: string;
     url: string;
-    etc?: SearchHistoryEntity['etc'];
+    preview: Promise<PreviewPanelSnapshot>;
   }
 ): void {
   element.addEventListener('click', (e) => {
     e.stopPropagation();
     const entry = entrySupplier();
 
-    storage.isFavoriteContains(entry.id)
+    favoriteStorage.isFavoriteContains(entry.id)
       .then(isFavorite => {
         if (isFavorite) {
           // 이미 즐겨찾기인 경우 추가로 등록할 지 확인
@@ -532,8 +545,6 @@ export function attachCreateFavoriteEvent(
         }
       })
       .then(() => openFavoriteFolderModal('create', entry))
-      .catch((error) => {
-        console.error('Error opening favorite modal:', error);
-      });
+      .catch((error) => console.error('Error opening favorite modal:', error));
   });
 }

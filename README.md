@@ -46,19 +46,18 @@ Follow these steps to install the extension:
    ```bash
    cd POE2-Trade-Butler
    ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Build the project:
+3. Build the project:
    ```bash
    npm run build
    ```
-5. Load the extension in Chrome:
+   -  Build the project with no minification (for development):
+      ```bash
+      npm run build:dev
+      ```
+4. Load the extension in Chrome:
     - Open Chrome and go to `chrome://extensions/`.
     - Enable **Developer Mode**.
     - Click **Load Unpacked** and select the `dist` folder.
-
 ---
 
 ## Usage
