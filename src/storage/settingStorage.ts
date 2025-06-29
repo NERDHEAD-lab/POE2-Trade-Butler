@@ -1,5 +1,5 @@
+import * as storage from './storage';
 import { get, set, StorageType } from './storage';
-import * as storageLoader from './storage';
 
 const KEY_PREFIX = 'poe2trade_settings_';
 
@@ -8,16 +8,16 @@ function setSetting(storageType: StorageType, key: string, value: any): Promise<
   return set(storageType, `${KEY_PREFIX}${key}`, value);
 }
 
-function getSetting(storage: StorageType, key: string, defaultValue: any = false): Promise<typeof defaultValue> {
-  return get(storage, `${KEY_PREFIX}${key}`, defaultValue);
+function getSetting(storageType: StorageType, key: string, defaultValue: any = false): Promise<typeof defaultValue> {
+  return get(storageType, `${KEY_PREFIX}${key}`, defaultValue);
 }
 
 function addOnChangeListener(
-  storage: StorageType,
+  storageType: StorageType,
   key: string,
   listener: (newValue: any, oldValue: any) => void
 ): void {
-  storageLoader.addOnChangeListener(storage, `${KEY_PREFIX}${key}`, listener);
+  storage.addOnChangeListener(storageType, `${KEY_PREFIX}${key}`, listener);
 }
 
 /* **************************************************************************************** */

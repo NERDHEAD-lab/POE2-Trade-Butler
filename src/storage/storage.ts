@@ -20,9 +20,9 @@ const StorageTypeEnum = {
 export type StorageType = keyof typeof StorageTypeEnum;
 
 
-export function set<T>(storage: StorageType, key: string, value: T): Promise<void> {
+export function set<T>(storageType: StorageType, key: string, value: T): Promise<void> {
   return new Promise((resolve, reject) => {
-    const storageObj = StorageTypeEnum[storage].module;
+    const storageObj = StorageTypeEnum[storageType].module;
     storageObj.set({ [key]: value }, () => {
       if (chrome.runtime.lastError) {
         reject(chrome.runtime.lastError);
@@ -51,11 +51,11 @@ export function get<T>(
 }
 
 export function addOnChangeListener<T>(
-  storage: StorageType,
+  storageType: StorageType,
   key: string,
   listener: (newValue: T, oldValue: T) => void
 ): void {
-  const storageObj = StorageTypeEnum[storage].module;
+  const storageObj = StorageTypeEnum[storageType].module;
 
   const changeListener = (changes: { [key: string]: chrome.storage.StorageChange }) => {
     const change = changes[key];

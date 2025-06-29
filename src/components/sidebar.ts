@@ -12,7 +12,6 @@ import * as folderUI from '../ui/favoriteFolderUI';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
-const ON_SEARCH_HISTORY_CHANGED = 'onSearchHistoryChanged';
 const ON_FAVORITE_FOLDER_CHANGED = 'onFavoriteFolderChanged';
 
 const sidebarHtml = `
