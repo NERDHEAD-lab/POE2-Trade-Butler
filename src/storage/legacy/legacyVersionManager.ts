@@ -135,3 +135,28 @@ export interface PreviewPanelSnapshot_v2 {
   attributes: { [key: string]: string };
   timestamp: number;
 }
+
+export interface FavoriteFolderRoot_v1 {
+  name?: string;
+  folders: FavoriteFolder_v1[];
+  items: FavoriteItem_v1[];
+}
+
+const favoriteFolderRoot: FavoriteFolderRoot_v1 = {
+  name: '/',
+  folders: [],
+  items: []
+};
+
+export interface FavoriteItem_v1 {
+  id: string;       // SearchHistoryEntity.id
+  name?: string;    // 사용자 지정 별칭 (기본값: id)
+  url: string;      // SearchHistoryEntity.url
+  etc?: Record<string, any>; // 기타 정보 (예: 프리뷰 데이터 등)
+}
+
+export interface FavoriteFolder_v1 {
+  name: string;                   // 폴더 표시 이름
+  folders?: FavoriteFolder_v1[];     // 하위 폴더
+  items?: FavoriteItem_v1[];         // 포함된 즐겨찾기 항목
+}
