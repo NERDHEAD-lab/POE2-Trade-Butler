@@ -24,6 +24,31 @@ export function isFileEntry(entry: FileSystemEntry): entry is FileEntry {
   return entry.type === 'file';
 }
 
+export function isFolderEntry(entry: FileSystemEntry): entry is FolderEntry {
+  return entry.type === 'folder';
+}
+
+export function getPath(entries: FileSystemEntry[], entry: FileSystemEntry): string {
+  if(!entry.parentId) return '/';
+
+  const pathParts: string[] = [];
+  let currentEntry: FileSystemEntry | undefined = entry;
+  while (currentEntry) {
+    pathParts.unshift(currentEntry.name);
+    if (currentEntry.parentId === null) break; // 루트에 도달
+    currentEntry = entries.find(e => e.id === currentEntry?.parentId);
+  }
+
+  return '/' + pathParts.join('/');
+}
+
+export function getDepth(entries: FileSystemEntry[], entry: FileSystemEntry): number {
+  const path = getPath(entries, entry);
+  if (path === '/') return 0;
+
+  return path.split('/').length - 1;
+}
+
 export function sortEntries(
   entries: FileSystemEntry[],
   sortType: SortType = 'name',
@@ -103,4 +128,50 @@ export function moveEntry(
   return entries.map(e =>
     e.id === entryId ? { ...e, parentId: targetParentId, modifiedAt: new Date().toISOString() } : e
   );
+}
+
+export function addEntry(
+  entries: FileSystemEntry[],
+  newEntry: Omit<FileSystemEntry, 'id' | 'createdAt' | 'modifiedAt'>,
+  parentId: string | null
+): FileSystemEntry[] {
+  const id = crypto.randomUUID();
+  const timestamp = new Date().toISOString();
+
+  const isFile = (e: any): e is FileEntry => e.type === 'file';
+  const isFolder = (e: any): e is FolderEntry => e.type === 'folder';
+
+  let entry: FileEntry | FolderEntry;
+
+  if (isFile(newEntry)) {
+    entry = {
+      ...newEntry,
+      id,
+      type: 'file',
+      parentId,
+      createdAt: timestamp,
+      modifiedAt: timestamp,
+      metadata: newEntry.metadata ?? {}
+    };
+  } else if (isFolder(newEntry)) {
+    entry = {
+      ...newEntry,
+      id,
+      type: 'folder',
+      parentId,
+      createdAt: timestamp,
+      modifiedAt: timestamp
+    };
+  } else {
+    throw new Error(`Invalid entry type: ${(newEntry as any).type}`);
+  }
+
+  return [...entries, entry];
+}
+
+export function getChildren(
+  entries: FileSystemEntry[],
+  parentId: string | null
+): FileSystemEntry[] {
+  return entries.filter(entry => entry.parentId === parentId);
 }

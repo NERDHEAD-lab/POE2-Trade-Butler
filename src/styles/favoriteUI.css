@@ -39,3 +39,18 @@
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+
+.favorite-folder-list .dragging {
+    opacity: 0.5;
+    background-color: #444;
+}
+
+.favorite-folder-list .folder.drag-over {
+    background-color: #555;
+    border: 2px dashed #007bff;
+}
+
+.favorite-folder-list .favorite.drag-over {
+    cursor: not-allowed;
+    background-color: #444;
+}
