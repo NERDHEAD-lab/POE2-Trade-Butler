@@ -7,6 +7,8 @@ import * as settingStorage from '../storage/settingStorage';
 import { TradePreviewer } from '../utils/tradePreviewInjector';
 import * as previewStorage from '../storage/previewStorage';
 import { PreviewPanelSnapshot } from '../storage/previewStorage';
+import * as favoriteUI from '../ui/favoriteFileSystemUI';
+import * as fs from '../ui/fileSystemEntry';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
@@ -40,7 +42,7 @@ const sidebarHtml = `
       <span>Favorites</span>
       <button id="add-favorite">Add Current page</button>
     </h3>
-    <div id="favorites-list"></div>
+    <div id="favorites-list-wrapper"></div>
   </div>
 </div>
 
@@ -145,14 +147,17 @@ export function renderSidebar(container: HTMLElement): void {
   })();
 
 
-  loadHistoryList(searchHistoryStorage.getAll());
-  loadFavoritesList(favoriteStorage.getFavoriteFolderRoot());
-  searchHistoryStorage.addOnChangeListener((newValue) => loadHistoryList(Promise.resolve(newValue)));
+  const favoriteWrapper = document.getElementById('favorites-list-wrapper') as HTMLDivElement;
 
-  favoriteStorage.addFavoriteFolderChangedListener(ON_FAVORITE_FOLDER_CHANGED, (root) => {
-    loadHistoryList(searchHistoryStorage.getAll());
-    loadFavoritesList(Promise.resolve(root));
-  });
+  //loadHistoryList(searchHistoryStorage.getAll())
+  Promise.resolve()
+    .then(() => loadHistoryList(searchHistoryStorage.getAll()))
+    .then(() => favoriteUI.loadFavoriteFileSystemUI(favoriteWrapper))
+    .then(() => {
+      searchHistoryStorage.addOnChangeListener((newValue) => loadHistoryList(Promise.resolve(newValue)));
+      favoriteStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
+    });
+
 
   // 탭 전환 이벤트
   (async () => {
@@ -227,7 +232,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
       .join('\n')}`;
   }
 
-  favoriteStorage.isFavoriteContains(entry.id)
+  favoriteStorage.exists(entry.id)
     .then(isFavorite => {
       if (isFavorite) {
         favoriteStar.classList.add('active');
@@ -263,6 +268,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   return li;
 }
 
+// TODO: refactoring 필요
 function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistoryEntity[]>): void {
   historyList.then(entries => {
     const historyListElement = document.getElementById('history-list');
@@ -280,156 +286,6 @@ function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistory
       historyListElement.appendChild(item);
     });
   });
-}
-
-function loadFavoritesList(favorites: Promise<favoriteStorage.FavoriteFolderRoot>): void {
-  const wrapper = document.getElementById('favorites-list') as HTMLDivElement;
-  if (!wrapper) {
-    console.error('Could not find #favorites-list element');
-    return;
-  }
-
-  const onComplete = (ul: HTMLUListElement) => {
-    ul.querySelectorAll('.folder-item')
-      .forEach(item => {
-        const li = item as HTMLLIElement;
-        li.addEventListener('dblclick', (e) => {
-          e.stopPropagation();
-          const path = folderUI.getSelectedFolderPath(folderElement);
-          const currentName = li.querySelector('.folder-name')?.textContent || '';
-          const newName = prompt('Enter new name for favorite folder:', currentName);
-          const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
-
-          if (newName && !exceptions.some(char => newName.includes(char))) {
-            favoriteStorage.renameFavoriteElement('folder', path, newName)
-              .then(() => {
-                showToast(`Favorite folder renamed to "${newName}"`);
-              })
-              .catch(error => {
-                console.error('Error renaming favorite folder:', error);
-                showToast('Failed to rename favorite folder.', '#f00');
-              });
-          } else {
-            alert(`Invalid name. Please avoid using these characters: ${exceptions.join(' ')}`);
-          }
-        });
-      });
-
-    ul.querySelectorAll('.favorite-item')
-      .forEach(item => {
-        const li = item as HTMLLIElement;
-        const id = li.dataset.id;
-        if (!id) {
-          console.warn('Favorite item without ID:', li);
-          return;
-        }
-
-        favorites.then(root => {
-          //root 내부 folders도 재귀 검색 필요
-          const entry = findFavoriteItemById(root, id);
-
-          if (!entry) {
-            console.warn(`Favorite item not found in root: ${id}`);
-            return;
-          }
-          attachPreviewHoverEvents(li, entry);
-
-          let clickTimer: ReturnType<typeof setTimeout> | null = null;
-          // 클릭 이벤트 리스너 추가
-          li.addEventListener('click', () => {
-            // window.location.href = api.getUrlFromSearchHistory(entry);
-            if (clickTimer) return;
-
-            clickTimer = setTimeout(() => {
-              clickTimer = null;
-              window.location.href = api.getUrlFromSearchHistory(entry);
-            }, 200);
-          });
-
-          // 더블 클릭 이벤트 리스너 추가
-          li.addEventListener('dblclick', (e) => {
-            e.stopPropagation();
-            if (clickTimer) {
-              clearTimeout(clickTimer);
-              clickTimer = null;
-            }
-
-            const newName = prompt('Enter new name for favorite item:', entry.name);
-            const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
-
-            if (newName === null) {
-              showToast('Canceled renaming favorite item.', '#f66');
-            } else if (newName === '') {
-              showToast('Name cannot be empty.', '#f66');
-            } else if (exceptions.some(char => newName.includes(char))) {
-              alert(`Invalid name. Please avoid using these characters: ${exceptions.join(' ')}`);
-            } else {
-              const path = li.dataset.path || '/';
-              favoriteStorage.renameFavoriteElement('item', path, newName)
-                .then(() => {
-                  showToast(`Favorite item renamed to "${newName}"`);
-                })
-                .catch(error => {
-                  console.error('Error renaming favorite item:', error);
-                  showToast('Failed to rename favorite item.', '#f00');
-                });
-            }
-          });
-
-          const fileIcon = li.querySelector('.file-icon') as HTMLSpanElement;
-          if (!fileIcon) {
-            console.warn('File icon not found in favorite item:', li);
-            return;
-          }
-
-          // 즐겨찾기 아이콘 클릭 이벤트 리스너 추가 - 클릭 시 즐겨찾기에서 제거 확인창
-          fileIcon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const path = li.dataset.path || '/';
-            if (confirm(`Are you sure you want to remove "${path}" from favorites?`)) {
-              favoriteStorage.removeFavoriteItem(path)
-                .then(() => {
-                  showToast(`"${entry.name}" has been removed from favorites.`);
-                })
-                .catch(error => {
-                  console.error('Error removing favorite item:', error);
-                  showToast('Failed to remove favorite item.', '#f00');
-                });
-            }
-          });
-        });
-      });
-  };
-
-  const folderElement = folderUI.generate(favorites, true, true, onComplete);
-  wrapper.innerHTML = ''; // Clear existing content
-  wrapper.appendChild(folderElement);
-}
-
-function findFavoriteItemById(root: favoriteStorage.FavoriteFolderRoot, id: string): favoriteStorage.FavoriteItem | undefined {
-  // 1. 루트의 items에서 먼저 찾음
-  const directMatch = root.items.find(item => item.id === id);
-  if (directMatch) return directMatch;
-
-  // 2. 폴더를 재귀 탐색
-  for (const folder of root.folders) {
-    const match = findItemInFolderById(folder, id);
-    if (match) return match;
-  }
-
-  return undefined;
-}
-
-function findItemInFolderById(folder: favoriteStorage.FavoriteFolder, id: string): favoriteStorage.FavoriteItem | undefined {
-  const item = folder.items?.find(i => i.id === id);
-  if (item) return item;
-
-  for (const subFolder of folder.folders || []) {
-    const match = findItemInFolderById(subFolder, id);
-    if (match) return match;
-  }
-
-  return undefined;
 }
 
 

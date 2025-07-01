@@ -10,16 +10,17 @@ import { FileSystemUI } from './fileSystemUI';
  * favoriteStorage의 변경이 필요 할 경우 항상 favoriteStorage.getAll()을 호출하여 수행합니다.
  */
 
-const favoriteFileSystemClass = 'favorite-folder-list';
+const favoriteFileSystemClassName = 'favorite-folder-list';
 const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
 
 export async function loadFavoriteFileSystemUI(parent: HTMLDivElement): Promise<FileSystemUI> {
   return favorite.getAll()
     .then(entries => fs.sortEntries(entries))
     .then(sortedEntries => {
-      return FileSystemUI.builder(sortedEntries)
+      return FileSystemUI
+        .builder(sortedEntries)
         .htmlLiElement((entries, entry) => createLiElement(entries, entry))
-        .attachTo(parent)
+        .attachTo(parent, { className: favoriteFileSystemClassName })
         .build();
     })
     .then(fileSystemUI => fileSystemUI.create())
@@ -144,7 +145,7 @@ function addRenameEvent(nameElement: HTMLSpanElement, entry: FileSystemEntry) {
       favorite.getAll().then(favorites => {
         const updatedFavorites = favorites.map(fav => {
           if (fav.id === entry.id) {
-            return { ...fav, name: newName, modifiedAt: new Date().toISOString()};
+            return { ...fav, name: newName, modifiedAt: new Date().toISOString() };
           }
           return fav;
         });
@@ -185,6 +186,9 @@ function createFavoriteItemHtmlElement(
     }
     window.location.href = entry.metadata.url;
   });
+
+  // TODO: 마우스 오버 기능 추가 필요 (preview 기능)
+  //       -> sidebar.attachPreviewHoverEvents
 
   // 아이콘 클릭 시 즐겨찾기 삭제
   iconElement.addEventListener('click', (e) => {
@@ -233,9 +237,8 @@ function addDragAndDropEvent(
       // 1초 이상 오버 시 폴더 아이콘 클릭 시 하위 항목 표시
       // (liElement.querySelector('.folder-icon') as HTMLSpanElement)
       const iconElement = liElement.querySelector('.folder-icon') as HTMLSpanElement;
-      if (iconElement.classList.contains('expanded')) {
-        return;
-      }
+
+      if (!iconElement || iconElement.classList.contains('expanded')) return;
 
       if (delayTimer) {
         clearTimeout(delayTimer);
@@ -266,14 +269,35 @@ function addDragAndDropEvent(
       delayTimer = null;
     }
 
+    // 드래그 앤 드롭된 항목의 ID가 없으면 무시
     const draggedId = e.dataTransfer?.getData('text/plain');
     if (!draggedId) return;
 
+    // 드래그 앤 드롭된 항목이 존재하지 않으면 무시
     const draggedEntry = entries.find(entry => entry.id === draggedId);
     if (!draggedEntry) return;
 
-    // 드래그 앤 드롭 로직 처리
-    // 예: draggedEntry를 현재 entry의 하위로 이동
+    // 자기 자신을 드래그 앤 드롭할 수 없음
+    if (draggedEntry.id === entry.id) return;
+
+    // 이미 폴더 안에 있을 경우, 이동할 수 없음
+    if (draggedEntry.parentId === entry.id) return;
+
+    // 드래그 앤 드롭된 항목이 폴더가 아닌 경우, 폴더로 이동할 수 없음
+    if (entry.type !== 'folder') {
+      alert('폴더로만 드래그 앤 드롭할 수 있습니다.');
+      return;
+    }
+
+    favorite.getAll().then(favorites => {
+      return fs.moveEntry(favorites, draggedEntry.id, entry.id);
+    }).then(updatedFavorites => {
+      return favorite.saveAll(updatedFavorites);
+    }).then(() => {
+      alert(`"${draggedEntry.name}" 항목이 "${entry.name}" 폴더로 이동되었습니다.`);
+    }).catch((err) => {
+      console.error('드래그 앤 드롭 중 오류 발생:', err);
+    });
   });
 }
 

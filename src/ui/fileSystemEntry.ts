@@ -1,6 +1,12 @@
 export type FileSystemEntry = FileEntry | FolderEntry;
 type SortType = 'name' | 'createdAt' | 'modifiedAt';
 
+// TODO: FileSystemEntry[]를 관리하는 클래스나 인터페이스로 추상화할 수 있음
+//       FileSystemManager<T extends FileSystemEntry<T>>
+//       -> FolderEntry { ..., metadata: T } // metadata는 추가적인 정보를 담는 객체의 타입을 확정한다.
+//       -> validate 구현을 강제하여 규칙을 정의할 수 있음
+//       -> root 폴더를 기본적으로 포함시킨다. (favoriteStorage의 기본값을 이관)
+
 export interface BaseEntry {
   readonly id: string;
   name: string;

@@ -40,17 +40,25 @@
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-.favorite-folder-list .dragging {
+.favorite-folder-list li {
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.favorite-folder-list li.dragging {
+    cursor: grabbing;
+}
+
+.favorite-folder-list li.drag-over {
     opacity: 0.5;
     background-color: #444;
 }
 
-.favorite-folder-list .folder.drag-over {
+.favorite-folder-list li.folder.drag-over {
     background-color: #555;
     border: 2px dashed #007bff;
 }
 
-.favorite-folder-list .favorite.drag-over {
+.favorite-folder-list li.favorite.drag-over {
     cursor: not-allowed;
-    background-color: #444;
+    background-color: #666;
 }

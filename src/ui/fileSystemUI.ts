@@ -1,57 +1,77 @@
-import * as fs from './fileSystemEntry';
 import { FileSystemEntry } from './fileSystemEntry';
 
-type EventType = 'click' | 'dblclick' | 'dragover' | 'drop';
-
 export class FileSystemUI {
-  private fileSystemEntries: FileSystemEntry[];
+  private root: FileSystemEntry[];
+  private parentElement: HTMLElement | null = null;
+  private renderLiElement: ((entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement) | null = null;
+  private className: string | null = null;
+  private ulElement: HTMLUListElement | null = null;
 
-  private constructor(fileSystemEntries: FileSystemEntry[]) {
-    this.fileSystemEntries = fileSystemEntries;
+  private constructor(root: FileSystemEntry[]) {
+    this.root = root;
+  }
+
+  public static builder(root: FileSystemEntry[]): FileSystemUIBuilder {
+    return new FileSystemUIBuilder(root);
   }
 
   public create(): FileSystemUI {
-    //TODO
+    if (!this.parentElement || !this.renderLiElement) {
+      throw new Error('FileSystemUI must be configured with parentElement and renderLiElement before calling create().');
+    }
+
+    // 기존 내용 초기화
+    if (this.ulElement) {
+      this.parentElement.removeChild(this.ulElement);
+    }
+
+    this.ulElement = document.createElement('ul');
+    if (this.className) {
+      this.ulElement.className = this.className;
+    }
+
+    // TODO: 추후 계층 구조를 여기서 처리할 수 있도록 개선
+    for (const entry of this.root) {
+      const li = this.renderLiElement!(this.root, entry);
+      this.ulElement!.appendChild(li);
+    }
+
+    this.parentElement.appendChild(this.ulElement);
     return this;
   }
 
-  public update(fileSystemEntries: FileSystemEntry[]): FileSystemUI {
-    //TODO
-    return this;
-  }
-
-  public destroy(): FileSystemUI {
-    //TODO
-    return this;
-  }
-
-  public static builder(fileSystemEntries: FileSystemEntry[]): FileSystemUIBuilder {
-    return new FileSystemUIBuilder(fileSystemEntries);
+  public update(newEntries: FileSystemEntry[]): void {
+    this.root = newEntries;
+    this.create();
   }
 }
 
 class FileSystemUIBuilder {
-  private readonly fileSystemEntries: FileSystemEntry[];
+  private readonly root: FileSystemEntry[];
+  private parentElement: HTMLElement | null = null;
+  private className: string | null = null;
+  private renderLiElement: ((entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement) | null = null;
 
-  constructor(fileSystemEntries: FileSystemEntry[]) {
-    this.fileSystemEntries = fileSystemEntries;
+  constructor(root: FileSystemEntry[]) {
+    this.root = root;
+  }
+
+  public htmlLiElement(fn: (entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement): FileSystemUIBuilder {
+    this.renderLiElement = fn;
+    return this;
+  }
+
+  public attachTo(parent: HTMLElement, options?: { className?: string }): FileSystemUIBuilder {
+    this.parentElement = parent;
+    this.className = options?.className || null;
+    return this;
   }
 
   public build(): FileSystemUI {
-    //TODO
-    return (FileSystemUI as any).createInstance(this.fileSystemEntries);
-  }
-
-  public htmlLiElement(handler: (fileSystemEntries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement): this {
-    //TODO
-    return this;
-  }
-
-  public attachTo(
-    parent: HTMLElement,
-    options?: { className?: string; style?: Partial<CSSStyleDeclaration> }
-  ): this {
-    //TODO
-    return this;
+    const ui = (FileSystemUI as any).createInstance(this.root);
+    ui.parentElement = this.parentElement;
+    ui.className = this.className;
+    ui.renderLiElement = this.renderLiElement;
+    return ui;
   }
 }
