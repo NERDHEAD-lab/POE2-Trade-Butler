@@ -1,21 +1,23 @@
 import * as storage from './storage';
 import { get, set, StorageType } from './storage';
-import { FileSystemEntry } from '../ui/fileSystemEntry';
+import { FileSystemEntry, FolderEntry } from '../ui/fileSystemEntry';
 
 const STORAGE_FAVORITE_TYPE: StorageType = 'sync';
 const STORAGE_FAVORITE_KEY = 'favoriteFolders';
 
-const DEFAULT_FAVORITE_MAP: () => FileSystemEntry[] = () => [{
-  id: 'root',
-  name: '/',
-  type: 'folder',
-  parentId: null,
-  createdAt: new Date().toISOString(),
-  modifiedAt: new Date().toISOString()
-}];
+const DEFAULT_FAVORITE_ROOT: () => FolderEntry = () => {
+  return {
+    id: 'root',
+    type: 'folder',
+    name: '/',
+    parentId: null,
+    createdAt: new Date().toISOString(),
+    modifiedAt: new Date().toISOString()
+  };
+};
 
 export async function getAll(): Promise<FileSystemEntry[]> {
-  return get<FileSystemEntry[]>(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, DEFAULT_FAVORITE_MAP());
+  return get<FileSystemEntry[]>(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, [DEFAULT_FAVORITE_ROOT()]);
 }
 
 export async function saveAll(favorites: FileSystemEntry[]): Promise<void> {
@@ -30,14 +32,7 @@ export async function saveAll(favorites: FileSystemEntry[]): Promise<void> {
 
   // Ensure the root entry is always present
   if (!favorites.some(entry => entry.id === 'root')) {
-    favorites.unshift({
-      id: 'root',
-      name: '/',
-      type: 'folder',
-      parentId: null,
-      createdAt: new Date().toISOString(),
-      modifiedAt: new Date().toISOString()
-    });
+    favorites.unshift(DEFAULT_FAVORITE_ROOT());
   }
 
   await set(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, favorites);
@@ -54,6 +49,12 @@ export function addOnChangeListener(
   listener: (newValue: FileSystemEntry[], oldValue: FileSystemEntry[]) => void
 ): void {
   storage.addOnChangeListener(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, listener);
+}
+
+export function removeOnChangeListener(
+  listener: (newValue: FileSystemEntry[], oldValue: FileSystemEntry[]) => void
+): void {
+  storage.removeOnChangeListener(STORAGE_FAVORITE_TYPE, listener);
 }
 
 export function addOnDeletedListener(

@@ -9,6 +9,7 @@ import * as previewStorage from '../storage/previewStorage';
 import { PreviewPanelSnapshot } from '../storage/previewStorage';
 import * as favoriteUI from '../ui/favoriteFileSystemUI';
 import * as fs from '../ui/fileSystemEntry';
+import { openFavoriteFolderModal } from '../ui/newFavoriteModal';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
@@ -120,7 +121,6 @@ export function renderSidebar(container: HTMLElement): void {
       return {
         id: searchHistoryFromUrl.id,
         url: searchHistoryFromUrl.url,
-        preview: TradePreviewer.extractCurrentPanel()
       };
     }
   );
@@ -254,7 +254,6 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   attachCreateFavoriteEvent(favoriteStar, () => ({
     id: entry.id,
     url: entry.url,
-    preview: previewStorage.getById(entry.id).then(preview => preview || TradePreviewer.extractCurrentPanel())
   }));
 
   removeButton.addEventListener('click', (e) => {
@@ -384,23 +383,26 @@ export function attachCreateFavoriteEvent(
   entrySupplier: () => {
     id: string;
     url: string;
-    preview: Promise<PreviewPanelSnapshot>;
   }
 ): void {
   element.addEventListener('click', (e) => {
     e.stopPropagation();
     const entry = entrySupplier();
 
-    favoriteStorage.isFavoriteContains(entry.id)
-      .then(isFavorite => {
-        if (isFavorite) {
-          // 이미 즐겨찾기인 경우 추가로 등록할 지 확인
-          if (!confirm('이미 즐겨찾기에 추가된 항목입니다. 다시 추가하시겠습니까?')) {
+    favoriteStorage.getAll()
+      .then(favorites => {
+        return favorites
+          .filter(fav => fav.id === entry.id)
+          .map(fav => fs.getPath(favorites, fav));
+      })
+      .then(favoritesPath => {
+        if (favoritesPath.length > 0) {
+          const message = `이미 즐겨찾기에 추가된 항목입니다:\n${favoritesPath.map(path => `- ${path}`).join('\n')}\n\n다시 추가하시겠습니까?`;
+          if (!confirm(message)) {
             return;
           }
         }
+        return openFavoriteFolderModal(entry.id, entry.url);
       })
-      .then(() => openFavoriteFolderModal('create', entry))
-      .catch((error) => console.error('Error opening favorite modal:', error));
   });
 }

@@ -26,8 +26,44 @@ export async function loadFavoriteFileSystemUI(parent: HTMLDivElement): Promise<
     .then(fileSystemUI => fileSystemUI.create())
     .then(fileSystemUI => {
       // storage가 변경될 때마다 UI를 업데이트합니다.
-      favorite.addOnChangeListener(newValue => fileSystemUI.update(fs.sortEntries(newValue)));
+      const onChangeListener = (newValue: FileSystemEntry[]) => {
+        return fileSystemUI.update(fs.sortEntries(newValue));
+      };
+
+      favorite.addOnChangeListener(onChangeListener);
+      fileSystemUI.addOnDestroyed(() => favorite.removeOnChangeListener(onChangeListener));
       return fileSystemUI;
+    });
+}
+
+export async function getSelectedFolder(parent: HTMLDivElement): Promise<FolderEntry> {
+  return getSelected(parent)
+    .then(entry => {
+      if (!fs.isFolderEntry(entry)) {
+        throw new Error('선택된 항목은 폴더가 아닙니다.');
+      }
+      return entry;
+    });
+}
+
+export async function getSelected(parent: HTMLDivElement): Promise<FileSystemEntry> {
+  const selectedElement = parent.querySelector(`.${favoriteFileSystemClassName} .selected`);
+  if (!selectedElement || !(selectedElement instanceof HTMLLIElement)) {
+    throw new Error('선택된 항목이 없습니다.');
+  }
+
+  const id = selectedElement.dataset.id;
+  if (!id) {
+    throw new Error('선택된 항목의 ID가 없습니다.');
+  }
+
+  return favorite.getAll()
+    .then(entries => {
+      const entry = entries.find(e => e.id === id);
+      if (!entry) {
+        throw new Error(`ID가 ${id}인 항목을 찾을 수 없습니다.`);
+      }
+      return entry;
     });
 }
 
@@ -35,7 +71,7 @@ function createLiElement(
   entries: FileSystemEntry[],
   entry: FileSystemEntry
 ): HTMLLIElement {
-  var liElement: HTMLLIElement;
+  let liElement: HTMLLIElement;
   if (fs.isFolderEntry(entry)) {
     liElement = createFolderHtmlElement(entries, entry);
   } else if (fs.isFileEntry(entry)) {
@@ -85,14 +121,14 @@ function createFolderHtmlElement(
       clickTimer = null;
 
       // 모든 li 요소에서 selected 클래스 제거 및 현재 요소에만 selected 클래스 추가
-      Array.from(liElement.parentElement?.children || [])
-        .forEach(child => {
-          if (child instanceof HTMLLIElement) {
-            child.classList.remove('selected');
+      Array.from(liElement.parentElement?.querySelectorAll(`.${favoriteFileSystemClassName} .folder-name`) || [])
+        .forEach(elseNameElement => {
+          if (elseNameElement instanceof HTMLSpanElement) {
+            elseNameElement.classList.remove('selected');
           }
         });
 
-      liElement.classList.add('selected');
+      nameElement.classList.add('selected');
     }, 250);
   });
 
@@ -131,33 +167,6 @@ function createFolderHtmlElement(
   liElement.appendChild(iconElement);
   liElement.appendChild(nameElement);
   return liElement;
-}
-
-function addRenameEvent(nameElement: HTMLSpanElement, entry: FileSystemEntry) {
-  nameElement.addEventListener('dblclick', (e) => {
-    e.stopPropagation();
-    const newName = prompt('새로운 이름을 입력하세요:', entry.name);
-    if (!newName || newName.trim() === entry.name) {
-      alert('이름 변경이 취소되었습니다.');
-    } else if (exceptionCheck(newName)) {
-      alert('이름에 사용할 수 없는 문자가 포함되어 있습니다. (/, \\, :, *, ?, ", <, >, |)');
-    } else {
-      favorite.getAll().then(favorites => {
-        const updatedFavorites = favorites.map(fav => {
-          if (fav.id === entry.id) {
-            return { ...fav, name: newName, modifiedAt: new Date().toISOString() };
-          }
-          return fav;
-        });
-        return favorite.saveAll(updatedFavorites);
-      }).then(() => {
-        alert(`"${entry.name}"의 이름이 "${newName}"(으)로 변경되었습니다.`);
-      }).catch(err => {
-        console.error('즐겨찾기 이름 변경 중 오류 발생:', err);
-        alert('즐겨찾기 이름 변경 중 오류가 발생했습니다.');
-      });
-    }
-  });
 }
 
 function createFavoriteItemHtmlElement(
@@ -205,6 +214,16 @@ function createFavoriteItemHtmlElement(
       alert('즐겨찾기 삭제 중 오류가 발생했습니다.');
     });
   });
+
+  // url이 li의 url과 같으면 selected 상태로 변경
+  window.addEventListener('load', () => {
+    if (window.location.href === entry.metadata?.url) {
+      nameElement.classList.add('selected');
+    } else {
+      nameElement.classList.remove('selected');
+    }
+  });
+
 
   // 이름 더블클릭 시 이름 변경
   addRenameEvent(nameElement, entry);
@@ -298,6 +317,33 @@ function addDragAndDropEvent(
     }).catch((err) => {
       console.error('드래그 앤 드롭 중 오류 발생:', err);
     });
+  });
+}
+
+function addRenameEvent(nameElement: HTMLSpanElement, entry: FileSystemEntry) {
+  nameElement.addEventListener('dblclick', (e) => {
+    e.stopPropagation();
+    const newName = prompt('새로운 이름을 입력하세요:', entry.name);
+    if (!newName || newName.trim() === entry.name) {
+      alert('이름 변경이 취소되었습니다.');
+    } else if (exceptionCheck(newName)) {
+      alert('이름에 사용할 수 없는 문자가 포함되어 있습니다. (/, \\, :, *, ?, ", <, >, |)');
+    } else {
+      favorite.getAll().then(favorites => {
+        const updatedFavorites = favorites.map(fav => {
+          if (fav.id === entry.id) {
+            return { ...fav, name: newName, modifiedAt: new Date().toISOString() };
+          }
+          return fav;
+        });
+        return favorite.saveAll(updatedFavorites);
+      }).then(() => {
+        alert(`"${entry.name}"의 이름이 "${newName}"(으)로 변경되었습니다.`);
+      }).catch(err => {
+        console.error('즐겨찾기 이름 변경 중 오류 발생:', err);
+        alert('즐겨찾기 이름 변경 중 오류가 발생했습니다.');
+      });
+    }
   });
 }
 

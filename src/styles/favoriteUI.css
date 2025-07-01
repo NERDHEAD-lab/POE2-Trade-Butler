@@ -14,8 +14,13 @@
     background-color: #333;
 }
 
-.favorite-folder-list span.selected {
+.favorite-folder-list .folder-name.selected {
     background-color: #555;
+    color: white;
+}
+
+.favorite-folder-list .favorite-name.selected {
+    background-color: #007bff;
     color: white;
 }
 

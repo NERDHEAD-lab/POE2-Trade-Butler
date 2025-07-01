@@ -6,6 +6,8 @@ export class FileSystemUI {
   private renderLiElement: ((entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement) | null = null;
   private className: string | null = null;
   private ulElement: HTMLUListElement | null = null;
+  private onLiElementAdded: ((li: HTMLLIElement, entry: FileSystemEntry) => void)[] = [];
+  private onDestroyed: (() => void)[] = [];
 
   private constructor(root: FileSystemEntry[]) {
     this.root = root;
@@ -34,6 +36,7 @@ export class FileSystemUI {
     for (const entry of this.root) {
       const li = this.renderLiElement!(this.root, entry);
       this.ulElement!.appendChild(li);
+      this.onLiElementAdded.forEach(callback => callback(li, entry));
     }
 
     this.parentElement.appendChild(this.ulElement);
@@ -44,6 +47,26 @@ export class FileSystemUI {
     this.root = newEntries;
     this.create();
   }
+
+  public destroy(): void {
+    if (this.ulElement && this.parentElement) {
+      this.parentElement.removeChild(this.ulElement);
+      this.ulElement = null;
+    }
+    this.parentElement = null;
+    this.renderLiElement = null;
+    this.className = null;
+    this.onLiElementAdded = [];
+  }
+
+  public addOnLiElementAdded(callback: (li: HTMLLIElement, entry: FileSystemEntry) => void): void {
+    this.onLiElementAdded.push(callback);
+  }
+
+  public addOnDestroyed(callback: () => void): void {
+    this.onDestroyed.push(callback);
+  }
+
 }
 
 class FileSystemUIBuilder {

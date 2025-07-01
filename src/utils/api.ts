@@ -98,7 +98,7 @@ export function showToast(message: string, color = '#fff', duration = 3000) {
  * @param modal - 모달 요소
  * @return true를 반환하면 모달이 닫히고, false를 반환하면 모달이 닫히지 않습니다.
  */
-type ButtonListener = (modal: HTMLDivElement) => Promise<boolean>;
+export type ButtonListener = (modal: HTMLDivElement) => Promise<boolean>;
 
 interface ModalOptions {
   title?: string;

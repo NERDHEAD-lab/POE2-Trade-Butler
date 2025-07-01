@@ -35,7 +35,7 @@ export function isFolderEntry(entry: FileSystemEntry): entry is FolderEntry {
 }
 
 export function getPath(entries: FileSystemEntry[], entry: FileSystemEntry): string {
-  if(!entry.parentId) return '/';
+  if (!entry.parentId) return '/';
 
   const pathParts: string[] = [];
   let currentEntry: FileSystemEntry | undefined = entry;
@@ -138,7 +138,7 @@ export function moveEntry(
 
 export function addEntry(
   entries: FileSystemEntry[],
-  newEntry: Omit<FileSystemEntry, 'id' | 'createdAt' | 'modifiedAt'>,
+  newEntry: Omit<FileSystemEntry, 'id' | 'createdAt' | 'modifiedAt' | 'parentId'>,
   parentId: string | null
 ): FileSystemEntry[] {
   const id = crypto.randomUUID();
@@ -170,6 +170,11 @@ export function addEntry(
     };
   } else {
     throw new Error(`Invalid entry type: ${(newEntry as any).type}`);
+  }
+
+  // 동일 parentId를 가진 기존 항목과 이름이 중복되는지 확인
+  if (entries.some(e => e.parentId === parentId && e.name === entry.name)) {
+    throw new Error(`An entry with the name "${entry.name}" already exists in this folder.`);
   }
 
   return [...entries, entry];

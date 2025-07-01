@@ -50,6 +50,11 @@ export function get<T>(
   });
 }
 
+const listenerMap = new WeakMap<
+  (newValue: any, oldValue: any) => void,
+  (changes: { [key: string]: chrome.storage.StorageChange }) => void
+>();
+
 export function addOnChangeListener<T>(
   storageType: StorageType,
   key: string,
@@ -64,5 +69,18 @@ export function addOnChangeListener<T>(
     }
   };
 
+  listenerMap.set(listener, changeListener);
   storageObj.onChanged.addListener(changeListener);
+}
+
+export function removeOnChangeListener<T>(
+  storageType: StorageType,
+  listener: (newValue: T, oldValue: T) => void
+): void {
+  const storageObj = StorageTypeEnum[storageType].module;
+  const changeListener = listenerMap.get(listener);
+  if (changeListener) {
+    storageObj.onChanged.removeListener(changeListener);
+    listenerMap.delete(listener);
+  }
 }
