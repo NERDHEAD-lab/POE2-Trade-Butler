@@ -1,9 +1,9 @@
-const fs = require('fs');
-const archiver = require('archiver');
-const path = require('path');
+import fs from 'fs';
+import archiver from 'archiver';
+import path from 'path';
+import packageJson from '../package.json';
 
 // package.json에서 name 읽기
-const packageJson = require('../package.json');
 const projectName = packageJson.name || 'project';
 
 // 빌드 폴더와 ZIP 파일 이름 설정

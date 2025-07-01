@@ -10,6 +10,7 @@
     "format": "prettier --write .",
     "zip": "node scripts/create-zip.js"
   },
+  "type": "module",
   "keywords": [
     "chrome-extension",
     "poe2",

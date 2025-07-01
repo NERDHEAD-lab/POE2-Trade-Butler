@@ -1,9 +1,13 @@
-const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import CopyPlugin from 'copy-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
-module.exports = (env, argv = {}) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default (env, argv = {}) => {
   const mode = argv.mode || 'production';
 
   return {
@@ -54,4 +58,4 @@ module.exports = (env, argv = {}) => {
       new MiniCssExtractPlugin()
     ]
   };
-};
+}
