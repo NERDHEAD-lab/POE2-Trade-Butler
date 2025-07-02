@@ -49,7 +49,10 @@ export class TradePreviewer {
         target.addEventListener('mouseenter', () => {
           target.classList.add('hovered');
           previewStorage.getById(id)
-            .then(previewInfo => TradePreviewer.showAsPreviewPanel(previewInfo));
+            .then(previewInfo => {
+              if (!previewInfo) return;
+              TradePreviewer.showAsPreviewPanel(previewInfo)
+            });
         });
 
         target.addEventListener('mouseleave', () => {
@@ -57,12 +60,23 @@ export class TradePreviewer {
           TradePreviewer.hidePreviewPanel();
         });
 
-        if (appendPreviewIconTarget) {
-          const icon = document.createElement('span');
-          icon.className = 'preview-icon';
-          icon.textContent = '🔍';
-          appendPreviewIconTarget.insertAdjacentElement('afterend', icon);
-        }
+
+        previewStorage.getById(id)
+          .then(previewInfo => {
+            if (!appendPreviewIconTarget) return;
+            const icon = document.createElement('span');
+            icon.className = 'preview-icon';
+            icon.textContent = '🔍';
+            icon.style.marginLeft = '1px';
+            icon.style.fontSize = '0.8em';
+            icon.style.verticalAlign = 'middle';
+            if (!previewInfo) {
+              icon.style.opacity = '0.5';
+              icon.style.color = 'gray';
+            }
+
+            appendPreviewIconTarget.insertAdjacentElement('afterend', icon);
+          });
       })
       .catch(error => {
         console.error('Failed to wait for TradePreviewInjector:', error);

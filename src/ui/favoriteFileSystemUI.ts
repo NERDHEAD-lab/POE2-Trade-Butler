@@ -3,6 +3,7 @@ import * as favorite from '../storage/favoriteStorage';
 import * as fs from './fileSystemEntry';
 import { FileEntry, FileSystemEntry, FolderEntry } from './fileSystemEntry';
 import { FileSystemUI } from './fileSystemUI';
+import { TradePreviewer } from '../utils/tradePreviewInjector';
 
 //TODO: 추후 추상화 고려하여 FileSystemUI로 일부 기능을 옮길 것
 /**
@@ -240,6 +241,9 @@ function createFavoriteItemHtmlElement(
 
   // 이름 더블클릭 시 이름 변경
   addRenameEvent(nameElement, entry);
+  // 마우스 오버 시 미리보기 기능 추가
+  TradePreviewer.addHoverEventListener(liElement, entry.metadata.id, nameElement);
+
 
   liElement.appendChild(iconElement);
   liElement.appendChild(nameElement);
