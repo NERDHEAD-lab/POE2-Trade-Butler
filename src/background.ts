@@ -3,15 +3,7 @@ import * as searchHistory from './storage/searchHistoryStorage';
 import * as favorite from './storage/favoriteStorage';
 import * as previewStorage from './storage/previewStorage';
 
-chrome.runtime.onInstalled.addListener(async () => {
-  console.log('[background] Extension installed or updated. Running legacy storage migration...');
-  try {
-    await executeLegacyVersionMigrations();
-    console.log('[background] Migration completed.');
-  } catch (err) {
-    console.error('[background] Migration failed:', err);
-  }
-});
+await executeLegacyVersionMigrations();
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // reload the extension when a development script sends a message
@@ -26,7 +18,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return response.json();
       })
       .then(data => {
-        sendResponse({data: data.result});
+        sendResponse({ data: data.result });
       })
       .catch(error => {
         sendResponse({ error: error.message });
