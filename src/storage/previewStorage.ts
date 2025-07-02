@@ -4,7 +4,7 @@ import * as searchHistory from './searchHistoryStorage';
 import * as favorite from './favoriteStorage';
 
 const PREVIEW_STORAGE_TYPE: StorageType = 'local';
-const PREVIEW_STORAGE_KEY = 'preview';
+const PREVIEW_STORAGE_KEY = 'previewPanelSnapshots';
 
 export interface PreviewPanelSnapshot {
   searchKeyword: string;
