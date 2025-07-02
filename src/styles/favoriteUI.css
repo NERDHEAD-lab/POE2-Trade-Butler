@@ -1,3 +1,18 @@
+.poe2-modal-overlay div.favorite-name {
+    width: 100%;
+    min-width: 300px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    background-color: #1e1e1e;
+    color: #ccc;
+    padding: 8px 10px;
+    border: 1px solid #3c3c3c;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: inherit;
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
 .favorite-folder-list {
     list-style: none;
     padding-left: 0;
@@ -22,21 +37,6 @@
 .favorite-folder-list .favorite-name.selected {
     background-color: #007bff;
     color: white;
-}
-
-.favorite-folder-list .favorite-name {
-    width: 100%;
-    min-width: 300px;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-    background-color: #1e1e1e;
-    color: #ccc;
-    padding: 8px 10px;
-    border: 1px solid #3c3c3c;
-    border-radius: 4px;
-    font-size: 13px;
-    font-family: inherit;
-    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5);
 }
 
 .favorite-folder-list .favorite-name:focus {
