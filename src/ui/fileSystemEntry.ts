@@ -180,6 +180,13 @@ export function addEntry(
   return [...entries, entry];
 }
 
+export function getChildren(
+  entries: FileSystemEntry[],
+  parentId: string | null
+): FileSystemEntry[] {
+  return entries.filter(entry => entry.parentId === parentId);
+}
+
 export function getDescendants(
   entries: FileSystemEntry[],
   parentId: string | null
