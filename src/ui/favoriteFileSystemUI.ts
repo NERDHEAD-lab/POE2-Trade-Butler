@@ -222,13 +222,18 @@ function createFavoriteItemHtmlElement(
   });
 
   // url이 li의 url과 같으면 selected 상태로 변경
-  window.addEventListener('load', () => {
-    if (window.location.href === entry.metadata?.url) {
-      nameElement.classList.add('selected');
-    } else {
-      nameElement.classList.remove('selected');
-    }
-  });
+  (function observeUrlChange() {
+    new MutationObserver(() => {
+      if (window.location.href === entry.metadata?.url) {
+        nameElement.classList.add('selected');
+      } else {
+        nameElement.classList.remove('selected');
+      }
+    }).observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  })();
 
 
   // 이름 더블클릭 시 이름 변경
