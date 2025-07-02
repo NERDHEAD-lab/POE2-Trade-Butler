@@ -13,7 +13,6 @@ import { openFavoriteFolderModal } from '../ui/newFavoriteModal';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
-const ON_FAVORITE_FOLDER_CHANGED = 'onFavoriteFolderChanged';
 
 const sidebarHtml = `
 <div id="sidebar-header">
@@ -120,7 +119,7 @@ export function renderSidebar(container: HTMLElement): void {
 
       return {
         id: searchHistoryFromUrl.id,
-        url: searchHistoryFromUrl.url,
+        url: searchHistoryFromUrl.url
       };
     }
   );
@@ -149,7 +148,6 @@ export function renderSidebar(container: HTMLElement): void {
 
   const favoriteWrapper = document.getElementById('favorites-list-wrapper') as HTMLDivElement;
 
-  //loadHistoryList(searchHistoryStorage.getAll())
   Promise.resolve()
     .then(() => loadHistoryList(searchHistoryStorage.getAll()))
     .then(() => favoriteUI.loadFavoriteFileSystemUI(favoriteWrapper))
@@ -253,7 +251,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
 
   attachCreateFavoriteEvent(favoriteStar, () => ({
     id: entry.id,
-    url: entry.url,
+    url: entry.url
   }));
 
   removeButton.addEventListener('click', (e) => {
@@ -289,11 +287,6 @@ function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistory
 
 
 function observeUrlChange() {
-  if (process.env.NODE_ENV === 'development') {
-    console.debug('disabled URL change observer in development mode');
-    return;
-  }
-
   new MutationObserver(() => {
     updateHistoryFromUrl(window.location.href).catch(console.debug);
   }).observe(document.body, {
@@ -403,6 +396,6 @@ export function attachCreateFavoriteEvent(
           }
         }
         return openFavoriteFolderModal(entry.id, entry.url);
-      })
+      });
   });
 }

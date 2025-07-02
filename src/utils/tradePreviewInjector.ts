@@ -5,10 +5,6 @@ export class TradePreviewer {
   private static _previewPanel: HTMLDivElement | null = null;
 
   public static async waitWhileCurrentPanelExists(count: number = 20, interval: number = 100): Promise<void> {
-    if (process.env.NODE_ENV === 'development') {
-      throw new Error('Skipping waitWhileCurrentPanelExists in development mode');
-    }
-
     while (count-- > 0) {
       if (TradePreviewer.currentPanel) return;
       await new Promise(resolve => setTimeout(resolve, interval));
@@ -47,10 +43,6 @@ export class TradePreviewer {
   }
 
   public static showAsPreviewPanel(snapshot: PreviewPanelSnapshot): void {
-    if (process.env.NODE_ENV === 'development') {
-      console.debug('Skipping showPreviewPanel in development mode');
-      return;
-    }
 
     TradePreviewer.hideCurrentPanel();
 
@@ -87,11 +79,6 @@ export class TradePreviewer {
   }
 
   public static hidePreviewPanel(): void {
-    if (process.env.NODE_ENV === 'development') {
-      console.debug('Skipping hidePreviewPanel in development mode');
-      return;
-    }
-
     TradePreviewer.showCurrentPanel();
 
     if (TradePreviewer._previewPanel && TradePreviewer._previewPanel.parentElement) {

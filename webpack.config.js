@@ -56,6 +56,7 @@ export default (env, argv = {}) => {
         ]
       }),
       new MiniCssExtractPlugin()
-    ]
-  };
+    ],
+    devtool: mode === 'development' ? 'source-map' : 'hidden-source-map'
+  }
 }
