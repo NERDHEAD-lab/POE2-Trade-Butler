@@ -305,9 +305,16 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
     console.debug('Already handling URL change, skipping:', currentUrl);
     return;
   }
-  if (api.parseSearchUrl(currentUrl) === null) {
+
+
+  const parseSearchUrl = api.parseSearchUrl(currentUrl);
+  if (parseSearchUrl === null) {
     console.debug(`Ignoring URL change, not a valid search URL: ${currentUrl}`);
     return;
+  } else {
+    TradePreviewer.extractCurrentPanel()
+      .then(previewInfo => previewStorage.addOrUpdateById(parseSearchUrl.id, previewInfo))
+      .catch(err => console.error('Error extracting current panel:', err));
   }
 
   const autoAddEnabled = await settingStorage.isHistoryAutoAddEnabled();
@@ -329,8 +336,6 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
     }
 
     await searchHistoryStorage.addOrUpdate(entity.id, entity.url)
-      .then(() => TradePreviewer.extractCurrentPanel())
-      .then(previewInfo => previewStorage.addOrUpdateById(entity.id, previewInfo))
       .then(() => settingStorage.setLatestSearchUrl(currentUrl))
       .then(() => console.log(`Search history updated for URL: ${currentUrl}`));
 
