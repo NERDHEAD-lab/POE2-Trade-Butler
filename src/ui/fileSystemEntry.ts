@@ -180,9 +180,22 @@ export function addEntry(
   return [...entries, entry];
 }
 
-export function getChildren(
+export function getDescendants(
   entries: FileSystemEntry[],
   parentId: string | null
 ): FileSystemEntry[] {
-  return entries.filter(entry => entry.parentId === parentId);
+  const result: FileSystemEntry[] = [];
+
+  function traverse(currentParentId: string | null) {
+    const children = entries.filter(entry => entry.parentId === currentParentId);
+    for (const child of children) {
+      result.push(child);
+      if (child.type === 'folder') {
+        traverse(child.id); // 재귀적으로 하위 탐색
+      }
+    }
+  }
+
+  traverse(parentId);
+  return result;
 }

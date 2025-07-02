@@ -84,6 +84,10 @@ function createLiElement(
   return liElement;
 }
 
+function isRootFolder(entry: FileSystemEntry): boolean {
+  return entry.type === 'folder' && entry.parentId === null;
+}
+
 function createFolderHtmlElement(
   entries: FileSystemEntry[],
   entry: FolderEntry
@@ -135,6 +139,7 @@ function createFolderHtmlElement(
   // 목록 더블클릭 시 아이콘 클릭 이벤트 실행
   liElement.addEventListener('dblclick', (e) => {
     e.stopPropagation();
+    if (isRootFolder(entry)) return;
 
     if (clickTimer) {
       clearTimeout(clickTimer);
@@ -146,19 +151,20 @@ function createFolderHtmlElement(
 
   // 아이콘 클릭 시 하위 항목 표시/숨김
   iconElement.addEventListener('click', () => {
+    if (isRootFolder(entry)) return;
+
     const isExpanded = iconElement.classList.toggle('expanded');
-    const childEntries = fs.getChildren(entries, entry.id);
-    const childElements = Array.from(liElement.parentElement?.children || []).filter(
-      child => child instanceof HTMLLIElement && child.dataset.id === entry.id
-    );
+    const childEntries = fs.getDescendants(entries, entry.id);
+    childEntries.forEach(entry => {
+      console.log(`Toggling visibility for entry: ${entry.name} (ID: ${entry.id})`);
+      const childElement = liElement.parentElement?.querySelector(`li[data-id="${entry.id}"]`) as HTMLLIElement | null;
+      if (childElement) {
+        childElement.style.display = isExpanded ? 'block' : 'none';
+      }
+    });
 
     iconElement.textContent = isExpanded ? '📂' : '📁';
     nameElement.textContent = isExpanded ? entry.name : `${entry.name} (${childEntries.length})`;
-    childElements.forEach(child => {
-      if (child instanceof HTMLLIElement) {
-        child.style.display = isExpanded ? 'block' : 'none';
-      }
-    });
   });
 
   // 이름 더블클릭 시 이름 변경
@@ -321,6 +327,8 @@ function addDragAndDropEvent(
 }
 
 function addRenameEvent(nameElement: HTMLSpanElement, entry: FileSystemEntry) {
+  if (isRootFolder(entry)) return;
+
   nameElement.addEventListener('dblclick', (e) => {
     e.stopPropagation();
     const newName = prompt('새로운 이름을 입력하세요:', entry.name);
