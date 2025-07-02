@@ -35,7 +35,7 @@
 }
 
 .favorite-folder-list .favorite-name.selected {
-    background-color: #007bff;
+    border: 1px solid #007bff;
     color: white;
 }
 

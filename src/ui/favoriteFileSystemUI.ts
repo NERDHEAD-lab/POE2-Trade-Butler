@@ -115,19 +115,28 @@ function createFolderHtmlElement(
   nameElement.textContent = entry.name;
 
 
-  let clickTimer: ReturnType<typeof setTimeout> | null = null;
+  const clickTimerEntity: { clickTimer: ReturnType<typeof setTimeout> | null, preventClick: boolean } = {
+    clickTimer: null,
+    preventClick: false
+  }
 
   // 목록 클릭 시 selected 상태로 변경
   liElement.addEventListener('click', (e) => {
     e.stopPropagation();
 
-    if (clickTimer) {
-      clearTimeout(clickTimer);
-      clickTimer = null;
+    if (clickTimerEntity.preventClick) {
+      clickTimerEntity.preventClick = false;
+      return;
     }
 
-    clickTimer = setTimeout(() => {
-      clickTimer = null;
+    if (clickTimerEntity.clickTimer) {
+      clearTimeout(clickTimerEntity.clickTimer);
+      clickTimerEntity.clickTimer = null;
+    }
+
+    clickTimerEntity.clickTimer = setTimeout(() => {
+      clickTimerEntity.clickTimer = null;
+      clickTimerEntity.preventClick = false;
 
       // 모든 li 요소에서 selected 클래스 제거 및 현재 요소에만 selected 클래스 추가
       Array.from(liElement.parentElement?.querySelectorAll(`.${favoriteFileSystemClassName} .folder-name`) || [])
@@ -148,10 +157,11 @@ function createFolderHtmlElement(
     e.stopPropagation();
     if (isRootFolder(entry)) return;
 
-    if (clickTimer) {
-      clearTimeout(clickTimer);
-      clickTimer = null;
+    if (clickTimerEntity.clickTimer) {
+      clearTimeout(clickTimerEntity.clickTimer);
+      clickTimerEntity.clickTimer = null;
     }
+    clickTimerEntity.preventClick = true;
 
     iconElement.click();
   });
@@ -177,7 +187,7 @@ function createFolderHtmlElement(
   });
 
   // 이름 더블클릭 시 이름 변경
-  addRenameEvent(nameElement, entry);
+  addRenameEvent(nameElement, entry, clickTimerEntity);
 
   liElement.appendChild(iconElement);
   liElement.appendChild(nameElement);
@@ -211,16 +221,35 @@ function createFavoriteItemHtmlElement(
   nameElement.className = 'favorite-name';
   nameElement.textContent = entry.name;
 
-  // 목록 클릭 시 해당 URL로 이동
-  liElement.addEventListener('click', () => {
-    if (!entry.metadata || !entry.metadata.url) {
-      throw new Error(`비정상적인 즐겨찾기 항목: ${entry.name}. URL이 없습니다.`);
-    }
-    window.location.href = entry.metadata.url;
-  });
+  const clickTimerEntity: { clickTimer: ReturnType<typeof setTimeout> | null, preventClick: boolean } = {
+    clickTimer: null,
+    preventClick: false
+  }
 
-  // TODO: 마우스 오버 기능 추가 필요 (preview 기능)
-  //       -> sidebar.attachPreviewHoverEvents
+  // 목록 클릭 시 해당 URL로 이동
+  liElement.addEventListener('click', (e) => {
+    e.stopPropagation();
+
+    if (clickTimerEntity.preventClick) {
+      clickTimerEntity.preventClick = false;
+      return;
+    }
+
+    if (clickTimerEntity.clickTimer) {
+      clearTimeout(clickTimerEntity.clickTimer);
+      clickTimerEntity.clickTimer = null;
+    }
+
+    clickTimerEntity.clickTimer = setTimeout(() => {
+      clickTimerEntity.clickTimer = null;
+      clickTimerEntity.preventClick = false;
+
+      if (!entry.metadata || !entry.metadata.url) {
+        throw new Error(`비정상적인 즐겨찾기 항목: ${entry.name}. URL이 없습니다.`);
+      }
+      window.location.href = entry.metadata.url;
+    }, 250);
+  });
 
   // 아이콘 클릭 시 즐겨찾기 삭제
   iconElement.addEventListener('click', (e) => {
@@ -254,7 +283,7 @@ function createFavoriteItemHtmlElement(
 
 
   // 이름 더블클릭 시 이름 변경
-  addRenameEvent(nameElement, entry);
+  addRenameEvent(nameElement, entry, clickTimerEntity);
   // 마우스 오버 시 미리보기 기능 추가
   TradePreviewer.addHoverEventListener(liElement, entry.metadata.id, nameElement);
 
@@ -351,11 +380,17 @@ function addDragAndDropEvent(
   });
 }
 
-function addRenameEvent(nameElement: HTMLSpanElement, entry: FileSystemEntry) {
+function addRenameEvent(nameElement: HTMLSpanElement, entry: FileSystemEntry, clickTimerEntity: { clickTimer: ReturnType<typeof setTimeout> | null, preventClick: boolean }): void {
   if (isRootFolder(entry)) return;
 
   nameElement.addEventListener('dblclick', (e) => {
     e.stopPropagation();
+
+    if (clickTimerEntity.clickTimer) {
+      clearTimeout(clickTimerEntity.clickTimer);
+      clickTimerEntity.clickTimer = null;
+    }
+
     const newName = prompt('새로운 이름을 입력하세요:', entry.name);
     if (!newName || newName.trim() === entry.name) {
       alert('이름 변경이 취소되었습니다.');
@@ -377,6 +412,8 @@ function addRenameEvent(nameElement: HTMLSpanElement, entry: FileSystemEntry) {
         alert('즐겨찾기 이름 변경 중 오류가 발생했습니다.');
       });
     }
+
+    clickTimerEntity.preventClick = true;
   });
 }
 
