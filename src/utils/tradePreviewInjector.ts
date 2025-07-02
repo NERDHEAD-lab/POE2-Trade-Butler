@@ -1,4 +1,5 @@
 import { PreviewPanelSnapshot } from '../storage/previewStorage';
+import * as previewStorage from '../storage/previewStorage';
 
 export class TradePreviewer {
   private static readonly PREVIEW_PANEL_ID = 'trade-preview-panel';
@@ -42,8 +43,33 @@ export class TradePreviewer {
     };
   }
 
-  public static showAsPreviewPanel(snapshot: PreviewPanelSnapshot): void {
+  public static addHoverEventListener(target: HTMLElement, id: string, appendPreviewIconTarget?: HTMLElement): void {
+    TradePreviewer.waitWhileCurrentPanelExists()
+      .then(() => {
+        target.addEventListener('mouseenter', () => {
+          target.classList.add('hovered');
+          previewStorage.getById(id)
+            .then(previewInfo => TradePreviewer.showAsPreviewPanel(previewInfo));
+        });
 
+        target.addEventListener('mouseleave', () => {
+          target.classList.remove('hovered');
+          TradePreviewer.hidePreviewPanel();
+        });
+
+        if (appendPreviewIconTarget) {
+          const icon = document.createElement('span');
+          icon.className = 'preview-icon';
+          icon.textContent = '🔍';
+          appendPreviewIconTarget.insertAdjacentElement('afterend', icon);
+        }
+      })
+      .catch(error => {
+        console.error('Failed to wait for TradePreviewInjector:', error);
+      });
+  }
+
+  public static showAsPreviewPanel(snapshot: PreviewPanelSnapshot): void {
     TradePreviewer.hideCurrentPanel();
 
     const wrapper = document.createElement('div');

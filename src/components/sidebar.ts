@@ -298,6 +298,7 @@ function observeUrlChange() {
 let currentHandleUrl = '';
 
 async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
+  console.log(`Handling URL change: ${currentUrl}`);
   const latestSearchUrl = await settingStorage.getLatestSearchUrl();
 
   const autoAddEnabled = await settingStorage.isHistoryAutoAddEnabled();
@@ -349,26 +350,11 @@ export function attachPreviewHoverEvents(
     id: string;
     etc?: Record<string, any>
   }): void {
-  TradePreviewer.waitWhileCurrentPanelExists()
-    .then(() => {
-      element.addEventListener('mouseenter', () => {
-        element.classList.add('hovered');
-        const previewInfo = entry.etc?.previewInfo as PreviewPanelSnapshot;
-        if (!previewInfo) {
-          console.warn('No preview info found for entry:', entry.id);
-          return;
-        }
-        TradePreviewer.showAsPreviewPanel(previewInfo);
-      });
-
-      element.addEventListener('mouseleave', () => {
-        element.classList.remove('hovered');
-        TradePreviewer.hidePreviewPanel();
-      });
-    })
-    .catch(error => {
-      console.error('Failed to wait for TradePreviewInjector:', error);
-    });
+  TradePreviewer.addHoverEventListener(
+    element,
+    entry.id,
+    element.querySelector('.history-name') as HTMLElement
+  )
 }
 
 export function attachCreateFavoriteEvent(
