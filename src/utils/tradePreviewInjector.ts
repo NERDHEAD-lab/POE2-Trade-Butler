@@ -14,13 +14,13 @@ export class TradePreviewer {
   }
 
   public static async extractCurrentPanel(): Promise<PreviewPanelSnapshot> {
+    await TradePreviewer.waitUntilSearchButtonEnabled();
+
     const panel = TradePreviewer.currentPanel;
     if (!panel) {
       console.error('Trade preview element not found. Make sure you are on the trade page.');
       throw new Error('Trade preview element not found');
     }
-
-    await TradePreviewer.waitUntilSearchButtonEnabled();
 
     const isCollapsed = TradePreviewer.isPanelCollapsed();
     await TradePreviewer.expandPanel();
