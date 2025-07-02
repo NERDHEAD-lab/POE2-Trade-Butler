@@ -63,6 +63,8 @@ export class FileSystemUI {
     this.renderLiElement = null;
     this.className = null;
     this.onLiElementAdded = [];
+
+    this.onDestroyed.forEach(callback => callback());
   }
 
   public addOnLiElementAdded(callback: (li: HTMLLIElement, entry: FileSystemEntry) => void): void {
