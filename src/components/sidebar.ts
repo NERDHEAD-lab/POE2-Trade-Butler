@@ -301,18 +301,19 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
   console.log(`Handling URL change: ${currentUrl}`);
   const latestSearchUrl = await settingStorage.getLatestSearchUrl();
 
-  const autoAddEnabled = await settingStorage.isHistoryAutoAddEnabled();
-  if (!autoAddEnabled) {
-    console.debug('History auto-add is disabled, skipping URL change handling');
-    return;
-  }
-
   if (currentHandleUrl === currentUrl) {
     console.debug('Already handling URL change, skipping:', currentUrl);
     return;
   }
   if (api.parseSearchUrl(currentUrl) === null) {
     console.debug(`Ignoring URL change, not a valid search URL: ${currentUrl}`);
+    return;
+  }
+
+  const autoAddEnabled = await settingStorage.isHistoryAutoAddEnabled();
+  if (!autoAddEnabled) {
+    console.debug('History auto-add is disabled, skipping URL change handling');
+    await settingStorage.setLatestSearchUrl(currentUrl);
     return;
   }
 
