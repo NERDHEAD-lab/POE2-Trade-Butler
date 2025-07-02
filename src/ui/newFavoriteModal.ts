@@ -123,7 +123,7 @@ export function onConfirmCreateFavoriteModal(wrapper: HTMLDivElement): ButtonLis
     const id = nameInput.dataset.id;
     const url = nameInput.dataset.url;
 
-    if (url) {
+    if (!url) {
       // throw new Error('즐겨찾기 URL이 정의되지 않았습니다.');
       alert('즐겨찾기 URL이 정의되지 않았습니다.');
       return false;
