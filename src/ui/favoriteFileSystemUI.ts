@@ -101,6 +101,7 @@ function createFolderHtmlElement(
   const nameElement = document.createElement('span');
 
   liElement.className = 'folder';
+  liElement.dataset.parentId = entry.parentId || '';
   liElement.dataset.id = entry.id;
   liElement.style.marginLeft = `${fs.getDepth(entries, entry) * 10}px`;
   liElement.draggable = true;
@@ -161,11 +162,13 @@ function createFolderHtmlElement(
 
     const isExpanded = iconElement.classList.toggle('expanded');
     const childEntries = fs.getDescendants(entries, entry.id);
+
     childEntries.forEach(entry => {
       console.log(`Toggling visibility for entry: ${entry.name} (ID: ${entry.id})`);
       const childElement = liElement.parentElement?.querySelector(`li[data-id="${entry.id}"]`) as HTMLLIElement | null;
       if (childElement) {
-        childElement.style.display = isExpanded ? 'block' : 'none';
+        const shouldBeVisible = isExpanded && isAncestorsExpanded(childElement);
+        childElement.style.display = shouldBeVisible ? 'block' : 'none';
       }
     });
 
@@ -179,6 +182,14 @@ function createFolderHtmlElement(
   liElement.appendChild(iconElement);
   liElement.appendChild(nameElement);
   return liElement;
+}
+
+function isAncestorsExpanded(element: HTMLLIElement): boolean {
+  const parentId = element.dataset.parentId;
+  const parentFolder = element.parentElement?.querySelector(`li[data-id="${parentId}"]`) as HTMLLIElement | null;
+  const isExpanded = parentFolder?.querySelector('.folder-icon')?.classList.contains('expanded') ?? true;
+
+  return isExpanded && (parentFolder ? isAncestorsExpanded(parentFolder) : true);
 }
 
 function createFavoriteItemHtmlElement(
