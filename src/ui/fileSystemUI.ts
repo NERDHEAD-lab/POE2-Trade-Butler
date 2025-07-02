@@ -13,6 +13,10 @@ export class FileSystemUI {
     this.root = root;
   }
 
+  private static createInstance(root: FileSystemEntry[]): FileSystemUI {
+    return new FileSystemUI(root);
+  }
+
   public static builder(root: FileSystemEntry[]): FileSystemUIBuilder {
     return new FileSystemUIBuilder(root);
   }
