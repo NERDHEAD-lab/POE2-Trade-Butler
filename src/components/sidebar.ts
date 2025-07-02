@@ -230,7 +230,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
       .join('\n')}`;
   }
 
-  favoriteStorage.exists(entry.id)
+  favoriteStorage.existsByMetadataId(entry.id)
     .then(isFavorite => {
       if (isFavorite) {
         favoriteStar.classList.add('active');
@@ -298,7 +298,7 @@ function observeUrlChange() {
 let currentHandleUrl = '';
 
 async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
-  console.log(`Handling URL change: ${currentUrl}`);
+  console.debug(`Handling URL change: ${currentUrl}`);
   const latestSearchUrl = await settingStorage.getLatestSearchUrl();
 
   if (currentHandleUrl === currentUrl) {

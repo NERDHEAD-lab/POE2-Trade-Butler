@@ -61,7 +61,7 @@ export async function deleteIfOrphaned(deletedId: string, triggered: 'searchHist
   let existsInOtherStorage = false;
   if (triggered === 'searchHistory') {
     //반대편을 확인
-    existsInOtherStorage = await favorite.exists(deletedId);
+    existsInOtherStorage = await favorite.existsByMetadataId(deletedId);
   } else if (triggered === 'favorite') {
     existsInOtherStorage = await searchHistory.exists(deletedId);
   }

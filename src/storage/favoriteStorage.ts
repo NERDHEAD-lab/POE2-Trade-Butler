@@ -38,11 +38,10 @@ export async function saveAll(favorites: FileSystemEntry[]): Promise<void> {
   await set(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, favorites);
 }
 
-export async function exists(id: string): Promise<boolean> {
-  const favorites = await getAll();
-  return favorites
-    .filter(entry => entry.type === 'folder')
-    .some(entry => entry.id === id);
+export async function existsByMetadataId(id: string): Promise<boolean> {
+  return getAll()
+    .then(favorites => favorites.filter(entry => entry.type === 'file'))
+    .then(favorites => favorites.some(entry => entry.metadata.id === id));
 }
 
 export function addOnChangeListener(
