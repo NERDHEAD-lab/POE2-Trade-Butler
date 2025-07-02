@@ -69,7 +69,24 @@ export async function deleteIfOrphaned(deletedId: string, triggered: 'searchHist
   if (existsInOtherStorage) return;
 }
 
-export async function cleanOrphanSnapshots(): Promise<void> {
-  const currentSnapshots = await getAll();
-
+/**
+ * 24h 이상된 스냅샷을 삭제합니다. (history, favorite에 orphan된 경우)
+ */
+export async function cleanExpiredOrphanSnapshots(): Promise<void> {
+  const now = Date.now();
+  const currentSnapshots = await getAll()
+    .then(snapshots => {
+      return Object.fromEntries(
+        Object.entries(snapshots).filter(([key]) => {
+          return !searchHistory.exists(key) && !favorite.existsByMetadataId(key);
+        })
+      );
+    })
+    .then(snapshots => {
+      return Object.fromEntries(
+        Object.entries(snapshots).filter(([_, snapshot]) => {
+          return now - snapshot.timestamp <= 24 * 60 * 60 * 1000;
+        })
+      );
+    });
 }

@@ -4,6 +4,7 @@ import * as favorite from './storage/favoriteStorage';
 import * as previewStorage from './storage/previewStorage';
 
 await executeLegacyVersionMigrations();
+await previewStorage.cleanExpiredOrphanSnapshots();
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // reload the extension when a development script sends a message
