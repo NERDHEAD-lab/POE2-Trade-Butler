@@ -4,6 +4,7 @@ import * as fs from './fileSystemEntry';
 import { FileEntry, FileSystemEntry, FolderEntry } from './fileSystemEntry';
 import { FileSystemUI } from './fileSystemUI';
 import { TradePreviewer } from '../utils/tradePreviewInjector';
+import { showToast } from '../utils/api';
 
 //TODO: 추후 추상화 고려하여 FileSystemUI로 일부 기능을 옮길 것
 /**
@@ -321,7 +322,7 @@ function addDragAndDropEvent(
 
     // 드래그 앤 드롭된 항목이 폴더가 아닌 경우, 폴더로 이동할 수 없음
     if (entry.type !== 'folder') {
-      alert('폴더로만 드래그 앤 드롭할 수 있습니다.');
+      showToast('폴더로만 드래그 앤 드롭할 수 있습니다.');
       return;
     }
 
@@ -330,7 +331,7 @@ function addDragAndDropEvent(
     }).then(updatedFavorites => {
       return favorite.saveAll(updatedFavorites);
     }).then(() => {
-      alert(`"${draggedEntry.name}" 항목이 "${entry.name}" 폴더로 이동되었습니다.`);
+      showToast(`"${draggedEntry.name}" 항목이 "${entry.name}" 폴더로 이동되었습니다.`);
     }).catch((err) => {
       console.error('드래그 앤 드롭 중 오류 발생:', err);
     });
