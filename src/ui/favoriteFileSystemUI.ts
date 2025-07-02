@@ -49,7 +49,7 @@ export async function getSelectedFolder(parent: HTMLDivElement): Promise<FolderE
 }
 
 export async function getSelected(parent: HTMLDivElement): Promise<FileSystemEntry> {
-  const selectedElement = parent.querySelector(`.${favoriteFileSystemClassName} .selected`);
+  const selectedElement = parent.querySelector(`.${favoriteFileSystemClassName} li > span.selected`)?.parentElement as HTMLLIElement;
   if (!selectedElement || !(selectedElement instanceof HTMLLIElement)) {
     throw new Error('선택된 항목이 없습니다.');
   }
@@ -139,6 +139,8 @@ function createFolderHtmlElement(
       nameElement.classList.add('selected');
     }, 250);
   });
+
+  if (isRootFolder(entry)) liElement.click();
 
   // 목록 더블클릭 시 아이콘 클릭 이벤트 실행
   liElement.addEventListener('dblclick', (e) => {
