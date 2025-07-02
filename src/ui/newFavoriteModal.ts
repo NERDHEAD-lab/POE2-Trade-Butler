@@ -18,16 +18,7 @@ export async function openFavoriteFolderModal(
       nameInput.dataset.url = url;
 
       wrapper.appendChild(nameInput);
-      const favoriteUI = await folderUI
-        .loadFavoriteFileSystemUI(wrapper)
-        .then(folderUI => {
-          folderUI.addOnLiElementAdded((li, entry) => {
-            if (entry.type === 'file') li.style.display = 'none';
-          });
-
-          return folderUI;
-        });
-
+      const favoriteUI = await folderUI.loadFavoriteFileSystemUI(wrapper, false)
       return { favoriteUI, wrapper };
     })
     .then(({ favoriteUI, wrapper }) => {

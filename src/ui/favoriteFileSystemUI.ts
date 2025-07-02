@@ -13,13 +13,13 @@ import { FileSystemUI } from './fileSystemUI';
 const favoriteFileSystemClassName = 'favorite-folder-list';
 const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
 
-export async function loadFavoriteFileSystemUI(parent: HTMLDivElement): Promise<FileSystemUI> {
+export async function loadFavoriteFileSystemUI(parent: HTMLDivElement, showFile: boolean = true): Promise<FileSystemUI> {
   return favorite.getAll()
     .then(entries => fs.sortEntries(entries))
     .then(sortedEntries => {
       return FileSystemUI
         .builder(sortedEntries)
-        .htmlLiElement((entries, entry) => createLiElement(entries, entry))
+        .htmlLiElement((entries, entry) => createLiElement(entries, entry, showFile))
         .attachTo(parent, { className: favoriteFileSystemClassName })
         .build();
     })
@@ -69,12 +69,14 @@ export async function getSelected(parent: HTMLDivElement): Promise<FileSystemEnt
 
 function createLiElement(
   entries: FileSystemEntry[],
-  entry: FileSystemEntry
-): HTMLLIElement {
+  entry: FileSystemEntry,
+  showFile: boolean = true
+): HTMLLIElement | void {
   let liElement: HTMLLIElement;
   if (fs.isFolderEntry(entry)) {
     liElement = createFolderHtmlElement(entries, entry);
   } else if (fs.isFileEntry(entry)) {
+    if (!showFile) return;
     liElement = createFavoriteItemHtmlElement(entries, entry);
   } else {
     throw new Error(`알 수 없는 파일 시스템 항목 유형: ${(entry as any).type}`);

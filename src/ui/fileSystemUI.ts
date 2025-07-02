@@ -3,7 +3,7 @@ import { FileSystemEntry } from './fileSystemEntry';
 export class FileSystemUI {
   private root: FileSystemEntry[];
   private parentElement: HTMLElement | null = null;
-  private renderLiElement: ((entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement) | null = null;
+  private renderLiElement: ((entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement | void) | null = null;
   private className: string | null = null;
   private ulElement: HTMLUListElement | null = null;
   private onLiElementAdded: ((li: HTMLLIElement, entry: FileSystemEntry) => void)[] = [];
@@ -39,6 +39,8 @@ export class FileSystemUI {
     // TODO: 추후 계층 구조를 여기서 처리할 수 있도록 개선
     for (const entry of this.root) {
       const li = this.renderLiElement!(this.root, entry);
+      if (!li) continue;
+
       this.ulElement!.appendChild(li);
       this.onLiElementAdded.forEach(callback => callback(li, entry));
     }
@@ -77,13 +79,13 @@ class FileSystemUIBuilder {
   private readonly root: FileSystemEntry[];
   private parentElement: HTMLElement | null = null;
   private className: string | null = null;
-  private renderLiElement: ((entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement) | null = null;
+  private renderLiElement: ((entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement | void) | null = null;
 
   constructor(root: FileSystemEntry[]) {
     this.root = root;
   }
 
-  public htmlLiElement(fn: (entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement): FileSystemUIBuilder {
+  public htmlLiElement(fn: (entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement | void): FileSystemUIBuilder {
     this.renderLiElement = fn;
     return this;
   }
