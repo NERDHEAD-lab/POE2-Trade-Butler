@@ -1,4 +1,4 @@
-import { get, set, StorageType, localStorage } from '../storage';
+import { get, localStorage, set, StorageType } from '../storage';
 
 const CURRENT_STORAGE_VERSION_KEY = 'poe2trade_storage_version';
 const CURRENT_STORAGE_VERSION = 2;
@@ -17,35 +17,95 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
     key: 'searchHistory',
     storageType: 'local',
     version: 1,
-    migrate: async (legacy:SearchHistoryEntity_v1[]) => {
-      const currentEntity : SearchHistoryEntity_v2[] = [];
-      const currentPreviewData: PreviewPanelSnapshot_v2[] = [];
+    migrate: async (legacy: SearchHistoryEntity_v1[]) => {
+      const currentEntity: SearchHistoryEntity_v2[] = [];
+      const currentPreviewData: Record<string, PreviewPanelSnapshot_v2> = {};
 
       legacy
-      .filter(entry => entry.etc && entry.etc.previewData)
-      .forEach((entry) => {
-        const etc = entry.etc!;
-        const previewData = etc.previewData;
+        .forEach((entry) => {
+          currentEntity.push({
+            id: entry.id,
+            url: entry.url,
+            lastSearched: entry.lastSearched,
+            previousSearches: entry.previousSearches
+          });
 
-        currentEntity.push({
-          id: entry.id,
-          url: entry.url,
-          lastSearched: entry.lastSearched,
-          previousSearches: entry.previousSearches
-        });
+          if (!entry.etc?.previewInfo) return;
+          const previewData = entry.etc.previewInfo;
 
-        currentPreviewData.push({
-          searchKeyword: previewData.searchKeyword,
-          outerHTML: previewData.outerHTML,
-          attributes: previewData.attributes,
-          timestamp: previewData.timestamp
+          currentPreviewData[entry.id] = {
+            searchKeyword: previewData.searchKeyword,
+            outerHTML: previewData.outerHTML,
+            attributes: previewData.attributes,
+            timestamp: previewData.timestamp
+          };
         });
-      });
 
       await set('local', 'searchHistory', currentEntity);
       await set('local', 'previewPanelSnapshots', currentPreviewData);
     },
-    description: 'Migrate search history from v1 to v2 format, extracting preview data.'
+    description: 'Migrate search history from v1 to v2 format, extracting history entries and preview data.'
+  },
+  {
+    key: 'favoriteFolders',
+    storageType: 'local',
+    version: 1,
+    migrate: async (legacy: FavoriteFolderRoot_v1) => {
+      const root = DEFAULT_FAVORITE_ROOT();
+      const currentEntities: FileSystemEntry_2[] = [root];
+      const currentPreviewData: Record<string, PreviewPanelSnapshot_v2> = {};
+
+      function exportFile(entry: FavoriteItem_v1, parentId: string): void {
+        let result: FileSystemEntry_2;
+        result = {
+          id: crypto.randomUUID(),
+          name: entry.name || entry.id,
+          type: 'file',
+          parentId: parentId,
+          createdAt: new Date().toISOString(),
+          modifiedAt: new Date().toISOString(),
+          metadata: { id: entry.id, url: entry.url }
+        };
+
+        currentEntities.push(result);
+
+        if (!entry.etc?.previewInfo) return;
+        const previewData = entry.etc.previewInfo;
+
+        currentPreviewData[entry.id] = {
+          searchKeyword: previewData.searchKeyword,
+          outerHTML: previewData.outerHTML,
+          attributes: previewData.attributes,
+          timestamp: previewData.timestamp
+        };
+      }
+
+      function exportFolder(entry: FavoriteFolder_v1, parentId: string): void {
+        const result: FolderEntry_2 = {
+          id: crypto.randomUUID(),
+          name: entry.name,
+          type: 'folder',
+          parentId: parentId,
+          createdAt: new Date().toISOString(),
+          modifiedAt: new Date().toISOString()
+        };
+        currentEntities.push(result);
+
+        if (entry.folders) {
+          entry.folders.forEach(subFolder => exportFolder(subFolder, result.id));
+        }
+        if (entry.items) {
+          entry.items.forEach(item => exportFile(item, result.id));
+        }
+      }
+
+      legacy.items?.forEach(item => exportFile(item, root.id));
+      legacy.folders?.forEach(folder => exportFolder(folder, root.id));
+
+      await set('sync', 'favoriteFolders', currentEntities);
+      await set('local', 'previewPanelSnapshots', currentPreviewData);
+    },
+    description: 'Migrate favorite folders from v1 to v2 format, ensuring root folder structure.'
   }
 ] satisfies LegacyVersionMigrator<any>[];
 
@@ -60,7 +120,7 @@ export async function executeLegacyVersionMigrations(): Promise<void> {
 
   console.log(`Starting migrations from version ${currentVersion} to ${CURRENT_STORAGE_VERSION}`);
   for (const migrator of legacyVersionMigrators) {
-    if (migrator.version > currentVersion && migrator.version <= CURRENT_STORAGE_VERSION) {
+    if (migrator.version >= currentVersion && migrator.version < CURRENT_STORAGE_VERSION) {
       try {
         await executeMigration(migrator);
       } catch (error) {
@@ -74,45 +134,39 @@ export async function executeLegacyVersionMigrations(): Promise<void> {
 }
 
 
-
-
-
 function getCurrentStorageVersion(): Promise<number> {
   return new Promise((resolve) => {
     localStorage.get([CURRENT_STORAGE_VERSION_KEY], (result) => {
-      resolve(result[CURRENT_STORAGE_VERSION_KEY] || 1);
+      resolve(result[CURRENT_STORAGE_VERSION_KEY] || 0);
     });
   });
 }
 
-function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const storage = migrator.storageType;
-    const key = migrator.key;
+async function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<void> {
+  const storage = migrator.storageType;
+  const key = migrator.key;
 
-    get(storage, key, [])
-      .then((legacyData) => {
-        if (legacyData && legacyData.length > 0) {
-          return migrator.migrate(legacyData);
-        } else {
-          console.warn(`No data found for migration: ${migrator.description}`);
-          return Promise.resolve();
-        }
-      })
-      .then(() => {
-        console.log(`Migration completed: ${migrator.description}`);
-        resolve();
-      })
-      .catch((error) => {
-        console.error(`Migration failed: ${migrator.description}`, error);
-        reject(error);
-      });
-  });
+  try {
+    const legacyData = await get(storage, key, []);
+
+    console.log(`Trying to migrate data for key: ${key}, storage: ${storage}`);
+    if (legacyData) {
+      await migrator.migrate(legacyData);
+    } else {
+      console.warn(`No data found for migration: ${migrator.description}`);
+    }
+
+    console.log(`Migration completed: ${migrator.description}`);
+  } catch (error) {
+    console.error(`Migration failed: ${migrator.description}`, error);
+    throw error;
+  }
 }
 
 
 /* ****************************************************************************** */
 /* Legacy Version Manager for Poe2Trade Storage ********************************* */
+
 /* ****************************************************************************** */
 interface SearchHistoryEntity_v1 {
   id: string;
@@ -160,3 +214,36 @@ export interface FavoriteFolder_v1 {
   folders?: FavoriteFolder_v1[];     // 하위 폴더
   items?: FavoriteItem_v1[];         // 포함된 즐겨찾기 항목
 }
+
+export type FileSystemEntry_2 = FileEntry_2 | FolderEntry_2;
+
+
+interface BaseEntry_2 {
+  readonly id: string;
+  name: string;
+  readonly type: 'file' | 'folder';
+  parentId: string | null;  // null이면 루트
+  createdAt: string;
+  modifiedAt: string;
+}
+
+interface FileEntry_2 extends BaseEntry_2 {
+  readonly type: 'file';
+  content?: string;
+  metadata: Record<string, any>;
+}
+
+interface FolderEntry_2 extends BaseEntry_2 {
+  readonly type: 'folder';
+}
+
+const DEFAULT_FAVORITE_ROOT: () => FolderEntry_2 = () => {
+  return {
+    id: 'root',
+    type: 'folder',
+    name: '/',
+    parentId: null,
+    createdAt: new Date().toISOString(),
+    modifiedAt: new Date().toISOString()
+  };
+};
