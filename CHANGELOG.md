@@ -1,5 +1,14 @@
 # CHANGE LOG
 
+## [2.3.1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.3.0...2.3.1) (2025-07-03)
+
+
+### Bug Fixes
+
+* ES module 마이그레이션 간 누락되어 빌드에 실패하는 문제 수정 ([2d0e8dc](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/2d0e8dc3d4a170dd6b40de5212628caf28dc537c))
+* eslint 제약 조건 조치 ([3699efa](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/3699efa712d4e3a7f56c574761acbb1254fd0356))
+* 참조가 없는 미리보기 데이터를 삭제하지 않는 문제 수정 ([6ca4f1d](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/6ca4f1d16c03cc7fbbe177dc7b7afc5c39b1c2ee))
+
 ## [2.3.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.2.0...2.3.0) (2025-07-03)
 
 
