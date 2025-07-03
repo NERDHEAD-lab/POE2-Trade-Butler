@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## [2.3.2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.3.1...2.3.2) (2025-07-03)
+
+
+### Bug Fixes
+
+* 즐겨찾기 추가 클릭 시 예외상황(검색결과 페이지가 아닌경우)에 무반응인 문제 수정 ([d78af08](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/d78af086ad310940c62c7c33585db0b8d0c3280b))
+
 ## [2.3.1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.3.0...2.3.1) (2025-07-03)
 
 
