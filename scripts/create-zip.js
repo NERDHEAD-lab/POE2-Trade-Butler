@@ -1,8 +1,11 @@
 import fs from 'fs';
 import archiver from 'archiver';
-import path from 'path';
-import packageJson from '../package.json';
+import path, { dirname } from 'path';
+import packageJson from '../package.json' with { type: 'json' };
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 // package.json에서 name 읽기
 const projectName = packageJson.name || 'project';
 
