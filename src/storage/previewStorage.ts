@@ -67,6 +67,8 @@ export async function deleteIfOrphaned(deletedId: string, triggered: 'searchHist
   }
 
   if (existsInOtherStorage) return;
+
+  await deleteById(deletedId);
 }
 
 /**
