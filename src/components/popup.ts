@@ -1,5 +1,5 @@
 import '../styles/popup.css';
-import * as settingStorage from '../storage/settingStorage';
+// import * as settingStorage from '../storage/settingStorage';
 
 interface popupMenuItem {
   id: string;
