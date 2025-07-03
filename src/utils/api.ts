@@ -1,5 +1,3 @@
-import { SearchHistoryEntity } from './storage';
-
 /*
   http(s)://www.pathofexile.com/trade2/search/poe2/{serverName}/{id}
   http(s)://poe.game.daum.net/trade2/search/poe2/{serverName}/{id}
@@ -100,7 +98,7 @@ export function showToast(message: string, color = '#fff', duration = 3000) {
  * @param modal - 모달 요소
  * @return true를 반환하면 모달이 닫히고, false를 반환하면 모달이 닫히지 않습니다.
  */
-type ButtonListener = (modal: HTMLDivElement) => Promise<boolean>;
+export type ButtonListener = (modal: HTMLDivElement) => Promise<boolean>;
 
 interface ModalOptions {
   title?: string;
@@ -217,7 +215,9 @@ export function showModal(options: ModalOptions): void {
       } else {
         const result = listener(modal);
         if (result instanceof Promise) {
-          result.then(close => { if (close) overlay.remove(); });
+          result.then(close => {
+            if (close) overlay.remove();
+          });
         } else if (result) {
           overlay.remove();
         }

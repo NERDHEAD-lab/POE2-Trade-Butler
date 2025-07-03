@@ -1,19 +1,11 @@
-export interface PreviewPanelSnapshot {
-  searchKeyword: string;
-  outerHTML: string;
-  attributes: { [key: string]: string };
-  timestamp: number;
-}
+import { PreviewPanelSnapshot } from '../storage/previewStorage';
+import * as previewStorage from '../storage/previewStorage';
 
 export class TradePreviewer {
   private static readonly PREVIEW_PANEL_ID = 'trade-preview-panel';
   private static _previewPanel: HTMLDivElement | null = null;
 
   public static async waitWhileCurrentPanelExists(count: number = 20, interval: number = 100): Promise<void> {
-    if (process.env.NODE_ENV === 'development') {
-      throw new Error('Skipping waitWhileCurrentPanelExists in development mode');
-    }
-
     while (count-- > 0) {
       if (TradePreviewer.currentPanel) return;
       await new Promise(resolve => setTimeout(resolve, interval));
@@ -22,13 +14,13 @@ export class TradePreviewer {
   }
 
   public static async extractCurrentPanel(): Promise<PreviewPanelSnapshot> {
+    await TradePreviewer.waitUntilSearchButtonEnabled();
+
     const panel = TradePreviewer.currentPanel;
     if (!panel) {
       console.error('Trade preview element not found. Make sure you are on the trade page.');
       throw new Error('Trade preview element not found');
     }
-
-    await TradePreviewer.waitUntilSearchButtonEnabled();
 
     const isCollapsed = TradePreviewer.isPanelCollapsed();
     await TradePreviewer.expandPanel();
@@ -51,12 +43,47 @@ export class TradePreviewer {
     };
   }
 
-  public static showAsPreviewPanel(snapshot: PreviewPanelSnapshot): void {
-    if (process.env.NODE_ENV === 'development') {
-      console.debug('Skipping showPreviewPanel in development mode');
-      return;
-    }
+  public static addHoverEventListener(target: HTMLElement, id: string, appendPreviewIconTarget?: HTMLElement): void {
+    TradePreviewer.waitWhileCurrentPanelExists()
+      .then(() => {
+        target.addEventListener('mouseenter', () => {
+          target.classList.add('hovered');
+          previewStorage.getById(id)
+            .then(previewInfo => {
+              if (!previewInfo) return;
+              TradePreviewer.showAsPreviewPanel(previewInfo)
+            });
+        });
 
+        target.addEventListener('mouseleave', () => {
+          target.classList.remove('hovered');
+          TradePreviewer.hidePreviewPanel();
+        });
+
+
+        previewStorage.getById(id)
+          .then(previewInfo => {
+            if (!appendPreviewIconTarget) return;
+            const icon = document.createElement('span');
+            icon.className = 'preview-icon';
+            icon.textContent = '🔍';
+            icon.style.marginLeft = '1px';
+            icon.style.fontSize = '0.8em';
+            icon.style.verticalAlign = 'middle';
+            if (!previewInfo) {
+              icon.style.opacity = '0.5';
+              icon.style.color = 'gray';
+            }
+
+            appendPreviewIconTarget.insertAdjacentElement('afterend', icon);
+          });
+      })
+      .catch(error => {
+        console.error('Failed to wait for TradePreviewInjector:', error);
+      });
+  }
+
+  public static showAsPreviewPanel(snapshot: PreviewPanelSnapshot): void {
     TradePreviewer.hideCurrentPanel();
 
     const wrapper = document.createElement('div');
@@ -92,11 +119,6 @@ export class TradePreviewer {
   }
 
   public static hidePreviewPanel(): void {
-    if (process.env.NODE_ENV === 'development') {
-      console.debug('Skipping hidePreviewPanel in development mode');
-      return;
-    }
-
     TradePreviewer.showCurrentPanel();
 
     if (TradePreviewer._previewPanel && TradePreviewer._previewPanel.parentElement) {

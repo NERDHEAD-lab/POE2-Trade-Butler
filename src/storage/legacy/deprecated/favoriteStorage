@@ -1,68 +1,10 @@
-import { showToast } from './api';
+import { showToast } from '../../../utils/api';
+import { localStorage } from '../../storage';
 
 // TODO: 종류 별로 별도 Repository 클래스로 분리 필요
-/********************* MockSafety Check *********************/
-const isChromeAvailable = typeof chrome !== 'undefined' && chrome.storage?.local;
 
-const storage = isChromeAvailable
-  ? chrome.storage.local
-  : {
-    get: (keys: string[] | string, callback: (result: any) => void) => {
-      console.warn('⚠️ Mock storage.get called', keys);
-      const result: Record<string, any> = {};
 
-      if (Array.isArray(keys)) {
-        keys.forEach(key => {
-          const raw = localStorage.getItem(key);
-          result[key] = raw ? JSON.parse(raw) : undefined;
-        });
-      } else {
-        const raw = localStorage.getItem(keys);
-        result[keys] = raw ? JSON.parse(raw) : undefined;
-      }
-
-      callback(result);
-    },
-
-    set: (items: Record<string, any>, callback?: () => void) => {
-      console.warn('⚠️ Mock storage.set called', items);
-      Object.entries(items).forEach(([key, value]) => {
-        localStorage.setItem(key, JSON.stringify(value));
-      });
-      callback?.();
-    },
-
-    remove: (keys: string | string[], callback?: () => void) => {
-      console.warn('⚠️ Mock storage.remove called', keys);
-      if (Array.isArray(keys)) {
-        keys.forEach(key => localStorage.removeItem(key));
-      } else {
-        localStorage.removeItem(keys);
-      }
-      callback?.();
-    },
-
-    clear: (callback?: () => void) => {
-      console.warn('⚠️ Mock storage.clear called');
-      localStorage.clear();
-      callback?.();
-    }
-  };
-
-if (!isChromeAvailable) {
-  showToast('Chrome storage API not available, using mock storage');
-}
-
-const STORAGE_SEARCH_HISTORY_KEY = 'searchHistory';
 const STORAGE_FAVORITE_KEY = 'favoriteFolders';
-
-export interface SearchHistoryEntity {
-  id: string;
-  url: string;
-  lastSearched: string;
-  previousSearches: string[];
-  etc?: Record<string, any>; // 기타 정보 (예: 프리뷰 데이터 등)
-}
 
 export interface FavoriteFolderRoot {
   name?: string;
@@ -80,29 +22,12 @@ export interface FavoriteItem {
   id: string;       // SearchHistoryEntity.id
   name?: string;    // 사용자 지정 별칭 (기본값: id)
   url: string;      // SearchHistoryEntity.url
-  etc?: Record<string, any>; // 기타 정보 (예: 프리뷰 데이터 등)
 }
 
 export interface FavoriteFolder {
   name: string;                   // 폴더 표시 이름
   folders?: FavoriteFolder[];     // 하위 폴더
   items?: FavoriteItem[];         // 포함된 즐겨찾기 항목
-}
-
-
-type SearchHistoryChangedListener = (newEntries: SearchHistoryEntity[]) => void;
-const searchHistoryChangedListener = new Map<string, SearchHistoryChangedListener>();
-
-export function addSearchHistoryChangedListener(key: string, fn: SearchHistoryChangedListener): void {
-  searchHistoryChangedListener.set(key, fn);
-}
-
-export function removeSearchHistoryChangedListener(key: string): void {
-  searchHistoryChangedListener.delete(key);
-}
-
-function notifySearchHistoryChangedListener(newEntries: SearchHistoryEntity[]) {
-  searchHistoryChangedListener.forEach(fn => fn(newEntries));
 }
 
 type FavoriteFolderChangedListener = (root: FavoriteFolderRoot) => void;
@@ -121,108 +46,10 @@ function notifyFavoriteFolderChangedListener(root: FavoriteFolderRoot) {
 }
 
 
-export async function getAllHistory(): Promise<SearchHistoryEntity[]> {
-  return new Promise((resolve) => {
-    storage.get([STORAGE_SEARCH_HISTORY_KEY], (storage) => {
-      resolve(storage[STORAGE_SEARCH_HISTORY_KEY] || []);
-    });
-  });
-}
-
-/**
- * Adds a new search history entry or updates an existing one.
- * @param entry
- * @returns {Promise<Boolean>} Returns true if a new entry was added, false if an existing entry was updated.
- */
-export async function addOrUpdateHistory(entry: {
-  id: string;
-  url: string;
-  etc?: Record<string, any>;
-}): Promise<Boolean> {
-  const history = await getAllHistory();
-  const index = history.findIndex((item) => item.id === entry.id);
-
-  const isNewEntry = index < 0;
-
-  if (isNewEntry) {
-    history.push({
-      id: entry.id,
-      url: entry.url,
-      lastSearched: new Date().toISOString(),
-      previousSearches: [],
-      etc: entry.etc || {}
-    });
-  } else {
-    const existing = history[index];
-    existing.previousSearches.push(existing.lastSearched);
-    existing.lastSearched = new Date().toISOString();
-  }
-
-  await storage.set({ [STORAGE_SEARCH_HISTORY_KEY]: history });
-  notifySearchHistoryChangedListener(history);
-
-  return isNewEntry;
-}
-
-export async function putIfAbsentEtc(id: string, key: string, callbackValue: () => any): Promise<void> {
-  const history = await getAllHistory();
-  const entry = history.find(item => item.id === id);
-
-  if (!entry) {
-    throw new Error(`No search history found for id: ${id}`);
-  }
-
-  if (!entry.etc) {
-    entry.etc = {};
-  }
-
-  if (!(key in entry.etc)) {
-    try {
-      const callbackValueResult = callbackValue();
-      entry.etc[key] = (callbackValueResult instanceof Promise) ? await callbackValueResult : callbackValueResult;
-      await storage.set({ [STORAGE_SEARCH_HISTORY_KEY]: history });
-
-      notifySearchHistoryChangedListener(history);
-    } catch (error) {
-      console.error(`Error setting etc.${key} for id ${id}:`, error);
-      throw new Error(`Failed to set etc.${key} for id ${id}`);
-    }
-  }
-}
-
-export async function getEtcValue(id: string, key: string): Promise<any> {
-  const history = await getAllHistory();
-  const entry = history.find(item => item.id === id);
-
-  if (!entry || !entry.etc || !(key in entry.etc)) {
-    throw new Error(`No etc.${key} found for id: ${id}`);
-  }
-
-  return entry.etc[key];
-}
-
-export async function deleteHistoryById(id: string): Promise<void> {
-  const history = await getAllHistory();
-  const updated = history.filter(entry => entry.id !== id);
-  await storage.set({ [STORAGE_SEARCH_HISTORY_KEY]: updated });
-
-  notifySearchHistoryChangedListener(updated);
-}
-
-export async function isExistingHistory(id: string): Promise<boolean> {
-  const history = await getAllHistory();
-  return history.some(entry => entry.id === id);
-}
-
-export async function clearAllHistory(): Promise<void> {
-  await storage.remove(STORAGE_SEARCH_HISTORY_KEY);
-
-  notifySearchHistoryChangedListener([]);
-}
 
 export async function getFavoriteFolderRoot(): Promise<FavoriteFolderRoot> {
   return new Promise(resolve => {
-    storage.get([STORAGE_FAVORITE_KEY], (result) => {
+    localStorage.get([STORAGE_FAVORITE_KEY], (result) => {
       resolve(result[STORAGE_FAVORITE_KEY] || favoriteFolderRoot);
     });
   });
@@ -230,7 +57,7 @@ export async function getFavoriteFolderRoot(): Promise<FavoriteFolderRoot> {
 
 async function saveFavoriteFolderRoot(root: FavoriteFolderRoot): Promise<void> {
   return new Promise(resolve => {
-    storage.set({ [STORAGE_FAVORITE_KEY]: root }, () => {
+    localStorage.set({ [STORAGE_FAVORITE_KEY]: root }, () => {
       resolve();
       notifyFavoriteFolderChangedListener(root);
     });
@@ -303,7 +130,7 @@ export async function createFavoriteFolder(parentPath: string, name: string): Pr
 
 export async function isFavoriteContains(id: string): Promise<boolean> {
   return new Promise((resolve) => {
-    storage.get([STORAGE_FAVORITE_KEY], (storage) => {
+    localStorage.get([STORAGE_FAVORITE_KEY], (storage) => {
       const favorites: FavoriteFolderRoot = storage[STORAGE_FAVORITE_KEY] || { folders: [], items: [] };
 
       //root 및 folder 내 재귀한다.
@@ -437,44 +264,7 @@ export async function renameFavoriteElement(
 
 
 export async function flushFavoriteFolder(): Promise<void> {
-  await storage.remove(STORAGE_FAVORITE_KEY);
+  await localStorage.remove(STORAGE_FAVORITE_KEY);
   notifyFavoriteFolderChangedListener(favoriteFolderRoot);
   showToast('즐겨찾기 폴더가 초기화되었습니다.', '#0f0');
-}
-
-export type LatestTab = 'history' | 'favorites';
-
-export function setLatestTab(dataTab: LatestTab): void {
-  localStorage.setItem('latestTab', dataTab);
-}
-
-export function getLatestTab(): LatestTab {
-  const tab = localStorage.getItem('latestTab') as LatestTab | null;
-  return tab || 'history'; // 기본값은 'history'
-}
-
-export function setHistoryAutoAddEnabled(enabled: boolean): void {
-  localStorage.setItem('historyAutoAddEnabled', String(enabled));
-}
-
-export function isHistoryAutoAddEnabled(): boolean {
-  const value = localStorage.getItem('historyAutoAddEnabled');
-  return value !== null ? value === 'true' : true;
-}
-
-export function setLatestSearchUrl(url: string): void {
-  localStorage.setItem('latestSearchUrl', url);
-}
-
-export function getLatestSearchUrl(): string | null {
-  return localStorage.getItem('latestSearchUrl');
-}
-
-export function isSidebarCollapsed(): boolean {
-  const value = localStorage.getItem('sidebarCollapsed');
-  return value !== null ? value === 'true' : false; // 기본값은 false
-}
-
-export function setSidebarCollapsed(collapsed: boolean): void {
-  localStorage.setItem('sidebarCollapsed', String(collapsed));
 }
