@@ -26,18 +26,18 @@ const popupMenuListHtml = `
  * todo: 3. show ads
  */
 const popupMenuList: popupMenuItem[] = [
-  {
-    id: 'redirectPoe2Trade',
-    label: 'Redirect to Poe2Trade as english',
-
-    async checked() {
-      return await settingStorage.isRedirectPoe2TradeEnabled();
-    },
-
-    async onChange(checked: boolean) {
-      await settingStorage.setRedirectPoe2TradeEnabled(checked);
-    }
-  }
+  // {
+  //   id: 'redirectPoe2Trade',
+  //   label: 'Redirect to Poe2Trade as english',
+  //
+  //   async checked() {
+  //     return await settingStorage.isRedirectPoe2TradeEnabled();
+  //   },
+  //
+  //   async onChange(checked: boolean) {
+  //     await settingStorage.setRedirectPoe2TradeEnabled(checked);
+  //   }
+  // }
 ];
 
 function appendPopupMenuItem(target: HTMLElement, item: popupMenuItem) {
