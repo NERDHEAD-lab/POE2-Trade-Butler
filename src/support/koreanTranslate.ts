@@ -66,6 +66,7 @@ async function setItem(key: string, fetchUrl: string) {
   localStorage.setItem(key, JSON.stringify(response.data));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fetchFromBackground(url: string): Promise<any> {
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage({ type: 'FETCH', url }, (response) => {

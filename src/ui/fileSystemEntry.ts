@@ -19,7 +19,7 @@ export interface BaseEntry {
 export interface FileEntry extends BaseEntry {
   readonly type: 'file';
   content?: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, string>;
 }
 
 export interface FolderEntry extends BaseEntry {
@@ -136,20 +136,29 @@ export function moveEntry(
   );
 }
 
+type FileEntryInput = Omit<FileEntry, 'id' | 'createdAt' | 'modifiedAt' | 'parentId'>;
+type FolderEntryInput = Omit<FolderEntry, 'id' | 'createdAt' | 'modifiedAt' | 'parentId'>;
+type NewEntryInput = FileEntryInput | FolderEntryInput;
+
+function isFileEntryInput(e: NewEntryInput): e is FileEntryInput {
+  return e.type === 'file';
+}
+
+function isFolderEntryInput(e: NewEntryInput): e is FolderEntryInput {
+  return e.type === 'folder';
+}
+
 export function addEntry(
   entries: FileSystemEntry[],
-  newEntry: Omit<FileSystemEntry, 'id' | 'createdAt' | 'modifiedAt' | 'parentId'>,
+  newEntry: NewEntryInput,
   parentId: string | null
 ): FileSystemEntry[] {
   const id = crypto.randomUUID();
   const timestamp = new Date().toISOString();
 
-  const isFile = (e: any): e is FileEntry => e.type === 'file';
-  const isFolder = (e: any): e is FolderEntry => e.type === 'folder';
-
   let entry: FileEntry | FolderEntry;
 
-  if (isFile(newEntry)) {
+  if (isFileEntryInput(newEntry)) {
     entry = {
       ...newEntry,
       id,
@@ -159,7 +168,7 @@ export function addEntry(
       modifiedAt: timestamp,
       metadata: newEntry.metadata ?? {}
     };
-  } else if (isFolder(newEntry)) {
+  } else if (isFolderEntryInput(newEntry)) {
     entry = {
       ...newEntry,
       id,
@@ -169,7 +178,7 @@ export function addEntry(
       modifiedAt: timestamp
     };
   } else {
-    throw new Error(`Invalid entry type: ${(newEntry as any).type}`);
+    throw new Error(`Invalid entry type: ${(newEntry as Record<string, unknown>).type}`);
   }
 
   // 동일 parentId를 가진 기존 항목과 이름이 중복되는지 확인

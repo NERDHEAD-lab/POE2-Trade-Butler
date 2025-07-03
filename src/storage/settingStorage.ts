@@ -4,18 +4,18 @@ import { get, set, StorageType } from './storage';
 const KEY_PREFIX = 'poe2trade_settings_';
 
 //override the default storage methods to include a prefix
-function setSetting(storageType: StorageType, key: string, value: any): Promise<void> {
+function setSetting<T>(storageType: StorageType, key: string, value: T): Promise<void> {
   return set(storageType, `${KEY_PREFIX}${key}`, value);
 }
 
-function getSetting(storageType: StorageType, key: string, defaultValue: any = false): Promise<typeof defaultValue> {
+function getSetting<T>(storageType: StorageType, key: string, defaultValue: T): Promise<T> {
   return get(storageType, `${KEY_PREFIX}${key}`, defaultValue);
 }
 
-function addOnChangeListener(
+function addOnChangeListener<T>(
   storageType: StorageType,
   key: string,
-  listener: (newValue: any, oldValue: any) => void
+  listener: (newValue: T, oldValue: T) => void
 ): void {
   storage.addOnChangeListener(storageType, `${KEY_PREFIX}${key}`, listener);
 }

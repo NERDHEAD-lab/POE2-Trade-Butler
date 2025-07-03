@@ -11,7 +11,7 @@ export function parseSearchUrl(url: string): { serverName: string, id: string } 
   try {
     const serverName = decodeURIComponent(serverNameRaw);
     return { serverName, id };
-  } catch (e) {
+  } catch {
     return null; // serverName 디코딩 실패 시 null
   }
 }
@@ -75,7 +75,7 @@ export function showToast(message: string, color = '#fff', duration = 3000) {
 
   // 기존 toast가 있으면 위로 올리기
   const existingToasts = document.querySelectorAll('.poe2-toast') as NodeListOf<HTMLDivElement>;
-  existingToasts.forEach((el, index) => {
+  existingToasts.forEach((el) => {
     el.style.bottom = el.style.bottom ? `${parseInt(el.style.bottom) + 50}px` : '80px';
   });
 
