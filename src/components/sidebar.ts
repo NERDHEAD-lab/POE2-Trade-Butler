@@ -369,22 +369,30 @@ export function attachCreateFavoriteEvent(
 ): void {
   element.addEventListener('click', (e) => {
     e.stopPropagation();
-    const entry = entrySupplier();
+    try {
+      const entry = entrySupplier();
 
-    favoriteStorage.getAll()
-      .then(favorites => {
-        return favorites
-          .filter(fav => fav.id === entry.id)
-          .map(fav => fs.getPath(favorites, fav));
-      })
-      .then(favoritesPath => {
-        if (favoritesPath.length > 0) {
-          const message = `이미 즐겨찾기에 추가된 항목입니다:\n${favoritesPath.map(path => `- ${path}`).join('\n')}\n\n다시 추가하시겠습니까?`;
-          if (!confirm(message)) {
-            return;
+      favoriteStorage.getAll()
+        .then(favorites => {
+          return favorites
+            .filter(fav => fav.id === entry.id)
+            .map(fav => fs.getPath(favorites, fav));
+        })
+        .then(favoritesPath => {
+          if (favoritesPath.length > 0) {
+            const message = `이미 즐겨찾기에 추가된 항목입니다:\n${favoritesPath.map(path => `- ${path}`).join('\n')}\n\n다시 추가하시겠습니까?`;
+            if (!confirm(message)) {
+              return;
+            }
           }
-        }
-        return openFavoriteFolderModal(entry.id, entry.url);
-      });
+          return openFavoriteFolderModal(entry.id, entry.url);
+        });
+    } catch (error) {
+      if (error instanceof Error) {
+        showToast(`즐겨찾기 추가 중 오류가 발생했습니다: ${error.message}`, '#f00');
+      } else {
+        showToast('즐겨찾기 추가 중 알 수 없는 오류가 발생했습니다.', '#f00');
+      }
+    }
   });
 }
