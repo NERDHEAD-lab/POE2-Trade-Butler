@@ -1,6 +1,6 @@
 {
   "name": "poe2-trade-butler",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "main": "index.js",
   "scripts": {
     "build": "npm run lint && webpack --mode production && npm run zip",

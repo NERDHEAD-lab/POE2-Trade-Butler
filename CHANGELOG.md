@@ -1,5 +1,65 @@
 # CHANGE LOG
 
+## [2.3.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.2.0...2.3.0) (2025-07-03)
+
+
+### Features
+
+* favoriteStorage 및 즐겨찾기 UI 재구성 - 1 ([7125c6d](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/7125c6da81916c9c05d556af1853900faff62823))
+* favoriteStorage 및 즐겨찾기 UI 재구성 - 2 ([3547d39](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/3547d39b487c99f3e9511c2b76f55575620178cc))
+* favoriteStorage 및 즐겨찾기 UI 재구성 - 3 ([884de2c](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/884de2cd5a25d63724a8e9065e4a0551c09310ca))
+* favoriteStorage 및 즐겨찾기 UI 재구성 - 4 ([24ef6e9](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/24ef6e9545c2a5aa760a66aeb438775274382d73))
+* favoriteStorage 및 즐겨찾기 UI 재구성 - 5 ([751b1a6](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/751b1a68b305edd506cdf8384461b7942e3c43ff))
+* favoriteStorage 및 즐겨찾기 UI 재구성 - 6 ([aec1602](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/aec1602610bf07fb372ab727003b0e04c08144e8))
+* favoriteStorage 및 즐겨찾기 UI 재구성 - 7 ([8fba9ea](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/8fba9eaf8c790f919c3cee1d26508fb58bc5a0f6))
+* orphaned + expired(24h)된 preview를 제거하도록 개선 ([053537a](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/053537a08b84d03bc378be31fdac1bca925dddb6))
+* popup UI 구성 - 1 ([2c7b26e](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/2c7b26e0d6858af4e5e62b1d465f0c003281aaed))
+* popup UI 구성 - 2 ([ba35c3b](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/ba35c3bcff2edd36e74d75288e53703b5ea12b0e))
+* settingStorage의 getLatestSearchUrl가 실제로 검색결과 중 마지막결과를 기록할 수 있도록 개선 ([f030e41](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f030e410b6d7bdd18e25294dbe72eb4ea7109809))
+* 누락된 favorite 마우스 호버 시 미리보기 기능 재추가 ([e8afdea](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/e8afdea6bf85e4fc187ce00da0ed383a1e9256b8))
+* 변경된 storage 구조에 맞게 migration을 지원하는 onInstalled 이벤트 추가 - 1 ([1c5899c](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/1c5899ccedc392955fa8f58f000d275a57c96324))
+* 즐겨찾기 폴더가 좀더 자연스럽게 접히도록 개선 ([8f521c5](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/8f521c52ab4c366b1d1d73dd32ecd0c90681a9af))
+* 한국어 번역 기능 일부 개발 - 1 ([60fb694](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/60fb694daebc326461bc45eb455b6e856dd3b385))
+* 항상 preview를 현재 열린 페이지에서 추출하도록 개선 ([14b5d45](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/14b5d4547aca9d63160c6fb7307758bf3f7b1423))
+
+
+### Bug Fixes
+
+* favorite UI refactoring 간 고장난 동작 정상화 ([3c22540](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/3c22540ff1bbebfe9067d43cd64a53b002c491ad))
+* fileSystemUI가 destroy 될 때, onDestroyed를 호출하지 않는 문제 수정 ([8fc4c8a](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/8fc4c8ae3043014ff551220a9d0f6aefd0c8fdd4))
+* fileSystemUI가 생성되지 않는 문제 수정 ([d988d64](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/d988d645859685b937839b534810ba7056ce3083))
+* panel이 로드되기 전에 현재 패널을 가져오려고 하는 문제 수정 ([3c4eea9](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/3c4eea90b72d8f002e0b10a12c78d9517d57cd5c))
+* storage 마이그레이션 동작 중에 storage 이벤트가 등록되지 않도록 수정 ([e40fd5f](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/e40fd5fa5acfa7c8a4ea011bbc10756f738c4a09))
+* 개발 빌드에서 정상적으로 동작하지 않는 문제 조치 ([f9f0c30](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f9f0c30e661f5f0fa3cfaf817614624b9840e4d0))
+* 비정상적인 CSS 수정 ([81150f0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/81150f054e095e450b1dabac2fbe00716f822b90))
+* 즐겨찾기 UI의 더블클릭 이벤트 propagation 처리 보완 ([f893e3a](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f893e3a32554daca3b6c5e97b33285f6af320e2d))
+* 즐겨찾기 UI의 더블클릭 이벤트 propagation 처리 보완 - 2 ([3ccc28a](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/3ccc28a2f199bee151543995d062dc4b1d647d7f))
+* 즐겨찾기 버튼 클릭 시 url을 찾을 수 없는 문제 수정 ([f9435eb](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f9435eb564658114ca2c77b81d900fca1cce4a5a))
+* 즐겨찾기 선택된 요소를 가져오지 못하는 문제 수정 및 root를 미리 선택해두도록 개선 ([7e65484](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/7e65484a8157bd2619753d90cd794778f8d28750))
+* 즐겨찾기 추가 modal에서 파일을 숨기지 못하는 문제 수정 ([7f386f6](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/7f386f66bf17cf3592c32d96112055cacb9b1853))
+* 즐겨찾기에 열린 페이지와 동일한 item을 표시 하지 못하는 문제 수정 ([b02df8d](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/b02df8de0d7e9f6bc68770589c3d8c68fa64992a))
+* 즐겨찾기에서 잘못된 id로 preview 정보를 가져오는 문제 수정 ([f2a2819](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f2a28195ea5779d63dfed1b2c7c8176f3c8424dd))
+
+
+### Code Refactoring
+
+* develop 환경 제거 ([90fcdc1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/90fcdc114436d0a289d704eadad5c529c6970a4d))
+* develop 환경 제거 - 2 ([73cc93b](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/73cc93bf606e80ca22ea6558d4ef96d01c69376a))
+* favorite 관련 기능을 storage에서 분리 ([9a0ea52](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/9a0ea524a4c15a5b395d16a7e7764477ed23ccb5))
+* favorite-folder-list를 sidebar.css에서 분리 ([8d32e49](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/8d32e4940ab2ba4011cac6ed214ad71d2367b945))
+* PreviewPanelSnapshot 정보를 history, favorite storage로부터 분리 및 불필요한/잘못된 구조 개선 ([8f47806](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/8f47806e57d99d8dce371c0bf6acbff8e691a1ec))
+* searchHistory 관련 기능을 storage에서 분리 ([5da5863](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/5da586347adc1d9f25b0726084550ef1c80b30f8))
+* settingStorage가 local과 sync를 선택 할 수 있도록 개선 ([c6acf11](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/c6acf113a9e66cac2725c52d76dcc2c947292e91))
+* settingStorage의 getter/setter를 storageLoader로 통합 ([979a1cd](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/979a1cd2ae896d64007da648bac59c03b893428c))
+* storage.ts에서 storage를 safe하게 가져오는 로직을 storageLoader.ts로 분리 ([da645e6](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/da645e624394ec56e044f5dc9488eaa9492d4a2d))
+* storageLoader 코드 패턴 통일 ([e5923c6](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/e5923c617e0a5605fee115c210cb93dc16c91ece))
+* storageLoader를 OCP 원칙에 맞게 Exhaustiveness checking 구조로 변경 ([fe0c6fc](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/fe0c6fc9c67e24049e840c5ebe4e5fdbc9e63897))
+* storageLoader를 적절하게 이름과 함수 명을 변경 ([556ebf6](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/556ebf6caaf078a7be90b1ba88930e185c37aec1))
+* storage에서 cacheData 관련 기능 분리 ([721d9bd](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/721d9bd93e9a696c64db240cbe644fcc143b03b4))
+* storage에서 setting 관련 기능 분리 및 각 동작이 async하게 동작 할 수 있도록 개선 ([f2a30ca](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f2a30ca14cb862f79eecc95ac2f96c8afca64800))
+* 불필요한 개발설정 간소화 및 README 반영 ([28dd91f](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/28dd91f14c2e1efdae9590768c861a48815a9a89))
+* 코드 정리 (누락된 storageLoader -&gt; storage, storage: StorageType -&gt; storageType: StorageType 수정) ([64b4a80](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/64b4a80e18093154a43840131b3b420170a6c90e))
+
 ## [2.2.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/poe2-trade-butler-2.1.1...poe2-trade-butler-2.2.0) (2025-06-25)
 
 
