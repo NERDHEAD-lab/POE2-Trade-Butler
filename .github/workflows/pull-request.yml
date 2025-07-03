@@ -2,8 +2,6 @@ name: CI - Build Check
 
 on:
   pull_request:
-    branches:
-      - master
 
 jobs:
   build:
