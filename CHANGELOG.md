@@ -1,5 +1,14 @@
 # CHANGE LOG
 
+## [2.3.3](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.3.2...2.3.3) (2025-07-03)
+
+
+### Bug Fixes
+
+* remove not implemented popup ([fc49e64](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/fc49e641d4a48fecc3678fb4ca2f454e5896f749))
+* remove not implemented popup ([85aac0f](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/85aac0fcd758cbf2cbf9d640bff7c62aabc8868f))
+* remove not implemented popup - 2 ([473e07e](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/473e07e3f19c2ecd002e8924cacc98ec7b20d2f7))
+
 ## [2.3.2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.3.1...2.3.2) (2025-07-03)
 
 
