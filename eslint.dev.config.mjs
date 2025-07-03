@@ -1,15 +1,18 @@
+import tseslint from 'typescript-eslint';
 import { defineConfig } from 'eslint/config';
 import parser from '@typescript-eslint/parser';
 import globals from 'globals';
 
 export default defineConfig([
+  { ignores: ['dist/**'] },
+  { files: ['**/*.js'], languageOptions: { sourceType: 'commonjs' } },
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
     languageOptions: {
       parser,
       ecmaVersion: 'latest',
       sourceType: 'module',
-      globals: globals.browser,
+      globals: globals.browser
     },
     rules: {
       'no-warning-comments': ['warn', {
@@ -21,7 +24,17 @@ export default defineConfig([
       'no-console': 'off',
       'no-debugger': 'off',
       'no-alert': 'off',
-      'no-constant-condition': 'off',
+      'no-constant-condition': 'off'
     }
-  }
+  },
+  // 에러를 경고레벨로 tseslint.configs.recommended를 설정
+  tseslint.configs.recommended.map(config => ({
+    ...config,
+    rules: Object.fromEntries(
+      Object.entries(config.rules ?? {}).map(([rule, value]) => [
+        rule,
+        typeof value === 'string' ? value.replace('error', 'warn') : value,
+      ])
+    )
+  }))
 ]);

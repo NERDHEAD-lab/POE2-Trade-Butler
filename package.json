@@ -4,9 +4,9 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run lint && webpack --mode production && npm run zip",
-    "build:dev": "webpack --mode development",
+    "build:dev": "npm run lint:dev && webpack --mode development",
     "lint": "eslint .",
-    "lint:todo": "eslint . --config eslint.todo.config.mjs",
+    "lint:dev": "eslint . --config eslint.dev.config.mjs",
     "format": "prettier --write .",
     "zip": "node scripts/create-zip.js"
   },
