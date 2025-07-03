@@ -1,5 +1,7 @@
 import { get, localStorage, set, StorageType } from '../storage';
 
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const CURRENT_STORAGE_VERSION_KEY = 'poe2trade_storage_version';
 const CURRENT_STORAGE_VERSION = 2;
 
@@ -10,7 +12,6 @@ interface LegacyVersionMigrator<LEGACY> {
   migrate: (legacy: LEGACY) => Promise<void>;
   description: string;
 }
-
 
 const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
   {
@@ -56,8 +57,7 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
       const currentPreviewData: Record<string, PreviewPanelSnapshot_v2> = {};
 
       function exportFile(entry: FavoriteItem_v1, parentId: string): void {
-        let result: FileSystemEntry_2;
-        result = {
+        const result: FileSystemEntry_2 = {
           id: crypto.randomUUID(),
           name: entry.name || entry.id,
           type: 'file',
@@ -102,8 +102,9 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
       legacy.items?.forEach(item => exportFile(item, root.id));
       legacy.folders?.forEach(folder => exportFolder(folder, root.id));
 
-      await set('sync', 'favoriteFolders', currentEntities);
-      await set('local', 'previewPanelSnapshots', currentPreviewData);
+      await chrome.storage.local.remove('favoriteFolders'); // Remove old v1 storage
+      await set('sync', 'favoriteFolders', currentEntities); // Save as v2 format
+      await set('local', 'previewPanelSnapshots', currentPreviewData); // Save preview data
     },
     description: 'Migrate favorite folders from v1 to v2 format, ensuring root folder structure.'
   }
@@ -195,12 +196,6 @@ export interface FavoriteFolderRoot_v1 {
   folders: FavoriteFolder_v1[];
   items: FavoriteItem_v1[];
 }
-
-const favoriteFolderRoot: FavoriteFolderRoot_v1 = {
-  name: '/',
-  folders: [],
-  items: []
-};
 
 export interface FavoriteItem_v1 {
   id: string;       // SearchHistoryEntity.id

@@ -50,10 +50,14 @@ export function get<T>(
   });
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const listenerMap = new WeakMap<
   (newValue: any, oldValue: any) => void,
   (changes: { [key: string]: chrome.storage.StorageChange }) => void
 >();
+
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
 
 export function addOnChangeListener<T>(
   storageType: StorageType,

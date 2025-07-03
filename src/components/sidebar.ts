@@ -6,7 +6,6 @@ import * as searchHistoryStorage from '../storage/searchHistoryStorage';
 import * as settingStorage from '../storage/settingStorage';
 import { TradePreviewer } from '../utils/tradePreviewInjector';
 import * as previewStorage from '../storage/previewStorage';
-import { PreviewPanelSnapshot } from '../storage/previewStorage';
 import * as favoriteUI from '../ui/favoriteFileSystemUI';
 import * as fs from '../ui/fileSystemEntry';
 import { openFavoriteFolderModal } from '../ui/newFavoriteModal';
@@ -241,7 +240,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
     });
 
   // hover 시 미리보기 패널 표시
-  attachPreviewHoverEvents(li, entry);
+  attachPreviewHoverEvents(li, entry.id);
 
   // history-item 클릭 시
   li.addEventListener('click', () => {
@@ -352,15 +351,13 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
 
 export function attachPreviewHoverEvents(
   element: HTMLElement,
-  entry: {
-    id: string;
-    etc?: Record<string, any>
-  }): void {
+  entryId: string
+): void {
   TradePreviewer.addHoverEventListener(
     element,
-    entry.id,
+    entryId,
     element.querySelector('.history-name') as HTMLElement
-  )
+  );
 }
 
 export function attachCreateFavoriteEvent(

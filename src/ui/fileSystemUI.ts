@@ -99,6 +99,7 @@ class FileSystemUIBuilder {
   }
 
   public build(): FileSystemUI {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ui = (FileSystemUI as any).createInstance(this.root);
     ui.parentElement = this.parentElement;
     ui.className = this.className;

@@ -67,6 +67,8 @@ export async function deleteIfOrphaned(deletedId: string, triggered: 'searchHist
   }
 
   if (existsInOtherStorage) return;
+
+  await deleteById(deletedId);
 }
 
 /**
@@ -74,7 +76,7 @@ export async function deleteIfOrphaned(deletedId: string, triggered: 'searchHist
  */
 export async function cleanExpiredOrphanSnapshots(): Promise<void> {
   const now = Date.now();
-  const currentSnapshots = await getAll()
+  await getAll()
     .then(snapshots => {
       return Object.fromEntries(
         Object.entries(snapshots).filter(([key]) => {
@@ -84,7 +86,7 @@ export async function cleanExpiredOrphanSnapshots(): Promise<void> {
     })
     .then(snapshots => {
       return Object.fromEntries(
-        Object.entries(snapshots).filter(([_, snapshot]) => {
+        Object.entries(snapshots).filter(([, snapshot]) => {
           return now - snapshot.timestamp <= 24 * 60 * 60 * 1000;
         })
       );

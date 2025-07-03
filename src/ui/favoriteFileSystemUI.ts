@@ -81,7 +81,7 @@ function createLiElement(
     if (!showFile) return;
     liElement = createFavoriteItemHtmlElement(entries, entry);
   } else {
-    throw new Error(`알 수 없는 파일 시스템 항목 유형: ${(entry as any).type}`);
+    throw new Error(`알 수 없는 파일 시스템 항목 유형: ${(entry as Record<string, unknown>).type}`);
   }
 
   addDragAndDropEvent(liElement, entries, entry);
