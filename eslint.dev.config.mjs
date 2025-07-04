@@ -2,6 +2,8 @@ import tseslint from 'typescript-eslint';
 import { defineConfig } from 'eslint/config';
 import parser from '@typescript-eslint/parser';
 import globals from 'globals';
+import chalk from 'chalk';
+
 
 export default defineConfig([
   { ignores: ['dist/**'] },
@@ -33,8 +35,15 @@ export default defineConfig([
     rules: Object.fromEntries(
       Object.entries(config.rules ?? {}).map(([rule, value]) => [
         rule,
-        typeof value === 'string' ? value.replace('error', 'warn') : value,
+        typeof value === 'string' ? value.replace('error', 'warn') : value
       ])
     )
   }))
 ]);
+
+
+console.warn(
+  chalk.yellowBright(
+    '*************** TODO must be registered in GITHUB Issue ***************'
+  )
+);
