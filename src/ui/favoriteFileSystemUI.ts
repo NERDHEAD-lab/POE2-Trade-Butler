@@ -5,6 +5,7 @@ import { FileEntry, FileSystemEntry, FolderEntry } from './fileSystemEntry';
 import { FileSystemUI } from './fileSystemUI';
 import { TradePreviewer } from '../utils/tradePreviewInjector';
 import { showToast } from '../utils/api';
+import { getMessage } from '../utils/_locale';
 
 //TODO: 추후 추상화 고려하여 FileSystemUI로 일부 기능을 옮길 것
 /**
@@ -174,7 +175,7 @@ function createFolderHtmlElement(
     const childEntries = fs.getChildren(entries, entry.id);
 
     childEntries.forEach(entry => {
-      console.log(`Toggling visibility for entry: ${entry.name} (ID: ${entry.id})`);
+      console.log(getMessage('log_toggle_visibility', entry.name, entry.id));
       const childElement = liElement.parentElement?.querySelector(`li[data-id="${entry.id}"]`) as HTMLLIElement | null;
       if (childElement) {
         childElement.style.display = isExpanded ? 'block' : 'none';
@@ -245,16 +246,16 @@ function createFavoriteItemHtmlElement(
   // 아이콘 클릭 시 즐겨찾기 삭제
   iconElement.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (!confirm(`정말로 "${entry.name}" 즐겨찾기를 삭제하시겠습니까?`)) return;
+    if (!confirm(getMessage('confirm_delete_favorite', entry.name))) return;
 
     favorite.getAll().then(favorites => {
       const updatedFavorites = favorites.filter(fav => fav.id !== entry.id);
       return favorite.saveAll(updatedFavorites);
     }).then(() => {
-      alert(`"${entry.name}" 즐겨찾기가 삭제되었습니다.`);
+      alert(getMessage('toast_folder_deleted', entry.name));
     }).catch(err => {
-      console.error('즐겨찾기 삭제 중 오류 발생:', err);
-      alert('즐겨찾기 삭제 중 오류가 발생했습니다.');
+      console.error(getMessage('error_delete_favorite', err.toString()));
+      alert(getMessage('error_delete_favorite', err.toString()));
     });
   });
 
@@ -355,7 +356,7 @@ function addDragAndDropEvent(
 
     // 드래그 앤 드롭된 항목이 폴더가 아닌 경우, 폴더로 이동할 수 없음
     if (entry.type !== 'folder') {
-      showToast('폴더로만 드래그 앤 드롭할 수 있습니다.');
+      showToast(getMessage('toast_drag_drop_folder_only'));
       return;
     }
 
@@ -364,9 +365,9 @@ function addDragAndDropEvent(
     }).then(updatedFavorites => {
       return favorite.saveAll(updatedFavorites);
     }).then(() => {
-      showToast(`"${draggedEntry.name}" 항목이 "${entry.name}" 폴더로 이동되었습니다.`);
+      showToast(getMessage('toast_item_moved', draggedEntry.name, entry.name));
     }).catch((err) => {
-      console.error('드래그 앤 드롭 중 오류 발생:', err);
+      console.error(getMessage('error_drag_drop', err.toString()));
     });
   });
 }
@@ -397,10 +398,10 @@ function addRenameEvent(nameElement: HTMLSpanElement, entry: FileSystemEntry, cl
         });
         return favorite.saveAll(updatedFavorites);
       }).then(() => {
-        alert(`"${entry.name}"의 이름이 "${newName}"(으)로 변경되었습니다.`);
+        alert(getMessage('alert_favorite_renamed', entry.name, newName));
       }).catch(err => {
-        console.error('즐겨찾기 이름 변경 중 오류 발생:', err);
-        alert('즐겨찾기 이름 변경 중 오류가 발생했습니다.');
+        console.error(getMessage('error_rename_favorite', err.toString()));
+        alert(getMessage('error_rename_favorite', err.toString()));
       });
     }
 

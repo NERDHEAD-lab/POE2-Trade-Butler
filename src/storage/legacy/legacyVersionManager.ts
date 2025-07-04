@@ -1,4 +1,5 @@
 import { get, localStorage, set, StorageType } from '../storage';
+import { getMessage } from '../../utils/_locale';
 
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -119,13 +120,13 @@ export async function executeLegacyVersionMigrations(): Promise<void> {
 
   legacyVersionMigrators.sort((a, b) => a.version - b.version);
 
-  console.log(`Starting migrations from version ${currentVersion} to ${CURRENT_STORAGE_VERSION}`);
+  console.log(getMessage('log_migration_start', currentVersion.toString(), CURRENT_STORAGE_VERSION.toString()));
   for (const migrator of legacyVersionMigrators) {
     if (migrator.version >= currentVersion && migrator.version < CURRENT_STORAGE_VERSION) {
       try {
         await executeMigration(migrator);
       } catch (error) {
-        console.error(`Migration failed for version ${migrator.version}:`, error);
+        console.error(getMessage('error_migration_failed', migrator.version.toString(), error.toString()));
       }
     }
   }
@@ -150,16 +151,16 @@ async function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<v
   try {
     const legacyData = await get(storage, key, []);
 
-    console.log(`Trying to migrate data for key: ${key}, storage: ${storage}`);
+    console.log(getMessage('log_migration_key', key, storage));
     if (legacyData) {
       await migrator.migrate(legacyData);
     } else {
-      console.warn(`No data found for migration: ${migrator.description}`);
+      console.warn(getMessage('warn_no_data_for_migration', migrator.description));
     }
 
-    console.log(`Migration completed: ${migrator.description}`);
+    console.log(getMessage('log_migration_completed', migrator.description));
   } catch (error) {
-    console.error(`Migration failed: ${migrator.description}`, error);
+    console.error(getMessage('error_migration_description_failed', migrator.description, error.toString()));
     throw error;
   }
 }

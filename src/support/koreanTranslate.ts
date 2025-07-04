@@ -1,5 +1,6 @@
 import { isKoreanServer, showToast } from '../utils/api';
 import * as cacheData from '../storage/cacheData';
+import { getMessage } from '../utils/_locale';
 
 const LSCACHE_TRADE2ITEMS = 'https://poe.game.daum.net/api/trade2/data/items'
 const LSCACHE_TRADE2FILTERS = 'https://poe.game.daum.net/api/trade2/data/filters'

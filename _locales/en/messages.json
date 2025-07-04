@@ -6,5 +6,293 @@
   "extension_description": {
     "message": "A Chrome Extension for POE2 Trade with a sidebar and history management.",
     "description": "Description of the Chrome extension"
+  },
+
+  "log_migration_start": {
+    "message": "Starting migrations from version $1 to $2",
+    "description": "Log message when starting migrations"
+  },
+  "log_migration_key": {
+    "message": "Trying to migrate data for key: $1, storage: $2",
+    "description": "Log message when migrating data for a key"
+  },
+  "log_migration_completed": {
+    "message": "Migration completed: $1",
+    "description": "Log message when migration is completed"
+  },
+  "log_zip_created": {
+    "message": "ZIP file created: $1 ($2 total bytes)",
+    "description": "Log message when ZIP file is created"
+  },
+  "log_search_history_updated": {
+    "message": "Search history updated for URL: $1",
+    "description": "Log message when search history is updated"
+  },
+  "log_toggle_visibility": {
+    "message": "Toggling visibility for entry: $1 (ID: $2)",
+    "description": "Log message when toggling visibility for an entry"
+  },
+
+  "error_clear_history": {
+    "message": "Error clearing search history: $1",
+    "description": "Error message when clearing search history"
+  },
+  "error_check_favorite": {
+    "message": "Error checking favorite status: $1",
+    "description": "Error message when checking favorite status"
+  },
+  "error_delete_history": {
+    "message": "Error deleting history: $1",
+    "description": "Error message when deleting history"
+  },
+  "error_history_list_not_found": {
+    "message": "Could not find #history-list element",
+    "description": "Error message when history list element is not found"
+  },
+  "error_extract_panel": {
+    "message": "Error extracting current panel: $1",
+    "description": "Error message when extracting current panel"
+  },
+  "error_handle_url_change": {
+    "message": "Error handling URL change: $1",
+    "description": "Error message when handling URL change"
+  },
+  "error_trade_preview_not_found": {
+    "message": "Trade preview element not found. Make sure you are on the trade page.",
+    "description": "Error message when trade preview element is not found"
+  },
+  "error_wait_for_injector": {
+    "message": "Failed to wait for TradePreviewInjector: $1",
+    "description": "Error message when waiting for TradePreviewInjector"
+  },
+  "error_invalid_panel_html": {
+    "message": "Invalid panel HTML",
+    "description": "Error message when panel HTML is invalid"
+  },
+  "error_insert_preview_panel": {
+    "message": "Failed to insert preview panel next to currentPanel",
+    "description": "Error message when inserting preview panel"
+  },
+  "error_search_input_not_found": {
+    "message": "Search left input not found. Cannot set search value.",
+    "description": "Error message when search input is not found"
+  },
+  "error_delete_favorite": {
+    "message": "Error deleting favorite: $1",
+    "description": "Error message when deleting favorite"
+  },
+  "error_drag_drop": {
+    "message": "Error during drag and drop: $1",
+    "description": "Error message during drag and drop"
+  },
+  "error_rename_favorite": {
+    "message": "Error renaming favorite: $1",
+    "description": "Error message when renaming favorite"
+  },
+  "error_migration_failed": {
+    "message": "Migration failed for version $1: $2",
+    "description": "Error message when migration fails"
+  },
+  "error_migration_description_failed": {
+    "message": "Migration failed: $1 $2",
+    "description": "Error message when migration fails with description"
+  },
+  "error_korean_translation": {
+    "message": "Error applying Korean translation: $1",
+    "description": "Error message when applying Korean translation"
+  },
+  "error_build_folder_not_found": {
+    "message": "Build folder not found: $1",
+    "description": "Error message when build folder is not found"
+  },
+  "error_content_element_not_found": {
+    "message": "Could not find .content element",
+    "description": "Error message when content element is not found"
+  },
+  "error_invalid_url_format": {
+    "message": "Invalid current URL format($1), will use history URL instead.",
+    "description": "Error message when URL format is invalid"
+  },
+  "error_trade_preview_panel_not_found": {
+    "message": "Trade preview panel not found",
+    "description": "Error message when trade preview panel is not found"
+  },
+  "error_search_button_not_enabled": {
+    "message": "Search button did not become enabled in time",
+    "description": "Error message when search button is not enabled in time"
+  },
+  "error_advanced_panel_not_expanded": {
+    "message": "Advanced panel did not expand in time",
+    "description": "Error message when advanced panel did not expand in time"
+  },
+
+  "warn_no_data_for_migration": {
+    "message": "No data found for migration: $1",
+    "description": "Warning message when no data is found for migration"
+  },
+
+  "sidebar_title": {
+    "message": "Trade Butler",
+    "description": "Sidebar title"
+  },
+  "clear_history": {
+    "message": "Clear History",
+    "description": "Button text for clearing history"
+  },
+  "history_tab": {
+    "message": "History",
+    "description": "Tab label for history"
+  },
+  "favorites_tab": {
+    "message": "Favorites",
+    "description": "Tab label for favorites"
+  },
+  "search_history": {
+    "message": "Search History",
+    "description": "Section title for search history"
+  },
+  "favorites": {
+    "message": "Favorites",
+    "description": "Section title for favorites"
+  },
+  "add_current_page": {
+    "message": "Add Current page",
+    "description": "Button text for adding current page to favorites"
+  },
+  "confirm_clear_history": {
+    "message": "Are you sure you want to clear all search history?",
+    "description": "Confirmation message for clearing all search history"
+  },
+  "toast_history_cleared": {
+    "message": "Search history cleared successfully.",
+    "description": "Toast message when history is cleared"
+  },
+  "toast_history_clear_failed": {
+    "message": "Failed to clear search history.",
+    "description": "Toast message when history clear fails"
+  },
+  "toast_history_auto_add": {
+    "message": "History auto-add $1.",
+    "description": "Toast message for history auto-add toggle"
+  },
+  "toast_favorite_add_error": {
+    "message": "Error adding to favorites: $1",
+    "description": "Toast message when adding to favorites fails"
+  },
+  "toast_favorite_add_unknown_error": {
+    "message": "Unknown error adding to favorites.",
+    "description": "Toast message when adding to favorites fails with unknown error"
+  },
+  "toast_korean_translation_success": {
+    "message": "Korean translation applied successfully!",
+    "description": "Toast message when Korean translation is applied successfully"
+  },
+  "toast_korean_translation_error": {
+    "message": "Error applying Korean translation. Please try again later.",
+    "description": "Toast message when applying Korean translation fails"
+  },
+  "toast_folder_name_empty": {
+    "message": "Folder name is empty.",
+    "description": "Toast message when folder name is empty"
+  },
+  "toast_folder_name_too_long": {
+    "message": "Folder name must be 20 characters or less.",
+    "description": "Toast message when folder name is too long"
+  },
+  "toast_folder_name_invalid_chars": {
+    "message": "Folder name cannot contain $1 characters.",
+    "description": "Toast message when folder name contains invalid characters"
+  },
+  "toast_folder_created": {
+    "message": "Folder \"$1\" has been created.",
+    "description": "Toast message when folder is created"
+  },
+  "toast_no_folder_selected": {
+    "message": "Please select a folder to delete.",
+    "description": "Toast message when no folder is selected for deletion"
+  },
+  "toast_cannot_delete_root": {
+    "message": "Cannot delete the root folder.",
+    "description": "Toast message when trying to delete the root folder"
+  },
+  "toast_folder_deleted": {
+    "message": "Folder \"$1\" has been deleted.",
+    "description": "Toast message when folder is deleted"
+  },
+  "toast_folder_delete_failed": {
+    "message": "Failed to delete folder: $1",
+    "description": "Toast message when folder deletion fails"
+  },
+  "toast_favorite_added": {
+    "message": "\"$1\" has been added to favorites.",
+    "description": "Toast message when item is added to favorites"
+  },
+  "toast_drag_drop_folder_only": {
+    "message": "You can only drag and drop to folders.",
+    "description": "Toast message when trying to drag and drop to non-folder"
+  },
+  "toast_item_moved": {
+    "message": "Item \"$1\" has been moved to folder \"$2\".",
+    "description": "Toast message when item is moved to a folder"
+  },
+  "confirm_delete_favorite": {
+    "message": "Are you sure you want to delete the favorite \"$1\"?",
+    "description": "Confirmation message when deleting a favorite"
+  },
+  "alert_favorite_renamed": {
+    "message": "The name of \"$1\" has been changed to \"$2\".",
+    "description": "Alert message when a favorite has been renamed"
+  },
+  "error_create_folder": {
+    "message": "Error creating folder: $1",
+    "description": "Error message when creating a folder"
+  },
+  "error_delete_folder": {
+    "message": "Error deleting folder: $1",
+    "description": "Error message when deleting a folder"
+  },
+  "error_add_favorite": {
+    "message": "Error adding favorite: $1",
+    "description": "Error message when adding a favorite"
+  },
+  "confirm_delete_folder_with_items": {
+    "message": "This folder contains items. Are you sure you want to delete it?",
+    "description": "Confirmation message when deleting a folder with items"
+  },
+  "alert_favorite_name_invalid": {
+    "message": "Favorite name input is missing or invalid.",
+    "description": "Alert message when favorite name input is invalid"
+  },
+  "alert_favorite_url_undefined": {
+    "message": "Favorite URL is not defined.",
+    "description": "Alert message when favorite URL is not defined"
+  },
+  "prompt_enter_folder_name": {
+    "message": "Enter new folder name:",
+    "description": "Prompt message when creating a new folder"
+  },
+  "button_new_folder": {
+    "message": "📁 New Folder",
+    "description": "Button text for creating a new folder"
+  },
+  "button_delete_folder": {
+    "message": "❌ Delete Folder",
+    "description": "Button text for deleting a folder"
+  },
+  "modal_add_to_favorite_folder": {
+    "message": "Add to Favorite Folder",
+    "description": "Modal title for adding to favorite folder"
+  },
+  "button_save": {
+    "message": "Save",
+    "description": "Button text for saving"
+  },
+  "button_cancel": {
+    "message": "Cancel",
+    "description": "Button text for canceling"
+  },
+  "placeholder_item_name": {
+    "message": "Item name (default: $1)",
+    "description": "Placeholder text for item name input"
   }
 }

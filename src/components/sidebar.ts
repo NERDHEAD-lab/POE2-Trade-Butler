@@ -1,6 +1,7 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
 import { showToast } from '../utils/api';
+import { getMessage } from '../utils/_locale';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as searchHistoryStorage from '../storage/searchHistoryStorage';
 import * as settingStorage from '../storage/settingStorage';
@@ -15,19 +16,19 @@ const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
 
 const sidebarHtml = `
 <div id="sidebar-header">
-  <h2 class="sidebar-header-title">Trade Butler</h2>
-  <button id="clear-history">Clear History</button>
+  <h2 class="sidebar-header-title">${getMessage('sidebar_title')}</h2>
+  <button id="clear-history">${getMessage('clear_history')}</button>
 </div>
 
 <div id="sidebar-menu">
-  <button class="menu-tab active" data-tab="history">History</button>
-  <button class="menu-tab" data-tab="favorites">Favorites</button>
+  <button class="menu-tab active" data-tab="history">${getMessage('history_tab')}</button>
+  <button class="menu-tab" data-tab="favorites">${getMessage('favorites_tab')}</button>
 </div>
 
 <div id="sidebar-content">
   <div id="history" class="tab-content active">
     <h3>
-      <span>Search History</span>
+      <span>${getMessage('search_history')}</span>
       <label class="switch">
         <input type="checkbox" id="history-switch" checked />
         <span class="slider"></span>
@@ -38,8 +39,8 @@ const sidebarHtml = `
   </div>
   <div id="favorites" class="tab-content">
     <h3>
-      <span>Favorites</span>
-      <button id="add-favorite">Add Current page</button>
+      <span>${getMessage('favorites')}</span>
+      <button id="add-favorite">${getMessage('add_current_page')}</button>
     </h3>
     <div id="favorites-list-wrapper"></div>
   </div>
@@ -87,12 +88,12 @@ export function renderSidebar(container: HTMLElement): void {
   // sidebar history 삭제
   const clearHistoryButton = sidebar.querySelector<HTMLButtonElement>('#clear-history');
   clearHistoryButton?.addEventListener('click', () => {
-    if (confirm('Are you sure you want to clear all search history?')) {
+    if (confirm(getMessage('confirm_clear_history'))) {
       searchHistoryStorage.removeAll().then(() => {
-        showToast('Search history cleared successfully.');
+        showToast(getMessage('toast_history_cleared'));
       }).catch(error => {
-        console.error('Error clearing search history:', error);
-        showToast('Failed to clear search history.', '#f00');
+        console.error(getMessage('error_clear_history', error.toString()));
+        showToast(getMessage('toast_history_clear_failed'), '#f00');
       });
     }
   });
@@ -107,7 +108,7 @@ export function renderSidebar(container: HTMLElement): void {
     historySwitch.addEventListener('change', () => {
       const isChecked = historySwitch.checked;
       settingStorage.setHistoryAutoAddEnabled(isChecked);
-      showToast(`History auto-add ${isChecked ? 'enabled' : 'disabled'}.`);
+      showToast(getMessage('toast_history_auto_add', isChecked ? 'enabled' : 'disabled'));
     });
   })();
 
@@ -236,7 +237,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
       }
     })
     .catch(error => {
-      console.error('Error checking favorite status:', error);
+      console.error(getMessage('error_check_favorite', error.toString()));
     });
 
   // hover 시 미리보기 패널 표시
@@ -256,7 +257,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   removeButton.addEventListener('click', (e) => {
     e.stopPropagation();
     searchHistoryStorage.deleteById(entry.id).catch((error) => {
-      console.error('Error deleting history:', error);
+      console.error(getMessage('error_delete_history', error.toString()));
     });
     li.remove();
   });
@@ -269,7 +270,7 @@ function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistory
   historyList.then(entries => {
     const historyListElement = document.getElementById('history-list');
     if (!historyListElement) {
-      console.error('Could not find #history-list element');
+      console.error(getMessage('error_history_list_not_found'));
       return;
     }
     historyListElement.innerHTML = ''; // Clear existing items
@@ -313,7 +314,7 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
   } else {
     TradePreviewer.extractCurrentPanel()
       .then(previewInfo => previewStorage.addOrUpdateById(parseSearchUrl.id, previewInfo))
-      .catch(err => console.error('Error extracting current panel:', err));
+      .catch(err => console.error(getMessage('error_extract_panel', err.toString())));
   }
 
   const autoAddEnabled = await settingStorage.isHistoryAutoAddEnabled();
@@ -336,12 +337,13 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
 
     await searchHistoryStorage.addOrUpdate(entity.id, entity.url)
       .then(() => settingStorage.setLatestSearchUrl(currentUrl))
-      .then(() => console.log(`Search history updated for URL: ${currentUrl}`));
+      .then(() => console.log(getMessage('log_search_history_updated', currentUrl)));
 
   } catch (err) {
     console.info(`Unexpected error while handling URL change: ${currentUrl}`, err);
     if (process.env.NODE_ENV === 'development') {
-      console.error('Error handling URL change:', err);
+      const errMsg = (err instanceof Error) ? err.toString() : String(err);
+      console.error(getMessage('error_handle_url_change', errMsg));
     }
   } finally {
     currentHandleUrl = '';
@@ -389,9 +391,9 @@ export function attachCreateFavoriteEvent(
         });
     } catch (error) {
       if (error instanceof Error) {
-        showToast(`즐겨찾기 추가 중 오류가 발생했습니다: ${error.message}`, '#f00');
+        showToast(getMessage('toast_favorite_add_error', error.message), '#f00');
       } else {
-        showToast('즐겨찾기 추가 중 알 수 없는 오류가 발생했습니다.', '#f00');
+        showToast(getMessage('toast_favorite_add_unknown_error'), '#f00');
       }
     }
   });
