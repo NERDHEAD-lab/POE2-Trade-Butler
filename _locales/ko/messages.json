@@ -294,5 +294,9 @@
   "confirm_clear_history": {
     "message": "모든 검색 기록을 삭제하시겠습니까?",
     "description": "Confirmation message for clearing all search history"
+  },
+  "history_switch_title": {
+    "message": "검색 기록 자동 추가",
+    "description": "Placeholder text for auto-add history switch"
   }
 }

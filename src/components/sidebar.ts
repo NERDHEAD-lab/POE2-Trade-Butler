@@ -30,8 +30,8 @@ const sidebarHtml = `
     <h3>
       <span>${getMessage('search_history')}</span>
       <label class="switch">
-        <input type="checkbox" id="history-switch" checked />
-        <span class="slider"></span>
+        <input type="checkbox" id="history-switch" checked>
+        <span class="slider"   title="${getMessage('history_switch_title')}"/>
       </label>
     </h3>
 

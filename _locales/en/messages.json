@@ -294,5 +294,9 @@
   "placeholder_item_name": {
     "message": "Item name (default: $1)",
     "description": "Placeholder text for item name input"
+  },
+  "history_switch_title": {
+    "message": "Auto-add history switch",
+    "description": "Placeholder text for auto-add history switch"
   }
 }
