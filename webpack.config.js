@@ -52,7 +52,8 @@ export default (env, argv = {}) => {
       new CopyPlugin({
         patterns: [
           { from: 'src/manifest.json', to: '.' },
-          { from: 'src/assets', to: 'assets' }
+          { from: 'src/assets', to: 'assets' },
+          { from: '_locales', to: '_locales' }
         ]
       }),
       new MiniCssExtractPlugin()

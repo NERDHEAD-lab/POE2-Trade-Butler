@@ -1,0 +1,10 @@
+{
+  "extension_name": {
+    "message": "POE2 거래 도우미",
+    "description": "The name of the Chrome extension"
+  },
+  "extension_description": {
+    "message": "POE2 거래를 위한 Chrome 확장 프로그램으로, 사이드바와 거래 기록 관리 기능을 제공합니다.",
+    "description": "Description of the Chrome extension"
+  }
+}
