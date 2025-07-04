@@ -18,8 +18,8 @@
     "storage"
   ],
   "host_permissions": [
-    "*://www.pathofexile.com/trade2/*",
-    "*://poe.game.daum.net/trade2/*"
+    "https://www.pathofexile.com/trade2/*",
+    "https://poe.game.daum.net/trade2/*"
   ],
   "content_scripts": [
     {
