@@ -141,7 +141,7 @@ export function onConfirmCreateFavoriteModal(wrapper: HTMLDivElement): ButtonLis
         };
 
         return fs.addEntry(
-          favorites, newEntry, selectedFolder.parentId);
+          favorites, newEntry, selectedFolder.id);
       })
       .then(newEntry => favoriteStorage.saveAll(newEntry))
       .then(() => {
