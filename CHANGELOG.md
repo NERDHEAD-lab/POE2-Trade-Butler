@@ -1,5 +1,26 @@
 # CHANGE LOG
 
+## [2.4.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.3.3...2.4.0) (2025-07-05)
+
+
+### Features
+
+* i18n 적용 - favoriteFileSystemUI.ts 일주 적용 ([f5526cc](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f5526cc1f4594c7c617c08b236a288d9a0b131b3))
+* i18n 적용 - history switch 툴팁 추가 ([6eac409](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/6eac40949464c9e227a83f7623a07b6ac97c2821))
+* i18n 적용 - 전체 프로젝트에서 문자열 추출 및 정리 ([ef3dd7b](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/ef3dd7b5e127b8e0801aadc19aeb37a0a51b957e))
+* i18n 적용 - 플러그인 이름 및 설명 ([2a4a342](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/2a4a34268bf2e4e458b33485aab4c67198aecb46))
+* preview panel 경량화 ([b9aba17](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/b9aba1703a765cd7a6ee9c8fb43e9a240a314098))
+* sidebar 너비 조절 기능 추가 ([d7953cb](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/d7953cb81a77db6b973a323c56fc3f868c7a3a60))
+* 검색 기록 UI 간소화 ([e747627](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/e747627420c33830b352459657a755020b019611))
+* 검색 기록 삭제 버튼 위치 변경 ([4d516d1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/4d516d15dc9a8e3ee9562a0fbdba1aaee9861cb1))
+* 페이지 변경을 감지하는 기능 개선 ([e8cf742](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/e8cf7428a3c041827ecaa23e0f060f460b4ec4e3))
+* 플러그인에서 POE2 도메인을 https 만 허용하도록 변경 ([2c8b7c7](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/2c8b7c74deec3593dc2634f216bd690e085d28ba))
+
+
+### Bug Fixes
+
+* 즐겨찾기 폴더가 좀더 자연스럽게 접히지 않는 문제 수정 ([e499c83](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/e499c832088d4de69761e8196628afd3242d035e))
+
 ## [2.3.3](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.3.2...2.3.3) (2025-07-03)
 
 
