@@ -19,7 +19,7 @@ const sidebarHtml = `
   <h2 class="sidebar-header-title">${getMessage('sidebar_title')}</h2>
   <button id="clear-history">${getMessage('clear_history')}</button>
 </div>
-
+<div id="poe2-sidebar-resizer"></div>
 <div id="sidebar-menu">
   <button class="menu-tab active" data-tab="history">${getMessage('history_tab')}</button>
   <button class="menu-tab" data-tab="favorites">${getMessage('favorites_tab')}</button>
@@ -85,6 +85,42 @@ export function renderSidebar(container: HTMLElement): void {
     sidebar.style.top = '80px';
   }
 
+  const resizer = sidebar.querySelector<HTMLDivElement>('#poe2-sidebar-resizer');
+  let isResizing = false;
+  let startX = 0;
+  let startWidth = 0;
+
+  if (resizer) {
+    resizer.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      startX = e.clientX;
+      startWidth = sidebar.offsetWidth;
+      document.body.style.cursor = 'ew-resize';
+      document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isResizing) return;
+      const dx = startX - e.clientX;
+      let newWidth = startWidth + dx;
+      newWidth = Math.max(200, Math.min(600, newWidth));
+      sidebar.style.width = newWidth + 'px';
+      // content wrapper 패딩도 동기화
+      const wrapper = document.getElementById(POE2_CONTENT_WRAPPER_ID);
+      if (wrapper) {
+        wrapper.style.paddingRight = newWidth + 'px';
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isResizing) {
+        isResizing = false;
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      }
+    });
+  }
+
   // sidebar history 삭제
   const clearHistoryButton = sidebar.querySelector<HTMLButtonElement>('#clear-history');
   clearHistoryButton?.addEventListener('click', () => {
@@ -137,11 +173,19 @@ export function renderSidebar(container: HTMLElement): void {
       wrapper.classList.toggle('collapsed', !isOpen);
       toggleButton.textContent = isOpen ? '⮜' : '⮞';
       settingStorage.setSidebarCollapsed(!isOpen);
+
+      if (!isOpen) {
+        wrapper.style.paddingRight = '0';
+      } else {
+        wrapper.style.paddingRight = sidebar.offsetWidth + 'px';
+      }
     });
 
     const isCollapsed = await settingStorage.isSidebarCollapsed();
     if (isCollapsed) {
       toggleButton.click(); // 초기 상태 동기화
+    } else {
+      wrapper.style.paddingRight = sidebar.offsetWidth + 'px';
     }
   })();
 
