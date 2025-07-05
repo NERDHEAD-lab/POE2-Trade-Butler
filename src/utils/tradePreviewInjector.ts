@@ -26,7 +26,11 @@ export class TradePreviewer {
     const isCollapsed = TradePreviewer.isPanelCollapsed();
     await TradePreviewer.expandPanel();
     const searchLeft = TradePreviewer.currentSearchLeftValue;
-    const outerHTML = panel.outerHTML;
+
+    const panelClone = panel.cloneNode(true) as HTMLElement;
+    panelClone.querySelectorAll('.multiselect__content-wrapper').forEach(el => el.remove());
+    const outerHTML = panelClone.outerHTML;
+
     if (isCollapsed) {
       TradePreviewer.collapsePanel();
     }
@@ -72,7 +76,7 @@ export class TradePreviewer {
             icon.style.fontSize = '0.8em';
             icon.style.verticalAlign = 'middle';
             if (!previewInfo) {
-              icon.style.opacity = '0.5';
+              icon.style.opacity = '0.1';
               icon.style.color = 'gray';
             }
 
