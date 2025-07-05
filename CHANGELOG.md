@@ -1,5 +1,13 @@
 # CHANGE LOG
 
+## [2.4.1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.4.0...2.4.1) (2025-07-05)
+
+
+### Bug Fixes
+
+* 미리보기에서 추출한 검색어가 검색 이력 목록에 즉시 반영되지않는 문제 수정 ([32381d4](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/32381d4af20013ce5f59552d3c3e89ebc5d4979c))
+* 미리보기에서 추출한 검색어가 검색 이력 목록에 즉시 반영되지않는 문제 수정 ([ba2ed50](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/ba2ed50fed253e59bea455eb6049eef3e706aec4))
+
 ## [2.4.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.3.3...2.4.0) (2025-07-05)
 
 
