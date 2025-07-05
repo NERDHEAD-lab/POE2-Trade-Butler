@@ -1,5 +1,13 @@
 # CHANGE LOG
 
+## [2.4.2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.4.1...2.4.2) (2025-07-05)
+
+
+### Bug Fixes
+
+* 즐겨찾기 추가 시 이름 입력란이 비정상적으로 표시되는 문제 수정 ([cd0bac3](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/cd0bac333953144b9e0fd6765872859992981954))
+* 즐겨찾기 추가시 부모 폴더에 추가되는 문제 수정 ([af970da](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/af970da5292fbef1875fe1116a06cc97224f4b4c))
+
 ## [2.4.1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.4.0...2.4.1) (2025-07-05)
 
 
