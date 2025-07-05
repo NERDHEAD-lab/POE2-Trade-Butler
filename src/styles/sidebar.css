@@ -44,11 +44,7 @@
     z-index: 10001;
 }
 
-.transition-toggle-button {
-    transition: right 0.3s ease-in-out;
-}
-
-.poe2-toggle-button:hover {
+#poe2-sidebar-toggle-button:hover {
     background-color: #666;
 }
 
