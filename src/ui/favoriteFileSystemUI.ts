@@ -172,13 +172,21 @@ function createFolderHtmlElement(
     if (isRootFolder(entry)) return;
 
     const isExpanded = iconElement.classList.toggle('expanded');
-    const childEntries = fs.getChildren(entries, entry.id);
+    const childEntries = fs.getDescendants(entries, entry.id);
 
     childEntries.forEach(entry => {
       console.log(getMessage('log_toggle_visibility', entry.name, entry.id));
       const childElement = liElement.parentElement?.querySelector(`li[data-id="${entry.id}"]`) as HTMLLIElement | null;
-      if (childElement) {
-        childElement.style.display = isExpanded ? 'block' : 'none';
+      if (!childElement) return;
+
+      if (isExpanded) {
+        // 열림
+        childElement.style.display = childElement.dataset.previousDisplay || '';
+        childElement.dataset.previousDisplay = ''; // 이전 display 값 초기화
+      } else {
+        // 닫힘
+        childElement.dataset.previousDisplay = childElement.style.display;
+        childElement.style.display = 'none';
       }
     });
 
