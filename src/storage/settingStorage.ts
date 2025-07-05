@@ -84,3 +84,14 @@ export function addRedirectPoe2TradeEnabledChangeListener(
 ): void {
   addOnChangeListener('sync', 'redirectPoe2TradeEnabled', listener);
 }
+
+// Butler Guide Shown
+const defaultButlerGuideShown = false;
+
+export function setButlerGuideShown(shown: boolean): Promise<void> {
+  return setSetting('local', 'butlerGuideShown', shown);
+}
+
+export function isButlerGuideShown(): Promise<boolean> {
+  return getSetting('local', 'butlerGuideShown', defaultButlerGuideShown);
+}
