@@ -298,5 +298,14 @@
   "history_switch_title": {
     "message": "Auto-add history switch",
     "description": "Placeholder text for auto-add history switch"
+  },
+  "korean_translation_success": {
+    "message": "Korean translation applied successfully."
+  },
+  "korean_translation_error": {
+    "message": "An error occurred while applying Korean translation."
+  },
+  "korean_translation_error_console": {
+    "message": "Korean translation error:"
   }
 }

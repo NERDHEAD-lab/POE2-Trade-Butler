@@ -298,5 +298,14 @@
   "history_switch_title": {
     "message": "검색 기록 자동 추가",
     "description": "Placeholder text for auto-add history switch"
+  },
+  "korean_translation_success": {
+    "message": "한국어 번역이 성공적으로 적용되었습니다."
+  },
+  "korean_translation_error": {
+    "message": "한국어 번역 적용 중 오류가 발생했습니다."
+  },
+  "korean_translation_error_console": {
+    "message": "한국어 번역 오류:"
   }
 }
