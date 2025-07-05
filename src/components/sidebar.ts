@@ -320,12 +320,18 @@ function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistory
 
 
 function observeUrlChange() {
-  new MutationObserver(() => {
-    updateHistoryFromUrl(window.location.href).catch(console.debug);
-  }).observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+  let lastUrl = window.location.href;
+
+  const checkUrlChange = () => {
+    const currentUrl = window.location.href;
+    if (currentUrl !== lastUrl) {
+      lastUrl = currentUrl;
+      updateHistoryFromUrl(currentUrl).catch(console.debug);
+    }
+  };
+
+  const observer = new MutationObserver(checkUrlChange);
+  observer.observe(document.body, { childList: true, subtree: true });
 }
 
 let currentHandleUrl = '';
