@@ -1,0 +1,311 @@
+{
+  "extension_name": {
+    "message": "POE2 거래 도우미",
+    "description": "The name of the Chrome extension"
+  },
+  "extension_description": {
+    "message": "POE2 거래를 위한 Chrome 확장 프로그램으로, 사이드바와 거래 기록 관리 기능을 제공합니다.",
+    "description": "Description of the Chrome extension"
+  },
+
+  "log_migration_start": {
+    "message": "버전 $1에서 $2로 마이그레이션 시작",
+    "description": "Log message when starting migrations"
+  },
+  "log_migration_key": {
+    "message": "키: $1, 스토리지: $2에 대한 데이터 마이그레이션 시도 중",
+    "description": "Log message when migrating data for a key"
+  },
+  "log_migration_completed": {
+    "message": "마이그레이션 완료: $1",
+    "description": "Log message when migration is completed"
+  },
+  "log_zip_created": {
+    "message": "ZIP 파일 생성됨: $1 (총 $2 바이트)",
+    "description": "Log message when ZIP file is created"
+  },
+  "log_search_history_updated": {
+    "message": "URL에 대한 검색 기록 업데이트됨: $1",
+    "description": "Log message when search history is updated"
+  },
+  "log_toggle_visibility": {
+    "message": "항목 가시성 전환: $1 (ID: $2)",
+    "description": "Log message when toggling visibility for an entry"
+  },
+
+  "error_clear_history": {
+    "message": "검색 기록 지우기 오류: $1",
+    "description": "Error message when clearing search history"
+  },
+  "error_check_favorite": {
+    "message": "즐겨찾기 상태 확인 오류: $1",
+    "description": "Error message when checking favorite status"
+  },
+  "error_delete_history": {
+    "message": "기록 삭제 오류: $1",
+    "description": "Error message when deleting history"
+  },
+  "error_history_list_not_found": {
+    "message": "#history-list 요소를 찾을 수 없습니다",
+    "description": "Error message when history list element is not found"
+  },
+  "error_extract_panel": {
+    "message": "현재 패널 추출 오류: $1",
+    "description": "Error message when extracting current panel"
+  },
+  "error_handle_url_change": {
+    "message": "URL 변경 처리 오류: $1",
+    "description": "Error message when handling URL change"
+  },
+  "error_trade_preview_not_found": {
+    "message": "거래 미리보기 요소를 찾을 수 없습니다. 거래 페이지에 있는지 확인하세요.",
+    "description": "Error message when trade preview element is not found"
+  },
+  "error_wait_for_injector": {
+    "message": "TradePreviewInjector 대기 실패: $1",
+    "description": "Error message when waiting for TradePreviewInjector"
+  },
+  "error_invalid_panel_html": {
+    "message": "유효하지 않은 패널 HTML",
+    "description": "Error message when panel HTML is invalid"
+  },
+  "error_insert_preview_panel": {
+    "message": "현재 패널 옆에 미리보기 패널 삽입 실패",
+    "description": "Error message when inserting preview panel"
+  },
+  "error_search_input_not_found": {
+    "message": "검색 입력 필드를 찾을 수 없습니다. 검색 값을 설정할 수 없습니다.",
+    "description": "Error message when search input is not found"
+  },
+  "error_delete_favorite": {
+    "message": "즐겨찾기 삭제 중 오류 발생: $1",
+    "description": "Error message when deleting favorite"
+  },
+  "error_drag_drop": {
+    "message": "드래그 앤 드롭 중 오류 발생: $1",
+    "description": "Error message during drag and drop"
+  },
+  "error_rename_favorite": {
+    "message": "즐겨찾기 이름 변경 중 오류 발생: $1",
+    "description": "Error message when renaming favorite"
+  },
+  "error_migration_failed": {
+    "message": "버전 $1에 대한 마이그레이션 실패: $2",
+    "description": "Error message when migration fails"
+  },
+  "error_migration_description_failed": {
+    "message": "마이그레이션 실패: $1 $2",
+    "description": "Error message when migration fails with description"
+  },
+  "error_korean_translation": {
+    "message": "한국어 번역 적용 오류: $1",
+    "description": "Error message when applying Korean translation"
+  },
+  "error_build_folder_not_found": {
+    "message": "빌드 폴더를 찾을 수 없음: $1",
+    "description": "Error message when build folder is not found"
+  },
+  "error_content_element_not_found": {
+    "message": ".content 요소를 찾을 수 없습니다",
+    "description": "Error message when content element is not found"
+  },
+  "error_invalid_url_format": {
+    "message": "유효하지 않은 현재 URL 형식($1), 대신 기록 URL을 사용합니다.",
+    "description": "Error message when URL format is invalid"
+  },
+  "error_trade_preview_panel_not_found": {
+    "message": "거래 미리보기 패널을 찾을 수 없습니다",
+    "description": "Error message when trade preview panel is not found"
+  },
+  "error_search_button_not_enabled": {
+    "message": "검색 버튼이 제시간에 활성화되지 않았습니다",
+    "description": "Error message when search button is not enabled in time"
+  },
+  "error_advanced_panel_not_expanded": {
+    "message": "고급 패널이 제시간에 확장되지 않았습니다",
+    "description": "Error message when advanced panel did not expand in time"
+  },
+
+  "warn_no_data_for_migration": {
+    "message": "마이그레이션을 위한 데이터를 찾을 수 없음: $1",
+    "description": "Warning message when no data is found for migration"
+  },
+
+  "toast_history_cleared": {
+    "message": "검색 기록이 삭제되었습니다.",
+    "description": "Toast message when history is cleared"
+  },
+  "toast_history_clear_failed": {
+    "message": "검색 기록 삭제에 실패했습니다.",
+    "description": "Toast message when history clear fails"
+  },
+  "toast_history_auto_add": {
+    "message": "기록 자동 추가: $1",
+    "description": "Toast message for history auto-add toggle"
+  },
+  "toast_favorite_add_error": {
+    "message": "즐겨찾기 추가 실패: $1",
+    "description": "Toast message for favorite add error"
+  },
+  "toast_favorite_add_unknown_error": {
+    "message": "즐겨찾기 추가 중 알 수 없는 오류가 발생했습니다.",
+    "description": "Toast message for unknown favorite add error"
+  },
+  "toast_korean_translation_success": {
+    "message": "한국어 번역이 성공적으로 적용되었습니다!",
+    "description": "Toast message when Korean translation is applied successfully"
+  },
+  "toast_korean_translation_error": {
+    "message": "한국어 번역 적용 중 오류가 발생했습니다. 나중에 다시 시도해주세요.",
+    "description": "Toast message when applying Korean translation fails"
+  },
+  "toast_folder_name_empty": {
+    "message": "폴더 이름을 입력하지 않았습니다.",
+    "description": "Toast message when folder name is empty"
+  },
+  "toast_folder_name_too_long": {
+    "message": "폴더 이름은 20자 이하여야 합니다.",
+    "description": "Toast message when folder name is too long"
+  },
+  "toast_folder_name_invalid_chars": {
+    "message": "폴더 이름에 $1 문자를 포함할 수 없습니다.",
+    "description": "Toast message when folder name contains invalid characters"
+  },
+  "toast_folder_created": {
+    "message": "\"$1\" 폴더가 생성되었습니다.",
+    "description": "Toast message when folder is created"
+  },
+  "toast_no_folder_selected": {
+    "message": "삭제할 폴더를 선택해주세요.",
+    "description": "Toast message when no folder is selected for deletion"
+  },
+  "toast_cannot_delete_root": {
+    "message": "루트 폴더는 삭제할 수 없습니다.",
+    "description": "Toast message when trying to delete the root folder"
+  },
+  "toast_folder_deleted": {
+    "message": "\"$1\" 폴더가 삭제되었습니다.",
+    "description": "Toast message when folder is deleted"
+  },
+  "toast_folder_delete_failed": {
+    "message": "폴더 삭제에 실패했습니다: $1",
+    "description": "Toast message when folder deletion fails"
+  },
+  "toast_favorite_added": {
+    "message": "\"$1\"이(가) 즐겨찾기에 추가되었습니다.",
+    "description": "Toast message when item is added to favorites"
+  },
+  "toast_drag_drop_folder_only": {
+    "message": "폴더로만 드래그 앤 드롭할 수 있습니다.",
+    "description": "Toast message when trying to drag and drop to non-folder"
+  },
+  "toast_item_moved": {
+    "message": "\"$1\" 항목이 \"$2\" 폴더로 이동되었습니다.",
+    "description": "Toast message when item is moved to a folder"
+  },
+  "confirm_delete_favorite": {
+    "message": "정말로 \"$1\" 즐겨찾기를 삭제하시겠습니까?",
+    "description": "Confirmation message when deleting a favorite"
+  },
+  "alert_favorite_renamed": {
+    "message": "\"$1\"의 이름이 \"$2\"(으)로 변경되었습니다.",
+    "description": "Alert message when a favorite has been renamed"
+  },
+  "error_create_folder": {
+    "message": "폴더 생성 중 오류 발생: $1",
+    "description": "Error message when creating a folder"
+  },
+  "error_delete_folder": {
+    "message": "폴더 삭제 중 오류 발생: $1",
+    "description": "Error message when deleting a folder"
+  },
+  "error_add_favorite": {
+    "message": "즐겨찾기 추가 중 오류 발생: $1",
+    "description": "Error message when adding a favorite"
+  },
+  "confirm_delete_folder_with_items": {
+    "message": "이 폴더에 포함된 항목이 있습니다. 정말로 삭제하시겠습니까?",
+    "description": "Confirmation message when deleting a folder with items"
+  },
+  "alert_favorite_name_invalid": {
+    "message": "즐겨찾기 이름 입력란이 없거나 잘못된 형식입니다.",
+    "description": "Alert message when favorite name input is invalid"
+  },
+  "alert_favorite_url_undefined": {
+    "message": "즐겨찾기 URL이 정의되지 않았습니다.",
+    "description": "Alert message when favorite URL is not defined"
+  },
+  "prompt_enter_folder_name": {
+    "message": "새 폴더 이름을 입력하세요:",
+    "description": "Prompt message when creating a new folder"
+  },
+  "button_new_folder": {
+    "message": "📁 새 폴더",
+    "description": "Button text for creating a new folder"
+  },
+  "button_delete_folder": {
+    "message": "❌ 폴더 삭제",
+    "description": "Button text for deleting a folder"
+  },
+  "modal_add_to_favorite_folder": {
+    "message": "즐겨찾기 폴더에 추가",
+    "description": "Modal title for adding to favorite folder"
+  },
+  "button_save": {
+    "message": "저장",
+    "description": "Button text for saving"
+  },
+  "button_cancel": {
+    "message": "취소",
+    "description": "Button text for canceling"
+  },
+  "placeholder_item_name": {
+    "message": "항목 이름 (기본값: $1)",
+    "description": "Placeholder text for item name input"
+  },
+  "sidebar_title": {
+    "message": "Trade Butler",
+    "description": "Sidebar title"
+  },
+  "clear_history": {
+    "message": "기록 삭제",
+    "description": "Button text for clearing history"
+  },
+  "history_tab": {
+    "message": "기록",
+    "description": "Tab label for history"
+  },
+  "favorites_tab": {
+    "message": "즐겨찾기",
+    "description": "Tab label for favorites"
+  },
+  "search_history": {
+    "message": "검색 기록",
+    "description": "Section title for search history"
+  },
+  "favorites": {
+    "message": "즐겨찾기",
+    "description": "Section title for favorites"
+  },
+  "add_current_page": {
+    "message": "현재 페이지 추가",
+    "description": "Button text for adding current page to favorites"
+  },
+  "confirm_clear_history": {
+    "message": "모든 검색 기록을 삭제하시겠습니까?",
+    "description": "Confirmation message for clearing all search history"
+  },
+  "history_switch_title": {
+    "message": "검색 기록 자동 추가",
+    "description": "Placeholder text for auto-add history switch"
+  },
+  "korean_translation_success": {
+    "message": "한국어 번역이 성공적으로 적용되었습니다."
+  },
+  "korean_translation_error": {
+    "message": "한국어 번역 적용 중 오류가 발생했습니다."
+  },
+  "korean_translation_error_console": {
+    "message": "한국어 번역 오류:"
+  }
+}

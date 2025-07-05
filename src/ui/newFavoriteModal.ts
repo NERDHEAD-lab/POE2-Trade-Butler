@@ -3,6 +3,7 @@ import * as favoriteStorage from '../storage/favoriteStorage';
 import * as folderUI from './favoriteFileSystemUI';
 import * as fs from './fileSystemEntry';
 import { FileEntry } from './fileSystemEntry';
+import { getMessage } from '../utils/_locale';
 
 export async function openFavoriteFolderModal(
   id: string,
@@ -13,7 +14,7 @@ export async function openFavoriteFolderModal(
       const nameInput = document.createElement('input');
       nameInput.className = 'favorite-name';
       nameInput.type = 'text';
-      nameInput.placeholder = `항목 이름 (기본값: ${id})`;
+      nameInput.placeholder = getMessage('placeholder_item_name', id);
       nameInput.dataset.id = id;
       nameInput.dataset.url = url;
 
@@ -23,10 +24,10 @@ export async function openFavoriteFolderModal(
     })
     .then(({ favoriteUI, wrapper }) => {
       showModal({
-        title: '즐겨찾기 폴더에 추가',
+        title: getMessage('modal_add_to_favorite_folder'),
         div: wrapper,
-        confirm: '저장',
-        cancel: '취소',
+        confirm: getMessage('button_save'),
+        cancel: getMessage('button_cancel'),
         onConfirmListener: onConfirmCreateFavoriteModal(wrapper),
         onCancelListener: async (): Promise<boolean> => {
           favoriteUI.destroy();
@@ -38,21 +39,21 @@ export async function openFavoriteFolderModal(
         },
         etcButtons: [
           {
-            name: '📁 새 폴더',
+            name: getMessage('button_new_folder'),
             listener: async (): Promise<boolean> => {
               const selectedFolder = await folderUI.getSelectedFolder(wrapper);
               const parentId = selectedFolder?.id || null;
-              const name = prompt('새 폴더 이름을 입력하세요:')?.trim();
+              const name = prompt(getMessage('prompt_enter_folder_name'))?.trim();
               const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
 
               if (!name) {
-                showToast('폴더 이름을 입력하지 않았습니다.', '#f66');
+                showToast(getMessage('toast_folder_name_empty'), '#f66');
                 return false;
               } else if (name.length > 20) {
-                showToast('폴더 이름은 20자 이하여야 합니다.', '#f66');
+                showToast(getMessage('toast_folder_name_too_long'), '#f66');
                 return false;
               } else if (exceptions.some(exception => name.includes(exception))) {
-                showToast(`폴더 이름에 ${exceptions.join(', ')} 문자를 포함할 수 없습니다.`, '#f66');
+                showToast(getMessage('toast_folder_name_invalid_chars', exceptions.join(', ')), '#f66');
                 return false;
               }
 
@@ -60,28 +61,28 @@ export async function openFavoriteFolderModal(
                 .then(async favorites => fs.addEntry(favorites, { name: name, type: 'folder' }, parentId))
                 .then(newEntry => favoriteStorage.saveAll(newEntry))
                 .then(() => {
-                  showToast(`"${name}" 폴더가 생성되었습니다.`);
+                  showToast(getMessage('toast_folder_created'), name);
                   return false;
                 })
                 .catch(error => {
-                  console.error(error.message);
+                  console.error(getMessage('error_create_folder', error.message));
                   return false;
                 });
             }
           },
           {
-            name: '❌ 폴더 삭제',
+            name: getMessage('button_delete_folder'),
             listener: async (): Promise<boolean> => {
               const favoriteEntries = await favoriteStorage.getAll();
               const selectedFolder = await folderUI.getSelectedFolder(wrapper);
               if (!selectedFolder) {
-                showToast('삭제할 폴더를 선택해주세요.', '#f66');
+                showToast(getMessage('toast_no_folder_selected'), '#f66');
                 return false;
               } else if (selectedFolder.id === 'root') {
-                showToast('루트 폴더는 삭제할 수 없습니다.', '#f66');
+                showToast(getMessage('toast_cannot_delete_root'), '#f66');
                 return false;
               } else if (favoriteEntries.some(entry => entry.parentId === selectedFolder.id)) {
-                if (!confirm('이 폴더에 포함된 항목이 있습니다. 정말로 삭제하시겠습니까?')) {
+                if (!confirm(getMessage('confirm_delete_folder_with_items'))) {
                   return false;
                 }
               }
@@ -90,12 +91,12 @@ export async function openFavoriteFolderModal(
                 favoriteEntries.filter(entry => entry.id !== selectedFolder.id)
               )
                 .then(() => {
-                  showToast(`"${selectedFolder.name}" 폴더가 삭제되었습니다.`);
+                  showToast(getMessage('toast_folder_deleted', selectedFolder.name));
                   return false;
                 })
                 .catch(error => {
-                  console.error(error.message);
-                  showToast(`폴더 삭제에 실패했습니다: ${error.message}`, '#f66');
+                  console.error(getMessage('error_delete_folder', error.message));
+                  showToast(getMessage('toast_folder_delete_failed', error.message), '#f66');
                   return false;
                 });
             }
@@ -115,7 +116,7 @@ export function onConfirmCreateFavoriteModal(wrapper: HTMLDivElement): ButtonLis
 
     if (!nameInput || !nameInput.dataset.id) {
       // throw new Error('즐겨찾기 이름 입력란이 없거나 잘못된 형식입니다.');
-      alert('즐겨찾기 이름 입력란이 없거나 잘못된 형식입니다.');
+      alert(getMessage('alert_favorite_name_invalid'));
       return false;
     }
 
@@ -125,7 +126,7 @@ export function onConfirmCreateFavoriteModal(wrapper: HTMLDivElement): ButtonLis
 
     if (!url) {
       // throw new Error('즐겨찾기 URL이 정의되지 않았습니다.');
-      alert('즐겨찾기 URL이 정의되지 않았습니다.');
+      alert(getMessage('alert_favorite_url_undefined'));
       return false;
     }
 
@@ -144,11 +145,11 @@ export function onConfirmCreateFavoriteModal(wrapper: HTMLDivElement): ButtonLis
       })
       .then(newEntry => favoriteStorage.saveAll(newEntry))
       .then(() => {
-        showToast(`"${name}"이(가) 즐겨찾기에 추가되었습니다.`);
+        showToast(getMessage('toast_favorite_added', name));
         return true;
       })
       .catch(error => {
-        console.error(error.message);
+        console.error(getMessage('error_add_favorite', error.message));
         return false;
       });
   };

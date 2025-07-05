@@ -1,5 +1,6 @@
 import { isKoreanServer, showToast } from '../utils/api';
 import * as cacheData from '../storage/cacheData';
+import { getMessage } from '../utils/_locale';
 
 const LSCACHE_TRADE2ITEMS = 'https://poe.game.daum.net/api/trade2/data/items'
 const LSCACHE_TRADE2FILTERS = 'https://poe.game.daum.net/api/trade2/data/filters'
@@ -16,14 +17,12 @@ export async function applyKoreanTranslate() {
     await waitForDOM();
     await translateLscaches();
 
-
-    showToast('Korean translation applied successfully!', '#0f0');
+    showToast(getMessage('korean_translation_success'), '#0f0');
   } catch (error) {
-    showToast('Error applying Korean translation. Please try again later.', '#f00');
-    console.error('Error applying Korean translation:', error);
+    showToast(getMessage('korean_translation_error'), '#f00');
+    console.error(getMessage('korean_translation_error_console'), error);
   }
 }
-
 
 // async function extractTranslationFromPage(): Promise<Record<string, string>> {
 //   const url = 'https://web.poecdn.com/js/translate.ko_KR.js';

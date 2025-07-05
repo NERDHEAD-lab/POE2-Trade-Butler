@@ -1,3 +1,4 @@
+import { getMessage } from './_locale';
 /*
   http(s)://www.pathofexile.com/trade2/search/poe2/{serverName}/{id}
   http(s)://poe.game.daum.net/trade2/search/poe2/{serverName}/{id}
@@ -21,7 +22,7 @@ export function getSearchHistoryFromUrl(url: string): {
 } {
   const parsed = parseSearchUrl(url);
   if (!parsed) {
-    throw new Error(`Invalid search URL format: ${url}`);
+    throw new Error(getMessage('error_invalid_url_format', url));
   }
 
   return { id: parsed.id, url: url };
@@ -40,7 +41,7 @@ export function getUrlFromSearchHistory(
 
   const match = currentUrl.match(regex);
   if (!match) {
-    console.error(`Invalid current URL format(${currentUrl}), will use history URL instead.`, '#f00');
+    console.error(getMessage('error_invalid_url_format', currentUrl), '#f00');
     return history.url;
   }
 
@@ -119,8 +120,8 @@ export function showModal(options: ModalOptions): void {
   const {
     title = null,
     div,
-    confirm = '확인',
-    cancel = '취소',
+    confirm = getMessage('button_save'),
+    cancel = getMessage('button_cancel'),
     onConfirmListener,
     onCancelListener,
     onOverlayClickListener,

@@ -1,5 +1,6 @@
 import { PreviewPanelSnapshot } from '../storage/previewStorage';
 import * as previewStorage from '../storage/previewStorage';
+import { getMessage } from './_locale';
 
 export class TradePreviewer {
   private static readonly PREVIEW_PANEL_ID = 'trade-preview-panel';
@@ -10,7 +11,7 @@ export class TradePreviewer {
       if (TradePreviewer.currentPanel) return;
       await new Promise(resolve => setTimeout(resolve, interval));
     }
-    throw new Error('Trade preview panel not found');
+    throw new Error(getMessage('error_trade_preview_panel_not_found'));
   }
 
   public static async extractCurrentPanel(): Promise<PreviewPanelSnapshot> {
@@ -18,14 +19,18 @@ export class TradePreviewer {
 
     const panel = TradePreviewer.currentPanel;
     if (!panel) {
-      console.error('Trade preview element not found. Make sure you are on the trade page.');
-      throw new Error('Trade preview element not found');
+      console.error(getMessage('error_trade_preview_not_found'));
+      throw new Error(getMessage('error_trade_preview_not_found'));
     }
 
     const isCollapsed = TradePreviewer.isPanelCollapsed();
     await TradePreviewer.expandPanel();
     const searchLeft = TradePreviewer.currentSearchLeftValue;
-    const outerHTML = panel.outerHTML;
+
+    const panelClone = panel.cloneNode(true) as HTMLElement;
+    panelClone.querySelectorAll('.multiselect__content-wrapper').forEach(el => el.remove());
+    const outerHTML = panelClone.outerHTML;
+
     if (isCollapsed) {
       TradePreviewer.collapsePanel();
     }
@@ -71,7 +76,7 @@ export class TradePreviewer {
             icon.style.fontSize = '0.8em';
             icon.style.verticalAlign = 'middle';
             if (!previewInfo) {
-              icon.style.opacity = '0.5';
+              icon.style.opacity = '0.1';
               icon.style.color = 'gray';
             }
 
@@ -79,7 +84,7 @@ export class TradePreviewer {
           });
       })
       .catch(error => {
-        console.error('Failed to wait for TradePreviewInjector:', error);
+        console.error(getMessage('error_wait_for_injector', error.toString()));
       });
   }
 
@@ -91,7 +96,7 @@ export class TradePreviewer {
     const panel = wrapper.firstElementChild as HTMLDivElement;
 
     if (!panel) {
-      console.error('Invalid panel HTML');
+      console.error(getMessage('error_invalid_panel_html'));
       return;
     }
 
@@ -110,7 +115,7 @@ export class TradePreviewer {
     } else if (current && current.parentElement) {
       current.parentElement.insertBefore(panel, current.nextElementSibling);
     } else {
-      console.error('Failed to insert preview panel next to currentPanel');
+      console.error(getMessage('error_insert_preview_panel'));
       return;
     }
 
@@ -147,7 +152,7 @@ export class TradePreviewer {
       if (button && !button.disabled) return;
       await new Promise(resolve => setTimeout(resolve, delay));
     }
-    throw new Error('Search button did not become enabled in time');
+    throw new Error(getMessage('error_search_button_not_enabled'));
   }
 
   public static isPanelCollapsed(): boolean {
@@ -172,7 +177,7 @@ export class TradePreviewer {
       }
       await new Promise(resolve => setTimeout(resolve, delay));
     }
-    throw new Error('Advanced panel did not expand in time');
+    throw new Error(getMessage('error_advanced_panel_not_expanded'));
   }
 
 
@@ -202,7 +207,7 @@ export class TradePreviewer {
   private static set previewPanelSearchLeftValue(value: string) {
     const searchLeft = this.previewPanel?.querySelector('.search-bar .search-left input') as HTMLInputElement | null;
     if (!searchLeft) {
-      console.error('Search left input not found. Cannot set search value.');
+      console.error(getMessage('error_search_input_not_found'));
       return;
     }
     searchLeft.value = value;
