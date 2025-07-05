@@ -51,20 +51,9 @@ const sidebarHtml = `
 
 const historyItem = `
 <span class="favorite-star">★</span>
-<div class="history-info">
-  <div class="name-edit-container">
-    <label>
-      <span class="history-name"></span>
-    </label>
-  </div>
-  <div>
-    <span class="last-searched"></span>
-  </div>
-  <div><span class="total-searches"></span>
-  </div>
-</div>
+<span class="history-name"></span>
 <button class="remove-history">🗑️</button>
-  `;
+`;
 
 export function renderSidebar(container: HTMLElement): void {
   if (document.getElementById(POE2_SIDEBAR_ID)) return;
@@ -235,8 +224,6 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   li.innerHTML = historyItem;
 
   const nameSpan = li.querySelector('.history-name') as HTMLSpanElement;
-  const lastSearchedSpan = li.querySelector('.last-searched') as HTMLSpanElement;
-  const totalSearchesSpan = li.querySelector('.total-searches') as HTMLSpanElement;
   const removeButton = li.querySelector('.remove-history') as HTMLButtonElement;
   const favoriteStar = li.querySelector('.favorite-star') as HTMLSpanElement;
 
@@ -249,9 +236,8 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
       }
     });
 
-  //    existing.lastSearched = new Date().toISOString();
-  // YYYY.MM.DD HH:mm 형식으로 표시
-  lastSearchedSpan.textContent = `Last searched: ${new Date(entry.lastSearched).toLocaleString('ko-KR', {
+  // title에 정보 표시
+  const lastSearchedStr = `Last searched: ${new Date(entry.lastSearched).toLocaleString('ko-KR', {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -259,10 +245,10 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
     minute: '2-digit',
     hour12: false
   })}`;
-
-  totalSearchesSpan.textContent = `Total searches: ${entry.previousSearches.length + 1}`;
+  const totalSearchesStr = `Total searches: ${entry.previousSearches.length + 1}`;
+  let prevSearchesStr = '';
   if (entry.previousSearches.length > 0) {
-    totalSearchesSpan.title = `Previous searches: ${entry.previousSearches
+    prevSearchesStr = `\nPrevious searches:\n${entry.previousSearches
       .map(search => new Date(search).toLocaleString('ko-KR', {
         year: 'numeric',
         month: '2-digit',
@@ -273,6 +259,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
       }))
       .join('\n')}`;
   }
+  li.title = `${lastSearchedStr}\n${totalSearchesStr}${prevSearchesStr}`;
 
   favoriteStorage.existsByMetadataId(entry.id)
     .then(isFavorite => {

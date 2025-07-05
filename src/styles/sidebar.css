@@ -196,25 +196,25 @@
 .history-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    cursor: pointer; /* 마우스 커서 변경 */
+    cursor: pointer;
     transition: background-color 0.2s ease-in-out;
+    gap: 8px;
 }
 
 .history-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.history-item .last-searched,
-.history-item .total-searches {
-    font-size: 12px;
-}
-
-.history-info {
-    flex: 1;
-    padding-left: 10px;
+.history-name {
+    display: block;
+    text-align: left;
+    flex-grow: 1;
+    min-width: 0;
+    /* overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; */
 }
 
 /* Favorite star */
