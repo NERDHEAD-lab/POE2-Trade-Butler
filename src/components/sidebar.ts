@@ -188,6 +188,7 @@ export function renderSidebar(container: HTMLElement): void {
     .then(() => favoriteUI.loadFavoriteFileSystemUI(favoriteWrapper))
     .then(() => {
       searchHistoryStorage.addOnChangeListener((newValue) => loadHistoryList(Promise.resolve(newValue)));
+      previewStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
       favoriteStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
     });
 
