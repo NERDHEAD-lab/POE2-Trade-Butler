@@ -17,7 +17,6 @@ const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
 const sidebarHtml = `
 <div id="sidebar-header">
   <h2 class="sidebar-header-title">${getMessage('sidebar_title')}</h2>
-  <button id="clear-history">${getMessage('clear_history')}</button>
 </div>
 <div id="poe2-sidebar-resizer"></div>
 <div id="sidebar-menu">
@@ -28,11 +27,14 @@ const sidebarHtml = `
 <div id="sidebar-content">
   <div id="history" class="tab-content active">
     <h3>
-      <span>${getMessage('search_history')}</span>
-      <label class="switch">
-        <input type="checkbox" id="history-switch" checked>
-        <span class="slider"   title="${getMessage('history_switch_title')}"/>
-      </label>
+      <span class="history-title-group">
+        <span>${getMessage('search_history')}</span>
+        <label class="switch">
+          <input type="checkbox" id="history-switch" checked>
+          <span class="slider"   title="${getMessage('history_switch_title')}"/>
+        </label>
+      </span>
+      <button id="clear-history">${getMessage('clear_history')}</button>
     </h3>
 
     <ul id="history-list"></ul>

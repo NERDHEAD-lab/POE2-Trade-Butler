@@ -140,10 +140,39 @@
 
 #sidebar-content h3 {
     display: flex;
-    /*좌로 정렬*/
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     margin: 0;
+    gap: 10px;
+}
+
+.history-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#clear-history {
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: 2px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, color 0.2s;
+    font-size: 0.7em;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+#clear-history:hover {
+    background-color: #c0392b;
+    color: #fff;
+}
+
+#history > h3 > #clear-history {
+    margin-left: auto;
 }
 
 /* Favorite button */
