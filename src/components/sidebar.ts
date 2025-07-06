@@ -71,9 +71,18 @@ export function renderSidebar(container: HTMLElement): void {
   sidebar.id = POE2_SIDEBAR_ID;
   sidebar.innerHTML = sidebarHtml;
   container.appendChild(sidebar);
+
   if (api.isKoreanServer()) {
     //poe2-sidebar top 80px 설정
-    sidebar.style.top = '80px';
+    const bannerHeight = 80; // 배너 높이
+    const minTop = 5; // 최소 top 값
+    sidebar.style.top = bannerHeight + 'px';
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      // 스크롤이 배너 높이 이하일 땐 점점 올라가고, 초과시 0으로 고정
+      const newTop = Math.max(minTop, bannerHeight - scrollTop);
+      sidebar.style.top = newTop + 'px';
+    })
   }
 
   const resizer = sidebar.querySelector<HTMLDivElement>('#poe2-sidebar-resizer');
