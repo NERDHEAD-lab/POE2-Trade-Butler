@@ -1,5 +1,18 @@
 # CHANGE LOG
 
+## [2.5.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.4.2...2.5.0) (2025-07-06)
+
+
+### Features
+
+* i18n 영문 번역을 좀더 자연스럽게 변경 ([01c0e59](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/01c0e59532660e079a4e31dff2a3231436ac563e))
+* i18n 적용 및 가이드 추가 ([5cc2724](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/5cc2724d351c32e9e2a7444b577e8de11ad82052))
+* i18n 적용 및 가이드 추가 - 2 ([d7ff69f](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/d7ff69f6acb07d21f0af6d4251910ac4197a12dc))
+* 사용 가이드 기능 예외 처리 강화 ([378cc2c](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/378cc2cd85312fad3b7ed0b7f86a91dd0d396d63))
+* 사용 가이드 기능 추가 ([109d762](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/109d762b5a99a4d38bddb2291487b836b233027e))
+* 사용 가이드 기능 추가 - 2 ([8160089](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/8160089491bce9f91cfa0955d6d35f7f5ad001b4))
+* 사용 가이드 기능 추가 - 3 ([dc444a0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/dc444a026f0220ad71f46cd0af52e31d37e05034))
+
 ## [2.4.2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.4.1...2.4.2) (2025-07-05)
 
 
