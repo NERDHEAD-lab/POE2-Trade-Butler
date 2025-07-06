@@ -65,6 +65,13 @@ export class TradePreviewer {
           TradePreviewer.hidePreviewPanel();
         });
 
+        // currentPanel에 마우스가 들어오면 미리보기 제거
+        // TradePreviewer.currentPanel?.addEventListener('mouseenter', () => {
+        document.querySelector('div#poe2-content-wrapper div.wrapper')?.addEventListener('mouseenter', () => {
+          target.classList.remove('hovered');
+          TradePreviewer.hidePreviewPanel();
+        });
+
 
         previewStorage.getById(id)
           .then(previewInfo => {
