@@ -84,7 +84,7 @@ export class TradePreviewer {
           });
       })
       .catch(error => {
-        console.error(getMessage('error_wait_for_injector', error.toString()));
+        console.debug(getMessage('error_wait_for_injector', error.toString()));
       });
   }
 

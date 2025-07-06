@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run lint && webpack --mode production && npm run zip",
-    "build:dev": "npm run lint:dev && webpack --mode development",
+    "build:dev": "webpack --mode development && npm run lint:dev",
     "lint": "eslint .",
     "lint:dev": "eslint . --config eslint.dev.config.mjs",
     "format": "prettier --write .",
