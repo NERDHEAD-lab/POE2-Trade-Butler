@@ -421,7 +421,7 @@
     "description": "Popup: powered by message"
   },
   "popup_support_please": {
-    "message": "이 프로젝트가 마음에 드신다면 기부를 고려해주세요!",
+    "message": "POE2를 플레이 할 전기세를 지원해주세요!",
     "description": "Popup: donation/sponsor message"
   },
   "popup_dev_version": {
