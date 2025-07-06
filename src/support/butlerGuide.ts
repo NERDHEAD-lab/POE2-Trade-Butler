@@ -1,3 +1,8 @@
+import { getMessage } from '../utils/_locale';
+import { loadHistoryList } from '../components/sidebar';
+import { SearchHistoryEntity } from '../storage/searchHistoryStorage';
+import * as history from '../storage/searchHistoryStorage';
+
 interface ButlerGuide {
   guideTarget: string; // 가이드 대상
   description: string; // 가이드 설명
@@ -9,7 +14,7 @@ interface ButlerGuide {
 const butlerGuides: ButlerGuide[] = [
   {
     guideTarget: '#poe2-sidebar #poe2-sidebar-toggle-button',
-    description: 'Click this button to toggle the sidebar visibility.',
+    description: getMessage('butler_guide_toggle_sidebar'),
     focusTarget: ['#poe2-sidebar'],
     onBefore: () => {
       const sidebarElement = document.querySelector('#poe2-sidebar') as HTMLElement;
@@ -34,7 +39,7 @@ const butlerGuides: ButlerGuide[] = [
   },
   {
     guideTarget: '#poe2-sidebar #poe2-sidebar-toggle-button',
-    description: 'Click this button to toggle the sidebar visibility.',
+    description: getMessage('butler_guide_toggle_sidebar'),
     focusTarget: ['#poe2-sidebar'],
     onAfter: () => {
       const element = document.querySelector('#poe2-sidebar #poe2-sidebar-toggle-button') as HTMLButtonElement;
@@ -44,6 +49,63 @@ const butlerGuides: ButlerGuide[] = [
       }
       // 사이드 바를 닫는다.
       element.click();
+    }
+  },
+  {
+    guideTarget: '#sidebar-menu button[data-tab="history"]',
+    description: getMessage('butler_guide_switch_tab'),
+    focusTarget: ['#sidebar-menu'],
+    onBefore: () => {
+      const historyTab = document.querySelector('#sidebar-menu button[data-tab="history"]') as HTMLButtonElement;
+      const favoritesTab = document.querySelector('#sidebar-menu button[data-tab="favorites"]') as HTMLButtonElement;
+      if (!historyTab || !favoritesTab) {
+        console.error('History or Favorites tab not found in the sidebar.');
+        return;
+      }
+      // Favorites 탭이 열려 있으면 History 탭으로 전환
+      if (favoritesTab.classList.contains('active')) {
+        historyTab.click();
+      }
+    },
+    onAfter: () => {
+      const favoritesTab = document.querySelector('#sidebar-menu button[data-tab="favorites"]') as HTMLButtonElement;
+      if (!favoritesTab) {
+        console.error('Favorites tab not found in the sidebar.');
+        return;
+      }
+      // favorites 탭을 연다
+      favoritesTab.click();
+    }
+  },
+  {
+    guideTarget: '#sidebar-menu button[data-tab="favorites"]',
+    description: getMessage('butler_guide_switch_tab'),
+    focusTarget: ['#sidebar-menu'],
+    onAfter: () => {
+      const historyTab = document.querySelector('#sidebar-menu button[data-tab="history"]') as HTMLButtonElement;
+      if (!historyTab) {
+        console.error('History tab not found in the sidebar.');
+        return;
+      }
+      // history 탭을 연다
+      historyTab.click();
+    }
+  },
+  {
+    // 자동 검색 기록 슬라이더
+    guideTarget: '#sidebar-content .history-title-group span.slider',
+    description: getMessage('butler_guide_auto_search_slider'),
+    focusTarget: ['#sidebar-content .history-title-group']
+  },
+  {
+    guideTarget: '#sidebar-content #history-list',
+    description: getMessage('butler_guide_history_item'),
+    focusTarget: ['#sidebar-content'],
+    onBefore: () => {
+      loadHistoryList(Promise.resolve([{id: 'dummy', url: 'https://example.com', lastSearched: new Date().toISOString(), previousSearches: []} as SearchHistoryEntity]));
+    },
+    onAfter: () => {
+      loadHistoryList(history.getAll())
     }
   }
 ];

@@ -307,5 +307,25 @@
   },
   "korean_translation_error_console": {
     "message": "Korean translation error:"
+  },
+  "butler_guide_toggle_sidebar": {
+    "message": "Click this button to toggle the sidebar visibility.",
+    "description": "Guide: sidebar toggle button"
+  },
+  "butler_guide_switch_tab": {
+    "message": "Click on the \"History\" or \"Favorites\" tab to switch between them.",
+    "description": "Guide: switch between history/favorites tab"
+  },
+  "butler_guide_next": {
+    "message": "Next",
+    "description": "Guide: next button"
+  },
+  "butler_guide_auto_search_slider": {
+    "message": "Use this slider to enable or disable auto-adding search history.",
+    "description": "Guide: auto search history toggle slider"
+  },
+  "butler_guide_history_item": {
+    "message": "This is a search history item. Click on it to perform the same search again.",
+    "description": "Guide: search history item"
   }
 }

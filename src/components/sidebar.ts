@@ -300,7 +300,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
 }
 
 // TODO: refactoring 필요
-function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistoryEntity[]>): void {
+export function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistoryEntity[]>): void {
   historyList.then(entries => {
     const historyListElement = document.getElementById('history-list');
     if (!historyListElement) {

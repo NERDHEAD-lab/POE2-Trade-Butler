@@ -307,5 +307,25 @@
   },
   "korean_translation_error_console": {
     "message": "한국어 번역 오류:"
+  },
+  "butler_guide_toggle_sidebar": {
+    "message": "이 버튼을 눌러 사이드바를 열거나 닫을 수 있습니다.",
+    "description": "Guide: sidebar toggle button"
+  },
+  "butler_guide_switch_tab": {
+    "message": "\"기록\" 또는 \"즐겨찾기\" 탭을 눌러 탭을 전환할 수 있습니다.",
+    "description": "Guide: switch between history/favorites tab"
+  },
+  "butler_guide_next": {
+    "message": "다음",
+    "description": "Guide: next button"
+  },
+  "butler_guide_auto_search_slider": {
+    "message": "검색 기록 자동 추가 기능을 켜면, 검색 시 기록이 자동으로 추가됩니다.",
+    "description": "Guide: auto search history toggle slider"
+  },
+  "butler_guide_history_item": {
+    "message": "검색 기록 항목을 클릭하여 해당 거래 페이지로 이동할 수 있습니다.",
+    "description": "Guide: search history item"
   }
 }
