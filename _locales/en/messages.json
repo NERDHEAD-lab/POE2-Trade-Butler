@@ -309,7 +309,7 @@
     "message": "Korean translation error:"
   },
   "butler_guide_toggle_sidebar": {
-    "message": "Click this button to toggle the sidebar visibility.",
+    "message": "Click this button to open or close the sidebar.",
     "description": "Guide: sidebar toggle button"
   },
   "butler_guide_switch_tab": {
@@ -321,11 +321,11 @@
     "description": "Guide: next button"
   },
   "butler_guide_auto_search_slider": {
-    "message": "Use this slider to enable or disable auto-adding search history.",
+    "message": "Enable this to automatically save your searches to history.",
     "description": "Guide: auto search history toggle slider"
   },
   "butler_guide_history_item": {
-    "message": "This is a search history item. Click on it to perform the same search again.",
+    "message": "Click a search history item to open that trade page again.",
     "description": "Guide: search history item"
   },
   "butler_guide_favorite_star": {
@@ -333,7 +333,7 @@
     "description": "Guide: favorite star button"
   },
   "butler_guide_preview_icon": {
-    "message": "If the item has a preview available, this icon will show it.",
+    "message": "This icon appears when a preview is available for the item.",
     "description": "Guide: preview icon for trade item"
   },
   "butler_guide_remove_history": {
@@ -361,7 +361,7 @@
     "description": "Guide: input for favorite folder name"
   },
   "butler_guide_favorite_file_icon_remove_with_click": {
-    "message": "Click the ⭐ icon in the favorites list to remove the favorite.",
+    "message": "Click the ⭐ icon to remove an item from your favorites.",
     "description": "Guide: remove favorite item with trash icon"
   },
   "butler_guide_favorite_file_drag_and_drop": {
