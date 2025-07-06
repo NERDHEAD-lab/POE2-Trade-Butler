@@ -155,9 +155,9 @@
     "message": "Favorites",
     "description": "Section title for favorites"
   },
-  "add_current_page": {
-    "message": "Add Current page",
-    "description": "Button text for adding current page to favorites"
+  "manage_favorites": {
+    "message": "Manage Favorites",
+    "description": "Button text for managing favorites"
   },
   "confirm_clear_history": {
     "message": "Are you sure you want to clear all search history?",

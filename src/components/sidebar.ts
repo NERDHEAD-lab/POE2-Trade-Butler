@@ -42,7 +42,7 @@ const sidebarHtml = `
   <div id="favorites" class="tab-content">
     <h3>
       <span>${getMessage('favorites')}</span>
-      <button id="add-favorite">${getMessage('add_current_page')}</button>
+      <button id="add-favorite">${getMessage('manage_favorites')}</button>
     </h3>
     <div id="favorites-list-wrapper"></div>
   </div>

@@ -287,9 +287,9 @@
     "message": "즐겨찾기",
     "description": "Section title for favorites"
   },
-  "add_current_page": {
-    "message": "현재 페이지 추가",
-    "description": "Button text for adding current page to favorites"
+  "manage_favorites": {
+    "message": "즐겨찾기 관리",
+    "description": "Button text for managing favorites"
   },
   "confirm_clear_history": {
     "message": "모든 검색 기록을 삭제하시겠습니까?",
