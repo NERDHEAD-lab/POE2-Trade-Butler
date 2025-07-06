@@ -4,7 +4,6 @@ import { SearchHistoryEntity } from '../storage/searchHistoryStorage';
 import * as history from '../storage/searchHistoryStorage';
 import * as favoriteUI from '../ui/favoriteFileSystemUI';
 import * as fs from '../ui/fileSystemEntry';
-import * as favorite from '../storage/favoriteStorage';
 
 interface ButlerGuide {
   guideTarget: string; // 가이드 대상
