@@ -52,3 +52,37 @@ input:checked + .slider {
 input:checked + .slider:before {
     transform: translateX(14px);
 }
+
+.badge-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.badge-subsection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    padding: 8px 0 7px 0;
+}
+
+.badge-subsection + .badge-subsection {
+    margin-top: 6px;
+    border-top: 1.5px dashed #e0e0e0;
+    padding-top: 10px;
+}
+
+.badge-section .badge-subsection .badge-section-title {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 2px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}

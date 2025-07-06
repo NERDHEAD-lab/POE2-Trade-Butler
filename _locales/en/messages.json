@@ -403,5 +403,29 @@
   "history_item_previous_searches": {
     "message": "Previous searches:",
     "description": "Tooltip: previous search dates for a history item"
+  },
+  "popup_installed_version": {
+    "message": "Installed Version",
+    "description": "Label for installed extension version in popup"
+  },
+  "popup_latest_version": {
+    "message": "Latest version!",
+    "description": "Shown when installed version is up to date"
+  },
+  "popup_new_version_available": {
+    "message": "New version available! $1",
+    "description": "Shown when a new version is available (shows latest version)"
+  },
+  "popup_powered_by": {
+    "message": "Powered by $1",
+    "description": "Popup: powered by message"
+  },
+  "popup_support_please": {
+    "message": "If you like this project, please consider supporting!",
+    "description": "Popup: donation/sponsor message"
+  },
+  "popup_dev_version": {
+    "message": "Development version!",
+    "description": "Shown when installed version is higher than the latest release"
   }
 }

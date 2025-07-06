@@ -403,5 +403,29 @@
   "history_item_previous_searches": {
     "message": "이전 검색 기록:",
     "description": "Tooltip: previous search dates for a history item"
+  },
+  "popup_installed_version": {
+    "message": "설치 버전",
+    "description": "Label for installed extension version in popup"
+  },
+  "popup_latest_version": {
+    "message": "최신 버전입니다!",
+    "description": "Shown when installed version is up to date"
+  },
+  "popup_new_version_available": {
+    "message": "신규 버전 설치 가능! $1",
+    "description": "Shown when a new version is available (shows latest version)"
+  },
+  "popup_powered_by": {
+    "message": "Powered by $1",
+    "description": "Popup: powered by message"
+  },
+  "popup_support_please": {
+    "message": "이 프로젝트가 마음에 드신다면 기부를 고려해주세요!",
+    "description": "Popup: donation/sponsor message"
+  },
+  "popup_dev_version": {
+    "message": "개발 버전입니다!",
+    "description": "Shown when installed version is higher than the latest release"
   }
 }
