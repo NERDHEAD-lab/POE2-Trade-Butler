@@ -54,18 +54,19 @@ export async function runButlerGuides() {
   await new Promise(resolve => setTimeout(resolve, 2000));
 
   for (let i = 0; i < butlerGuides.length; i++) {
+    console.log(`Running guide ${i + 1}/${butlerGuides.length}:`, butlerGuides[i].description);
     const guide = butlerGuides[i];
     guide.onBefore?.();
 
     // 오버레이 추가
     let overlay: HTMLDivElement | null = null;
-    let focusRects: DOMRect[] = [];
+    // let focusRects: DOMRect[] = [];
     if (guide.focusTarget && guide.focusTarget.length > 0) {
-      focusRects = guide.focusTarget.flatMap(sel =>
-        Array.from(document.querySelectorAll<HTMLElement>(sel))
-          .filter(el => el.offsetParent !== null)
-          .map(el => el.getBoundingClientRect())
-      );
+      // focusRects = guide.focusTarget.flatMap(sel =>
+      //   Array.from(document.querySelectorAll<HTMLElement>(sel))
+      //     .filter(el => el.offsetParent !== null)
+      //     .map(el => el.getBoundingClientRect())
+      // );
       overlay = document.createElement('div');
       overlay.id = 'butler-guide-blur-overlay';
       overlay.style.position = 'fixed';
@@ -78,23 +79,30 @@ export async function runButlerGuides() {
       overlay.style.backdropFilter = 'blur(4px)';
       overlay.style.background = 'rgba(0,0,0,0.2)';
       overlay.style.transition = 'backdrop-filter 0.2s;';
-      if (focusRects.length > 0) {
-        const holes = focusRects.map(r =>
-          `inset(${r.top}px calc(100vw - ${r.right}px) calc(100vh - ${r.bottom}px) ${r.left}px)`
-        );
-        overlay.style.clipPath = holes.length === 1 ? holes[0] : `polygon(evenodd, ${holes.join(', ')})`;
-      }
+      // if (focusRects.length > 0) {
+      //   const holes = focusRects.map(r =>
+      //     `inset(${r.top}px calc(100vw - ${r.right}px) calc(100vh - ${r.bottom}px) ${r.left}px)`
+      //   );
+        // overlay.style.clipPath = holes.length === 1 ? holes[0] : `polygon(evenodd, ${holes.join(', ')})`;
+      // }
       document.body.appendChild(overlay);
     }
 
     // guideTarget 강조 박스 생성 + 동적 추적
     let highlightBox: HTMLDivElement | null = null;
     let running = false;
+    let frameHandle: number | null = null;
     const target = document.querySelector(guide.guideTarget) as HTMLElement;
     const margin = 8;
 
+    if (!target) {
+      console.warn(`Guide target not found: ${guide.guideTarget}`);
+      continue;
+    }
+
     function updateHighlightBox() {
       if (!running) return;
+      const target = document.querySelector(guide.guideTarget) as HTMLElement;
       if (target && highlightBox) {
         const rect = target.getBoundingClientRect();
         highlightBox.style.left = (rect.left - margin) + 'px';
@@ -102,7 +110,7 @@ export async function runButlerGuides() {
         highlightBox.style.width = (rect.width + margin * 2) + 'px';
         highlightBox.style.height = (rect.height + margin * 2) + 'px';
       }
-      requestAnimationFrame(updateHighlightBox);
+      frameHandle = requestAnimationFrame(updateHighlightBox);
     }
 
     if (target) {
@@ -122,7 +130,7 @@ export async function runButlerGuides() {
       highlightBox.style.transition = 'all 0.3s cubic-bezier(0.55,0,0.55,1)';
       document.body.appendChild(highlightBox);
       running = true;
-      updateHighlightBox(); // ★동적 위치 갱신 루프 시작★
+      updateHighlightBox();
     }
 
     // 설명 표시 및 next 버튼
@@ -173,7 +181,7 @@ export async function runButlerGuides() {
 
       nextBtn = document.createElement('button');
       nextBtn.id = 'butler-guide-next-btn';
-      nextBtn.textContent = '다음';
+      nextBtn.textContent = getMessage('butler_guide_next'); // i18n 메시지 적용
       nextBtn.style.marginTop = '8px';
       nextBtn.style.alignSelf = 'flex-end';
       nextBtn.style.background = '#4caf50';
@@ -204,6 +212,9 @@ export async function runButlerGuides() {
       if (overlay) overlay.remove();
       if (highlightBox) highlightBox.remove();
       running = false;
+      if (frameHandle !== null) {
+        cancelAnimationFrame(frameHandle);
+      }
     }
   }
 }
