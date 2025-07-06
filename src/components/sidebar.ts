@@ -241,18 +241,18 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
 
   // title에 정보 표시
   const locale = getCurrentLocale();
-  const lastSearchedStr = `Last searched: ${new Date(entry.lastSearched).toLocaleString(locale, {
+  const lastSearchedStr = getMessage('history_item_last_searched', new Date(entry.lastSearched).toLocaleString(locale, {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
     hour12: false
-  })}`;
-  const totalSearchesStr = `Total searches: ${entry.previousSearches.length + 1}`;
+  }));
+  const totalSearchesStr = getMessage('history_item_total_searches', String(entry.previousSearches.length + 1));
   let prevSearchesStr = '';
   if (entry.previousSearches.length > 0) {
-    prevSearchesStr = `\nPrevious searches:\n${entry.previousSearches
+    prevSearchesStr = '\n' + getMessage('history_item_previous_searches') + '\n' + entry.previousSearches
       .map(search => new Date(search).toLocaleString(locale, {
         year: 'numeric',
         month: '2-digit',
@@ -261,7 +261,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
         minute: '2-digit',
         hour12: false
       }))
-      .join('\n')}`;
+      .join('\n');
   }
   li.title = `${lastSearchedStr}\n${totalSearchesStr}${prevSearchesStr}`;
 
@@ -358,7 +358,9 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
       if (items.length === 0) return;
       const headerLi = document.createElement('li');
       headerLi.className = 'history-group-header';
-      headerLi.innerHTML = dateLabel ? `<span>${header}</span><span style="float:right;opacity:0.7;font-size:13px;">${dateLabel}</span>` : header;
+      // i18n 적용
+      const headerText = getMessage(header);
+      headerLi.innerHTML = dateLabel ? `<span>${headerText}</span><span style="float:right;opacity:0.7;font-size:13px;">${dateLabel}</span>` : headerText;
       list.appendChild(headerLi);
       items.forEach(entry => {
         const item = createHistoryItem(entry);
@@ -369,13 +371,23 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
     // 오늘, 어제
     if (groups['오늘'].length > 0) {
       const date = new Date(groups['오늘'][0].lastSearched);
-      const dateStr = date.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-      renderGroup('오늘', groups['오늘'], dateStr);
+      const dateStr = date.toLocaleDateString(locale, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+      });
+      renderGroup('history_group_today', groups['오늘'], dateStr);
     }
     if (groups['어제'].length > 0) {
       const date = new Date(groups['어제'][0].lastSearched);
-      const dateStr = date.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-      renderGroup('어제', groups['어제'], dateStr);
+      const dateStr = date.toLocaleDateString(locale, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+      });
+      renderGroup('history_group_yesterday', groups['어제'], dateStr);
     }
 
     // 날짜별(오늘/어제/일주일전/오래됨 제외)
@@ -385,7 +397,12 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
     });
     dateGroupKeys.forEach(dateStr => {
       const date = new Date(dateStr);
-      const fullDate = date.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+      const fullDate = date.toLocaleDateString(locale, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+      });
       renderGroup(`${fullDate}`, dateGroups[dateStr]);
     });
 
@@ -395,14 +412,18 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
       const max = groups['일주일전'].reduce((max, e) => new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max, groups['일주일전'][0]);
       const minDate = new Date(min.lastSearched);
       const maxDate = new Date(max.lastSearched);
-      const rangeStr = `${minDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })} ~ ${maxDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })}`;
-      renderGroup('일주일전', groups['일주일전'], rangeStr);
+      const rangeStr = `${minDate.toLocaleDateString(locale, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })} ~ ${maxDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })}`;
+      renderGroup('history_group_last_week', groups['일주일전'], rangeStr);
     }
     if (groups['오래됨'].length > 0) {
       const max = groups['오래됨'].reduce((max, e) => new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max, groups['오래됨'][0]);
       const maxDate = new Date(max.lastSearched);
       const rangeStr = `~ ${maxDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })}`;
-      renderGroup('오래됨', groups['오래됨'], rangeStr);
+      renderGroup('history_group_older', groups['오래됨'], rangeStr);
     }
   });
 }
@@ -510,7 +531,7 @@ export function attachCreateFavoriteEvent(
         })
         .then(favoritesPath => {
           if (favoritesPath.length > 0) {
-            const message = `이미 즐겨찾기에 추가된 항목입니다:\n${favoritesPath.map(path => `- ${path}`).join('\n')}\n\n다시 추가하시겠습니까?`;
+            const message = getMessage('already_in_favorites', favoritesPath.map(path => `- ${path}`).join('\n'));
             if (!confirm(message)) {
               return;
             }

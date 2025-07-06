@@ -371,5 +371,37 @@
   "butler_guide_start_confirm": {
     "message": "Click \"OK\" to begin the guide. You can always return to this guide later at settings.",
     "description": "Guide: start confirmation button"
+  },
+  "history_group_today": {
+    "message": "Today",
+    "description": "Header for today's search history group"
+  },
+  "history_group_yesterday": {
+    "message": "Yesterday",
+    "description": "Header for yesterday's search history group"
+  },
+  "history_group_last_week": {
+    "message": "Last Week",
+    "description": "Header for last week's search history group"
+  },
+  "history_group_older": {
+    "message": "Older",
+    "description": "Header for older search history group"
+  },
+  "already_in_favorites": {
+    "message": "This item is already in your favorites:\n$1\nDo you want to add it again?",
+    "description": "Message shown when trying to add an already-favorited item"
+  },
+  "history_item_last_searched": {
+    "message": "Last searched: $1",
+    "description": "Tooltip: last searched date/time for a history item"
+  },
+  "history_item_total_searches": {
+    "message": "Total searches: $1",
+    "description": "Tooltip: total search count for a history item"
+  },
+  "history_item_previous_searches": {
+    "message": "Previous searches:",
+    "description": "Tooltip: previous search dates for a history item"
   }
 }

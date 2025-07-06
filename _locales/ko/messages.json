@@ -371,5 +371,37 @@
   "butler_guide_start_confirm": {
     "message": "가이드를 시작하려면 \"확인\"을 클릭하세요. 설정에서 언제든지 이 가이드로 돌아올 수 있습니다.",
     "description": "Guide: start confirmation button"
+  },
+  "history_group_today": {
+    "message": "오늘",
+    "description": "Header for today's search history group"
+  },
+  "history_group_yesterday": {
+    "message": "어제",
+    "description": "Header for yesterday's search history group"
+  },
+  "history_group_last_week": {
+    "message": "일주일전",
+    "description": "Header for last week's search history group"
+  },
+  "history_group_older": {
+    "message": "오래됨",
+    "description": "Header for older search history group"
+  },
+  "already_in_favorites": {
+    "message": "이미 즐겨찾기에 추가된 항목입니다:\n$1\n그래도 추가하시겠습니까?",
+    "description": "Message shown when trying to add an already-favorited item"
+  },
+  "history_item_last_searched": {
+    "message": "마지막 검색: $1",
+    "description": "Tooltip: last searched date/time for a history item"
+  },
+  "history_item_total_searches": {
+    "message": "총 검색 횟수: $1",
+    "description": "Tooltip: total search count for a history item"
+  },
+  "history_item_previous_searches": {
+    "message": "이전 검색 기록:",
+    "description": "Tooltip: previous search dates for a history item"
   }
 }
