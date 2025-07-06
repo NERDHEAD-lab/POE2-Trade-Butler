@@ -367,5 +367,9 @@
   "butler_guide_favorite_file_drag_and_drop": {
     "message": "즐겨찾기 항목을 드래그 앤 드롭하여 폴더 간에 이동할 수 있습니다.",
     "description": "Guide: drag and drop favorite item to move between folders"
+  },
+  "butler_guide_start_confirm": {
+    "message": "가이드를 시작하려면 \"확인\"을 클릭하세요. 설정에서 언제든지 이 가이드로 돌아올 수 있습니다.",
+    "description": "Guide: start confirmation button"
   }
 }

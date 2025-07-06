@@ -367,5 +367,9 @@
   "butler_guide_favorite_file_drag_and_drop": {
     "message": "You can drag and drop favorite items to move them between folders.",
     "description": "Guide: drag and drop favorite item to move between folders"
+  },
+  "butler_guide_start_confirm": {
+    "message": "Click \"OK\" to begin the guide. You can always return to this guide later at settings.",
+    "description": "Guide: start confirmation button"
   }
 }
