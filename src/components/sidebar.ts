@@ -1,7 +1,7 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
 import { showToast } from '../utils/api';
-import { getMessage } from '../utils/_locale';
+import { getMessage, getCurrentLocale } from '../utils/_locale';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as searchHistoryStorage from '../storage/searchHistoryStorage';
 import * as settingStorage from '../storage/settingStorage';
@@ -315,10 +315,11 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
 
     // 날짜 그룹핑
     const now = new Date();
-    const todayStr = now.toLocaleDateString('ko-KR');
+    const locale = getCurrentLocale();
+    const todayStr = now.toLocaleDateString(locale);
     const yesterday = new Date(now);
     yesterday.setDate(now.getDate() - 1);
-    const yesterdayStr = yesterday.toLocaleDateString('ko-KR');
+    const yesterdayStr = yesterday.toLocaleDateString(locale);
     const oneWeekAgo = new Date(now);
     oneWeekAgo.setDate(now.getDate() - 7);
     const twoWeeksAgo = new Date(now);
@@ -335,7 +336,7 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
 
     entries.forEach(entry => {
       const entryDate = new Date(entry.lastSearched);
-      const entryDateStr = entryDate.toLocaleDateString('ko-KR');
+      const entryDateStr = entryDate.toLocaleDateString(locale);
       if (entryDateStr === todayStr) {
         groups['오늘'].push(entry);
       } else if (entryDateStr === yesterdayStr) {
@@ -367,12 +368,12 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
     // 오늘, 어제
     if (groups['오늘'].length > 0) {
       const date = new Date(groups['오늘'][0].lastSearched);
-      const dateStr = date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+      const dateStr = date.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
       renderGroup('오늘', groups['오늘'], dateStr);
     }
     if (groups['어제'].length > 0) {
       const date = new Date(groups['어제'][0].lastSearched);
-      const dateStr = date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+      const dateStr = date.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
       renderGroup('어제', groups['어제'], dateStr);
     }
 
@@ -383,8 +384,7 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
     });
     dateGroupKeys.forEach(dateStr => {
       const date = new Date(dateStr);
-      const dayName = date.toLocaleDateString('ko-KR', { weekday: 'long' });
-      const fullDate = date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+      const fullDate = date.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
       renderGroup(`${fullDate}`, dateGroups[dateStr]);
     });
 
@@ -394,16 +394,15 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
       const max = groups['일주일전'].reduce((max, e) => new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max, groups['일주일전'][0]);
       const minDate = new Date(min.lastSearched);
       const maxDate = new Date(max.lastSearched);
-      const rangeStr = `${minDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} ~ ${maxDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+      const rangeStr = `${minDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })} ~ ${maxDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })}`;
       renderGroup('일주일전', groups['일주일전'], rangeStr);
     }
-    // 오래됨
     if (groups['오래됨'].length > 0) {
       const min = groups['오래됨'].reduce((min, e) => new Date(e.lastSearched) < new Date(min.lastSearched) ? e : min, groups['오래됨'][0]);
       const max = groups['오래됨'].reduce((max, e) => new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max, groups['오래됨'][0]);
       const minDate = new Date(min.lastSearched);
       const maxDate = new Date(max.lastSearched);
-      const rangeStr = `~ ${maxDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+      const rangeStr = `~ ${maxDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })}`;
       renderGroup('오래됨', groups['오래됨'], rangeStr);
     }
   });
