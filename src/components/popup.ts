@@ -19,12 +19,6 @@ const popupMenuListHtml = `
 </label>
 `
 
-/**
- * todo: 1. show history menu
- * todo: 2. redirect poe.game.daum.net -> www.pathofexile.com
- * todo:    - translate eng -> kor
- * todo: 3. show ads
- */
 const popupMenuList: popupMenuItem[] = [
   // {
   //   id: 'redirectPoe2Trade',

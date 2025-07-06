@@ -7,7 +7,6 @@ import { TradePreviewer } from '../utils/tradePreviewInjector';
 import { showToast } from '../utils/api';
 import { getMessage } from '../utils/_locale';
 
-//TODO: 추후 추상화 고려하여 FileSystemUI로 일부 기능을 옮길 것
 /**
  * 즐겨찾기 파일 시스템 UI를 로드하고 생성합니다.
  * favoriteStorage의 변경이 필요 할 경우 항상 favoriteStorage.getAll()을 호출하여 수행합니다.
