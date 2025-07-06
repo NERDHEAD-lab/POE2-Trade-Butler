@@ -1,7 +1,7 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
 import { showToast } from '../utils/api';
-import { getMessage, getCurrentLocale } from '../utils/_locale';
+import { getCurrentLocale, getMessage } from '../utils/_locale';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as searchHistoryStorage from '../storage/searchHistoryStorage';
 import * as settingStorage from '../storage/settingStorage';
@@ -398,9 +398,7 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
       renderGroup('일주일전', groups['일주일전'], rangeStr);
     }
     if (groups['오래됨'].length > 0) {
-      const min = groups['오래됨'].reduce((min, e) => new Date(e.lastSearched) < new Date(min.lastSearched) ? e : min, groups['오래됨'][0]);
       const max = groups['오래됨'].reduce((max, e) => new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max, groups['오래됨'][0]);
-      const minDate = new Date(min.lastSearched);
       const maxDate = new Date(max.lastSearched);
       const rangeStr = `~ ${maxDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })}`;
       renderGroup('오래됨', groups['오래됨'], rangeStr);

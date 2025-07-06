@@ -1,5 +1,3 @@
-import { isKoreanServer } from './api';
-
 /**
  * Gets a localized message from the _locales directory.
  * Falls back to the default locale if the message is not found in the current locale.

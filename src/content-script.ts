@@ -1,7 +1,6 @@
 import { renderSidebar } from './components/sidebar';
 import './styles/sidebar.css';
 import { getMessage } from './utils/_locale';
-import * as settingStorage from './storage/settingStorage';
 import * as butlerGuide from './support/butlerGuide';
 
 
