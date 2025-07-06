@@ -327,5 +327,45 @@
   "butler_guide_history_item": {
     "message": "검색 기록 항목을 클릭하여 해당 거래 페이지로 이동할 수 있습니다.",
     "description": "Guide: search history item"
+  },
+  "butler_guide_favorite_star": {
+    "message": "이 버튼을 클릭하여 거래를 즐겨찾기에 추가할 수 있습니다.",
+    "description": "Guide: favorite star button"
+  },
+  "butler_guide_preview_icon": {
+    "message": "거래 항목에 미리보기가 가능한 경우, 이 아이콘이 표시 됩니다.",
+    "description": "Guide: preview icon for trade item"
+  },
+  "butler_guide_remove_history": {
+    "message": "이 버튼을 클릭하여 검색 기록 항목을 삭제할 수 있습니다.",
+    "description": "Guide: remove search history item button"
+  },
+  "butler_guide_clear_history_button": {
+    "message": "검색 기록을 모두 삭제하려면 이 버튼을 클릭하세요.",
+    "description": "Guide: clear search history button"
+  },
+  "butler_guide_add_favorite_button": {
+    "message": "현재 거래 페이지를 즐겨찾기에 추가하려면 이 버튼을 클릭하세요.",
+    "description": "Guide: add current page to favorites button"
+  },
+  "butler_guide_favorite_folder_list": {
+    "message": "즐겨찾기 폴더 목록입니다.",
+    "description": "Guide: favorite folder selection list"
+  },
+  "butler_guide_favorite_folder_icon": {
+    "message": "즐겨찾기 폴더 아이콘(\uD83D\uDCC2)을 클릭하여 폴더를 접거나 펼칠 수 있습니다.",
+    "description": "Guide: favorite folder icon for selection or creation"
+  },
+  "butler_guide_favorite_list_rename_with_double_click": {
+    "message": "즐겨찾기 목록 내 이름을 더블클릭하여 이름을 변경할 수 있습니다.",
+    "description": "Guide: input for favorite folder name"
+  },
+  "butler_guide_favorite_file_icon_remove_with_click": {
+    "message": "즐겨찾기 목록의 ⭐ 아이콘을 클릭하여 즐겨찾기를 삭제할 수 있습니다.",
+    "description": "Guide: remove favorite item with trash icon"
+  },
+  "butler_guide_favorite_file_drag_and_drop": {
+    "message": "즐겨찾기 항목을 드래그 앤 드롭하여 폴더 간에 이동할 수 있습니다.",
+    "description": "Guide: drag and drop favorite item to move between folders"
   }
 }

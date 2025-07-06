@@ -327,5 +327,45 @@
   "butler_guide_history_item": {
     "message": "This is a search history item. Click on it to perform the same search again.",
     "description": "Guide: search history item"
+  },
+  "butler_guide_favorite_star": {
+    "message": "Click this star to add the current search to your favorites.",
+    "description": "Guide: favorite star button"
+  },
+  "butler_guide_preview_icon": {
+    "message": "If the item has a preview available, this icon will show it.",
+    "description": "Guide: preview icon for trade item"
+  },
+  "butler_guide_remove_history": {
+    "message": "Click this button to remove the search history item.",
+    "description": "Guide: remove search history item button"
+  },
+  "butler_guide_clear_history_button": {
+    "message": "Click this button to clear all search history.",
+    "description": "Guide: clear search history button"
+  },
+  "butler_guide_add_favorite_button": {
+    "message": "Click this button to add the current page to your favorites.",
+    "description": "Guide: add current page to favorites button"
+  },
+  "butler_guide_favorite_folder_list": {
+    "message": "This is the list of favorite folders.",
+    "description": "Guide: favorite folder selection list"
+  },
+  "butler_guide_favorite_folder_icon": {
+    "message": "Click the favorite folder icon (\uD83D\uDCC2) to collapse or expand the folder.",
+    "description": "Guide: favorite folder icon for selection or creation"
+  },
+  "butler_guide_favorite_list_rename_with_double_click": {
+    "message": "Double-click on the favorite list name to rename it.",
+    "description": "Guide: input for favorite folder name"
+  },
+  "butler_guide_favorite_file_icon_remove_with_click": {
+    "message": "Click the ⭐ icon in the favorites list to remove the favorite.",
+    "description": "Guide: remove favorite item with trash icon"
+  },
+  "butler_guide_favorite_file_drag_and_drop": {
+    "message": "You can drag and drop favorite items to move them between folders.",
+    "description": "Guide: drag and drop favorite item to move between folders"
   }
 }

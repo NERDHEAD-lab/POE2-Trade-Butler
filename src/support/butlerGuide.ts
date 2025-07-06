@@ -2,6 +2,9 @@ import { getMessage } from '../utils/_locale';
 import { loadHistoryList } from '../components/sidebar';
 import { SearchHistoryEntity } from '../storage/searchHistoryStorage';
 import * as history from '../storage/searchHistoryStorage';
+import * as favoriteUI from '../ui/favoriteFileSystemUI';
+import * as fs from '../ui/fileSystemEntry';
+import * as favorite from '../storage/favoriteStorage';
 
 interface ButlerGuide {
   guideTarget: string; // 가이드 대상
@@ -98,14 +101,112 @@ const butlerGuides: ButlerGuide[] = [
     focusTarget: ['#sidebar-content .history-title-group']
   },
   {
-    guideTarget: '#sidebar-content #history-list',
+    guideTarget: '#sidebar-content #history-list li.history-item',
     description: getMessage('butler_guide_history_item'),
     focusTarget: ['#sidebar-content'],
     onBefore: () => {
-      loadHistoryList(Promise.resolve([{id: 'dummy', url: 'https://example.com', lastSearched: new Date().toISOString(), previousSearches: []} as SearchHistoryEntity]));
-    },
-    onAfter: () => {
-      loadHistoryList(history.getAll())
+      loadHistoryList(Promise.resolve([{
+        id: 'dummy',
+        url: 'https://example.com',
+        lastSearched: new Date().toISOString(),
+        previousSearches: []
+      } as SearchHistoryEntity]));
+    }
+  },
+  {
+    guideTarget: '#sidebar-content #history-list li.history-item .favorite-star',
+    description: getMessage('butler_guide_favorite_star'),
+    focusTarget: ['#sidebar-content']
+  },
+  {
+    guideTarget: '#sidebar-content #history-list li.history-item .preview-icon',
+    description: getMessage('butler_guide_preview_icon'),
+    focusTarget: ['#sidebar-content']
+  },
+  {
+    guideTarget: '#sidebar-content #history-list li.history-item .remove-history',
+    description: getMessage('butler_guide_remove_history'),
+    focusTarget: ['#sidebar-content'],
+    onAfter: () => loadHistoryList(history.getAll())
+  },
+  {
+    guideTarget: '#sidebar-content button#clear-history',
+    description: getMessage('butler_guide_clear_history_button'),
+    focusTarget: ['#sidebar-content']
+  },
+  {
+    guideTarget: '#sidebar-content button#add-favorite',
+    description: getMessage('butler_guide_add_favorite_button'),
+    focusTarget: ['#sidebar-content'],
+    onBefore: () => {
+      const favoritesTab = document.querySelector('#sidebar-menu button[data-tab="favorites"]') as HTMLButtonElement;
+      if (!favoritesTab) {
+        console.error('Favorites tab not found in the sidebar.');
+        return;
+      }
+      // favorites 탭을 연다
+      favoritesTab.click();
+    }
+  },
+  {
+    guideTarget: '#sidebar-content #favorites-list-wrapper',
+    description: getMessage('butler_guide_favorite_folder_list'),
+    focusTarget: ['#sidebar-content'],
+    onBefore: async () => {
+      const favoriteWrapper = document.getElementById('favorites-list-wrapper') as HTMLDivElement;
+      favoriteWrapper.querySelector('.favorite-folder-list')?.remove();
+      await favoriteUI.loadFavoriteFileSystemUI(favoriteWrapper)
+        .then(favoriteUI => {
+          const entries: fs.FileSystemEntry[] = [{
+            id: 'root',
+            type: 'folder',
+            name: '/',
+            parentId: null,
+            createdAt: new Date().toISOString(),
+            modifiedAt: new Date().toISOString()
+          }, {
+            id: 'dummy-favorite',
+            type: 'folder',
+            name: 'Dummy Favorite Folder',
+            parentId: 'root',
+            createdAt: new Date().toISOString(),
+            modifiedAt: new Date().toISOString()
+          }, {
+            id: 'dummy-file',
+            type: 'file',
+            name: 'Dummy Favorite',
+            parentId: 'dummy-favorite',
+            createdAt: new Date().toISOString(),
+            modifiedAt: new Date().toISOString(),
+            metadata: { id: 'dummy-file-metadata-id', url: 'https://example.com/dummy-file' }
+          }];
+          favoriteUI.update(entries);
+        });
+    }
+  },
+  {
+    guideTarget: '#sidebar-content #favorites-list-wrapper [data-id="dummy-favorite"] .folder-icon',
+    description: getMessage('butler_guide_favorite_folder_icon'),
+    focusTarget: ['#sidebar-content']
+  },
+  {
+    guideTarget: '#sidebar-content #favorites-list-wrapper [data-id="dummy-file"] .favorite-name',
+    description: getMessage('butler_guide_favorite_list_rename_with_double_click'),
+    focusTarget: ['#sidebar-content']
+  },
+  {
+    guideTarget: '#sidebar-content #favorites-list-wrapper [data-id="dummy-file"] .favorite-icon',
+    description: getMessage('butler_guide_favorite_file_icon_remove_with_click'),
+    focusTarget: ['#sidebar-content']
+  },
+  {
+    guideTarget: '#sidebar-content #favorites-list-wrapper',
+    description: getMessage('butler_guide_favorite_file_drag_and_drop'),
+    focusTarget: ['#sidebar-content'],
+    onAfter: async () => {
+      const favoriteWrapper = document.getElementById('favorites-list-wrapper') as HTMLDivElement;
+      favoriteWrapper.querySelector('.favorite-folder-list')?.remove();
+      await favoriteUI.loadFavoriteFileSystemUI(favoriteWrapper);
     }
   }
 ];
