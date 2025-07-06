@@ -367,7 +367,7 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
       const headerLi = document.createElement('li');
       headerLi.className = 'history-group-header';
       // i18n 적용
-      const headerText = getMessage(header);
+      const headerText = getMessage(header) || header;
       headerLi.innerHTML = dateLabel ? `<span>${headerText}</span><span style="float:right;opacity:0.7;font-size:13px;">${dateLabel}</span>` : headerText;
       list.appendChild(headerLi);
       items.forEach(entry => {
