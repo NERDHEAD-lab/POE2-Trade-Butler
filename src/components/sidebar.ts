@@ -307,15 +307,105 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
       console.error(getMessage('error_history_list_not_found'));
       return;
     }
-    historyListElement.innerHTML = ''; // Clear existing items
+    const list = historyListElement as HTMLUListElement;
+    list.innerHTML = '';
 
-    //최신 순으로 정렬
+    // 최신 순 정렬
     entries.sort((a, b) => new Date(b.lastSearched).getTime() - new Date(a.lastSearched).getTime());
 
+    // 날짜 그룹핑
+    const now = new Date();
+    const todayStr = now.toLocaleDateString('ko-KR');
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    const yesterdayStr = yesterday.toLocaleDateString('ko-KR');
+    const oneWeekAgo = new Date(now);
+    oneWeekAgo.setDate(now.getDate() - 7);
+    const twoWeeksAgo = new Date(now);
+    twoWeeksAgo.setDate(now.getDate() - 14);
+
+    // 그룹별로 분류
+    const groups: { [key: string]: searchHistoryStorage.SearchHistoryEntity[] } = {
+      '오늘': [],
+      '어제': [],
+      '일주일전': [],
+      '오래됨': []
+    };
+    const dateGroups: { [date: string]: searchHistoryStorage.SearchHistoryEntity[] } = {};
+
     entries.forEach(entry => {
-      const item = createHistoryItem(entry);
-      historyListElement.appendChild(item);
+      const entryDate = new Date(entry.lastSearched);
+      const entryDateStr = entryDate.toLocaleDateString('ko-KR');
+      if (entryDateStr === todayStr) {
+        groups['오늘'].push(entry);
+      } else if (entryDateStr === yesterdayStr) {
+        groups['어제'].push(entry);
+      } else if (entryDate >= oneWeekAgo) {
+        // 7일 이내는 날짜별로
+        if (!dateGroups[entryDateStr]) dateGroups[entryDateStr] = [];
+        dateGroups[entryDateStr].push(entry);
+      } else if (entryDate >= twoWeeksAgo) {
+        groups['일주일전'].push(entry);
+      } else {
+        groups['오래됨'].push(entry);
+      }
     });
+
+    // 그룹 렌더링 함수
+    function renderGroup(header: string, items: searchHistoryStorage.SearchHistoryEntity[], dateLabel?: string) {
+      if (items.length === 0) return;
+      const headerLi = document.createElement('li');
+      headerLi.className = 'history-group-header';
+      headerLi.innerHTML = dateLabel ? `<span>${header}</span><span style="float:right;opacity:0.7;font-size:13px;">${dateLabel}</span>` : header;
+      list.appendChild(headerLi);
+      items.forEach(entry => {
+        const item = createHistoryItem(entry);
+        list.appendChild(item);
+      });
+    }
+
+    // 오늘, 어제
+    if (groups['오늘'].length > 0) {
+      const date = new Date(groups['오늘'][0].lastSearched);
+      const dateStr = date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+      renderGroup('오늘', groups['오늘'], dateStr);
+    }
+    if (groups['어제'].length > 0) {
+      const date = new Date(groups['어제'][0].lastSearched);
+      const dateStr = date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+      renderGroup('어제', groups['어제'], dateStr);
+    }
+
+    // 날짜별(오늘/어제/일주일전/오래됨 제외)
+    const dateGroupKeys = Object.keys(dateGroups).sort((a, b) => {
+      // 최신순
+      return new Date(b).getTime() - new Date(a).getTime();
+    });
+    dateGroupKeys.forEach(dateStr => {
+      const date = new Date(dateStr);
+      const dayName = date.toLocaleDateString('ko-KR', { weekday: 'long' });
+      const fullDate = date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+      renderGroup(`${fullDate}`, dateGroups[dateStr]);
+    });
+
+    // 일주일전
+    if (groups['일주일전'].length > 0) {
+      const min = groups['일주일전'].reduce((min, e) => new Date(e.lastSearched) < new Date(min.lastSearched) ? e : min, groups['일주일전'][0]);
+      const max = groups['일주일전'].reduce((max, e) => new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max, groups['일주일전'][0]);
+      const minDate = new Date(min.lastSearched);
+      const maxDate = new Date(max.lastSearched);
+      const rangeStr = `${minDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })} ~ ${maxDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+      renderGroup('일주일전', groups['일주일전'], rangeStr);
+    }
+    // 오래됨
+    if (groups['오래됨'].length > 0) {
+      const min = groups['오래됨'].reduce((min, e) => new Date(e.lastSearched) < new Date(min.lastSearched) ? e : min, groups['오래됨'][0]);
+      const max = groups['오래됨'].reduce((max, e) => new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max, groups['오래됨'][0]);
+      const minDate = new Date(min.lastSearched);
+      const maxDate = new Date(max.lastSearched);
+      const rangeStr = `~ ${maxDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+      renderGroup('오래됨', groups['오래됨'], rangeStr);
+    }
   });
 }
 
