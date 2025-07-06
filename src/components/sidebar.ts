@@ -240,7 +240,8 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
     });
 
   // title에 정보 표시
-  const lastSearchedStr = `Last searched: ${new Date(entry.lastSearched).toLocaleString('ko-KR', {
+  const locale = getCurrentLocale();
+  const lastSearchedStr = `Last searched: ${new Date(entry.lastSearched).toLocaleString(locale, {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -252,7 +253,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   let prevSearchesStr = '';
   if (entry.previousSearches.length > 0) {
     prevSearchesStr = `\nPrevious searches:\n${entry.previousSearches
-      .map(search => new Date(search).toLocaleString('ko-KR', {
+      .map(search => new Date(search).toLocaleString(locale, {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
