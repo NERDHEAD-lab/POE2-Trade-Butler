@@ -2,6 +2,7 @@ import { executeLegacyVersionMigrations } from './storage/legacy/legacyVersionMa
 import * as searchHistory from './storage/searchHistoryStorage';
 import * as favorite from './storage/favoriteStorage';
 import * as previewStorage from './storage/previewStorage';
+import { getCachedCheckVersion } from './utils/versionChecker';
 
 await executeLegacyVersionMigrations();
 await previewStorage.cleanExpiredOrphanSnapshots();
@@ -35,4 +36,29 @@ searchHistory.addOnDeletedListener((deletedId) => {
 
 favorite.addOnDeletedListener((deletedId) => {
   void previewStorage.deleteIfOrphaned(deletedId, 'favorite');
+});
+
+function alertVersion() {
+  getCachedCheckVersion()
+    .then(result => {
+      // NEW_VERSION_AVAILABLE 일 경우 뱃지
+      if (result.versionType === 'NEW_VERSION_AVAILABLE') {
+        void chrome.action.setBadgeText({ text: '!' });
+        void chrome.action.setBadgeBackgroundColor({ color: '#f00' });
+      } else if (result.versionType === 'DEV') {
+        void chrome.action.setBadgeText({ text: 'DEV' });
+        void chrome.action.setBadgeBackgroundColor({ color: '#ff0' });
+      } else {
+        void chrome.action.setBadgeText({ text: '' });
+        void chrome.action.setBadgeBackgroundColor({ color: '#00f' });
+      }
+      console.info(`Version check completed: ${result.installedVersion} (Latest: ${result.latestVersion})`);
+    });
+}
+
+chrome.runtime.onStartup.addListener(() => alertVersion());
+
+void chrome.alarms.create('dailyVersionCheck', { periodInMinutes: 60 * 24 }); // 24시간마다
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === 'dailyVersionCheck') alertVersion();
 });
