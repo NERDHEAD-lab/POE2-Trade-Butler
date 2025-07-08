@@ -60,16 +60,30 @@ async function createVersionSection(parent: HTMLElement, refreshForce: boolean =
         contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:green;">(${getMessage('popup_latest_version')})</span>`;
         break;
       case 'NEW_VERSION_AVAILABLE':
-        contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(<a href="https://chrome.google.com/webstore/detail/${version.CHROME_WEBSTORE_ID}" target="_blank" rel="noopener" style="color:orange;text-decoration:underline;font-weight:bold;">${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}</a>)</span>`;
+        // contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(<a href="https://chrome.google.com/webstore/detail/${version.CHROME_WEBSTORE_ID}" target="_blank" rel="noopener" style="color:orange;text-decoration:underline;font-weight:bold;">${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}</a>)</span>`;
+        // use requestUpdateCheck
+        contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(${getMessage('popup_new_version_available', versionCheckResult.latestVersion)})</span>`;
+        const update = document.createElement('span');
+        update.innerHTML = `${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}`;
+        Object.assign(update.style, {
+          color: '#007bff',
+          cursor: 'pointer',
+          textDecoration: 'underline',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '4px'
+        })
+
+        update.addEventListener('click', () => chrome.runtime.requestUpdateCheck());
         break;
       case 'DEV':
         contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:#007bff;">(${getMessage('popup_dev_version')})</span>`;
         break;
       default:
-        const span = document.createElement('span');
+        const refresh = document.createElement('span');
         const spinner = createSpinner();
-        span.innerHTML = `재확인 ${spinner.outerHTML}`;
-        Object.assign(span.style, {
+        refresh.innerHTML = `재확인 ${spinner.outerHTML}`;
+        Object.assign(refresh.style, {
           color: '#aaa',
           cursor: 'pointer',
           textDecoration: 'underline',
@@ -79,13 +93,13 @@ async function createVersionSection(parent: HTMLElement, refreshForce: boolean =
         });
 
         // 스피너를 클릭하면 강제로 최신 버전 확인
-        span.addEventListener('click', () => {
-          span.closest('.version-section')?.remove();
+        refresh.addEventListener('click', () => {
+          refresh.closest('.version-section')?.remove();
           createVersionSection(parent, true);
         });
 
         contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b>`;
-        contentNode.appendChild(span);
+        contentNode.appendChild(refresh);
     }
   }
 

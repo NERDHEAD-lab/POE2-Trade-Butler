@@ -33,9 +33,9 @@ export async function checkVersion(): Promise<VersionCheckResult> {
   const versionType = compareVersions(installedVersion, latestVersion);
 
   if (versionType === 'NEW_VERSION_AVAILABLE') {
-    console.warn(`New version available: ${latestVersion}`);
+    console.info(`New version available: ${latestVersion}`);
   } else if (versionType === 'DEV') {
-    console.warn(`Development version detected: ${installedVersion}`);
+    console.info(`Development version detected: ${installedVersion}`);
   } else if (versionType === 'LATEST') {
     console.info(`You are using the latest version: ${installedVersion}`);
   } else {
@@ -63,6 +63,8 @@ function compareVersions(installedVersion: string, latestVersion: string): versi
   for (let i = 0; i < Math.max(currentParts.length, latestParts.length); i++) {
     const current = currentParts[i] || 0;
     const latest = latestParts[i] || 0;
+
+    if (process.env.NODE_ENV === 'development') return 'DEV';
     if (current > latest) return 'DEV';
     if (current < latest) return 'NEW_VERSION_AVAILABLE';
   }
