@@ -1,10 +1,11 @@
 import '../styles/popup.css';
 import { getMessage } from '../utils/_locale';
+import * as version from '../utils/versionChecker';
 
 const GITHUB_URL = 'https://github.com/NERDHEAD-lab/POE2-Trade-Butler';
 const GITHUB_SPONSOR_URL = 'https://github.com/sponsors/NERDHEAD-lab';
 const BUY_ME_A_COFFEE_URL = 'https://coff.ee/nerdhead_lab';
-const CHROME_WEBSTORE_ID = 'ipnemofnhodcgcplnnfekbfpmngeeocm';
+
 
 function createBadgeSection() {
   const badgeSection = document.createElement('div');
@@ -40,39 +41,56 @@ function createBadgeSection() {
   return badgeSection;
 }
 
-function compareVersions(a: string, b: string): number {
-  const pa = a.split('.').map(Number);
-  const pb = b.split('.').map(Number);
-  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
-    const na = pa[i] || 0;
-    const nb = pb[i] || 0;
-    if (na > nb) return 1;
-    if (na < nb) return -1;
-  }
-  return 0;
-}
-
-function createVersionSection(installed: string, latest: string | null) {
+async function createVersionSection(parent: HTMLElement, refreshForce: boolean = false) {
   const versionSection = document.createElement('div');
+  versionSection.className = 'version-section';
   versionSection.style.marginTop = '18px';
   versionSection.style.textAlign = 'center';
-  let versionInfo = '';
+  const installedVersion = await version.getInstalledVersion();
 
-  if (latest === null) {
-    // 로딩 중 메시지
-    versionInfo = `<b>${getMessage('popup_installed_version')}: ${installed}</b> <span style="color:#aaa;">(${createSpinner().outerHTML})</span>`;
-  } else {
-    const cmp = compareVersions(installed, latest);
-    if (cmp > 0) {
-      versionInfo = `<b>${getMessage('popup_installed_version')}: ${installed}</b> <span style="color:#007bff;">(${getMessage('popup_dev_version')})</span>`;
-    } else if (cmp === 0) {
-      versionInfo = `<b>${getMessage('popup_installed_version')}: ${installed}</b> <span style="color:green;">(${getMessage('popup_latest_version')})</span>`;
-    } else {
-      versionInfo = `<b>${getMessage('popup_installed_version')}: ${installed}</b> <span style="color:orange;">(<a href="https://chrome.google.com/webstore/detail/${CHROME_WEBSTORE_ID}" target="_blank" rel="noopener" style="color:orange;text-decoration:underline;font-weight:bold;">${getMessage('popup_new_version_available', latest)}</a>)</span>`;
+  const contentNode: HTMLElement = document.createElement('div');
+  contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${installedVersion}</b> <span style="color:#aaa;">(${createSpinner().outerHTML})</span>`;
+  versionSection.appendChild(contentNode);
+  parent.appendChild(versionSection);
+
+  async function updateVersionSection() {
+    const versionCheckResult = await version.getCachedCheckVersion(refreshForce);
+    switch (versionCheckResult.versionType) {
+      case 'LATEST':
+        contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:green;">(${getMessage('popup_latest_version')})</span>`;
+        break;
+      case 'NEW_VERSION_AVAILABLE':
+        contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(<a href="https://chrome.google.com/webstore/detail/${version.CHROME_WEBSTORE_ID}" target="_blank" rel="noopener" style="color:orange;text-decoration:underline;font-weight:bold;">${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}</a>)</span>`;
+        break;
+      case 'DEV':
+        contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:#007bff;">(${getMessage('popup_dev_version')})</span>`;
+        break;
+      default:
+        const span = document.createElement('span');
+        const spinner = createSpinner();
+        span.innerHTML = `재확인 ${spinner.outerHTML}`;
+        Object.assign(span.style, {
+          color: '#aaa',
+          cursor: 'pointer',
+          textDecoration: 'underline',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '4px'
+        });
+
+        // 스피너를 클릭하면 강제로 최신 버전 확인
+        span.addEventListener('click', () => {
+          span.closest('.version-section')?.remove();
+          createVersionSection(parent, true);
+        });
+
+        contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b>`;
+        contentNode.appendChild(span);
     }
   }
-  versionSection.innerHTML = versionInfo;
-  return versionSection;
+
+  //0.1 ~ 2초 후 실행 - 로딩 중 표시를 위해
+  setTimeout(updateVersionSection, Math.random() * 1900 + 100);
 }
 
 function createSpinner(size: number = 14) {
@@ -95,37 +113,6 @@ function createSpinner(size: number = 14) {
   return spinner;
 }
 
-async function getInstalledVersion(): Promise<string> {
-  return new Promise((resolve) => {
-    if (chrome && chrome.runtime && chrome.runtime.getManifest) {
-      resolve(chrome.runtime.getManifest().version);
-    } else {
-      resolve('0.0.0');
-    }
-  });
-}
-
-async function getLatestVersionFromBadge(): Promise<string> {
-  try {
-    const res = await fetch(`https://img.shields.io/chrome-web-store/v/${CHROME_WEBSTORE_ID}?label=Chrome%20Web%20Store`);
-    if (!res.ok) throw new Error('Failed to fetch badge SVG');
-    const svg = await res.text();
-    // SVG 내에서 버전 텍스트 추출 (예: v2.4.2)
-    const match = svg.match(/>v([0-9.]+)<\/?text>/i);
-    if (match && match[1]) {
-      return match[1];
-    }
-    // fallback: Chrome Web Store: v2.4.2
-    const fallback = svg.match(/Chrome Web Store: v([0-9.]+)/);
-    if (fallback && fallback[1]) {
-      return fallback[1];
-    }
-    return '0.0.0';
-  } catch {
-    return '0.0.0';
-  }
-}
-
 async function renderPopupMenu() {
   const root = document.body;
   root.innerHTML = '';
@@ -135,22 +122,8 @@ async function renderPopupMenu() {
   // 뱃지
   root.appendChild(createBadgeSection());
 
-  // 1. 설치된 버전 먼저 가져오기
-  const installed = await getInstalledVersion();
-
   // 2. (로딩 중) 표기 먼저 추가
-  const versionSection = createVersionSection(installed, null); // latest=null
-  root.appendChild(versionSection);
-
-  // 3. 비동기로 최신 버전 받아오고 UI 갱신
-  Promise.all([
-    getLatestVersionFromBadge(),
-    new Promise(resolve => setTimeout(resolve, 1000))
-  ]).then(([latest]) => {
-    versionSection.innerHTML = createVersionSection(installed, latest).innerHTML;
-  }).catch(() => {
-    versionSection.innerHTML = createVersionSection(installed, null).innerHTML;
-  });
+  void createVersionSection(root); // latest=null
 }
 
 document.addEventListener('DOMContentLoaded', renderPopupMenu);
