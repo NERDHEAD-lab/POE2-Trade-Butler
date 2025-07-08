@@ -427,5 +427,25 @@
   "popup_dev_version": {
     "message": "Development version!",
     "description": "Shown when installed version is higher than the latest release"
+  },
+  "button_import": {
+    "message": "Import",
+    "description": "Button text for importing favorites"
+  },
+  "button_export": {
+    "message": "Export",
+    "description": "Button text for exporting favorites"
+  },
+  "alert_import_to_folder": {
+    "message": "Importing to folder: $1\n(Only items in this folder will be affected.)",
+    "description": "Alert message when importing to a folder"
+  },
+  "alert_export_from_folder": {
+    "message": "Exporting from folder: $1\n(Only items in this folder will be exported.)",
+    "description": "Alert message when exporting from a folder"
+  },
+  "alert_select_folder_first": {
+    "message": "Please select a folder first.",
+    "description": "Alert message when no folder is selected"
   }
 }

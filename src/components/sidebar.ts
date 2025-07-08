@@ -36,7 +36,6 @@ const sidebarHtml = `
       </span>
       <button id="clear-history">${getMessage('clear_history')}</button>
     </h3>
-
     <ul id="history-list"></ul>
   </div>
   <div id="favorites" class="tab-content">
@@ -45,6 +44,10 @@ const sidebarHtml = `
       <button id="add-favorite">${getMessage('manage_favorites')}</button>
     </h3>
     <div id="favorites-list-wrapper"></div>
+    <div id="favorite-import-export" class="favorite-import-export-bottom">
+      <button id="favorite-import-btn" class="favorite-import-btn">${getMessage('button_import')}</button>
+      <button id="favorite-export-btn" class="favorite-export-btn">${getMessage('button_export')}</button>
+    </div>
   </div>
 </div>
 
@@ -192,13 +195,39 @@ export function renderSidebar(container: HTMLElement): void {
 
   const favoriteWrapper = document.getElementById('favorites-list-wrapper') as HTMLDivElement;
 
+  // import/export 버튼 이벤트 연결 (탭 하단 고정)
   Promise.resolve()
     .then(() => loadHistoryList(searchHistoryStorage.getAll()))
     .then(() => favoriteUI.loadFavoriteFileSystemUI(favoriteWrapper))
-    .then(() => {
+    .then((favoriteFileSystemUI) => {
       searchHistoryStorage.addOnChangeListener((newValue) => loadHistoryList(Promise.resolve(newValue)));
       previewStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
       favoriteStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
+
+      const importBtn = document.getElementById('favorite-import-btn') as HTMLButtonElement | null;
+      const exportBtn = document.getElementById('favorite-export-btn') as HTMLButtonElement | null;
+      if (importBtn && exportBtn) {
+        importBtn.onclick = async () => {
+          try {
+            const folder = await favoriteUI.getSelectedFolder(favoriteWrapper);
+            const path = fs.getPath(await favoriteStorage.getAll(), folder);
+            alert(getMessage('alert_import_to_folder', path));
+            // 실제 import 로직은 여기에 구현
+          } catch (e) {
+            alert(getMessage('alert_select_folder_first'));
+          }
+        };
+        exportBtn.onclick = async () => {
+          try {
+            const folder = await favoriteUI.getSelectedFolder(favoriteWrapper);
+            const path = fs.getPath(await favoriteStorage.getAll(), folder);
+            alert(getMessage('alert_export_from_folder', path));
+            // 실제 export 로직은 여기에 구현
+          } catch (e) {
+            alert(getMessage('alert_select_folder_first'));
+          }
+        };
+      }
     });
 
 

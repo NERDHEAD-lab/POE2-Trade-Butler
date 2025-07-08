@@ -427,5 +427,25 @@
   "popup_dev_version": {
     "message": "개발 버전입니다!",
     "description": "Shown when installed version is higher than the latest release"
+  },
+  "button_import": {
+    "message": "가져오기",
+    "description": "Button text for importing favorites"
+  },
+  "button_export": {
+    "message": "내보내기",
+    "description": "Button text for exporting favorites"
+  },
+  "alert_import_to_folder": {
+    "message": "선택된 폴더로 가져옵니다: $1\n(이 폴더에만 적용됩니다.)",
+    "description": "Alert message when importing to a folder"
+  },
+  "alert_export_from_folder": {
+    "message": "선택된 폴더에서 내보냅니다: $1\n(이 폴더의 항목만 내보내집니다.)",
+    "description": "Alert message when exporting from a folder"
+  },
+  "alert_select_folder_first": {
+    "message": "먼저 폴더를 선택해주세요.",
+    "description": "Alert message when no folder is selected"
   }
 }
