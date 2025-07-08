@@ -38,27 +38,51 @@ favorite.addOnDeletedListener((deletedId) => {
   void previewStorage.deleteIfOrphaned(deletedId, 'favorite');
 });
 
+const defaultIcon = {
+  '16': './assets/icon.png',
+  '128': './assets/icon(128x128).png'
+}
+
+const devIcon = {
+  '16': './assets/icon-dev.png',
+  '128': './assets/icon-dev(128x128).png'
+}
+
 function alertVersion() {
   getCachedCheckVersion()
     .then(result => {
-      // NEW_VERSION_AVAILABLE 일 경우 뱃지
       if (result.versionType === 'NEW_VERSION_AVAILABLE') {
-        void chrome.action.setBadgeText({ text: '!' });
-        void chrome.action.setBadgeBackgroundColor({ color: '#f00' });
+        void chrome.action.setBadgeText({ text: '🔄' });
+        void chrome.action.setBadgeBackgroundColor({ color: '#ff9800' });
       } else if (result.versionType === 'DEV') {
-        void chrome.action.setBadgeText({ text: 'DEV' });
-        void chrome.action.setBadgeBackgroundColor({ color: '#ff0' });
+        void chrome.action.setBadgeText({ text: '' });
+        void chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
+        void chrome.action.setIcon({ path: devIcon });
       } else {
         void chrome.action.setBadgeText({ text: '' });
-        void chrome.action.setBadgeBackgroundColor({ color: '#00f' });
+        void chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
+        void chrome.action.setIcon({ path: defaultIcon });
       }
       console.info(`Version check completed: ${result.installedVersion} (Latest: ${result.latestVersion})`);
     });
 }
 
 chrome.runtime.onStartup.addListener(() => alertVersion());
+chrome.runtime.onInstalled.addListener((details) => {
+  console.log(`Extension installed or updated: ${details.reason}`);
+  if (details.reason === 'install' || details.reason === 'update') {
+    alertVersion();
+  }
+});
+
+chrome.runtime.onUpdateAvailable.addListener((e) => {
+  console.log(`Update available: ${e.version}`);
+  chrome.runtime.reload();
+});
 
 void chrome.alarms.create('dailyVersionCheck', { periodInMinutes: 60 * 24 }); // 24시간마다
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === 'dailyVersionCheck') alertVersion();
 });
+
+alertVersion();
