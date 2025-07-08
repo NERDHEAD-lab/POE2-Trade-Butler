@@ -199,7 +199,7 @@ export function renderSidebar(container: HTMLElement): void {
   Promise.resolve()
     .then(() => loadHistoryList(searchHistoryStorage.getAll()))
     .then(() => favoriteUI.loadFavoriteFileSystemUI(favoriteWrapper))
-    .then((favoriteFileSystemUI) => {
+    .then(() => {
       searchHistoryStorage.addOnChangeListener((newValue) => loadHistoryList(Promise.resolve(newValue)));
       previewStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
       favoriteStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
@@ -213,7 +213,7 @@ export function renderSidebar(container: HTMLElement): void {
             const path = fs.getPath(await favoriteStorage.getAll(), folder);
             alert(getMessage('alert_import_to_folder', path));
             // 실제 import 로직은 여기에 구현
-          } catch (e) {
+          } catch {
             alert(getMessage('alert_select_folder_first'));
           }
         };
@@ -223,7 +223,7 @@ export function renderSidebar(container: HTMLElement): void {
             const path = fs.getPath(await favoriteStorage.getAll(), folder);
             alert(getMessage('alert_export_from_folder', path));
             // 실제 export 로직은 여기에 구현
-          } catch (e) {
+          } catch {
             alert(getMessage('alert_select_folder_first'));
           }
         };
