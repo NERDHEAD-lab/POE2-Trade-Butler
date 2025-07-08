@@ -56,6 +56,7 @@ export async function getInstalledVersion(): Promise<string> {
 }
 
 function compareVersions(installedVersion: string, latestVersion: string): versionType {
+  if (process.env.NODE_ENV === 'development') return 'DEV';
   if (latestVersion === '0.0.0') return 'UNKNOWN';
 
   const currentParts = installedVersion.split('.').map(Number);
@@ -63,8 +64,6 @@ function compareVersions(installedVersion: string, latestVersion: string): versi
   for (let i = 0; i < Math.max(currentParts.length, latestParts.length); i++) {
     const current = currentParts[i] || 0;
     const latest = latestParts[i] || 0;
-
-    if (process.env.NODE_ENV === 'development') return 'DEV';
     if (current > latest) return 'DEV';
     if (current < latest) return 'NEW_VERSION_AVAILABLE';
   }
