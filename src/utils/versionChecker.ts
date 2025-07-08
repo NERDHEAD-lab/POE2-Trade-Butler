@@ -93,6 +93,9 @@ async function getLatestVersionFromBadge(): Promise<string> {
     if (fallback && fallback[1]) {
       return fallback[1];
     }
+
+    const checkPageNotFound = svg.match(/Chrome Web Store: \s*([^"]+)/);
+    console.error('Failed to extract version. Badge might be not found or malformed:', checkPageNotFound ? checkPageNotFound[1] : 'Unknown error');
     return '0.0.0';
   } catch {
     console.error('Failed to fetch latest version from badge');
