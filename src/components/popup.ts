@@ -82,7 +82,7 @@ async function createVersionSection(parent: HTMLElement, refreshForce: boolean =
       default:
         const refresh = document.createElement('span');
         const spinner = createSpinner();
-        refresh.innerHTML = `재확인 ${spinner.outerHTML}`;
+        refresh.innerHTML = `(${getMessage('popup_check_version_again')} ${spinner.outerHTML})`;
         Object.assign(refresh.style, {
           color: '#aaa',
           cursor: 'pointer',

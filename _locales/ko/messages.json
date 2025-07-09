@@ -447,5 +447,9 @@
   "alert_select_folder_first": {
     "message": "먼저 폴더를 선택해주세요.",
     "description": "Alert message when no folder is selected"
+  },
+  "popup_check_version_again": {
+    "message": "재확인 $1",
+    "description": "Button text to check for updates again in the popup"
   }
 }
