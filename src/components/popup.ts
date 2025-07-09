@@ -1,6 +1,8 @@
 import '../styles/popup.css';
 import { getMessage } from '../utils/_locale';
 import * as version from '../utils/versionChecker';
+import iconUrl from '../assets/icon.png';
+import iconDevUrl from '../assets/icon-dev.png';
 
 const GITHUB_URL = 'https://github.com/NERDHEAD-lab/POE2-Trade-Butler';
 const GITHUB_SPONSOR_URL = 'https://github.com/sponsors/NERDHEAD-lab';
@@ -41,6 +43,42 @@ function createBadgeSection() {
   return badgeSection;
 }
 
+async function attachLogo(parent: HTMLElement) {
+  return version.checkVersion()
+    .then(version => version.versionType)
+    .then(versionType => {
+      const logo = document.createElement('div');
+
+      const img = document.createElement('img');
+      img.src = versionType === 'DEV' ? iconDevUrl : iconUrl;
+      logo.className = 'logo';
+      img.alt = 'POE2 Trade Butler Logo';
+      Object.assign(img.style, {
+        width: '100%',
+        height: '100%',
+        objectFit: 'contain',
+        display: 'block',
+        margin: '0 auto'
+      });
+      Object.assign(logo.style, {
+        width: '80px',
+        height: '80px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '0 auto',
+        cursor: 'pointer'
+      });
+
+      logo.appendChild(img);
+
+      return logo;
+    })
+    .then(logo => {
+      parent.appendChild(logo);
+    });
+}
+
 async function createVersionSection(parent: HTMLElement, refreshForce: boolean = false) {
   const versionSection = document.createElement('div');
   versionSection.className = 'version-section';
@@ -72,7 +110,7 @@ async function createVersionSection(parent: HTMLElement, refreshForce: boolean =
           display: 'inline-flex',
           alignItems: 'center',
           gap: '4px'
-        })
+        });
 
         update.addEventListener('click', () => chrome.runtime.requestUpdateCheck());
         break;
@@ -135,9 +173,8 @@ async function renderPopupMenu() {
 
   // 뱃지
   root.appendChild(createBadgeSection());
-
-  // 2. (로딩 중) 표기 먼저 추가
-  void createVersionSection(root); // latest=null
+  await attachLogo(root);
+  await createVersionSection(root);
 }
 
 document.addEventListener('DOMContentLoaded', renderPopupMenu);
