@@ -14,17 +14,34 @@ trading experience.
 
 ---
 
-| Chrome Extension                                                                                                                                                                                                           | Downloads                                                                                                                                                                                                 | GitHub Release                                                                                                                                          |
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm?label=Chrome%20Web%20Store)](https://chrome.google.com/webstore/detail/poe2-trade-butler/ipnemofnhodcgcplnnfekbfpmngeeocm) | [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ipnemofnhodcgcplnnfekbfpmngeeocm)](https://chrome.google.com/webstore/detail/poe2-trade-butler/ipnemofnhodcgcplnnfekbfpmngeeocm) | [![GitHub release](https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases) |
+| Chrome Extension                                                       | Downloads                                                                        | GitHub Release                                                 |
+|------------------------------------------------------------------------|----------------------------------------------------------------------------------|----------------------------------------------------------------|
+| [![Chrome Web Store][chrome-web-store-version]][chrome-web-store-link] | [![Chrome Web Store Users][chrome-web-store-users-badge]][chrome-web-store-link] | [![GitHub release][github-release-badge]][github-release-link] |
 
-| Build Status                                                                                                                                                                   | License                                                                                                                                                          | Privacy Policy                                                                                                                                                              |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [![Build Status](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/release-please.yml/badge.svg)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions) | [![GitHub license](https://img.shields.io/github/license/NERDHEAD-lab/POE2-Trade-Butler)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/LICENSE) | [![GitHub privacy-policy](https://img.shields.io/badge/Privacy%20Policy-Read%20Here-blue)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/privacy-policy.md) |
+| Build Status                                             | License                                                        | Privacy Policy                                                        |
+|----------------------------------------------------------|----------------------------------------------------------------|-----------------------------------------------------------------------|
+| [![Build Status][build-status-badge]][build-status-link] | [![GitHub license][github-license-badge]][github-license-link] | [![GitHub privacy-policy][privacy-policy-badge]][privacy-policy-link] |
 
-| Sponsors                                                                                                                                        | Buy Me a Coffee                                                                                                                                 |
-|-------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| [![GitHub sponsors](https://img.shields.io/github/sponsors/NERDHEAD-lab?logo=github&logoColor=white)](https://github.com/sponsors/NERDHEAD-lab) | [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-yellow?logo=buymeacoffee&logoColor=white)](https://coff.ee/nerdhead_lab) |
+| Sponsors                                                          | Buy Me a Coffee                                                   |
+|-------------------------------------------------------------------|-------------------------------------------------------------------|
+| [![GitHub sponsors][github-sponsors-badge]][github-sponsors-link] | [![Buy Me a Coffee][buy-me-a-coffee-badge]][buy-me-a-coffee-link] |
+
+[chrome-web-store-version]: https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm?label=Chrome%20Web%20Store
+[chrome-web-store-users-badge]: https://img.shields.io/chrome-web-store/users/ipnemofnhodcgcplnnfekbfpmngeeocm
+[chrome-web-store-link]: https://chrome.google.com/webstore/detail/poe2-trade-butler/ipnemofnhodcgcplnnfekbfpmngeeocm
+[github-release-badge]: https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler
+[github-release-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases
+[build-status-badge]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/release-please.yml/badge.svg
+[build-status-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions
+[github-license-badge]: https://img.shields.io/github/license/NERDHEAD-lab/POE2-Trade-Butler
+[github-license-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/LICENSE
+[privacy-policy-badge]: https://img.shields.io/badge/Privacy%20Policy-Read%20Here-blue
+[privacy-policy-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/privacy-policy.md
+[github-sponsors-badge]: https://img.shields.io/github/sponsors/NERDHEAD-lab?logo=github&logoColor=white
+[github-sponsors-link]: https://github.com/sponsors/NERDHEAD-lab
+[buy-me-a-coffee-badge]: https://img.shields.io/badge/Buy%20Me%20a%20Coffee-yellow?logo=buymeacoffee&logoColor=white
+[buy-me-a-coffee-link]: https://coff.ee/nerdhead_lab
+
 
 ---
 
