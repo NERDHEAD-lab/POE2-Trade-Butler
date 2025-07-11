@@ -113,13 +113,17 @@ Follow these steps to install the extension:
 ## Privacy Policy
 
 This extension values your privacy. All data is processed and stored locally on your browser. No data is transmitted to
-external servers. For full details, refer to our [Privacy Policy](./privacy-policy.md).
+external servers. For full details, refer to our [Privacy Policy][privacy-policy].
+
+[privacy-policy]: ./privacy-policy.md
 
 ---
 
 ## License
 
-This project is licensed under the [MIT License](./LICENSE).
+This project is licensed under the [MIT License][MIT License].
+
+[MIT License]: ./LICENSE
 
 ---
 
@@ -128,7 +132,9 @@ This project is licensed under the [MIT License](./LICENSE).
 For feedback or support, please contact:
 
 - **Email**: nerdlab.kr@gmail.com
-- **GitHub Issues**: [Issue Page](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/issues)
+- **GitHub Issues**: [Issue Page][github-issues-link]
+
+[github-issues-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/issues
 
 ---
 
