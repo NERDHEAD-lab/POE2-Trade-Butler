@@ -36,7 +36,6 @@ export class FileSystemUI {
       this.ulElement.className = this.className;
     }
 
-    // TODO: 추후 계층 구조를 여기서 처리할 수 있도록 개선
     for (const entry of this.root) {
       const li = this.renderLiElement!(this.root, entry);
       if (!li) continue;

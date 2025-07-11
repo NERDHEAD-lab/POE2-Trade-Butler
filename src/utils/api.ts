@@ -28,8 +28,6 @@ export function getSearchHistoryFromUrl(url: string): {
   return { id: parsed.id, url: url };
 }
 
-//TODO: 추후 설정에 따라 지정된 페이지 및 서버로 조합 할 수 있도록 변경
-// 현재는 단순히 현재 url을 반환
 export function getUrlFromSearchHistory(
   history: {
     id: string;

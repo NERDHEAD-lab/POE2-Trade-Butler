@@ -4,6 +4,7 @@ import { SearchHistoryEntity } from '../storage/searchHistoryStorage';
 import * as history from '../storage/searchHistoryStorage';
 import * as favoriteUI from '../ui/favoriteFileSystemUI';
 import * as fs from '../ui/fileSystemEntry';
+import * as settingStorage from '../storage/settingStorage';
 
 interface ButlerGuide {
   guideTarget: string; // 가이드 대상
@@ -212,6 +213,15 @@ const butlerGuides: ButlerGuide[] = [
 
 // focusTarget만 구멍 뚫는 오버레이 + guideTarget에 별도 강조 박스 추가
 export async function runButlerGuides() {
+  const shown = await settingStorage.isButlerGuideShown();
+  if (shown) return;
+
+  if (!confirm(getMessage('butler_guide_start_confirm'))) {
+    await settingStorage.setButlerGuideShown(true);
+    console.log('Butler guide skipped by user.');
+    return;
+  }
+
   // 2초 대기 후 가이드 시작
   await new Promise(resolve => setTimeout(resolve, 2000));
 
@@ -397,6 +407,7 @@ export async function runButlerGuides() {
     if (frameHandle !== null) {
       cancelAnimationFrame(frameHandle);
     }
+    await settingStorage.setButlerGuideShown(true);
     console.log('Butler guides completed.');
   }
 }

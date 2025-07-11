@@ -1,5 +1,3 @@
-import { isKoreanServer } from './api';
-
 /**
  * Gets a localized message from the _locales directory.
  * Falls back to the default locale if the message is not found in the current locale.
@@ -15,10 +13,14 @@ export function getMessage(key: string, ...substitutions: string[]): string {
 
 /**
  * Gets the current locale.
- * Returns 'ko' for Korean servers, 'en' otherwise.
- * 
+ * Returns the browser's UI language (navigator.language) if available, otherwise falls back to 'en'.
+ *
  * @returns The current locale code
  */
 export function getCurrentLocale(): string {
-  return isKoreanServer() ? 'ko' : 'en';
+  if (typeof navigator !== 'undefined' && navigator.language) {
+    return navigator.language;
+  }
+  // fallback for environments without navigator
+  return 'en';
 }

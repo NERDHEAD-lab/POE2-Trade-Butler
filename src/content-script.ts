@@ -1,7 +1,6 @@
 import { renderSidebar } from './components/sidebar';
 import './styles/sidebar.css';
 import { getMessage } from './utils/_locale';
-import * as settingStorage from './storage/settingStorage';
 import * as butlerGuide from './support/butlerGuide';
 
 
@@ -15,10 +14,6 @@ Promise.resolve()
   .then(() => renderSidebar(content))
   .then(async () => {
     // Butler Guide: 처음 실행 시 가이드 실행
-    const shown = await settingStorage.isButlerGuideShown();
-    if (!shown) {
-      await butlerGuide.runButlerGuides();
-      await settingStorage.setButlerGuideShown(true);
-    }
+    await butlerGuide.runButlerGuides();
   });
 

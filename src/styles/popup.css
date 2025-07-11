@@ -7,48 +7,36 @@ body {
     box-sizing: border-box;
 }
 
-
-/* Switch */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 34px;
-    height: 20px;
-    margin-left: 10px;
+.badge-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
 }
 
-.switch input {
-    display: none;
+.badge-subsection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    padding: 8px 0 7px 0;
 }
 
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 20px;
+.badge-subsection + .badge-subsection {
+    margin-top: 6px;
+    border-top: 1.5px dashed #e0e0e0;
+    padding-top: 10px;
 }
 
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;
-    width: 14px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: #007bff;
-}
-
-input:checked + .slider:before {
-    transform: translateX(14px);
+.badge-section .badge-subsection .badge-section-title {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 2px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
 }
