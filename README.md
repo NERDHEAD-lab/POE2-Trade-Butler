@@ -9,9 +9,6 @@ trading experience.
 > *Not affiliated with Grinding Gear Games; no access to client or API.  
 > It simply enhances information shown on the PoE2 trade web page in your browser.*
 
-
-[//]: # (![./src/icon.png]&#40;src/assets/icon.png&#41;)
-
 ---
 
 | Chrome Extension                                                       | Downloads                                                                        | GitHub Release                                                 |
@@ -26,22 +23,23 @@ trading experience.
 |-------------------------------------------------------------------|-------------------------------------------------------------------|
 | [![GitHub sponsors][github-sponsors-badge]][github-sponsors-link] | [![Buy Me a Coffee][buy-me-a-coffee-badge]][buy-me-a-coffee-link] |
 
-[chrome-web-store-version]: https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm?label=Chrome%20Web%20Store
+<!-- Badges -->
 [chrome-web-store-users-badge]: https://img.shields.io/chrome-web-store/users/ipnemofnhodcgcplnnfekbfpmngeeocm
-[chrome-web-store-link]: https://chrome.google.com/webstore/detail/poe2-trade-butler/ipnemofnhodcgcplnnfekbfpmngeeocm
 [github-release-badge]: https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler
-[github-release-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases
 [build-status-badge]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/release-please.yml/badge.svg
-[build-status-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions
 [github-license-badge]: https://img.shields.io/github/license/NERDHEAD-lab/POE2-Trade-Butler
-[github-license-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/LICENSE
 [privacy-policy-badge]: https://img.shields.io/badge/Privacy%20Policy-Read%20Here-blue
-[privacy-policy-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/privacy-policy.md
 [github-sponsors-badge]: https://img.shields.io/github/sponsors/NERDHEAD-lab?logo=github&logoColor=white
-[github-sponsors-link]: https://github.com/sponsors/NERDHEAD-lab
 [buy-me-a-coffee-badge]: https://img.shields.io/badge/Buy%20Me%20a%20Coffee-yellow?logo=buymeacoffee&logoColor=white
+<!-- Links -->
+[chrome-web-store-version]: https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm?label=Chrome%20Web%20Store
+[chrome-web-store-link]: https://chrome.google.com/webstore/detail/poe2-trade-butler/ipnemofnhodcgcplnnfekbfpmngeeocm
+[github-release-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases
+[build-status-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions
+[github-license-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/LICENSE
+[privacy-policy-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/privacy-policy.md
+[github-sponsors-link]: https://github.com/sponsors/NERDHEAD-lab
 [buy-me-a-coffee-link]: https://coff.ee/nerdhead_lab
-
 
 ---
 
