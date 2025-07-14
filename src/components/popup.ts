@@ -38,6 +38,27 @@ function createBadgeSection() {
     </a>
   `;
 
+  // 피드백 섹션
+  const feedbackSection = document.createElement('div');
+  feedbackSection.className = 'badge-subsection';
+  // github issue
+  feedbackSection.innerHTML = `
+    <div class="badge-section-title">${getMessage('popup_feedback')}</div>
+    <a href="${GITHUB_URL}/issues" target="_blank" rel="noopener" title="${getMessage('popup_feedback')}">
+      <img src="https://img.shields.io/github/issues/NERDHEAD-lab/POE2-Trade-Butler?label=Feedback&style=flat" alt="${getMessage('popup_feedback')}" style="height:32px;" />
+    </a>
+  `;
+
+  // 플러그인 평가
+  const reviewSection = document.createElement('div');
+  reviewSection.className = 'badge-subsection';
+  reviewSection.innerHTML = `
+    <div class="badge-section-title">${getMessage('popup_review_this_extension')}</div>
+    <a href="https://chrome.google.com/webstore/detail/${version.CHROME_WEBSTORE_ID}/reviews" target="_blank" rel="noopener" title="${getMessage('popup_review_this_extension')}">
+      <img src="https://img.shields.io/chrome-web-store/r/${version.CHROME_WEBSTORE_ID}?label=Reviews&style=flat" alt="${getMessage('popup_review_this_extension')}" style="height:32px;" />
+    </a>
+  `;
+
   badgeSection.appendChild(githubSection);
   badgeSection.appendChild(sponsorSection);
   return badgeSection;
