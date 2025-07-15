@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## [2.6.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.5.0...2.6.0) (2025-07-15)
+
+
+### Features
+
+* next release([#60](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/issues/60)) ([d7a79dc](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/d7a79dc438f17441fcabf8b513343799f516b0d8))
+
 ## [2.5.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.4.2...2.5.0) (2025-07-06)
 
 
