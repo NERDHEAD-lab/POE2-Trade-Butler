@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/chrome-manifest",
   "manifest_version": 3,
   "name": "__MSG_extension_name__",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "__MSG_extension_description__",
   "default_locale": "en",
   "action": {
@@ -16,7 +16,8 @@
     "service_worker": "background.js"
   },
   "permissions": [
-    "storage", "alarms"
+    "storage",
+    "alarms"
   ],
   "host_permissions": [
     "https://www.pathofexile.com/trade2/*",
