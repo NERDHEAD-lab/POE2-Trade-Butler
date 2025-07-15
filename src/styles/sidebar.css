@@ -1,4 +1,6 @@
 #poe2-sidebar {
+    display: flex;
+    flex-direction: column;
     position: fixed;
     top: 0;
     bottom: 20px;
@@ -19,6 +21,12 @@
 
 #poe2-sidebar.collapsed {
     transform: translateX(100%);
+}
+
+#poe2-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 #poe2-content-wrapper {
@@ -135,7 +143,9 @@
 
 /* Sidebar content */
 #sidebar-content {
+    flex: auto;
     padding: 10px;
+    height: 100%;
 }
 
 #sidebar-content h3 {
@@ -177,15 +187,15 @@
 
 /* Favorite button */
 #add-favorite {
-    background-color: #007bff; /* 버튼 배경색 */
-    color: white; /* 텍스트 색상 */
-    border: none; /* 테두리 제거 */
-    padding: 5px 5px; /* 내부 여백 */
-    font-size: 10px; /* 글꼴 크기 */
-    border-radius: 5px; /* 둥근 모서리 */
-    cursor: pointer; /* 클릭 가능한 커서 */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* 애니메이션 효과 */
-    margin-bottom: 10px; /* 아래쪽 간격 */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 5px;
+    font-size: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 10px;
 }
 
 #add-favorite:hover {
@@ -209,7 +219,11 @@
 }
 
 .tab-content.active {
-    display: block;
+    margin-bottom: 10px;
+    display: flex;
+    flex: auto;
+    flex-direction: column;
+    height: 100%;
 }
 
 #history-list {
@@ -375,4 +389,70 @@ input:checked + .slider:before {
 .poe2-modal input[type="text"],
 .poe2-modal input[type="search"] {
     user-select: text;
+}
+
+.history-group-header {
+    font-weight: bold;
+    color: #d7c185;
+    background: rgba(255,255,255,0.08);
+    padding: 8px 12px 4px 12px;
+    margin-top: 10px;
+    border-top: 1.5px solid rgba(255,255,255,0.18);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px 6px 0 0;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.history-group-header span:last-child {
+    opacity: 0.7;
+    font-size: clamp(11px, 2vw, 14px);
+    max-width: 60%;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.favorite-import-export-bottom {
+    flex-shrink: 0;
+    margin-top: 10px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px;
+    background: rgba(0,0,0,0.15);
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    z-index: 2;
+}
+
+.favorite-import-btn,
+.favorite-export-btn {
+    flex: 1 1 0;
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 0;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s;
+    text-align: center;
+    margin: 0;
+    min-width: 0;
+}
+
+.favorite-import-btn:hover,
+.favorite-export-btn:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+#favorite-import-export {
+    margin-top: auto;
 }

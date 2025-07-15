@@ -155,9 +155,9 @@
     "message": "Favorites",
     "description": "Section title for favorites"
   },
-  "add_current_page": {
-    "message": "Add Current page",
-    "description": "Button text for adding current page to favorites"
+  "manage_favorites": {
+    "message": "Manage Favorites",
+    "description": "Button text for managing favorites"
   },
   "confirm_clear_history": {
     "message": "Are you sure you want to clear all search history?",
@@ -367,5 +367,101 @@
   "butler_guide_favorite_file_drag_and_drop": {
     "message": "You can drag and drop favorite items to move them between folders.",
     "description": "Guide: drag and drop favorite item to move between folders"
+  },
+  "butler_guide_start_confirm": {
+    "message": "Click \"OK\" to begin the guide. You can always return to this guide later at settings.",
+    "description": "Guide: start confirmation button"
+  },
+  "history_group_today": {
+    "message": "Today",
+    "description": "Header for today's search history group"
+  },
+  "history_group_yesterday": {
+    "message": "Yesterday",
+    "description": "Header for yesterday's search history group"
+  },
+  "history_group_last_week": {
+    "message": "Last Week",
+    "description": "Header for last week's search history group"
+  },
+  "history_group_older": {
+    "message": "Older",
+    "description": "Header for older search history group"
+  },
+  "already_in_favorites": {
+    "message": "This item is already in your favorites:\n$1\nDo you want to add it again?",
+    "description": "Message shown when trying to add an already-favorited item"
+  },
+  "history_item_last_searched": {
+    "message": "Last searched: $1",
+    "description": "Tooltip: last searched date/time for a history item"
+  },
+  "history_item_total_searches": {
+    "message": "Total searches: $1",
+    "description": "Tooltip: total search count for a history item"
+  },
+  "history_item_previous_searches": {
+    "message": "Previous searches:",
+    "description": "Tooltip: previous search dates for a history item"
+  },
+  "popup_installed_version": {
+    "message": "Installed Version",
+    "description": "Label for installed extension version in popup"
+  },
+  "popup_latest_version": {
+    "message": "Latest version!",
+    "description": "Shown when installed version is up to date"
+  },
+  "popup_new_version_available": {
+    "message": "New version available! $1",
+    "description": "Shown when a new version is available (shows latest version)"
+  },
+  "popup_powered_by": {
+    "message": "Powered by $1",
+    "description": "Popup: powered by message"
+  },
+  "popup_support_please": {
+    "message": "Please support the electricity bill for playing POE2!",
+    "description": "Popup: donation/sponsor message"
+  },
+  "popup_dev_version": {
+    "message": "Development version!",
+    "description": "Shown when installed version is higher than the latest release"
+  },
+  "button_import": {
+    "message": "Import",
+    "description": "Button text for importing favorites"
+  },
+  "button_export": {
+    "message": "Export",
+    "description": "Button text for exporting favorites"
+  },
+  "alert_import_to_folder": {
+    "message": "Importing to folder: $1\n(Only items in this folder will be affected.)",
+    "description": "Alert message when importing to a folder"
+  },
+  "alert_export_from_folder": {
+    "message": "Exporting from folder: $1\n(Only items in this folder will be exported.)",
+    "description": "Alert message when exporting from a folder"
+  },
+  "alert_select_folder_first": {
+    "message": "Please select a folder first.",
+    "description": "Alert message when no folder is selected"
+  },
+  "popup_check_version_again": {
+    "message": "Check again $1",
+    "description": "Button text to check for updates again in the popup"
+  },
+  "popup_feedback": {
+    "message": "Feedback",
+    "description": "Popup: feedback button text"
+  },
+  "popup_review_this_extension": {
+    "message": "Review this extension",
+    "description": "Popup: button text to review the extension"
+  },
+  "info_backdrop_detected": {
+    "message": "Login page detected. Please log in to open the sidebar.",
+    "description": "Info message when backdrop is detected"
   }
 }

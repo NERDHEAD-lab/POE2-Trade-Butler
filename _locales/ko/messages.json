@@ -287,9 +287,9 @@
     "message": "즐겨찾기",
     "description": "Section title for favorites"
   },
-  "add_current_page": {
-    "message": "현재 페이지 추가",
-    "description": "Button text for adding current page to favorites"
+  "manage_favorites": {
+    "message": "즐겨찾기 관리",
+    "description": "Button text for managing favorites"
   },
   "confirm_clear_history": {
     "message": "모든 검색 기록을 삭제하시겠습니까?",
@@ -367,5 +367,101 @@
   "butler_guide_favorite_file_drag_and_drop": {
     "message": "즐겨찾기 항목을 드래그 앤 드롭하여 폴더 간에 이동할 수 있습니다.",
     "description": "Guide: drag and drop favorite item to move between folders"
+  },
+  "butler_guide_start_confirm": {
+    "message": "가이드를 시작하려면 \"확인\"을 클릭하세요. 설정에서 언제든지 이 가이드로 돌아올 수 있습니다.",
+    "description": "Guide: start confirmation button"
+  },
+  "history_group_today": {
+    "message": "오늘",
+    "description": "Header for today's search history group"
+  },
+  "history_group_yesterday": {
+    "message": "어제",
+    "description": "Header for yesterday's search history group"
+  },
+  "history_group_last_week": {
+    "message": "일주일전",
+    "description": "Header for last week's search history group"
+  },
+  "history_group_older": {
+    "message": "오래됨",
+    "description": "Header for older search history group"
+  },
+  "already_in_favorites": {
+    "message": "이미 즐겨찾기에 추가된 항목입니다:\n$1\n그래도 추가하시겠습니까?",
+    "description": "Message shown when trying to add an already-favorited item"
+  },
+  "history_item_last_searched": {
+    "message": "마지막 검색: $1",
+    "description": "Tooltip: last searched date/time for a history item"
+  },
+  "history_item_total_searches": {
+    "message": "총 검색 횟수: $1",
+    "description": "Tooltip: total search count for a history item"
+  },
+  "history_item_previous_searches": {
+    "message": "이전 검색 기록:",
+    "description": "Tooltip: previous search dates for a history item"
+  },
+  "popup_installed_version": {
+    "message": "설치 버전",
+    "description": "Label for installed extension version in popup"
+  },
+  "popup_latest_version": {
+    "message": "최신 버전입니다!",
+    "description": "Shown when installed version is up to date"
+  },
+  "popup_new_version_available": {
+    "message": "신규 버전 설치 가능! $1",
+    "description": "Shown when a new version is available (shows latest version)"
+  },
+  "popup_powered_by": {
+    "message": "Powered by $1",
+    "description": "Popup: powered by message"
+  },
+  "popup_support_please": {
+    "message": "POE2를 플레이 할 전기세를 지원해주세요!",
+    "description": "Popup: donation/sponsor message"
+  },
+  "popup_dev_version": {
+    "message": "개발 버전입니다!",
+    "description": "Shown when installed version is higher than the latest release"
+  },
+  "button_import": {
+    "message": "가져오기",
+    "description": "Button text for importing favorites"
+  },
+  "button_export": {
+    "message": "내보내기",
+    "description": "Button text for exporting favorites"
+  },
+  "alert_import_to_folder": {
+    "message": "선택된 폴더로 가져옵니다: $1\n(이 폴더에만 적용됩니다.)",
+    "description": "Alert message when importing to a folder"
+  },
+  "alert_export_from_folder": {
+    "message": "선택된 폴더에서 내보냅니다: $1\n(이 폴더의 항목만 내보내집니다.)",
+    "description": "Alert message when exporting from a folder"
+  },
+  "alert_select_folder_first": {
+    "message": "먼저 폴더를 선택해주세요.",
+    "description": "Alert message when no folder is selected"
+  },
+  "popup_check_version_again": {
+    "message": "재확인 $1",
+    "description": "Button text to check for updates again in the popup"
+  },
+  "popup_feedback": {
+    "message": "피드백",
+    "description": "Popup: feedback button text"
+  },
+  "popup_review_this_extension": {
+    "message": "이 확장 프로그램을 평가해주세요",
+    "description": "Popup: button text to review the extension"
+  },
+  "info_backdrop_detected": {
+    "message": "로그인 페이지 감지. sidebar를 열려면 로그인 후 다시 시도하세요.",
+    "description": "Info message when backdrop is detected"
   }
 }

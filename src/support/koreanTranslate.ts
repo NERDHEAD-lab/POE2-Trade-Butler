@@ -2,14 +2,14 @@ import { isKoreanServer, showToast } from '../utils/api';
 import * as cacheData from '../storage/cacheData';
 import { getMessage } from '../utils/_locale';
 
-const LSCACHE_TRADE2ITEMS = 'https://poe.game.daum.net/api/trade2/data/items'
-const LSCACHE_TRADE2FILTERS = 'https://poe.game.daum.net/api/trade2/data/filters'
-const LSCACHE_TRADE2STATS = 'https://poe.game.daum.net/api/trade2/data/stats'
+const LSCACHE_TRADE2ITEMS = 'https://poe.game.daum.net/api/trade2/data/items';
+const LSCACHE_TRADE2FILTERS = 'https://poe.game.daum.net/api/trade2/data/filters';
+const LSCACHE_TRADE2STATS = 'https://poe.game.daum.net/api/trade2/data/stats';
 const LSCACHE_TRADE2DATA = 'https://poe.game.daum.net/api/trade2/data/static';
 
 
 export async function applyKoreanTranslate() {
-  if(isKoreanServer()) {
+  if (isKoreanServer()) {
     return;
   }
 
@@ -80,10 +80,10 @@ async function fetchFromBackground(url: string): Promise<any> {
 
 async function waitForDOM(): Promise<void> {
   return new Promise((resolve) => {
-    if (document.readyState === "complete") {
+    if (document.readyState === 'complete') {
       resolve();
     } else {
-      window.addEventListener("load", () => resolve(), { once: true });
+      window.addEventListener('load', () => resolve(), { once: true });
     }
   });
 }

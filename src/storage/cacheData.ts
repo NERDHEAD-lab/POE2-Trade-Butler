@@ -8,13 +8,13 @@ interface CachedData<T> {
 export async function getOrFetchCache<T>(
   key: string,
   maxAge: number,
-  supplier: () => Promise<T>
+  supplier: () => Promise<T>,
+  forced: boolean = false
 ): Promise<T> {
-  const cached = await getCachedData<T>(key, maxAge);
-  if (cached !== null) {
-    return cached;
+  if (!forced) {
+    const cached = await getCachedData<T>(key, maxAge);
+    if (cached !== null) return cached;
   }
-
   const fresh = await supplier();
   await setCachedData(key, fresh);
   return fresh;

@@ -1,7 +1,7 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
 import { showToast } from '../utils/api';
-import { getMessage } from '../utils/_locale';
+import { getCurrentLocale, getMessage } from '../utils/_locale';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as searchHistoryStorage from '../storage/searchHistoryStorage';
 import * as settingStorage from '../storage/settingStorage';
@@ -36,15 +36,18 @@ const sidebarHtml = `
       </span>
       <button id="clear-history">${getMessage('clear_history')}</button>
     </h3>
-
     <ul id="history-list"></ul>
   </div>
   <div id="favorites" class="tab-content">
     <h3>
       <span>${getMessage('favorites')}</span>
-      <button id="add-favorite">${getMessage('add_current_page')}</button>
+      <button id="add-favorite">${getMessage('manage_favorites')}</button>
     </h3>
     <div id="favorites-list-wrapper"></div>
+<!--    <div id="favorite-import-export" class="favorite-import-export-bottom">-->
+<!--      <button id="favorite-import-btn" class="favorite-import-btn">${getMessage('button_import')}</button>-->
+<!--      <button id="favorite-export-btn" class="favorite-export-btn">${getMessage('button_export')}</button>-->
+<!--    </div>-->
   </div>
 </div>
 
@@ -71,9 +74,18 @@ export function renderSidebar(container: HTMLElement): void {
   sidebar.id = POE2_SIDEBAR_ID;
   sidebar.innerHTML = sidebarHtml;
   container.appendChild(sidebar);
+
   if (api.isKoreanServer()) {
     //poe2-sidebar top 80px 설정
-    sidebar.style.top = '80px';
+    const bannerHeight = 80; // 배너 높이
+    const minTop = 5; // 최소 top 값
+    sidebar.style.top = bannerHeight + 'px';
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      // 스크롤이 배너 높이 이하일 땐 점점 올라가고, 초과시 0으로 고정
+      const newTop = Math.max(minTop, bannerHeight - scrollTop);
+      sidebar.style.top = newTop + 'px';
+    })
   }
 
   const resizer = sidebar.querySelector<HTMLDivElement>('#poe2-sidebar-resizer');
@@ -183,6 +195,7 @@ export function renderSidebar(container: HTMLElement): void {
 
   const favoriteWrapper = document.getElementById('favorites-list-wrapper') as HTMLDivElement;
 
+  // import/export 버튼 이벤트 연결 (탭 하단 고정)
   Promise.resolve()
     .then(() => loadHistoryList(searchHistoryStorage.getAll()))
     .then(() => favoriteUI.loadFavoriteFileSystemUI(favoriteWrapper))
@@ -190,6 +203,31 @@ export function renderSidebar(container: HTMLElement): void {
       searchHistoryStorage.addOnChangeListener((newValue) => loadHistoryList(Promise.resolve(newValue)));
       previewStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
       favoriteStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
+
+      const importBtn = document.getElementById('favorite-import-btn') as HTMLButtonElement | null;
+      const exportBtn = document.getElementById('favorite-export-btn') as HTMLButtonElement | null;
+      if (importBtn && exportBtn) {
+        importBtn.onclick = async () => {
+          try {
+            const folder = await favoriteUI.getSelectedFolder(favoriteWrapper);
+            const path = fs.getPath(await favoriteStorage.getAll(), folder);
+            alert(getMessage('alert_import_to_folder', path));
+            // 실제 import 로직은 여기에 구현
+          } catch {
+            alert(getMessage('alert_select_folder_first'));
+          }
+        };
+        exportBtn.onclick = async () => {
+          try {
+            const folder = await favoriteUI.getSelectedFolder(favoriteWrapper);
+            const path = fs.getPath(await favoriteStorage.getAll(), folder);
+            alert(getMessage('alert_export_from_folder', path));
+            // 실제 export 로직은 여기에 구현
+          } catch {
+            alert(getMessage('alert_select_folder_first'));
+          }
+        };
+      }
     });
 
 
@@ -240,19 +278,20 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
     });
 
   // title에 정보 표시
-  const lastSearchedStr = `Last searched: ${new Date(entry.lastSearched).toLocaleString('ko-KR', {
+  const locale = getCurrentLocale();
+  const lastSearchedStr = getMessage('history_item_last_searched', new Date(entry.lastSearched).toLocaleString(locale, {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
     hour12: false
-  })}`;
-  const totalSearchesStr = `Total searches: ${entry.previousSearches.length + 1}`;
+  }));
+  const totalSearchesStr = getMessage('history_item_total_searches', String(entry.previousSearches.length + 1));
   let prevSearchesStr = '';
   if (entry.previousSearches.length > 0) {
-    prevSearchesStr = `\nPrevious searches:\n${entry.previousSearches
-      .map(search => new Date(search).toLocaleString('ko-KR', {
+    prevSearchesStr = '\n' + getMessage('history_item_previous_searches') + '\n' + entry.previousSearches
+      .map(search => new Date(search).toLocaleString(locale, {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
@@ -260,7 +299,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
         minute: '2-digit',
         hour12: false
       }))
-      .join('\n')}`;
+      .join('\n');
   }
   li.title = `${lastSearchedStr}\n${totalSearchesStr}${prevSearchesStr}`;
 
@@ -299,7 +338,6 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   return li;
 }
 
-// TODO: refactoring 필요
 export function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistoryEntity[]>): void {
   historyList.then(entries => {
     const historyListElement = document.getElementById('history-list');
@@ -307,15 +345,123 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
       console.error(getMessage('error_history_list_not_found'));
       return;
     }
-    historyListElement.innerHTML = ''; // Clear existing items
+    const list = historyListElement as HTMLUListElement;
+    list.innerHTML = '';
 
-    //최신 순으로 정렬
+    // 최신 순 정렬
     entries.sort((a, b) => new Date(b.lastSearched).getTime() - new Date(a.lastSearched).getTime());
 
+    // 날짜 그룹핑
+    const now = new Date();
+    const locale = getCurrentLocale();
+    const todayStr = now.toLocaleDateString(locale);
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+    const yesterdayStr = yesterday.toLocaleDateString(locale);
+    const oneWeekAgo = new Date(now);
+    oneWeekAgo.setDate(now.getDate() - 7);
+    const twoWeeksAgo = new Date(now);
+    twoWeeksAgo.setDate(now.getDate() - 14);
+
+    // 그룹별로 분류
+    const groups: { [key: string]: searchHistoryStorage.SearchHistoryEntity[] } = {
+      '오늘': [],
+      '어제': [],
+      '일주일전': [],
+      '오래됨': []
+    };
+    const dateGroups: { [date: string]: searchHistoryStorage.SearchHistoryEntity[] } = {};
+
     entries.forEach(entry => {
-      const item = createHistoryItem(entry);
-      historyListElement.appendChild(item);
+      const entryDate = new Date(entry.lastSearched);
+      const entryDateStr = entryDate.toLocaleDateString(locale);
+      if (entryDateStr === todayStr) {
+        groups['오늘'].push(entry);
+      } else if (entryDateStr === yesterdayStr) {
+        groups['어제'].push(entry);
+      } else if (entryDate >= oneWeekAgo) {
+        // 7일 이내는 날짜별로
+        if (!dateGroups[entryDateStr]) dateGroups[entryDateStr] = [];
+        dateGroups[entryDateStr].push(entry);
+      } else if (entryDate >= twoWeeksAgo) {
+        groups['일주일전'].push(entry);
+      } else {
+        groups['오래됨'].push(entry);
+      }
     });
+
+    // 그룹 렌더링 함수
+    function renderGroup(header: string, items: searchHistoryStorage.SearchHistoryEntity[], dateLabel?: string) {
+      if (items.length === 0) return;
+      const headerLi = document.createElement('li');
+      headerLi.className = 'history-group-header';
+      // i18n 적용
+      const headerText = getMessage(header) || header;
+      headerLi.innerHTML = dateLabel ? `<span>${headerText}</span><span style="float:right;opacity:0.7;font-size:13px;">${dateLabel}</span>` : headerText;
+      list.appendChild(headerLi);
+      items.forEach(entry => {
+        const item = createHistoryItem(entry);
+        list.appendChild(item);
+      });
+    }
+
+    // 오늘, 어제
+    if (groups['오늘'].length > 0) {
+      const date = new Date(groups['오늘'][0].lastSearched);
+      const dateStr = date.toLocaleDateString(locale, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+      });
+      renderGroup('history_group_today', groups['오늘'], dateStr);
+    }
+    if (groups['어제'].length > 0) {
+      const date = new Date(groups['어제'][0].lastSearched);
+      const dateStr = date.toLocaleDateString(locale, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+      });
+      renderGroup('history_group_yesterday', groups['어제'], dateStr);
+    }
+
+    // 날짜별(오늘/어제/일주일전/오래됨 제외)
+    const dateGroupKeys = Object.keys(dateGroups).sort((a, b) => {
+      // 최신순
+      return new Date(b).getTime() - new Date(a).getTime();
+    });
+    dateGroupKeys.forEach(dateStr => {
+      const date = new Date(dateStr);
+      const fullDate = date.toLocaleDateString(locale, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+      });
+      renderGroup(`${fullDate}`, dateGroups[dateStr]);
+    });
+
+    // 일주일전
+    if (groups['일주일전'].length > 0) {
+      const min = groups['일주일전'].reduce((min, e) => new Date(e.lastSearched) < new Date(min.lastSearched) ? e : min, groups['일주일전'][0]);
+      const max = groups['일주일전'].reduce((max, e) => new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max, groups['일주일전'][0]);
+      const minDate = new Date(min.lastSearched);
+      const maxDate = new Date(max.lastSearched);
+      const rangeStr = `${minDate.toLocaleDateString(locale, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })} ~ ${maxDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })}`;
+      renderGroup('history_group_last_week', groups['일주일전'], rangeStr);
+    }
+    if (groups['오래됨'].length > 0) {
+      const max = groups['오래됨'].reduce((max, e) => new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max, groups['오래됨'][0]);
+      const maxDate = new Date(max.lastSearched);
+      const rangeStr = `~ ${maxDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })}`;
+      renderGroup('history_group_older', groups['오래됨'], rangeStr);
+    }
   });
 }
 
@@ -422,7 +568,7 @@ export function attachCreateFavoriteEvent(
         })
         .then(favoritesPath => {
           if (favoritesPath.length > 0) {
-            const message = `이미 즐겨찾기에 추가된 항목입니다:\n${favoritesPath.map(path => `- ${path}`).join('\n')}\n\n다시 추가하시겠습니까?`;
+            const message = getMessage('already_in_favorites', favoritesPath.map(path => `- ${path}`).join('\n'));
             if (!confirm(message)) {
               return;
             }

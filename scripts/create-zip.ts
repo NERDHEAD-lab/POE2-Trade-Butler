@@ -27,8 +27,9 @@ function createZip() {
   });
 
   archive.pipe(output);
-  archive.directory(buildFolder, false); // 빌드 폴더 압축
-  archive.finalize();
+  // 빌드 폴더의 모든 파일을 ZIP에 추가
+  archive.directory(buildFolder, false);
+  void archive.finalize();
 }
 
 // 빌드 폴더 존재 여부 확인

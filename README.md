@@ -1,17 +1,50 @@
 # POE2-Trade-Butler
 
-A Chrome extension that adds a sidebar to the POE2 Trade page and provides a history management feature for enhanced trading experience.
+A Chrome extension that adds a sidebar to the POE2 Trade page and provides a history management feature for enhanced
+trading experience.
 
-![./src/icon.png](src/assets/icon.png)
+<img src="src/assets/icon.png" alt="icon" align="left" style="margin-right: 12px;"/>
+
+> **Disclaimer**  
+> *Not affiliated with Grinding Gear Games; no access to client or API.  
+> It simply enhances information shown on the PoE2 trade web page in your browser.*
+
 ---
-[![Build Status](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/release-please.yml/badge.svg)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions)
-[![GitHub release](https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases)
-[![Chrome Web Store Last Updated](https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm)](https://chrome.google.com/webstore/detail/poe2-trade-butler/ipnemofnhodcgcplnnfekbfpmngeeocm)
-<br>
-[![GitHub license](https://img.shields.io/github/license/NERDHEAD-lab/POE2-Trade-Butler)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/LICENSE)
-[![GitHub privacy-policy](https://img.shields.io/badge/Privacy%20Policy-Read%20Here-blue)](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/privacy-policy.md)
+
+| Chrome Extension                                                       | Downloads                                                                        | GitHub Release                                                 |
+|------------------------------------------------------------------------|----------------------------------------------------------------------------------|----------------------------------------------------------------|
+| [![Chrome Web Store][chrome-web-store-version]][chrome-web-store-link] | [![Chrome Web Store Users][chrome-web-store-users-badge]][chrome-web-store-link] | [![GitHub release][github-release-badge]][github-release-link] |
+
+| Build Status                                             | License                                                        | Privacy Policy                                                        |
+|----------------------------------------------------------|----------------------------------------------------------------|-----------------------------------------------------------------------|
+| [![Build Status][build-status-badge]][build-status-link] | [![GitHub license][github-license-badge]][github-license-link] | [![GitHub privacy-policy][privacy-policy-badge]][privacy-policy-link] |
+
+| Sponsors                                                          | Buy Me a Coffee                                                   |
+|-------------------------------------------------------------------|-------------------------------------------------------------------|
+| [![GitHub sponsors][github-sponsors-badge]][github-sponsors-link] | [![Buy Me a Coffee][buy-me-a-coffee-badge]][buy-me-a-coffee-link] |
+
+<!-- Badges -->
+[chrome-web-store-users-badge]: https://img.shields.io/chrome-web-store/users/ipnemofnhodcgcplnnfekbfpmngeeocm
+[github-release-badge]: https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler
+[build-status-badge]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/release-please.yml/badge.svg
+[github-license-badge]: https://img.shields.io/github/license/NERDHEAD-lab/POE2-Trade-Butler
+[privacy-policy-badge]: https://img.shields.io/badge/Privacy%20Policy-Read%20Here-blue
+[github-sponsors-badge]: https://img.shields.io/github/sponsors/NERDHEAD-lab?logo=github&logoColor=white
+[buy-me-a-coffee-badge]: https://img.shields.io/badge/Buy%20Me%20a%20Coffee-yellow?logo=buymeacoffee&logoColor=white
+<!-- Links -->
+[chrome-web-store-version]: https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm?label=Chrome%20Web%20Store
+[chrome-web-store-link]: https://chrome.google.com/webstore/detail/poe2-trade-butler/ipnemofnhodcgcplnnfekbfpmngeeocm
+[github-release-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases
+[build-status-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions
+[github-license-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/LICENSE
+[privacy-policy-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/privacy-policy.md
+[github-sponsors-link]: https://github.com/sponsors/NERDHEAD-lab
+[buy-me-a-coffee-link]: https://coff.ee/nerdhead_lab
+
+---
 
 ## Index
+
 1. [Introduction](#introduction)
 2. [Features](#features)
 3. [Installation](#installation)
@@ -23,19 +56,25 @@ A Chrome extension that adds a sidebar to the POE2 Trade page and provides a his
 ---
 
 ## Introduction
-**POE2-Trade-Butler** is a Chrome extension tailored for Path of Exile 2 players. It provides an intuitive sidebar on the trade page, helping users track their trading history and manage searches efficiently. The extension stores all data locally, ensuring user privacy.
+
+**POE2-Trade-Butler** is a Chrome extension tailored for Path of Exile 2 players. It provides an intuitive sidebar on
+the trade page, helping users track their trading history and manage searches efficiently. The extension stores all data
+locally, ensuring user privacy.
 
 ---
 
 ## Features
+
 - **Sidebar Integration**: Quickly access tools and information directly on the POE2 Trade page.
-- **Search History Management**: View your search history in the sidebar, see how many times you searched for the same content, and manage it conveniently.
+- **Search History Management**: View your search history in the sidebar, see how many times you searched for the same
+  content, and manage it conveniently.
 - **Favorites Management**: Set favorites for easier access, assign unique names to items, and organize them separately.
 - **Lightweight and Secure**: Data is stored locally on your device, ensuring privacy and performance.
 
 ---
 
 ## Installation
+
 Follow these steps to install the extension:
 
 1. Clone the repository:
@@ -50,7 +89,7 @@ Follow these steps to install the extension:
    ```bash
    npm run build
    ```
-   -  Build the project with no minification (for development):
+    - Build the project with no minification (for development):
       ```bash
       npm run build:dev
       ```
@@ -58,9 +97,11 @@ Follow these steps to install the extension:
     - Open Chrome and go to `chrome://extensions/`.
     - Enable **Developer Mode**.
     - Click **Load Unpacked** and select the `dist` folder.
+
 ---
 
 ## Usage
+
 1. Open the Path of Exile 2 Trade page.
 2. Use the sidebar to search, track, and manage your trades.
 3. View your search history, manage favorites, and update preferences from the extension settings.
@@ -68,19 +109,30 @@ Follow these steps to install the extension:
 ---
 
 ## Privacy Policy
-This extension values your privacy. All data is processed and stored locally on your browser. No data is transmitted to external servers. For full details, refer to our [Privacy Policy](./privacy-policy.md).
+
+This extension values your privacy. All data is processed and stored locally on your browser. No data is transmitted to
+external servers. For full details, refer to our [Privacy Policy][privacy-policy].
+
+[privacy-policy]: ./privacy-policy.md
 
 ---
 
 ## License
-This project is licensed under the [MIT License](./LICENSE).
+
+This project is licensed under the [MIT License][MIT License].
+
+[MIT License]: ./LICENSE
 
 ---
 
 ## Contact
+
 For feedback or support, please contact:
+
 - **Email**: nerdlab.kr@gmail.com
-- **GitHub Issues**: [Issue Page](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/issues)
+- **GitHub Issues**: [Issue Page][github-issues-link]
+
+[github-issues-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/issues
 
 ---
 
