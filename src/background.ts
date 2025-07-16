@@ -80,9 +80,4 @@ chrome.runtime.onUpdateAvailable.addListener((e) => {
   chrome.runtime.reload();
 });
 
-void chrome.alarms.create('dailyVersionCheck', { periodInMinutes: 60 * 24 }); // 24시간마다
-chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === 'dailyVersionCheck') alertVersion();
-});
-
 alertVersion();

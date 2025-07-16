@@ -16,8 +16,7 @@
     "service_worker": "background.js"
   },
   "permissions": [
-    "storage",
-    "alarms"
+    "storage"
   ],
   "host_permissions": [
     "https://www.pathofexile.com/trade2/*",
