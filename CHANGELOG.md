@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## [2.6.1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.6.0...2.6.1) (2025-07-16)
+
+
+### Bug Fixes
+
+* remove redundant permission (alarms) ([a86c29f](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/a86c29f902ea5d45a63c5c4044a5587fde20201e))
+
 ## [2.6.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.5.0...2.6.0) (2025-07-15)
 
 
