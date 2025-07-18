@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## [2.7.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.6.1...2.7.0) (2025-07-18)
+
+
+### Features
+
+* 중국, 대만 언어 추가 ([2a87011](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/2a87011928be45ff74af9851c0636f2fe64f98fc))
+
 ## [2.6.1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.6.0...2.6.1) (2025-07-16)
 
 
