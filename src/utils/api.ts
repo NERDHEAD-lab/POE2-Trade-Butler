@@ -1,14 +1,14 @@
 import { getMessage } from './_locale';
 /*
-  http(s)://www.pathofexile.com/trade2/search/poe2/{serverName}/{id}
+  http(s)://(www|jp|br|ru|th|de|fr|es).pathofexile.com/trade2/search/poe2/{serverName}/{id}
   http(s)://poe.game.daum.net/trade2/search/poe2/{serverName}/{id}
  */
 export function parseSearchUrl(url: string): { serverName: string, id: string } | null {
-  const regex = /^https?:\/\/(www\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)\/([^/]+)$/;
+  const regex = /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)\/([^/]+)$/;
   const match = url.match(regex);
   if (!match) return null;
 
-  const [, , serverNameRaw, id] = match;
+  const [, , , serverNameRaw, id] = match;
   try {
     const serverName = decodeURIComponent(serverNameRaw);
     return { serverName, id };
@@ -35,7 +35,7 @@ export function getUrlFromSearchHistory(
   },
   currentUrl: string = window.location.href
 ): string {
-  const regex = /^https?:\/\/(www\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)(?:\/[^/]+)?\/?$/;
+  const regex = /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)(?:\/[^/]+)?\/?$/;
 
   const match = currentUrl.match(regex);
   if (!match) {
@@ -43,13 +43,26 @@ export function getUrlFromSearchHistory(
     return history.url;
   }
 
-  const base = `https://${match[1]}/trade2/search/poe2/${match[2]}`;
+  const base = `https://${match[1]}/trade2/search/poe2/${match[3]}`;
   return `${base}/${history.id}`;
 }
 
 export function isKoreanServer(): boolean {
   const currentUrl = window.location.href;
   return currentUrl.includes('poe.game.daum.net');
+}
+
+export function getServerRegion(): string {
+  const currentUrl = window.location.href;
+  if (currentUrl.includes('poe.game.daum.net')) return 'kr';
+  if (currentUrl.includes('jp.pathofexile.com')) return 'jp';
+  if (currentUrl.includes('br.pathofexile.com')) return 'br';
+  if (currentUrl.includes('ru.pathofexile.com')) return 'ru';
+  if (currentUrl.includes('th.pathofexile.com')) return 'th';
+  if (currentUrl.includes('de.pathofexile.com')) return 'de';
+  if (currentUrl.includes('fr.pathofexile.com')) return 'fr';
+  if (currentUrl.includes('es.pathofexile.com')) return 'es';
+  return 'global'; // Default for www.pathofexile.com
 }
 
 export function showToast(message: string, color = '#fff', duration = 3000) {
