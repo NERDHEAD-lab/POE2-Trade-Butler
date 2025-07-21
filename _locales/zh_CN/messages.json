@@ -1,4 +1,8 @@
 {
+  "current_language": {
+    "message": "简体中文",
+    "description": "Print the current language"
+  },
   "extension_name": {
     "message": "POE2 交易助手",
     "description": "The name of the Chrome extension"

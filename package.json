@@ -3,12 +3,15 @@
   "version": "2.7.0",
   "main": "index.js",
   "scripts": {
-    "build": "npm run lint && webpack --mode production && npm run zip",
+    "build": "npm run lint && webpack --mode production && npm run script:zip",
     "build:dev": "webpack --mode development && npm run lint:dev",
+
     "lint": "eslint .",
     "lint:dev": "eslint . --config eslint.dev.config.mjs",
-    "format": "prettier --write .",
-    "zip": "tsx scripts/create-zip.ts"
+    "prettier": "prettier --write .",
+
+    "script:generate:langs": "tsx scripts/generate-supported-languages.ts",
+    "script:zip": "tsx scripts/create-zip.ts"
   },
   "type": "module",
   "keywords": [
