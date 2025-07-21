@@ -1,4 +1,5 @@
 import { getMessage } from './_locale';
+
 /*
   http(s)://(www|jp|br|ru|th|de|fr|es).pathofexile.com/trade2/search/poe2/{serverName}/{id}
   http(s)://poe.game.daum.net/trade2/search/poe2/{serverName}/{id}
@@ -48,20 +49,26 @@ export function getUrlFromSearchHistory(
 }
 
 export function isKoreanServer(): boolean {
-  const currentUrl = window.location.href;
-  return currentUrl.includes('poe.game.daum.net');
+  const currentUrl = new URL(window.location.href);
+  return currentUrl.hostname === 'poe.game.daum.net';
 }
 
-export function getServerRegion(): string {
-  const currentUrl = window.location.href;
-  if (currentUrl.includes('poe.game.daum.net')) return 'kr';
-  if (currentUrl.includes('jp.pathofexile.com')) return 'jp';
-  if (currentUrl.includes('br.pathofexile.com')) return 'br';
-  if (currentUrl.includes('ru.pathofexile.com')) return 'ru';
-  if (currentUrl.includes('th.pathofexile.com')) return 'th';
-  if (currentUrl.includes('de.pathofexile.com')) return 'de';
-  if (currentUrl.includes('fr.pathofexile.com')) return 'fr';
-  if (currentUrl.includes('es.pathofexile.com')) return 'es';
+export function getCurrentServerRegion(): string {
+  return getServerRegion(new URL(window.location.href));
+}
+
+export function getServerRegion(url: URL): string {
+  const hostname = url.hostname;
+
+  if (hostname === 'poe.game.daum.net') return 'kr';
+  if (hostname === 'jp.pathofexile.com') return 'jp';
+  if (hostname === 'br.pathofexile.com') return 'br';
+  if (hostname === 'ru.pathofexile.com') return 'ru';
+  if (hostname === 'th.pathofexile.com') return 'th';
+  if (hostname === 'de.pathofexile.com') return 'de';
+  if (hostname === 'fr.pathofexile.com') return 'fr';
+  if (hostname === 'es.pathofexile.com') return 'es';
+  if (hostname === 'www.pathofexile.com') return 'global';
   return 'global'; // Default for www.pathofexile.com
 }
 
