@@ -463,5 +463,9 @@
   "info_backdrop_detected": {
     "message": "檢測到登錄頁面。請登錄以打開 sidebar。",
     "description": "Info message when backdrop is detected"
+  },
+  "confirm_redirect_to_other_server": {
+    "message": "此搜尋紀錄來自不同伺服器（{1}），當前伺服器為（{2}）。是否繼續？",
+    "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
   }
 }

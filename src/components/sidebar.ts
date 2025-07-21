@@ -1,6 +1,6 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
-import { showToast } from '../utils/api';
+import { getCurrentServerRegion, getServerRegion, showToast } from '../utils/api';
 import { getCurrentLocale, getMessage } from '../utils/_locale';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as searchHistoryStorage from '../storage/searchHistoryStorage';
@@ -85,7 +85,7 @@ export function renderSidebar(container: HTMLElement): void {
       // 스크롤이 배너 높이 이하일 땐 점점 올라가고, 초과시 0으로 고정
       const newTop = Math.max(minTop, bannerHeight - scrollTop);
       sidebar.style.top = newTop + 'px';
-    })
+    });
   }
 
   const resizer = sidebar.querySelector<HTMLDivElement>('#poe2-sidebar-resizer');
@@ -318,7 +318,13 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
 
   // history-item 클릭 시
   li.addEventListener('click', () => {
-    window.location.href = api.getUrlFromSearchHistory(entry);
+    // window.location.href = api.getUrlFromSearchHistory(entry);
+    if (!(getServerRegion(new URL(entry.url)) && getCurrentServerRegion())) {
+      // 서버가 다른 경우 확인 후 redirect
+      confirm(getMessage('confirm_redirect_to_other_server', getServerRegion(new URL(entry.url)), getCurrentServerRegion()));
+    }
+
+    window.location.href = entry.url;
   });
 
 

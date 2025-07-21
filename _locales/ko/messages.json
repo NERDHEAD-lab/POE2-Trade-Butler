@@ -463,5 +463,9 @@
   "info_backdrop_detected": {
     "message": "로그인 페이지 감지. sidebar를 열려면 로그인 후 다시 시도하세요.",
     "description": "Info message when backdrop is detected"
+  },
+  "confirm_redirect_to_other_server": {
+    "message": "현재 서버({1})와 다른 서버({2})의 검색 기록입니다. 계속 이동하시겠습니까?",
+    "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
   }
 }
