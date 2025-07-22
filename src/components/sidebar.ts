@@ -532,7 +532,7 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
       .then(() => console.log(getMessage('log_search_history_updated', currentUrl)));
 
   } catch (err) {
-    console.info(`Unexpected error while handling URL change: ${currentUrl}`, err);
+    console.info(getMessage('error_handle_url_change', currentUrl), err);
     if (process.env.NODE_ENV === 'development') {
       const errMsg = (err instanceof Error) ? err.toString() : String(err);
       console.error(getMessage('error_handle_url_change', errMsg));
