@@ -5,11 +5,9 @@
   "scripts": {
     "build": "npm run lint && webpack --mode production && npm run script:zip",
     "build:dev": "webpack --mode development && npm run lint:dev",
-
     "lint": "eslint .",
     "lint:dev": "eslint . --config eslint.dev.config.mjs",
     "prettier": "prettier --write .",
-
     "script:generate:langs": "tsx scripts/generate-supported-languages.ts",
     "script:zip": "tsx scripts/create-zip.ts"
   },
@@ -44,6 +42,8 @@
     "globals": "^16.2.0",
     "npm-check-updates": "^18.0.1",
     "prettier": "^3.4.2",
+    "sass": "^1.89.2",
+    "sass-loader": "^16.0.5",
     "tsx": "^4.20.3",
     "typescript-eslint": "^8.35.0",
     "webpack": "^5.97.1",

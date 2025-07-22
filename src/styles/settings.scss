@@ -1,0 +1,46 @@
+/* Switch */
+.poe2-settings {
+  .poe2-settings-option-switch {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+    margin-left: 10px;
+
+    input.poe2-settings-switch-input {
+      display: none;
+    }
+
+    span.poe2-settings-switch-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 20px;
+    }
+
+    span.poe2-settings-switch-slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input.poe2-settings-switch-input:checked + .poe2-settings-switch-slider {
+      background-color: #007bff;
+    }
+
+    input.poe2-settings-switch-input:checked + .poe2-settings-switch-slider:before {
+      transform: translateX(14px);
+    }
+  }
+}
