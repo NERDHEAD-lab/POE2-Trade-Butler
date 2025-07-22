@@ -318,10 +318,10 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
 
   // history-item 클릭 시
   li.addEventListener('click', () => {
-    // window.location.href = api.getUrlFromSearchHistory(entry);
-    if (!(getServerRegion(new URL(entry.url)) && getCurrentServerRegion())) {
-      // 서버가 다른 경우 확인 후 redirect
-      confirm(getMessage('confirm_redirect_to_other_server', getServerRegion(new URL(entry.url)), getCurrentServerRegion()));
+    if (!(getServerRegion(new URL(entry.url)) === getCurrentServerRegion())) {
+      if(!confirm(getMessage('confirm_redirect_to_other_server', getServerRegion(new URL(entry.url)), getCurrentServerRegion()))) {
+        return;
+      }
     }
 
     window.location.href = entry.url;
