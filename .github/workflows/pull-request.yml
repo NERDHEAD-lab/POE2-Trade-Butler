@@ -3,6 +3,9 @@ name: CI - Build Check
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build and Lint Check
