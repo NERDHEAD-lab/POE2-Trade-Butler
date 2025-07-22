@@ -469,7 +469,7 @@
     "description": "Info message when backdrop is detected"
   },
   "confirm_redirect_to_other_server": {
-    "message": "현재 서버({1})와 다른 서버({2})의 검색 기록입니다. 계속 이동하시겠습니까?",
+    "message": "현재 서버($1)와 다른 서버($2)의 검색 기록입니다. 계속 이동하시겠습니까?",
     "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
   }
 }

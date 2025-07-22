@@ -469,7 +469,7 @@
     "description": "Info message when backdrop is detected"
   },
   "confirm_redirect_to_other_server": {
-    "message": "该搜索记录属于不同的服务器（{1}），当前服务器为（{2}）。是否继续？",
+    "message": "该搜索记录属于不同的服务器（$1），当前服务器为（$2）。是否继续？",
     "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
   }
 }

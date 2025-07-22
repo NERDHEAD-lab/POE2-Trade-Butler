@@ -469,7 +469,7 @@
     "description": "Info message when backdrop is detected"
   },
   "confirm_redirect_to_other_server": {
-    "message": "現在のサーバー({2})とは異なるサーバー({1})の検索履歴です。続行しますか？",
+    "message": "現在のサーバー($2)とは異なるサーバー($1)の検索履歴です。続行しますか？",
     "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
   }
 }

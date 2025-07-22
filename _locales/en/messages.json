@@ -469,7 +469,7 @@
     "description": "Info message when backdrop is detected"
   },
   "confirm_redirect_to_other_server": {
-    "message": "This search history is from a different server ({1}) than your current server ({2}). Do you want to continue?",
+    "message": "This search history is from a different server ($1) than your current server ($2). Do you want to continue?",
     "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
   }
 }
