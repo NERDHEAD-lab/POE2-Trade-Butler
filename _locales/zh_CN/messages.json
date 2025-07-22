@@ -263,6 +263,10 @@
     "message": "取消",
     "description": "Button text for canceling"
   },
+  "button_apply": {
+    "message": "应用",
+    "description": "Button text for applying changes"
+  },
   "placeholder_item_name": {
     "message": "项目名称 (默认: $1)",
     "description": "Placeholder text for item name input"
@@ -471,5 +475,21 @@
   "confirm_redirect_to_other_server": {
     "message": "该搜索记录属于不同的服务器（$1），当前服务器为（$2）。是否继续？",
     "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
+  },
+  "settings": {
+    "message": "设置",
+    "description": "Settings button text"
+  },
+  "settings_tab_general": {
+    "message": "常规",
+    "description": "Settings tab for general settings"
+  },
+  "settings_option_select_language": {
+    "message": "选择语言",
+    "description": "Settings option for selecting language"
+  },
+  "settings_option_select_language_default": {
+    "message": "默认 ($1)",
+    "description": "Settings option for selecting default language"
   }
 }

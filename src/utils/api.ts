@@ -119,7 +119,27 @@ export function showToast(message: string, color = '#fff', duration = 3000) {
  */
 export type ButtonListener = (modal: HTMLDivElement) => Promise<boolean>;
 
-interface ModalOptions {
+/**
+ * 모달 옵션 인터페이스
+ * @property title - 모달 제목 (선택 사항)
+ * @property div - 모달에 표시할 HTMLDivElement
+ * @property confirm - 확인 버튼 텍스트 (기본값: '저장')
+ * @property cancel - 취소 버튼 텍스트 (기본값: '취소')
+ *
+ * listener는 모달의 확인/취소 버튼 클릭 시 호출되는 함수입니다.
+ * return 값이 true이면 모달이 닫히고, false이면 닫히지 않습니다.
+ * @property onConfirmListener - 확인 버튼 클릭 시 호출되는 리스너 (선택 사항)
+ * @property onCancelListener - 취소 버튼 클릭 시 호출되는 리스너 (선택 사항)
+ * @property onOverlayClickListener - 모달 외부 클릭 시 호출되는 리스너 (선택 사항)
+ *
+ * @property etcButtons - 추가 버튼들 (선택 사항)
+ * - 각 버튼은 이름과 클릭 시 호출되는 리스너를 포함합니다.
+ *   name: 버튼 이름
+ *   listener: 버튼 클릭 시 호출되는 리스너
+ *
+ * @property hideCancel - 취소 버튼 숨기기 (기본값: false)
+ */
+export interface ModalOptions {
   title?: string;
   div: HTMLDivElement;
   confirm?: string;

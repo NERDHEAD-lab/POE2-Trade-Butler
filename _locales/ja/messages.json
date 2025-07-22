@@ -263,6 +263,10 @@
     "message": "キャンセル",
     "description": "Button text for canceling"
   },
+  "button_apply": {
+    "message": "適用",
+    "description": "Button text for applying changes"
+  },
   "placeholder_item_name": {
     "message": "アイテム名 (デフォルト: $1)",
     "description": "Placeholder text for item name input"
@@ -471,5 +475,21 @@
   "confirm_redirect_to_other_server": {
     "message": "現在のサーバー($2)とは異なるサーバー($1)の検索履歴です。続行しますか？",
     "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
+  },
+  "settings": {
+    "message": "設定",
+    "description": "Settings button text"
+  },
+  "settings_tab_general": {
+    "message": "一般設定",
+    "description": "Settings tab for general settings"
+  },
+  "settings_option_select_language": {
+    "message": "言語を選択",
+    "description": "Settings option for selecting language"
+  },
+  "settings_option_select_language_default": {
+    "message": "デフォルト ($1)",
+    "description": "Settings option for selecting default language"
   }
 }

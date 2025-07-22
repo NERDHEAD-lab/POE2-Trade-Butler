@@ -9,6 +9,7 @@ import { TradePreviewer } from '../utils/tradePreviewInjector';
 import * as previewStorage from '../storage/previewStorage';
 import * as favoriteUI from '../ui/favoriteFileSystemUI';
 import * as fs from '../ui/fileSystemEntry';
+import * as settings from '../ui/settings';
 import { openFavoriteFolderModal } from '../ui/newFavoriteModal';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
@@ -17,6 +18,7 @@ const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
 const sidebarHtml = `
 <div id="sidebar-header">
   <h2 class="sidebar-header-title">${getMessage('sidebar_title')}</h2>
+  <button id="setting"/>
 </div>
 <div id="poe2-sidebar-resizer"></div>
 <div id="sidebar-menu">
@@ -149,6 +151,12 @@ export function renderSidebar(container: HTMLElement): void {
       settingStorage.setHistoryAutoAddEnabled(isChecked);
       showToast(getMessage('toast_history_auto_add', isChecked ? 'enabled' : 'disabled'));
     });
+  })();
+
+  (async () => {
+    const settingButton = sidebar.querySelector<HTMLButtonElement>('#setting');
+    if (!settingButton) throw new Error('setting button not found');
+    void settings.appendSetting(settingButton);
   })();
 
 

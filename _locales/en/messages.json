@@ -295,6 +295,10 @@
     "message": "Cancel",
     "description": "Button text for canceling"
   },
+  "button_apply": {
+    "message": "Apply",
+    "description": "Button text for applying changes"
+  },
   "placeholder_item_name": {
     "message": "Item name (default: $1)",
     "description": "Placeholder text for item name input"
@@ -471,5 +475,21 @@
   "confirm_redirect_to_other_server": {
     "message": "This search history is from a different server ($1) than your current server ($2). Do you want to continue?",
     "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
+  },
+  "settings": {
+    "message": "Settings",
+    "description": "Settings button text"
+  },
+  "settings_tab_general": {
+    "message": "General",
+    "description": "Settings tab for general settings"
+  },
+  "settings_option_select_language": {
+    "message": "Select Language",
+    "description": "Settings option for selecting language"
+  },
+  "settings_option_select_language_default": {
+    "message": "Default ($1)",
+    "description": "Settings option for selecting default language"
   }
 }

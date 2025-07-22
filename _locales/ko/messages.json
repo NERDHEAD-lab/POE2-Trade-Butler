@@ -263,6 +263,10 @@
     "message": "취소",
     "description": "Button text for canceling"
   },
+  "button_apply": {
+    "message": "적용",
+    "description": "Button text for applying changes"
+  },
   "placeholder_item_name": {
     "message": "항목 이름 (기본값: $1)",
     "description": "Placeholder text for item name input"
@@ -471,5 +475,21 @@
   "confirm_redirect_to_other_server": {
     "message": "현재 서버($1)와 다른 서버($2)의 검색 기록입니다. 계속 이동하시겠습니까?",
     "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
+  },
+  "settings": {
+    "message": "설정",
+    "description": "Settings button text"
+  },
+  "settings_tab_general": {
+    "message": "일반",
+    "description": "Settings tab for general settings"
+  },
+  "settings_option_select_language": {
+    "message": "언어 선택",
+    "description": "Settings option for selecting language"
+  },
+  "settings_option_select_language_default": {
+    "message": "기본값 ($1)",
+    "description": "Settings option for selecting default language"
   }
 }
