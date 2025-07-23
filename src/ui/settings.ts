@@ -31,7 +31,7 @@ const settings: Settings = {
       ]
     },
     {
-      name: "테스트",
+      name: "24글자는잘될까궁금하니까메챠쿠챠테스트를해보자",
       iconUrl: chrome.runtime.getURL('assets/settings_24dp_E9E5DE.svg'),
       options: []
     }
@@ -54,33 +54,33 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
     cursor: 'pointer'
   });
 
-  const settingManager = new SettingManager(settings);
-
-  const modalOptions: ModalOptions = {
-    title: getMessage('settings'),
-    div: settingManager.generateSettingsDiv(),
-    confirm: getMessage('button_save'),
-    cancel: getMessage('button_cancel'),
-    onConfirmListener: async (): Promise<boolean> => {
-      settingManager.applyChanges();
-      return true;
-    },
-    onCancelListener: async (): Promise<boolean> => {
-      settingManager.clearApplyQueue();
-      return true;
-    },
-    etcButtons: [
-      {
-        name: getMessage('button_apply'),
-        listener: async (): Promise<boolean> => {
-          settingManager.applyChanges();
-          return false;
-        }
-      }
-    ]
-  };
 
   parent.addEventListener('click', () => {
+    const settingManager = new SettingManager(settings);
+
+    const modalOptions: ModalOptions = {
+      title: getMessage('settings'),
+      div: settingManager.generateSettingsDiv(),
+      confirm: getMessage('button_save'),
+      cancel: getMessage('button_cancel'),
+      onConfirmListener: async (): Promise<boolean> => {
+        settingManager.applyChanges();
+        return true;
+      },
+      onCancelListener: async (): Promise<boolean> => {
+        settingManager.clearApplyQueue();
+        return true;
+      },
+      etcButtons: [
+        {
+          name: getMessage('button_apply'),
+          listener: async (): Promise<boolean> => {
+            return false;
+          }
+        }
+      ]
+    };
+
     showModal(modalOptions);
   });
 }
