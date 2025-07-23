@@ -499,5 +499,13 @@
   "settings_no_changes": {
     "message": "未對設定進行任何更改。",
     "description": "Message shown when no changes were made to settings"
+  },
+  "settings_option_show_guide_again": {
+    "message": "再次顯示指南（需要刷新）",
+    "description": "Settings option to show the Butler guide again"
+  },
+  "settings_option_show_guide_again_enabled": {
+    "message": "再次顯示指南已啟用，刷新後將再次顯示指南。",
+    "description": "Settings option to enable showing the Butler guide again"
   }
 }

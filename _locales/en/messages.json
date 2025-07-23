@@ -499,5 +499,13 @@
   "settings_no_changes": {
     "message": "No changes were made to settings.",
     "description": "Message shown when no changes were made to settings"
+  },
+  "settings_option_show_guide_again": {
+    "message": "Show Guide Again (Refresh Required)",
+    "description": "Settings option to show the Butler guide again"
+  },
+  "settings_option_show_guide_again_enabled": {
+    "message": "Shown Guide Again enabled, Guide will be shown again after refresh.",
+    "description": "Settings option to enable showing the Butler guide again"
   }
 }

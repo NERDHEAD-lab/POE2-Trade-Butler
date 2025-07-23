@@ -156,17 +156,17 @@ export class SettingManager {
       optionDiv.appendChild(label);
 
       // input 렌더링 (switch, checkbox, select)
-      let input: HTMLInputElement | HTMLSelectElement | HTMLLabelElement;
+      let optionElement: HTMLInputElement | HTMLSelectElement | HTMLLabelElement;
       switch (option.option.type) {
         case 'checkbox': {
           const opt = option.option;
-          input = document.createElement('input');
-          input.type = 'checkbox';
-          (input as HTMLInputElement).checked = opt.checked;
-          input.onchange = () => {
+          optionElement = document.createElement('input');
+          optionElement.type = 'checkbox';
+          (optionElement as HTMLInputElement).checked = opt.checked;
+          optionElement.onchange = () => {
             this.addToApplyQueue(option.option, () => {
               if (option.option.onChangeListener) {
-                opt.onChangeListener((input as HTMLInputElement).checked);
+                opt.onChangeListener((optionElement as HTMLInputElement).checked);
               }
             });
           };
@@ -174,19 +174,19 @@ export class SettingManager {
         }
         case 'select': {
           const selectOpt = option.option;
-          input = document.createElement('select');
+          optionElement = document.createElement('select');
           selectOpt.options.forEach(optStr => {
             const optElem = document.createElement('option');
             optElem.textContent = optStr;
-            (input as HTMLSelectElement).appendChild(optElem);
+            (optionElement as HTMLSelectElement).appendChild(optElem);
           });
-          (input as HTMLSelectElement).selectedIndex = selectOpt.selectedIndex || 0;
-          input.onchange = () => {
+          (optionElement as HTMLSelectElement).selectedIndex = selectOpt.selectedIndex || 0;
+          optionElement.onchange = () => {
             this.addToApplyQueue(option.option, () => {
               if (option.option.onChangeListener) {
                 selectOpt.onChangeListener({
                   options: selectOpt.options,
-                  selectedIndex: (input as HTMLSelectElement).selectedIndex
+                  selectedIndex: (optionElement as HTMLSelectElement).selectedIndex
                 });
               }
             });
@@ -212,20 +212,20 @@ export class SettingManager {
               });
             };
           }
-          input = switchLabel;
+          optionElement = switchLabel;
           break;
         }
         default:
           throw new Error(`Unsupported option type: ${option.option.type}`);
       }
-      input.className = `poe2-settings-option-${option.option.type}`;
-      optionDiv.appendChild(input);
+      optionElement.className = `poe2-settings-option-${option.option.type}`;
       if (option.description) {
         const description = document.createElement('p');
         description.textContent = option.description;
         description.className = 'poe2-settings-option-description';
         optionDiv.appendChild(description);
       }
+      optionDiv.appendChild(optionElement);
       optionsDiv.appendChild(optionDiv);
     });
 

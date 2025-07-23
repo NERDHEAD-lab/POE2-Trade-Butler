@@ -3,7 +3,8 @@ import '../styles/settings.scss';
 import { getMessage } from '../utils/_locale';
 import { ModalOptions, showModal, showToast } from '../utils/api';
 import { LANGUAGE_NATIVE_NAMES } from '../utils/supportedLanguages';
-import { SelectOption, SettingManager, Settings } from '../utils/settingManager';
+import { CheckboxOption, SelectOption, SettingManager, Settings } from '../utils/settingManager';
+import * as settingStorage from '../storage/settingStorage';
 
 const settings: Settings = {
   tabs: [
@@ -13,13 +14,14 @@ const settings: Settings = {
       options: [
         {
           name: getMessage('settings_option_select_language'),
+          description: '출력 테스트',
           option: {
             id: 'select-language',
             iconUrl: chrome.runtime.getURL('assets/translate_24dp_E9E5DE.svg'),
             type: 'select',
             options: [
               chrome.i18n.getMessage('settings_option_select_language_default', defaultLanguage()),
-                ...Object.values(LANGUAGE_NATIVE_NAMES)
+              ...Object.values(LANGUAGE_NATIVE_NAMES)
             ],
             selectedIndex: 0,
             onChangeListener: (option) => {
@@ -27,13 +29,25 @@ const settings: Settings = {
               console.log('Language changed to:', option.options[option.selectedIndex]);
             }
           } as SelectOption
+        },
+        {
+          name: getMessage('settings_option_show_guide_again'),
+          option: {
+            id: 'show-guide-again',
+            iconUrl: chrome.runtime.getURL('assets/menu_book_24dp_E9E5DE.svg'),
+            type: 'checkbox',
+            checked: false,
+            onChangeListener: (checked: boolean) => {
+              if (!checked) {
+                return;
+              }
+              settingStorage.setButlerGuideShown(false).then(() => {
+                showToast(getMessage('settings_option_show_guide_again_enabled'));
+              });
+            }
+          } as CheckboxOption
         }
       ]
-    },
-    {
-      name: "24글자는잘될까궁금하니까메챠쿠챠테스트를해보자",
-      iconUrl: chrome.runtime.getURL('assets/settings_24dp_E9E5DE.svg'),
-      options: []
     }
   ]
 };

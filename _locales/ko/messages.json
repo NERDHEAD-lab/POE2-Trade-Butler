@@ -499,5 +499,13 @@
   "settings_no_changes": {
     "message": "설정에 변경 사항이 없습니다.",
     "description": "Message shown when no changes were made to settings"
+  },
+  "settings_option_show_guide_again": {
+    "message": "가이드를 다시 표시 (새로고침 필요)",
+    "description": "Settings option to show the Butler guide again"
+  },
+  "settings_option_show_guide_again_enabled": {
+    "message": "가이드가 다시 표시됩니다. 새로고침 후 확인하세요.",
+    "description": "Settings option to enable showing the Butler guide again"
   }
 }

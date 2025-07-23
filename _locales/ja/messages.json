@@ -499,5 +499,13 @@
   "settings_no_changes": {
     "message": "設定に変更はありませんでした。",
     "description": "Message shown when no changes were made to settings"
+  },
+  "settings_option_show_guide_again": {
+    "message": "ガイドを再表示する",
+    "description": "Settings option to show the Butler guide again"
+  },
+  "settings_option_show_guide_again_enabled": {
+    "message": "ガイドを再表示する設定が有効になりました。リフレッシュ後にガイドが再表示されます。",
+    "description": "Settings option to enable showing the Butler guide again"
   }
 }
