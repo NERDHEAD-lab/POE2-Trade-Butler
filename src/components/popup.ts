@@ -9,14 +9,14 @@ const GITHUB_SPONSOR_URL = 'https://github.com/sponsors/NERDHEAD-lab';
 const BUY_ME_A_COFFEE_URL = 'https://coff.ee/nerdhead_lab';
 
 
-function createBadgeSection() {
-  const badgeSection = document.createElement('div');
-  badgeSection.className = 'badge-section';
+function attachBadgeSection(badgeSection: HTMLDivElement): Promise<HTMLDivElement> {
+  return new Promise(() => {
+    badgeSection.className = 'badge-section';
 
-  // GitHub 섹션
-  const githubSection = document.createElement('div');
-  githubSection.className = 'badge-subsection';
-  githubSection.innerHTML = `
+    // GitHub 섹션
+    const githubSection = document.createElement('div');
+    githubSection.className = 'badge-subsection';
+    githubSection.innerHTML = `
     <div class="badge-section-title" style="display:flex;align-items:center;gap:6px;">
       ${getMessage('popup_powered_by', 'NERDHEAD-lab')}
       <a href="${GITHUB_URL}" target="_blank" rel="noopener" title="GitHub Repository" style="display:inline-flex;align-items:center;">
@@ -25,10 +25,10 @@ function createBadgeSection() {
     </div>
   `;
 
-  // 기부/스폰서 섹션
-  const sponsorSection = document.createElement('div');
-  sponsorSection.className = 'badge-subsection';
-  sponsorSection.innerHTML = `
+    // 기부/스폰서 섹션
+    const sponsorSection = document.createElement('div');
+    sponsorSection.className = 'badge-subsection';
+    sponsorSection.innerHTML = `
     <div class="badge-section-title">${getMessage('popup_support_please')}</div>
     <a href="${GITHUB_SPONSOR_URL}" target="_blank" rel="noopener" title="GitHub Sponsor">
       <img src="https://img.shields.io/github/sponsors/NERDHEAD-lab?label=Sponsor&logo=github&style=flat" alt="GitHub Sponsor" style="height:32px; margin-bottom:2px;" />
@@ -38,38 +38,37 @@ function createBadgeSection() {
     </a>
   `;
 
-  // 피드백 섹션
-  const feedbackSection = document.createElement('div');
-  feedbackSection.className = 'badge-subsection';
-  // github issue
-  feedbackSection.innerHTML = `
+    // 피드백 섹션
+    const feedbackSection = document.createElement('div');
+    feedbackSection.className = 'badge-subsection';
+    // github issue
+    feedbackSection.innerHTML = `
     <div class="badge-section-title">${getMessage('popup_feedback')}</div>
     <a href="${GITHUB_URL}/issues" target="_blank" rel="noopener" title="${getMessage('popup_feedback')}">
       <img src="https://img.shields.io/github/issues/NERDHEAD-lab/POE2-Trade-Butler?label=Feedback&style=flat" alt="${getMessage('popup_feedback')}" style="height:32px;" />
     </a>
   `;
 
-  // 플러그인 평가
-  const reviewSection = document.createElement('div');
-  reviewSection.className = 'badge-subsection';
-  reviewSection.innerHTML = `
+    // 플러그인 평가
+    const reviewSection = document.createElement('div');
+    reviewSection.className = 'badge-subsection';
+    reviewSection.innerHTML = `
     <div class="badge-section-title">${getMessage('popup_review_this_extension')}</div>
     <a href="https://chrome.google.com/webstore/detail/${version.CHROME_WEBSTORE_ID}/reviews" target="_blank" rel="noopener" title="${getMessage('popup_review_this_extension')}">
       <img src="https://img.shields.io/chrome-web-store/r/${version.CHROME_WEBSTORE_ID}?label=Reviews&style=flat" alt="${getMessage('popup_review_this_extension')}" style="height:32px;" />
     </a>
   `;
 
-  badgeSection.appendChild(githubSection);
-  badgeSection.appendChild(sponsorSection);
-  return badgeSection;
+    badgeSection.appendChild(githubSection);
+    badgeSection.appendChild(sponsorSection);
+    return badgeSection;
+  });
 }
 
-async function attachLogo(parent: HTMLElement) {
+async function attachLogoSection(logo: HTMLDivElement): Promise<HTMLDivElement> {
   return version.checkVersion()
     .then(version => version.versionType)
     .then(versionType => {
-      const logo = document.createElement('div');
-
       const img = document.createElement('img');
       img.src = versionType === 'DEV' ? iconDevUrl : iconUrl;
       logo.className = 'logo';
@@ -94,76 +93,75 @@ async function attachLogo(parent: HTMLElement) {
       logo.appendChild(img);
 
       return logo;
-    })
-    .then(logo => {
-      parent.appendChild(logo);
     });
 }
 
-async function createVersionSection(parent: HTMLElement, refreshForce: boolean = false) {
-  const versionSection = document.createElement('div');
-  versionSection.className = 'version-section';
-  versionSection.style.marginTop = '18px';
-  versionSection.style.textAlign = 'center';
-  const installedVersion = await version.getInstalledVersion();
+async function attachVersionSection(versionSection: HTMLDivElement, refreshForce: boolean = false): Promise<HTMLDivElement> {
+  return version.getInstalledVersion()
+    .then(installedVersion => {
+      versionSection.className = 'version-section';
+      versionSection.style.marginTop = '18px';
+      versionSection.style.textAlign = 'center';
 
-  const contentNode: HTMLElement = document.createElement('div');
-  contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${installedVersion}</b> <span style="color:#aaa;">(${createSpinner().outerHTML})</span>`;
-  versionSection.appendChild(contentNode);
-  parent.appendChild(versionSection);
+      const contentNode: HTMLElement = document.createElement('div');
+      contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${installedVersion}</b> <span style="color:#aaa;">(${createSpinner().outerHTML})</span>`;
+      versionSection.appendChild(contentNode);
 
-  async function updateVersionSection() {
-    const versionCheckResult = await version.getCachedCheckVersion(refreshForce);
-    switch (versionCheckResult.versionType) {
-      case 'LATEST':
-        contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:green;">(${getMessage('popup_latest_version')})</span>`;
-        break;
-      case 'NEW_VERSION_AVAILABLE':
-        // contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(<a href="https://chrome.google.com/webstore/detail/${version.CHROME_WEBSTORE_ID}" target="_blank" rel="noopener" style="color:orange;text-decoration:underline;font-weight:bold;">${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}</a>)</span>`;
-        // use requestUpdateCheck
-        contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(${getMessage('popup_new_version_available', versionCheckResult.latestVersion)})</span>`;
-        const update = document.createElement('span');
-        update.innerHTML = `${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}`;
-        Object.assign(update.style, {
-          color: '#007bff',
-          cursor: 'pointer',
-          textDecoration: 'underline',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '4px'
-        });
+      async function updateVersionSection() {
+        const versionCheckResult = await version.getCachedCheckVersion(refreshForce);
+        switch (versionCheckResult.versionType) {
+          case 'LATEST':
+            contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:green;">(${getMessage('popup_latest_version')})</span>`;
+            break;
+          case 'NEW_VERSION_AVAILABLE':
+            // contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(<a href="https://chrome.google.com/webstore/detail/${version.CHROME_WEBSTORE_ID}" target="_blank" rel="noopener" style="color:orange;text-decoration:underline;font-weight:bold;">${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}</a>)</span>`;
+            // use requestUpdateCheck
+            contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(${getMessage('popup_new_version_available', versionCheckResult.latestVersion)})</span>`;
+            const update = document.createElement('span');
+            update.innerHTML = `${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}`;
+            Object.assign(update.style, {
+              color: '#007bff',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
+            });
 
-        update.addEventListener('click', () => chrome.runtime.requestUpdateCheck());
-        break;
-      case 'DEV':
-        contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:#007bff;">(${getMessage('popup_dev_version')})</span>`;
-        break;
-      default:
-        const refresh = document.createElement('span');
-        const spinner = createSpinner();
-        refresh.innerHTML = `(${getMessage('popup_check_version_again')} ${spinner.outerHTML})`;
-        Object.assign(refresh.style, {
-          color: '#aaa',
-          cursor: 'pointer',
-          textDecoration: 'underline',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '4px'
-        });
+            update.addEventListener('click', () => chrome.runtime.requestUpdateCheck());
+            break;
+          case 'DEV':
+            contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:#007bff;">(${getMessage('popup_dev_version')})</span>`;
+            break;
+          default:
+            const refresh = document.createElement('span');
+            const spinner = createSpinner();
+            refresh.innerHTML = `(${getMessage('popup_check_version_again')} ${spinner.outerHTML})`;
+            Object.assign(refresh.style, {
+              color: '#aaa',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
+            });
 
-        // 스피너를 클릭하면 강제로 최신 버전 확인
-        refresh.addEventListener('click', () => {
-          refresh.closest('.version-section')?.remove();
-          createVersionSection(parent, true);
-        });
+            // 스피너를 클릭하면 강제로 최신 버전 확인
+            refresh.addEventListener('click', () => {
+              refresh.closest('.version-section')?.remove();
+              attachVersionSection(versionSection, true);
+            });
 
-        contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b>`;
-        contentNode.appendChild(refresh);
-    }
-  }
+            contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b>`;
+            contentNode.appendChild(refresh);
+        }
+      }
 
-  //0.1 ~ 2초 후 실행 - 로딩 중 표시를 위해
-  setTimeout(updateVersionSection, Math.random() * 1900 + 100);
+      //0.1 ~ 2초 후 실행 - 로딩 중 표시를 위해
+      setTimeout(updateVersionSection, Math.random() * 1900 + 100);
+
+      return versionSection;
+    });
 }
 
 function createSpinner(size: number = 14) {
@@ -192,10 +190,17 @@ async function renderPopupMenu() {
   root.style.minWidth = '260px';
   root.style.maxWidth = '340px';
 
-  // 뱃지
-  root.appendChild(createBadgeSection());
-  await attachLogo(root);
-  await createVersionSection(root);
+  const badgeSection = document.createElement('div');
+  root.appendChild(badgeSection);
+  const logoSection = document.createElement('div');
+  root.appendChild(logoSection);
+  const versionSection = document.createElement('div');
+  root.appendChild(versionSection);
+
+
+  void attachBadgeSection(badgeSection);
+  void attachLogoSection(logoSection);
+  void attachVersionSection(versionSection);
 }
 
 document.addEventListener('DOMContentLoaded', renderPopupMenu);
