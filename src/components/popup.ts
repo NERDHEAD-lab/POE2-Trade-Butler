@@ -1,6 +1,7 @@
 import * as informationSections from '../ui/information';
 
 function renderPopupMenu() {
+  console.log('Rendering popup menu...');
   const root = document.body;
   root.className = 'poe2-trade-butler-popup';
   root.innerHTML = '';
@@ -10,5 +11,8 @@ function renderPopupMenu() {
   informationSections.attachInformationSections(root);
 }
 
-
-document.addEventListener('DOMContentLoaded', renderPopupMenu);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderPopupMenu);
+} else {
+  renderPopupMenu();
+}
