@@ -3,7 +3,7 @@ import '../styles/settings.scss';
 import { getMessage } from '../utils/_locale';
 import { ModalOptions, showModal, showToast } from '../utils/api';
 import { LANGUAGE_NATIVE_NAMES } from '../utils/supportedLanguages';
-import { CheckboxOption, DivTextOption, SelectOption, SettingManager, Settings } from '../utils/settingManager';
+import { CheckboxDetailOption, DivTextDetailOption, SelectDetailOption, SettingManager, Settings } from '../utils/settingManager';
 import * as settingStorage from '../storage/settingStorage';
 import * as information from './information';
 
@@ -14,11 +14,11 @@ const settings: Settings = {
       iconUrl: chrome.runtime.getURL('assets/settings_24dp_E9E5DE.svg'),
       options: [
         {
+          id: 'select-language',
           name: getMessage('settings_option_select_language'),
+          iconUrl: chrome.runtime.getURL('assets/translate_24dp_E9E5DE.svg'),
           description: '출력 테스트',
-          option: {
-            id: 'select-language',
-            iconUrl: chrome.runtime.getURL('assets/translate_24dp_E9E5DE.svg'),
+          optionDetail: {
             type: 'select',
             options: [
               chrome.i18n.getMessage('settings_option_select_language_default', defaultLanguage()),
@@ -29,13 +29,13 @@ const settings: Settings = {
               // TODO
               console.log('Language changed to:', option.options[option.selectedIndex]);
             }
-          } as SelectOption
+          } as SelectDetailOption
         },
         {
+          id: 'show-guide-again',
           name: getMessage('settings_option_show_guide_again'),
-          option: {
-            id: 'show-guide-again',
-            iconUrl: chrome.runtime.getURL('assets/menu_book_24dp_E9E5DE.svg'),
+          iconUrl: chrome.runtime.getURL('assets/menu_book_24dp_E9E5DE.svg'),
+          optionDetail: {
             type: 'checkbox',
             checked: false,
             onChangeListener: (checked: boolean) => {
@@ -46,7 +46,7 @@ const settings: Settings = {
                 showToast(getMessage('settings_option_show_guide_again_enabled'));
               });
             }
-          } as CheckboxOption
+          } as CheckboxDetailOption
         }
       ]
     },
@@ -55,12 +55,12 @@ const settings: Settings = {
       iconUrl: chrome.runtime.getURL('assets/info_24dp_E9E5DE.svg'),
       options: [
         {
+          id: 'info-text',
           name: getMessage('settings_option_information'),
-          option: {
-            id: 'info-text',
+          optionDetail: {
             type: 'text',
             value: createInformationDiv(),
-          } as DivTextOption
+          } as DivTextDetailOption
         }
       ]
     }

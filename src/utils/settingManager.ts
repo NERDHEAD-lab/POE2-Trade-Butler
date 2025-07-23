@@ -5,31 +5,31 @@ export interface Settings {
 interface SettingTab {
   name: string;
   iconUrl: string;
-  options: SettingOption<AnyOption>[];
+  options: SettingOption<AnyDetailOption>[];
 }
 
-interface SettingOption<T extends AnyOption> {
-  name: string;
-  description?: string;
-  option: T;
-}
-
-type AnyOption = CheckboxOption | SelectOption | DivTextOption | NumberOption | SwitchOption;
-
-interface Option<T> {
+interface SettingOption<T extends AnyDetailOption> {
   id: string;
+  name: string;
   iconUrl?: string;
+  description?: string;
+  optionDetail: T;
+}
+
+type AnyDetailOption = CheckboxDetailOption | SelectDetailOption | DivTextDetailOption | NumberDetailOption | SwitchDetailOption;
+
+interface DetailOption<T> {
   type: 'checkbox' | 'select' | 'text' | 'number' | 'switch';
   onChangeListener?: onOptionChangeListener<T>;
 }
 
-export interface CheckboxOption extends Option<boolean> {
+export interface CheckboxDetailOption extends DetailOption<boolean> {
   type: 'checkbox';
   checked: boolean;
   onChangeListener: onOptionChangeListener<boolean>;
 }
 
-export interface SelectOption extends Option<SelectEntity> {
+export interface SelectDetailOption extends DetailOption<SelectEntity> {
   type: 'select';
   options: string[];
   selectedIndex: number;
@@ -42,12 +42,12 @@ interface SelectEntity {
 }
 
 // just for description, no listener
-export interface DivTextOption extends Option<void> {
+export interface DivTextDetailOption extends DetailOption<void> {
   type: 'text';
   value: HTMLDivElement | string;
 }
 
-export interface NumberOption extends Option<number> {
+export interface NumberDetailOption extends DetailOption<number> {
   type: 'number';
   value: number;
   min?: number;
@@ -55,7 +55,7 @@ export interface NumberOption extends Option<number> {
   onChangeListener: onOptionChangeListener<number>;
 }
 
-export interface SwitchOption extends Option<boolean> {
+export interface SwitchDetailOption extends DetailOption<boolean> {
   type: 'switch';
   checked: boolean;
   onChangeListener: onOptionChangeListener<boolean>;
@@ -143,9 +143,9 @@ export class SettingManager {
       optionDiv.className = 'poe2-settings-option';
 
       // 아이콘 렌더링
-      if (option.option.iconUrl) {
+      if (option.iconUrl) {
         const icon = document.createElement('img');
-        icon.src = option.option.iconUrl;
+        icon.src = option.iconUrl;
         icon.className = 'poe2-settings-option-icon';
         optionDiv.appendChild(icon);
       }
@@ -157,15 +157,15 @@ export class SettingManager {
 
       // input 렌더링 (switch, checkbox, select)
       let optionElement: HTMLInputElement | HTMLSelectElement | HTMLLabelElement | HTMLDivElement;
-      switch (option.option.type) {
+      switch (option.optionDetail.type) {
         case 'checkbox': {
-          const opt = option.option;
+          const opt = option.optionDetail;
           optionElement = document.createElement('input');
           (optionElement as HTMLInputElement).type = 'checkbox';
           (optionElement as HTMLInputElement).checked = opt.checked;
           optionElement.onchange = () => {
-            this.addToApplyQueue(option.option, () => {
-              if (option.option.onChangeListener) {
+            this.addToApplyQueue(option, () => {
+              if (option.optionDetail.onChangeListener) {
                 opt.onChangeListener((optionElement as HTMLInputElement).checked);
               }
             });
@@ -173,7 +173,7 @@ export class SettingManager {
           break;
         }
         case 'select': {
-          const selectOpt = option.option;
+          const selectOpt = option.optionDetail;
           optionElement = document.createElement('select');
           selectOpt.options.forEach(optStr => {
             const optElem = document.createElement('option');
@@ -182,8 +182,8 @@ export class SettingManager {
           });
           (optionElement as HTMLSelectElement).selectedIndex = selectOpt.selectedIndex || 0;
           optionElement.onchange = () => {
-            this.addToApplyQueue(option.option, () => {
-              if (option.option.onChangeListener) {
+            this.addToApplyQueue(option, () => {
+              if (option.optionDetail.onChangeListener) {
                 selectOpt.onChangeListener({
                   options: selectOpt.options,
                   selectedIndex: (optionElement as HTMLSelectElement).selectedIndex
@@ -194,7 +194,7 @@ export class SettingManager {
           break;
         }
         case 'switch': {
-          const switchOpt = option.option;
+          const switchOpt = option.optionDetail;
           // 커스텀 스위치 (label > input[type=checkbox] + span)
           const switchLabel = document.createElement('label');
           switchLabel.className = 'poe2-settings-option-switch';
@@ -205,8 +205,8 @@ export class SettingManager {
           const switchInput = switchLabel.querySelector('input[type=checkbox]') as HTMLInputElement;
           if (switchInput) {
             switchInput.onchange = () => {
-              this.addToApplyQueue(option.option, () => {
-                if (option.option.onChangeListener) {
+              this.addToApplyQueue(option, () => {
+                if (option.optionDetail.onChangeListener) {
                   switchOpt.onChangeListener(switchInput.checked);
                 }
               });
@@ -216,7 +216,7 @@ export class SettingManager {
           break;
         }
         case 'text': {
-          const textOpt = option.option;
+          const textOpt = option.optionDetail;
           optionElement = document.createElement('div');
           optionElement.className = 'poe2-settings-option-text';
           if (textOpt.value instanceof HTMLDivElement) {
@@ -227,9 +227,9 @@ export class SettingManager {
           break;
         }
         default:
-          throw new Error(`Unsupported option type: ${option.option.type}`);
+          throw new Error(`Unsupported option type: ${option.optionDetail.type}`);
       }
-      optionElement.className = `poe2-settings-option-${option.option.type}`;
+      optionElement.className = `poe2-settings-option-${option.optionDetail.type}`;
       if (option.description) {
         const description = document.createElement('p');
         description.textContent = option.description;
@@ -282,7 +282,7 @@ export class SettingManager {
     return Object.keys(this.applyChangedQueue).length > 0;
   }
 
-  public addToApplyQueue(option: AnyOption, callback: () => void): void {
+  public addToApplyQueue(option: SettingOption<any>, callback: () => void): void {
     this.applyChangedQueue[option.id] = callback;
   }
 
