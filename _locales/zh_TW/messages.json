@@ -491,5 +491,13 @@
   "settings_option_select_language_default": {
     "message": "預設 ($1)",
     "description": "Settings option for selecting default language"
+  },
+  "settings_changes_applied": {
+    "message": "設定變更已成功應用。",
+    "description": "Message shown when settings changes are successfully applied"
+  },
+  "settings_no_changes": {
+    "message": "未對設定進行任何更改。",
+    "description": "Message shown when no changes were made to settings"
   }
 }

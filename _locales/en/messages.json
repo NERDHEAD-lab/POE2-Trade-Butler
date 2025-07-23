@@ -491,5 +491,13 @@
   "settings_option_select_language_default": {
     "message": "Default ($1)",
     "description": "Settings option for selecting default language"
+  },
+  "settings_changes_applied": {
+    "message": "Settings changes have been applied.",
+    "description": "Message shown when settings changes are successfully applied"
+  },
+  "settings_no_changes": {
+    "message": "No changes were made to settings.",
+    "description": "Message shown when no changes were made to settings"
   }
 }

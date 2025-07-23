@@ -491,5 +491,13 @@
   "settings_option_select_language_default": {
     "message": "デフォルト ($1)",
     "description": "Settings option for selecting default language"
+  },
+  "settings_changes_applied": {
+    "message": "設定の変更が適用されました。",
+    "description": "Message shown when settings changes are successfully applied"
+  },
+  "settings_no_changes": {
+    "message": "設定に変更はありませんでした。",
+    "description": "Message shown when no changes were made to settings"
   }
 }

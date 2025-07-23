@@ -491,5 +491,13 @@
   "settings_option_select_language_default": {
     "message": "기본값 ($1)",
     "description": "Settings option for selecting default language"
+  },
+  "settings_changes_applied": {
+    "message": "설정 변경이 적용되었습니다.",
+    "description": "Message shown when settings changes are successfully applied"
+  },
+  "settings_no_changes": {
+    "message": "설정에 변경 사항이 없습니다.",
+    "description": "Message shown when no changes were made to settings"
   }
 }

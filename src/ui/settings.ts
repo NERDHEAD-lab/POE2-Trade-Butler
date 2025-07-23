@@ -1,7 +1,7 @@
 import '../styles/settings.scss';
 
 import { getMessage } from '../utils/_locale';
-import { ModalOptions, showModal } from '../utils/api';
+import { ModalOptions, showModal, showToast } from '../utils/api';
 import { LANGUAGE_NATIVE_NAMES } from '../utils/supportedLanguages';
 import { SelectOption, SettingManager, Settings } from '../utils/settingManager';
 
@@ -64,7 +64,10 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
       confirm: getMessage('button_save'),
       cancel: getMessage('button_cancel'),
       onConfirmListener: async (): Promise<boolean> => {
-        settingManager.applyChanges();
+        if (settingManager.hasChanges()) {
+          settingManager.applyChanges();
+          showToast(getMessage('settings_changes_applied'));
+        }
         return true;
       },
       onCancelListener: async (): Promise<boolean> => {
@@ -75,6 +78,12 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
         {
           name: getMessage('button_apply'),
           listener: async (): Promise<boolean> => {
+            if (settingManager.hasChanges()) {
+              settingManager.applyChanges();
+              showToast(getMessage('settings_changes_applied'));
+            } else {
+              showToast(getMessage('settings_no_changes'));
+            }
             return false;
           }
         }
