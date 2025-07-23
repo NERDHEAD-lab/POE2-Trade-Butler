@@ -39,7 +39,7 @@ const settings: Settings = {
 };
 
 
-export async function appendSetting(parent: HTMLElement): Promise<void> {
+export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
   const img = document.createElement('img');
   const settingIconUrl = chrome.runtime.getURL('assets/settings_24dp_1F1F1F.svg');
   parent.appendChild(img);

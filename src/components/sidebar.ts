@@ -156,7 +156,7 @@ export function renderSidebar(container: HTMLElement): void {
   (async () => {
     const settingButton = sidebar.querySelector<HTMLButtonElement>('#setting');
     if (!settingButton) throw new Error('setting button not found');
-    void settings.appendSetting(settingButton);
+    void settings.attachSettingOnClick(settingButton);
   })();
 
 
