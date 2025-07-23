@@ -14,7 +14,7 @@ interface SettingOption<T extends AnyOption> {
   option: T;
 }
 
-type AnyOption = CheckboxOption | SelectOption | TextOption | NumberOption | SwitchOption;
+type AnyOption = CheckboxOption | SelectOption | DivTextOption | NumberOption | SwitchOption;
 
 interface Option<T> {
   id: string;
@@ -42,9 +42,9 @@ interface SelectEntity {
 }
 
 // just for description, no listener
-export interface TextOption extends Option<void> {
+export interface DivTextOption extends Option<void> {
   type: 'text';
-  value: string;
+  value: HTMLDivElement | string;
 }
 
 export interface NumberOption extends Option<number> {
@@ -156,12 +156,12 @@ export class SettingManager {
       optionDiv.appendChild(label);
 
       // input 렌더링 (switch, checkbox, select)
-      let optionElement: HTMLInputElement | HTMLSelectElement | HTMLLabelElement;
+      let optionElement: HTMLInputElement | HTMLSelectElement | HTMLLabelElement | HTMLDivElement;
       switch (option.option.type) {
         case 'checkbox': {
           const opt = option.option;
           optionElement = document.createElement('input');
-          optionElement.type = 'checkbox';
+          (optionElement as HTMLInputElement).type = 'checkbox';
           (optionElement as HTMLInputElement).checked = opt.checked;
           optionElement.onchange = () => {
             this.addToApplyQueue(option.option, () => {
@@ -213,6 +213,17 @@ export class SettingManager {
             };
           }
           optionElement = switchLabel;
+          break;
+        }
+        case 'text': {
+          const textOpt = option.option;
+          optionElement = document.createElement('div');
+          optionElement.className = 'poe2-settings-option-text';
+          if (textOpt.value instanceof HTMLDivElement) {
+            optionElement.appendChild(textOpt.value);
+          } else {
+            optionElement.textContent = textOpt.value as string;
+          }
           break;
         }
         default:

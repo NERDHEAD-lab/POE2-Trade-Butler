@@ -95,12 +95,16 @@
 
   .poe2-settings-content {
     flex: 3 1 0;
-    padding: 12px 0 12px 12px;
+    margin-left: 8px;
+    padding: 12px;
     background: #212121;
-    border-radius: 0 14px 14px 0;
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
     gap: 24px;
+    //border: 1px solid #3e3e3e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
 
     .poe2-settings-content-title {
       font-size: 1.23em;
@@ -216,6 +220,25 @@
           .poe2-settings-switch-input:checked + .poe2-settings-switch-slider::before {
             transform: translateX(16px);
             background: #daf1ff;
+          }
+        }
+
+        .poe2-settings-option-information {
+          // 가운데 정렬
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .badge-subsection {
+            background: #474747;
+          }
+
+          .badge-subsection + .badge-subsection {
+            border-top: 1.5px dashed #5c5c5c;
+          }
+
+          .badge-section .badge-subsection .badge-section-title {
+            color: #e9e5de;
           }
         }
       }

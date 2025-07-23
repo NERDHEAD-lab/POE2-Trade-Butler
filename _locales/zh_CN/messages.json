@@ -507,5 +507,9 @@
   "settings_option_show_guide_again_enabled": {
     "message": "已启用再次显示指南，刷新后将再次显示指南。",
     "description": "Settings option to enable showing the Butler guide again"
+  },
+  "settings_tab_info": {
+    "message": "信息",
+    "description": "Settings tab for information"
   }
 }

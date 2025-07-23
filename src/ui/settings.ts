@@ -3,8 +3,9 @@ import '../styles/settings.scss';
 import { getMessage } from '../utils/_locale';
 import { ModalOptions, showModal, showToast } from '../utils/api';
 import { LANGUAGE_NATIVE_NAMES } from '../utils/supportedLanguages';
-import { CheckboxOption, SelectOption, SettingManager, Settings } from '../utils/settingManager';
+import { CheckboxOption, DivTextOption, SelectOption, SettingManager, Settings } from '../utils/settingManager';
 import * as settingStorage from '../storage/settingStorage';
+import * as information from './information';
 
 const settings: Settings = {
   tabs: [
@@ -46,6 +47,20 @@ const settings: Settings = {
               });
             }
           } as CheckboxOption
+        }
+      ]
+    },
+    {
+      name: getMessage('settings_tab_info'),
+      iconUrl: chrome.runtime.getURL('assets/info_24dp_E9E5DE.svg'),
+      options: [
+        {
+          name: getMessage('settings_option_information'),
+          option: {
+            id: 'info-text',
+            type: 'text',
+            value: createInformationDiv(),
+          } as DivTextOption
         }
       ]
     }
@@ -117,3 +132,9 @@ function defaultLanguage(): string {
 }
 
 
+function createInformationDiv(): HTMLDivElement {
+  const infoDiv = document.createElement('div');
+  infoDiv.className = 'poe2-settings-option-information';
+  information.attachInformationSections(infoDiv);
+  return infoDiv;
+}

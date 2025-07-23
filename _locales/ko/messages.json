@@ -507,5 +507,9 @@
   "settings_option_show_guide_again_enabled": {
     "message": "가이드가 다시 표시됩니다. 새로고침 후 확인하세요.",
     "description": "Settings option to enable showing the Butler guide again"
+  },
+  "settings_tab_info": {
+    "message": "정보",
+    "description": "Settings tab for information"
   }
 }
