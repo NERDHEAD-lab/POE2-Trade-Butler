@@ -216,7 +216,7 @@ export function showModal(options: ModalOptions): void {
     btn.textContent = label;
 
     const baseStyle = {
-      padding: '6px 12px',
+      padding: '6px 18px',
       fontSize: '14px',
       borderRadius: '4px',
       border: '1px solid transparent',

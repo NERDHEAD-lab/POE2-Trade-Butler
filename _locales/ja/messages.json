@@ -488,6 +488,10 @@
     "message": "言語を選択",
     "description": "Settings option for selecting language"
   },
+  "settings_option_select_language_description": {
+    "message": "拡張機能の言語を選択してください。デフォルトはブラウザの設定に従います。",
+    "description": "Description for the language selection option in settings"
+  },
   "settings_option_select_language_default": {
     "message": "デフォルト ($1)",
     "description": "Settings option for selecting default language"

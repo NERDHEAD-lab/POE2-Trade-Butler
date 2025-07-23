@@ -17,17 +17,35 @@ const settings: Settings = {
           id: 'select-language',
           name: getMessage('settings_option_select_language'),
           iconUrl: chrome.runtime.getURL('assets/translate_24dp_E9E5DE.svg'),
-          description: '출력 테스트',
+          description: getMessage('settings_option_select_language_description'),
           optionDetail: {
             type: 'select',
             options: [
               chrome.i18n.getMessage('settings_option_select_language_default', defaultLanguage()),
               ...Object.values(LANGUAGE_NATIVE_NAMES)
             ],
-            selectedIndex: 0,
+            selectedIndex: await i18nIndex(),
             onChangeListener: (option) => {
-              // TODO
               console.log('Language changed to:', option.options[option.selectedIndex]);
+              if (option.selectedIndex === 0) {
+                settingStorage.setLanguage('default').then(() => {
+                  showToast(getMessage('settings_option_select_language_default_enabled', defaultLanguage()));
+                });
+              } else {
+                const selectedLanguage = option.options[option.selectedIndex];
+                // value -> key
+                const languageKey = Object.keys(LANGUAGE_NATIVE_NAMES).find(
+                  key => LANGUAGE_NATIVE_NAMES[key as keyof typeof LANGUAGE_NATIVE_NAMES] === selectedLanguage
+                );
+
+                if (languageKey) {
+                  settingStorage.setLanguage(languageKey).then(() => {
+                    showToast(getMessage('settings_option_select_language_enabled', selectedLanguage));
+                  });
+                } else {
+                  showToast(getMessage('settings_option_select_language_invalid', selectedLanguage));
+                }
+              }
             }
           } as SelectDetailOption
         },
@@ -56,7 +74,7 @@ const settings: Settings = {
       options: [
         {
           id: 'info-text',
-          name: getMessage('settings_option_information'),
+          name: '',
           optionDetail: {
             type: 'text',
             value: createInformationDiv(),
@@ -96,6 +114,9 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
         if (settingManager.hasChanges()) {
           settingManager.applyChanges();
           showToast(getMessage('settings_changes_applied'));
+
+          await chrome.runtime.sendMessage({ type: 'RELOAD_EXTENSION' });
+          document.location.reload();
         }
         return true;
       },
@@ -126,6 +147,9 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
             if (settingManager.hasChanges()) {
               settingManager.applyChanges();
               showToast(getMessage('settings_changes_applied'));
+
+              await chrome.runtime.sendMessage({ type: 'RELOAD_EXTENSION' });
+              document.location.reload();
             } else {
               showToast(getMessage('settings_no_changes'));
             }
@@ -153,4 +177,10 @@ function createInformationDiv(): HTMLDivElement {
   infoDiv.className = 'poe2-settings-option-information';
   information.attachInformationSections(infoDiv);
   return infoDiv;
+}
+
+async function i18nIndex(): Promise<number> {
+  const language = await settingStorage.getLanguage();
+  const index = Object.keys(LANGUAGE_NATIVE_NAMES).indexOf(language);
+  return index === -1 ? 0 : index + 1; // +1 because the first option is "default"
 }

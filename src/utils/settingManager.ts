@@ -282,7 +282,7 @@ export class SettingManager {
     return Object.keys(this.applyChangedQueue).length > 0;
   }
 
-  public addToApplyQueue(option: SettingOption<any>, callback: () => void): void {
+  public addToApplyQueue(option: SettingOption<AnyDetailOption>, callback: () => void): void {
     this.applyChangedQueue[option.id] = callback;
   }
 

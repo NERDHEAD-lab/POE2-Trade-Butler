@@ -27,6 +27,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
     // Indicate that the response will be sent asynchronously
     return true;
+  } else if (message.type === 'RELOAD_EXTENSION') {
+    console.log('Reloading extension...');
+    chrome.runtime.reload();
+    sendResponse({ status: 'reloading' });
   }
 });
 

@@ -1,5 +1,6 @@
 import * as storage from './storage';
 import { get, set, StorageType } from './storage';
+import { LANGUAGE_NATIVE_NAMES } from '../utils/supportedLanguages';
 
 const KEY_PREFIX = 'poe2trade_settings_';
 
@@ -94,4 +95,23 @@ export function setButlerGuideShown(shown: boolean): Promise<void> {
 
 export function isButlerGuideShown(): Promise<boolean> {
   return getSetting('sync', 'butlerGuideShown', defaultButlerGuideShown);
+}
+
+// Language -> LANGUAGE_NATIVE_NAMES의 key와 일치해야 함 or "default"
+const defaultLanguage = 'default';
+
+export function setLanguage(language: string): Promise<void> {
+  if (language !== 'default' && !Object.keys(LANGUAGE_NATIVE_NAMES).includes(language)) {
+    throw new Error(`Unsupported language: ${language}`);
+  }
+  return setSetting('sync', 'language', language);
+}
+
+export async function getLanguage(): Promise<string> {
+  const language = await getSetting('sync', 'language', defaultLanguage);
+  if (language !== 'default' && !Object.keys(LANGUAGE_NATIVE_NAMES).includes(language)) {
+    await setLanguage(defaultLanguage);
+    return defaultLanguage;
+  }
+  return language;
 }

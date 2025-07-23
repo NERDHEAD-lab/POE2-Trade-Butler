@@ -488,6 +488,10 @@
     "message": "選擇語言",
     "description": "Settings option for selecting language"
   },
+  "settings_option_select_language_description": {
+    "message": "請選擇擴充功能的語言。預設會依照瀏覽器設定。",
+    "description": "Description for the language selection option in settings"
+  },
   "settings_option_select_language_default": {
     "message": "預設 ($1)",
     "description": "Settings option for selecting default language"
@@ -501,11 +505,11 @@
     "description": "Message shown when no changes were made to settings"
   },
   "settings_option_show_guide_again": {
-    "message": "再次顯示指南（需要刷新）",
+    "message": "再次顯示指南",
     "description": "Settings option to show the Butler guide again"
   },
   "settings_option_show_guide_again_enabled": {
-    "message": "再次顯示指南已啟用，刷新後將再次顯示指南。",
+    "message": "指南將再次顯示。刷新後會顯示。",
     "description": "Settings option to enable showing the Butler guide again"
   },
   "settings_changes_discard_confirm": {

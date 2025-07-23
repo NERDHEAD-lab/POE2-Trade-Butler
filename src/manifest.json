@@ -22,7 +22,8 @@
     {
       "resources": [
         "assets/*.svg",
-        "assets/*.png"
+        "assets/*.png",
+        "_locales/**/messages.json"
       ],
       "matches": [
         "<all_urls>"

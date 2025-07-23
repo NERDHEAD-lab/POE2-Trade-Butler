@@ -488,6 +488,10 @@
     "message": "Select Language",
     "description": "Settings option for selecting language"
   },
+  "settings_option_select_language_description": {
+    "message": "Select the language for the extension. The default is to follow the browser settings.",
+    "description": "Description for the language selection option in settings"
+  },
   "settings_option_select_language_default": {
     "message": "Default ($1)",
     "description": "Settings option for selecting default language"
@@ -501,7 +505,7 @@
     "description": "Message shown when no changes were made to settings"
   },
   "settings_option_show_guide_again": {
-    "message": "Show Guide Again (Refresh Required)",
+    "message": "Show Guide Again",
     "description": "Settings option to show the Butler guide again"
   },
   "settings_option_show_guide_again_enabled": {
