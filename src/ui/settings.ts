@@ -100,6 +100,22 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
         return true;
       },
       onCancelListener: async (): Promise<boolean> => {
+        if (settingManager.hasChanges()) {
+          const result = confirm(getMessage('settings_changes_discard_confirm'));
+          if (!result) {
+            return false;
+          }
+        }
+        settingManager.clearApplyQueue();
+        return true;
+      },
+      onOverlayClickListener: async (): Promise<boolean> => {
+        if (settingManager.hasChanges()) {
+          const result = confirm(getMessage('settings_changes_discard_confirm'));
+          if (!result) {
+            return false;
+          }
+        }
         settingManager.clearApplyQueue();
         return true;
       },

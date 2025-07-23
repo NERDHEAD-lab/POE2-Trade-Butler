@@ -511,5 +511,9 @@
   "settings_tab_info": {
     "message": "信息",
     "description": "Settings tab for information"
+  },
+  "settings_changes_discard_confirm": {
+    "message": "您有未保存的更改。是否放弃它们并退出设置？",
+    "description": "Confirmation message when there are unsaved changes in settings"
   }
 }

@@ -511,5 +511,9 @@
   "settings_tab_info": {
     "message": "Info",
     "description": "Settings tab for information"
+  },
+  "settings_changes_discard_confirm": {
+    "message": "You have unsaved changes. Do you want to discard them and exit settings?",
+    "description": "Confirmation message when there are unsaved changes in settings"
   }
 }

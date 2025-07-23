@@ -507,5 +507,10 @@
   "settings_option_show_guide_again_enabled": {
     "message": "再次顯示指南已啟用，刷新後將再次顯示指南。",
     "description": "Settings option to enable showing the Butler guide again"
+  },
+  "settings_changes_discard_confirm": {
+//    "message": "You have unsaved changes. Do you want to discard them and exit settings?",
+    "message": "您有未保存的更改。是否放棄這些更改並退出設定？",
+    "description": "Confirmation message when there are unsaved changes in settings"
   }
 }

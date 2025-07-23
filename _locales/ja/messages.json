@@ -511,5 +511,9 @@
   "settings_tab_info": {
     "message": "情報",
     "description": "Settings tab for information"
+  },
+  "settings_changes_discard_confirm": {
+    "message": "設定に保存されていない変更があります。変更を破棄して設定を終了しますか？",
+    "description": "Confirmation message when there are unsaved changes in settings"
   }
 }
