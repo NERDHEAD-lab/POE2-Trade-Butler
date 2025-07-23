@@ -61,6 +61,37 @@
     }
   }
 
+  .poe2-settings-content-title-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 18px;
+
+    .poe2-settings-content-title-text {
+      font-size: 1.13em;
+      //gray
+      color: #bababa;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .poe2-settings-content-title-divider.left {
+      flex: 1 1 0;
+      height: 1px;
+      background: #484848;
+      opacity: 0.7;
+      min-width: 0;
+      margin-right: 16px;
+    }
+    .poe2-settings-content-title-divider.right {
+      flex: 9 1 0;
+      height: 1px;
+      background: #484848;
+      opacity: 0.7;
+      min-width: 0;
+      margin-left: 16px;
+    }
+  }
 
   .poe2-settings-content {
     flex: 3 1 0;

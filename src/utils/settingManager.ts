@@ -106,8 +106,10 @@ export class SettingManager {
       tabContent.className = 'poe2-settings-content-tab';
       if (idx !== 0) tabContent.style.display = 'none'; // 첫 탭만 보이게
 
+      const titleBar = this.createContentTitle(tab);
       const optionsDiv = this.createOptions(tab);
 
+      tabContent.appendChild(titleBar);
       tabContent.appendChild(optionsDiv);
       contentDiv.appendChild(tabContent);
       tabOptionsMap.set(tab.name, tabContent);
