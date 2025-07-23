@@ -21,7 +21,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "assets/*.svg"
+        "assets/*.svg",
+        "assets/*.png"
       ],
       "matches": [
         "<all_urls>"
