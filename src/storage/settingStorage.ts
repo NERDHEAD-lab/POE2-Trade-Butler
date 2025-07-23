@@ -47,7 +47,7 @@ export function isHistoryAutoAddEnabled(): Promise<boolean> {
 }
 
 // LatestSearchUrl
-const defaultLatestSearchUrl = document.location.href;
+const defaultLatestSearchUrl = 'about:blank';
 
 export function setLatestSearchUrl(url: string): Promise<void> {
   return setSetting('local', 'latestSearchUrl', url);
