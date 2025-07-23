@@ -1,3 +1,5 @@
+import '../styles/information.scss';
+
 import { getMessage } from '../utils/_locale';
 import * as version from '../utils/versionChecker';
 
@@ -6,12 +8,16 @@ const GITHUB_SPONSOR_URL = 'https://github.com/sponsors/NERDHEAD-lab';
 const BUY_ME_A_COFFEE_URL = 'https://coff.ee/nerdhead_lab';
 
 export function attachInformationSections(parent: HTMLElement) {
+  const informationElement = document.createElement('div');
+  informationElement.className = 'poe2-information';
+  parent.appendChild(informationElement);
+
   const badgeSection = document.createElement('div');
-  parent.appendChild(badgeSection);
+  informationElement.appendChild(badgeSection);
   const logoSection = document.createElement('div');
-  parent.appendChild(logoSection);
+  informationElement.appendChild(logoSection);
   const versionSection = document.createElement('div');
-  parent.appendChild(versionSection);
+  informationElement.appendChild(versionSection);
 
 
   void attachBadgeSection(badgeSection);

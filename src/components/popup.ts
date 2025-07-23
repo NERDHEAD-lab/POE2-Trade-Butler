@@ -1,4 +1,3 @@
-import '../styles/popup.scss';
 import * as informationSections from '../ui/information';
 
 function renderPopupMenu() {
@@ -7,6 +6,7 @@ function renderPopupMenu() {
   root.innerHTML = '';
   root.style.minWidth = '260px';
   root.style.maxWidth = '340px';
+  root.style.backgroundColor = '#f9f9f9';
   informationSections.attachInformationSections(root);
 }
 
