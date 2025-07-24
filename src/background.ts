@@ -3,7 +3,9 @@ import * as searchHistory from './storage/searchHistoryStorage';
 import * as favorite from './storage/favoriteStorage';
 import * as previewStorage from './storage/previewStorage';
 import { getCachedCheckVersion } from './utils/versionChecker';
+import * as settingStorage from './storage/settingStorage';
 
+await settingStorage.flushI18n();
 await executeLegacyVersionMigrations();
 await previewStorage.cleanExpiredOrphanSnapshots();
 
@@ -27,10 +29,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
     // Indicate that the response will be sent asynchronously
     return true;
-  } else if (message.type === 'RELOAD_EXTENSION') {
-    console.log('Reloading extension...');
-    chrome.runtime.reload();
-    sendResponse({ status: 'reloading' });
   }
 });
 
@@ -71,13 +69,16 @@ function alertVersion() {
     });
 }
 
-chrome.runtime.onStartup.addListener(() => alertVersion());
+chrome.runtime.onStartup.addListener(() => {
+  alertVersion();
+});
 chrome.runtime.onInstalled.addListener((details) => {
   console.log(`Extension installed or updated: ${details.reason}`);
   if (details.reason === 'install' || details.reason === 'update') {
     alertVersion();
   }
 });
+
 
 chrome.runtime.onUpdateAvailable.addListener((e) => {
   console.log(`Update available: ${e.version}`);

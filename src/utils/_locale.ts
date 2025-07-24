@@ -6,22 +6,24 @@ const i18n: Record<string, Record<string, { message: string }>> = await getI18n(
 
 // If the language is 'default', we will use the browser's default i18n API
 async function getI18n(): Promise<Record<string, Record<string, { message: string }>>> {
-  const i18n: Record<string, Record<string, { message: string }>> = {};
+  return settingStorage.getOrFetchI18n(async () => {
+    const i18n: Record<string, Record<string, { message: string }>> = {};
+    // background cannot access "chrome-extension://" URL, so we need to fetch the localization files directly
+    if (isBackground()) return i18n;
 
-  // 모든 fetch를 배열로 생성
-  const fetches = Object.keys(LANGUAGE_NATIVE_NAMES).map(async (lang) => {
-    const url = chrome.runtime.getURL(`_locales/${lang}/messages.json`);
-    try {
-      const response = await fetch(url);
-      i18n[lang] = await response.json();
-    } catch (error) {
-      console.error(`Error loading localization file for ${lang}:`, error);
-    }
+    const fetches = Object.keys(LANGUAGE_NATIVE_NAMES).map(async (lang) => {
+      const url = chrome.runtime.getURL(`_locales/${lang}/messages.json`);
+      try {
+        const response = await fetch(url);
+        i18n[lang] = await response.json();
+      } catch (error) {
+        console.error(`Error loading localization file for ${lang}:`, error);
+      }
+    });
+
+    await Promise.all(fetches);
+    return i18n;
   });
-
-  await Promise.all(fetches); // 모든 fetch가 끝날 때까지 대기
-
-  return i18n;
 }
 
 async function getCurrentLanguage(): Promise<string> {
@@ -40,7 +42,7 @@ async function getCurrentLanguage(): Promise<string> {
  * @returns The localized message
  */
 export function getMessage(key: string, ...substitutions: string[]): string {
-  if (currentLanguage === 'default') {
+  if (currentLanguage === 'default' || isBackground()) {
     return chrome.i18n.getMessage(key, substitutions);
   }
 
@@ -62,6 +64,11 @@ export function getMessage(key: string, ...substitutions: string[]): string {
   } catch {
     return chrome.i18n.getMessage(key, substitutions); // Fallback to default locale
   }
+
+}
+
+function isBackground(): boolean {
+  return typeof window === 'undefined';
 
 }
 

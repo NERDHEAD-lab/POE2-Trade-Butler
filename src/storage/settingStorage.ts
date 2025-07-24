@@ -1,6 +1,7 @@
 import * as storage from './storage';
 import { get, set, StorageType } from './storage';
 import { LANGUAGE_NATIVE_NAMES } from '../utils/supportedLanguages';
+import * as versionChecker from '../utils/versionChecker';
 
 const KEY_PREFIX = 'poe2trade_settings_';
 
@@ -114,4 +115,41 @@ export async function getLanguage(): Promise<string> {
     return defaultLanguage;
   }
   return language;
+}
+
+type i18nEntity = {
+  version: string;
+  i18n: Record<string, Record<string, { message: string }>>
+}
+
+async function setI18n(i18n: Record<string, Record<string, { message: string }>>): Promise<void> {
+  return versionChecker.getInstalledVersion()
+    .then((version) => {
+      const i18nEntity: i18nEntity = {
+        version: version,
+        i18n: i18n
+      };
+      return setSetting('local', 'i18n', i18nEntity);
+    });
+}
+
+export async function getOrFetchI18n(
+  supplier: () => Promise<Record<string, Record<string, { message: string }>>>
+): Promise<Record<string, Record<string, { message: string }>>> {
+  const version = await versionChecker.getInstalledVersion();
+  const cached = await getSetting<i18nEntity>('local', 'i18n', { version: '', i18n: {} });
+
+  if (cached.version === version && Object.keys(cached.i18n).length === Object.keys(LANGUAGE_NATIVE_NAMES).length) {
+    return cached.i18n;
+  }
+
+  const freshI18n = await supplier();
+  console.log(`Fetched new i18n data for version ${version}:`, freshI18n);
+  await setI18n(freshI18n);
+  return freshI18n;
+}
+
+export async function flushI18n(): Promise<void> {
+  const version = await versionChecker.getInstalledVersion();
+  await setI18n({ [version]: {} });
 }

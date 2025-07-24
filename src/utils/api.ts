@@ -240,6 +240,7 @@ export function showModal(options: ModalOptions): void {
         border: '1px solid #d4b060'
       },
       cancel: {
+        padding: '6px 12px',
         backgroundColor: '#2a2a2a',
         color: '#ccc',
         border: '1px solid #555'
@@ -267,15 +268,24 @@ export function showModal(options: ModalOptions): void {
   }
 
   for (const btn of etcButtons) {
-    leftBtnGroup.appendChild(
-      makeButton(btn.name, btn.listener, 'normal') // 예: 폴더 삭제 같은 위험 행동
-    );
+    leftBtnGroup.appendChild(makeButton(btn.name, btn.listener, 'normal'));
   }
 
 // 오른쪽 버튼들
-  rightBtnGroup.appendChild(makeButton(confirm, onConfirmListener, 'confirm'));
+  const confirmBtn = makeButton(confirm, onConfirmListener, 'confirm');
+  rightBtnGroup.appendChild(confirmBtn);
   if (!hideCancel) {
-    rightBtnGroup.appendChild(makeButton(cancel, onCancelListener, 'cancel'));
+    const cancelBtn = makeButton(cancel, onCancelListener, 'cancel');
+    rightBtnGroup.appendChild(cancelBtn);
+    // 확인 버튼은 적어도 취소 버튼보다는 같거나 큰 크기로 설정
+    // confirmBtn.style.minWidth = cancelBtn.offsetWidth + 'px';
+    requestAnimationFrame(() => {
+      confirmBtn.style.minWidth = `${cancelBtn.offsetWidth}px`;
+      const etcButtons = leftBtnGroup.querySelectorAll('button');
+      etcButtons.forEach((btn) => {
+        btn.style.minWidth = `${cancelBtn.offsetWidth}px`;
+      });
+    });
   }
 
   btnWrapper.appendChild(leftBtnGroup);

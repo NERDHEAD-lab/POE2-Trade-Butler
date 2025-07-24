@@ -115,7 +115,6 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
           settingManager.applyChanges();
           showToast(getMessage('settings_changes_applied'));
 
-          await chrome.runtime.sendMessage({ type: 'RELOAD_EXTENSION' });
           document.location.reload();
         }
         return true;
@@ -148,7 +147,6 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
               settingManager.applyChanges();
               showToast(getMessage('settings_changes_applied'));
 
-              await chrome.runtime.sendMessage({ type: 'RELOAD_EXTENSION' });
               document.location.reload();
             } else {
               showToast(getMessage('settings_no_changes'));
