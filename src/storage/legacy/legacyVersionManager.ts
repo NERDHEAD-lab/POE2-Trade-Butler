@@ -126,7 +126,16 @@ export async function executeLegacyVersionMigrations(): Promise<void> {
       try {
         await executeMigration(migrator);
       } catch (error) {
-        console.error(getMessage('error_migration_failed', migrator.version.toString(), error.toString()));
+        let msg: string;
+
+        if (error instanceof Error) {
+          msg = error.message;
+        } else if (typeof error === "string") {
+          msg = error;
+        } else {
+          msg = JSON.stringify(error);
+        }
+        console.error(getMessage('error_migration_failed', migrator.version.toString(), msg));
       }
     }
   }
@@ -160,7 +169,16 @@ async function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<v
 
     console.log(getMessage('log_migration_completed', migrator.description));
   } catch (error) {
-    console.error(getMessage('error_migration_description_failed', migrator.description, error.toString()));
+    let msg: string;
+
+    if (error instanceof Error) {
+      msg = error.message;
+    } else if (typeof error === "string") {
+      msg = error;
+    } else {
+      msg = JSON.stringify(error);
+    }
+    console.error(getMessage('error_migration_description_failed', migrator.description, msg));
     throw error;
   }
 }
