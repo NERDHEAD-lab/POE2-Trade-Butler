@@ -519,5 +519,9 @@
   "settings_changes_discard_confirm": {
     "message": "You have unsaved changes. Do you want to discard them and exit settings?",
     "description": "Confirmation message when there are unsaved changes in settings"
+  },
+  "extension_reloaded_notice": {
+    "message": "Extension was updated. The page will refresh automatically.",
+    "description": "Notice shown when the extension is reloaded"
   }
 }

@@ -519,5 +519,9 @@
   "settings_changes_discard_confirm": {
     "message": "設定に保存されていない変更があります。変更を破棄して設定を終了しますか？",
     "description": "Confirmation message when there are unsaved changes in settings"
+  },
+  "extension_reloaded_notice": {
+    "message": "拡張機能が更新されました。ページは自動的にリフレッシュされます。",
+    "description": "Notice shown when the extension is reloaded"
   }
 }

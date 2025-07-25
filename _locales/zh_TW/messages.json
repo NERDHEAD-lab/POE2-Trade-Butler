@@ -515,5 +515,9 @@
   "settings_changes_discard_confirm": {
     "message": "您有未保存的更改。是否放棄這些更改並退出設定？",
     "description": "Confirmation message when there are unsaved changes in settings"
+  },
+  "extension_reloaded_notice": {
+    "message": "擴展已重新加載。頁面將自動刷新。",
+    "description": "Notice shown when the extension is reloaded"
   }
 }

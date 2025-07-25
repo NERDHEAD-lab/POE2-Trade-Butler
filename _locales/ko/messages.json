@@ -519,5 +519,9 @@
   "settings_changes_discard_confirm": {
     "message": "저장되지 않은 변경 사항이 있습니다. 설정을 종료하고 변경 사항을 취소하시겠습니까?",
     "description": "Confirmation message when there are unsaved changes in settings"
+  },
+  "extension_reloaded_notice": {
+    "message": "확장 프로그램이 업데이트되었습니다. 페이지가 자동으로 새로고침됩니다.",
+    "description": "Notice shown when the extension is reloaded"
   }
 }
