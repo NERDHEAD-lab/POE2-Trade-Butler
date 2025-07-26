@@ -1,0 +1,6 @@
+# build artifacts
+dist/
+build/
+
+# release-please managed
+CHANGELOG.md

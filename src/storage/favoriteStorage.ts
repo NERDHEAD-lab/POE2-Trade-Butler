@@ -1,9 +1,5 @@
-import * as storage from './storage';
-import { get, set, StorageType } from './storage';
+import { StorageManager } from './storage';
 import { FileSystemEntry, FolderEntry } from '../ui/fileSystemEntry';
-
-const STORAGE_FAVORITE_TYPE: StorageType = 'sync';
-const STORAGE_FAVORITE_KEY = 'favoriteFolders';
 
 const DEFAULT_FAVORITE_ROOT: () => FolderEntry = () => {
   return {
@@ -16,8 +12,12 @@ const DEFAULT_FAVORITE_ROOT: () => FolderEntry = () => {
   };
 };
 
+const favoriteStorage = new StorageManager<FileSystemEntry[]>('sync', 'favoriteFolders', () => [
+  DEFAULT_FAVORITE_ROOT()
+]);
+
 export async function getAll(): Promise<FileSystemEntry[]> {
-  return get<FileSystemEntry[]>(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, [DEFAULT_FAVORITE_ROOT()]);
+  return favoriteStorage.get();
 }
 
 export async function saveAll(favorites: FileSystemEntry[]): Promise<void> {
@@ -35,7 +35,7 @@ export async function saveAll(favorites: FileSystemEntry[]): Promise<void> {
     favorites.unshift(DEFAULT_FAVORITE_ROOT());
   }
 
-  await set(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, favorites);
+  await favoriteStorage.set(favorites);
 }
 
 export async function existsByMetadataId(id: string): Promise<boolean> {
@@ -47,19 +47,17 @@ export async function existsByMetadataId(id: string): Promise<boolean> {
 export function addOnChangeListener(
   listener: (newValue: FileSystemEntry[], oldValue: FileSystemEntry[]) => void
 ): void {
-  storage.addOnChangeListener(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, listener);
+  favoriteStorage.addOnChangeListener(listener);
 }
 
 export function removeOnChangeListener(
   listener: (newValue: FileSystemEntry[], oldValue: FileSystemEntry[]) => void
 ): void {
-  storage.removeOnChangeListener(STORAGE_FAVORITE_TYPE, listener);
+  favoriteStorage.removeOnChangeListener(listener);
 }
 
-export function addOnDeletedListener(
-  listener: (deletedId: string) => void
-): void {
-  storage.addOnChangeListener<FileSystemEntry[]>(STORAGE_FAVORITE_TYPE, STORAGE_FAVORITE_KEY, (newValue, oldValue) => {
+export function addOnDeletedListener(listener: (deletedId: string) => void): void {
+  favoriteStorage.addOnChangeListener((newValue, oldValue) => {
     const newIds = new Set(newValue.map(entry => entry.id));
     const oldIds = new Set(oldValue.map(entry => entry.id));
 

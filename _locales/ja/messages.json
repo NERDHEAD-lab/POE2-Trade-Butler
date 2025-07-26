@@ -1,258 +1,258 @@
 {
   "current_language": {
-    "message": "简体中文",
+    "message": "日本語",
     "description": "Print the current language"
   },
   "extension_name": {
-    "message": "POE2 交易助手",
+    "message": "POE2 トレード バトラー",
     "description": "The name of the Chrome extension"
   },
   "extension_description": {
-    "message": "一个用于POE2交易的Chrome扩展程序，提供侧边栏和历史记录管理功能。",
+    "message": "サイドバーと履歴管理機能を備えたPOE2トレード用のChrome拡張機能です。",
     "description": "Description of the Chrome extension"
   },
 
   "log_migration_start": {
-    "message": "开始从版本 $1 迁移到 $2",
+    "message": "バージョン $1 から $2 へのマイグレーションを開始しています",
     "description": "Log message when starting migrations"
   },
   "log_migration_key": {
-    "message": "尝试迁移键: $1, 存储: $2 的数据",
+    "message": "キー: $1、ストレージ: $2 のデータを移行しようとしています",
     "description": "Log message when migrating data for a key"
   },
   "log_migration_completed": {
-    "message": "迁移完成: $1",
+    "message": "マイグレーション完了: $1",
     "description": "Log message when migration is completed"
   },
   "log_zip_created": {
-    "message": "ZIP文件已创建: $1 (总 $2 字节)",
+    "message": "ZIPファイル作成: $1 (合計 $2 バイト)",
     "description": "Log message when ZIP file is created"
   },
   "log_search_history_updated": {
-    "message": "URL的搜索历史已更新: $1",
+    "message": "URL の検索履歴が更新されました: $1",
     "description": "Log message when search history is updated"
   },
   "log_toggle_visibility": {
-    "message": "切换条目可见性: $1 (ID: $2)",
+    "message": "エントリの表示を切り替えています: $1 (ID: $2)",
     "description": "Log message when toggling visibility for an entry"
   },
 
   "error_clear_history": {
-    "message": "清除搜索历史时出错: $1",
+    "message": "検索履歴のクリア中にエラーが発生しました: $1",
     "description": "Error message when clearing search history"
   },
   "error_check_favorite": {
-    "message": "检查收藏状态时出错: $1",
+    "message": "お気に入りステータスの確認中にエラーが発生しました: $1",
     "description": "Error message when checking favorite status"
   },
   "error_delete_history": {
-    "message": "删除历史记录时出错: $1",
+    "message": "履歴の削除中にエラーが発生しました: $1",
     "description": "Error message when deleting history"
   },
   "error_history_list_not_found": {
-    "message": "找不到 #history-list 元素",
+    "message": "#history-list 要素が見つかりませんでした",
     "description": "Error message when history list element is not found"
   },
   "error_extract_panel": {
-    "message": "提取当前面板时出错: $1",
+    "message": "現在のパネルの抽出中にエラーが発生しました: $1",
     "description": "Error message when extracting current panel"
   },
   "error_handle_url_change": {
-    "message": "处理URL变更时出错: $1",
+    "message": "URL変更の処理中にエラーが発生しました: $1",
     "description": "Error message when handling URL change"
   },
   "error_trade_preview_not_found": {
-    "message": "找不到交易预览元素。请确保您在交易页面上。",
+    "message": "トレードプレビュー要素が見つかりません。トレードページにいることを確認してください。",
     "description": "Error message when trade preview element is not found"
   },
   "error_wait_for_injector": {
-    "message": "等待 TradePreviewInjector 失败: $1",
+    "message": "TradePreviewInjector の待機に失敗しました: $1",
     "description": "Error message when waiting for TradePreviewInjector"
   },
   "error_invalid_panel_html": {
-    "message": "无效的面板HTML",
+    "message": "無効なパネルHTML",
     "description": "Error message when panel HTML is invalid"
   },
   "error_insert_preview_panel": {
-    "message": "无法在当前面板旁插入预览面板",
+    "message": "プレビューパネルを現在のパネルの横に挿入できませんでした",
     "description": "Error message when inserting preview panel"
   },
   "error_search_input_not_found": {
-    "message": "找不到搜索输入字段。无法设置搜索值。",
+    "message": "検索入力フィールドが見つかりません。検索値を設定できません。",
     "description": "Error message when search input is not found"
   },
   "error_delete_favorite": {
-    "message": "删除收藏时出错: $1",
+    "message": "お気に入りの削除中にエラーが発生しました: $1",
     "description": "Error message when deleting favorite"
   },
   "error_drag_drop": {
-    "message": "拖放过程中出错: $1",
+    "message": "ドラッグアンドドロップ中にエラーが発生しました: $1",
     "description": "Error message during drag and drop"
   },
   "error_rename_favorite": {
-    "message": "重命名收藏时出错: $1",
+    "message": "お気に入りの名前変更中にエラーが発生しました: $1",
     "description": "Error message when renaming favorite"
   },
   "error_migration_failed": {
-    "message": "版本 $1 的迁移失败: $2",
+    "message": "バージョン $1 のマイグレーションに失敗しました: $2",
     "description": "Error message when migration fails"
   },
   "error_migration_description_failed": {
-    "message": "迁移失败: $1 $2",
+    "message": "マイグレーションに失敗しました: $1 $2",
     "description": "Error message when migration fails with description"
   },
   "error_korean_translation": {
-    "message": "应用韩语翻译时出错: $1",
+    "message": "韓国語翻訳の適用中にエラーが発生しました: $1",
     "description": "Error message when applying Korean translation"
   },
   "error_build_folder_not_found": {
-    "message": "找不到构建文件夹: $1",
+    "message": "ビルドフォルダが見つかりません: $1",
     "description": "Error message when build folder is not found"
   },
   "error_content_element_not_found": {
-    "message": "找不到 .content 元素",
+    "message": ".content 要素が見つかりません",
     "description": "Error message when content element is not found"
   },
   "error_invalid_url_format": {
-    "message": "当前URL格式无效($1)，将使用历史URL代替。",
+    "message": "無効な現在のURL形式($1)、代わりに履歴URLを使用します。",
     "description": "Error message when URL format is invalid"
   },
   "error_trade_preview_panel_not_found": {
-    "message": "找不到交易预览面板",
+    "message": "トレードプレビューパネルが見つかりません",
     "description": "Error message when trade preview panel is not found"
   },
   "error_search_button_not_enabled": {
-    "message": "搜索按钮未能及时启用",
+    "message": "検索ボタンが時間内に有効になりませんでした",
     "description": "Error message when search button is not enabled in time"
   },
   "error_advanced_panel_not_expanded": {
-    "message": "高级面板未能及时展开",
+    "message": "詳細パネルが時間内に展開されませんでした",
     "description": "Error message when advanced panel did not expand in time"
   },
 
   "warn_no_data_for_migration": {
-    "message": "未找到迁移数据: $1",
+    "message": "マイグレーション用のデータが見つかりません: $1",
     "description": "Warning message when no data is found for migration"
   },
 
   "toast_history_cleared": {
-    "message": "搜索历史已成功清除。",
+    "message": "検索履歴が正常にクリアされました。",
     "description": "Toast message when history is cleared"
   },
   "toast_history_clear_failed": {
-    "message": "清除搜索历史失败。",
+    "message": "検索履歴のクリアに失敗しました。",
     "description": "Toast message when history clear fails"
   },
   "toast_history_auto_add": {
-    "message": "历史自动添加: $1",
+    "message": "履歴の自動追加: $1",
     "description": "Toast message for history auto-add toggle"
   },
   "toast_favorite_add_error": {
-    "message": "添加到收藏夹失败: $1",
+    "message": "お気に入りへの追加エラー: $1",
     "description": "Toast message for favorite add error"
   },
   "toast_favorite_add_unknown_error": {
-    "message": "添加到收藏夹时发生未知错误。",
+    "message": "お気に入りへの追加中に不明なエラーが発生しました。",
     "description": "Toast message for unknown favorite add error"
   },
   "toast_korean_translation_success": {
-    "message": "韩语翻译已成功应用！",
+    "message": "韓国語翻訳が正常に適用されました！",
     "description": "Toast message when Korean translation is applied successfully"
   },
   "toast_korean_translation_error": {
-    "message": "应用韩语翻译时出错。请稍后再试。",
+    "message": "韓国語翻訳の適用中にエラーが発生しました。後でもう一度お試しください。",
     "description": "Toast message when applying Korean translation fails"
   },
   "toast_folder_name_empty": {
-    "message": "文件夹名称为空。",
+    "message": "フォルダ名が空です。",
     "description": "Toast message when folder name is empty"
   },
   "toast_folder_name_too_long": {
-    "message": "文件夹名称不能超过20个字符。",
+    "message": "フォルダ名は20文字以下にする必要があります。",
     "description": "Toast message when folder name is too long"
   },
   "toast_folder_name_invalid_chars": {
-    "message": "文件夹名称不能包含 $1 字符。",
+    "message": "フォルダ名に $1 文字を含めることはできません。",
     "description": "Toast message when folder name contains invalid characters"
   },
   "toast_folder_created": {
-    "message": "文件夹 \"$1\" 已创建。",
+    "message": "フォルダ \"$1\" が作成されました。",
     "description": "Toast message when folder is created"
   },
   "toast_no_folder_selected": {
-    "message": "请选择要删除的文件夹。",
+    "message": "削除するフォルダを選択してください。",
     "description": "Toast message when no folder is selected for deletion"
   },
   "toast_cannot_delete_root": {
-    "message": "无法删除根文件夹。",
+    "message": "ルートフォルダは削除できません。",
     "description": "Toast message when trying to delete the root folder"
   },
   "toast_folder_deleted": {
-    "message": "文件夹 \"$1\" 已删除。",
+    "message": "フォルダ \"$1\" が削除されました。",
     "description": "Toast message when folder is deleted"
   },
   "toast_folder_delete_failed": {
-    "message": "删除文件夹失败: $1",
+    "message": "フォルダの削除に失敗しました: $1",
     "description": "Toast message when folder deletion fails"
   },
   "toast_favorite_added": {
-    "message": "\"$1\" 已添加到收藏夹。",
+    "message": "\"$1\" がお気に入りに追加されました。",
     "description": "Toast message when item is added to favorites"
   },
   "toast_drag_drop_folder_only": {
-    "message": "只能拖放到文件夹。",
+    "message": "フォルダにのみドラッグアンドドロップできます。",
     "description": "Toast message when trying to drag and drop to non-folder"
   },
   "toast_item_moved": {
-    "message": "项目 \"$1\" 已移动到文件夹 \"$2\"。",
+    "message": "アイテム \"$1\" がフォルダ \"$2\" に移動されました。",
     "description": "Toast message when item is moved to a folder"
   },
   "confirm_delete_favorite": {
-    "message": "您确定要删除收藏 \"$1\" 吗？",
+    "message": "お気に入り \"$1\" を削除してもよろしいですか？",
     "description": "Confirmation message when deleting a favorite"
   },
   "alert_favorite_renamed": {
-    "message": "\"$1\" 的名称已更改为 \"$2\"。",
+    "message": "\"$1\" の名前が \"$2\" に変更されました。",
     "description": "Alert message when a favorite has been renamed"
   },
   "error_create_folder": {
-    "message": "创建文件夹时出错: $1",
+    "message": "フォルダの作成中にエラーが発生しました: $1",
     "description": "Error message when creating a folder"
   },
   "error_delete_folder": {
-    "message": "删除文件夹时出错: $1",
+    "message": "フォルダの削除中にエラーが発生しました: $1",
     "description": "Error message when deleting a folder"
   },
   "error_add_favorite": {
-    "message": "添加收藏时出错: $1",
+    "message": "お気に入りの追加中にエラーが発生しました: $1",
     "description": "Error message when adding a favorite"
   },
   "confirm_delete_folder_with_items": {
-    "message": "此文件夹包含项目。您确定要删除它吗？",
+    "message": "このフォルダにはアイテムが含まれています。削除してもよろしいですか？",
     "description": "Confirmation message when deleting a folder with items"
   },
   "alert_favorite_name_invalid": {
-    "message": "收藏名称输入缺失或无效。",
+    "message": "お気に入り名の入力がないか無効です。",
     "description": "Alert message when favorite name input is invalid"
   },
   "alert_favorite_url_undefined": {
-    "message": "收藏URL未定义。",
+    "message": "お気に入りのURLが定義されていません。",
     "description": "Alert message when favorite URL is not defined"
   },
   "prompt_enter_folder_name": {
-    "message": "输入新文件夹名称:",
+    "message": "新しいフォルダ名を入力してください:",
     "description": "Prompt message when creating a new folder"
   },
   "button_new_folder": {
-    "message": "📁 新建文件夹",
+    "message": "📁 新規フォルダ",
     "description": "Button text for creating a new folder"
   },
   "button_delete_folder": {
-    "message": "❌ 删除文件夹",
+    "message": "❌ フォルダを削除",
     "description": "Button text for deleting a folder"
   },
   "modal_add_to_favorite_folder": {
-    "message": "添加到收藏文件夹",
+    "message": "お気に入りフォルダに追加",
     "description": "Modal title for adding to favorite folder"
   },
   "button_save": {
@@ -260,15 +260,15 @@
     "description": "Button text for saving"
   },
   "button_cancel": {
-    "message": "取消",
+    "message": "キャンセル",
     "description": "Button text for canceling"
   },
   "button_apply": {
-    "message": "应用",
+    "message": "適用",
     "description": "Button text for applying changes"
   },
   "placeholder_item_name": {
-    "message": "项目名称 (默认: $1)",
+    "message": "アイテム名 (デフォルト: $1)",
     "description": "Placeholder text for item name input"
   },
   "sidebar_title": {
@@ -276,152 +276,152 @@
     "description": "Sidebar title"
   },
   "clear_history": {
-    "message": "清除历史",
+    "message": "履歴をクリア",
     "description": "Button text for clearing history"
   },
   "history_tab": {
-    "message": "历史",
+    "message": "履歴",
     "description": "Tab label for history"
   },
   "favorites_tab": {
-    "message": "收藏夹",
+    "message": "お気に入り",
     "description": "Tab label for favorites"
   },
   "search_history": {
-    "message": "搜索历史",
+    "message": "検索履歴",
     "description": "Section title for search history"
   },
   "favorites": {
-    "message": "收藏夹",
+    "message": "お気に入り",
     "description": "Section title for favorites"
   },
   "manage_favorites": {
-    "message": "管理收藏夹",
+    "message": "お気に入りを管理",
     "description": "Button text for managing favorites"
   },
   "confirm_clear_history": {
-    "message": "您确定要清除所有搜索历史吗？",
+    "message": "すべての検索履歴をクリアしてもよろしいですか？",
     "description": "Confirmation message for clearing all search history"
   },
   "history_switch_title": {
-    "message": "自动添加历史记录",
+    "message": "履歴自動追加",
     "description": "Placeholder text for auto-add history switch"
   },
   "korean_translation_success": {
-    "message": "韩语翻译已成功应用。"
+    "message": "韓国語翻訳が正常に適用されました。"
   },
   "korean_translation_error": {
-    "message": "应用韩语翻译时出错。"
+    "message": "韓国語翻訳の適用中にエラーが発生しました。"
   },
   "korean_translation_error_console": {
-    "message": "韩语翻译错误:"
+    "message": "韓国語翻訳エラー:"
   },
   "butler_guide_toggle_sidebar": {
-    "message": "点击此按钮打开或关闭侧边栏。",
+    "message": "このボタンをクリックしてサイドバーを開閉します。",
     "description": "Guide: sidebar toggle button"
   },
   "butler_guide_switch_tab": {
-    "message": "点击\"历史\"或\"收藏夹\"标签在它们之间切换。",
+    "message": "「履歴」または「お気に入り」タブをクリックして切り替えます。",
     "description": "Guide: switch between history/favorites tab"
   },
   "butler_guide_next": {
-    "message": "下一步",
+    "message": "次へ",
     "description": "Guide: next button"
   },
   "butler_guide_auto_search_slider": {
-    "message": "启用此功能可自动将搜索保存到历史记录中。",
+    "message": "これを有効にすると、検索が自動的に履歴に保存されます。",
     "description": "Guide: auto search history toggle slider"
   },
   "butler_guide_history_item": {
-    "message": "点击搜索历史项目再次打开该交易页面。",
+    "message": "検索履歴アイテムをクリックして、そのトレードページを再度開きます。",
     "description": "Guide: search history item"
   },
   "butler_guide_favorite_star": {
-    "message": "点击此星标将当前搜索添加到收藏夹。",
+    "message": "このスターをクリックして現在の検索をお気に入りに追加します。",
     "description": "Guide: favorite star button"
   },
   "butler_guide_preview_icon": {
-    "message": "当项目有预览可用时，会显示此图标。",
+    "message": "アイテムのプレビューが利用可能な場合、このアイコンが表示されます。",
     "description": "Guide: preview icon for trade item"
   },
   "butler_guide_remove_history": {
-    "message": "点击此按钮删除搜索历史项目。",
+    "message": "このボタンをクリックして検索履歴アイテムを削除します。",
     "description": "Guide: remove search history item button"
   },
   "butler_guide_clear_history_button": {
-    "message": "点击此按钮清除所有搜索历史。",
+    "message": "このボタンをクリックしてすべての検索履歴をクリアします。",
     "description": "Guide: clear search history button"
   },
   "butler_guide_add_favorite_button": {
-    "message": "点击此按钮将当前页面添加到收藏夹。",
+    "message": "このボタンをクリックして現在のページをお気に入りに追加します。",
     "description": "Guide: add current page to favorites button"
   },
   "butler_guide_favorite_folder_list": {
-    "message": "这是收藏文件夹列表。",
+    "message": "これはお気に入りフォルダのリストです。",
     "description": "Guide: favorite folder selection list"
   },
   "butler_guide_favorite_folder_icon": {
-    "message": "点击收藏文件夹图标(\uD83D\uDCC2)可折叠或展开文件夹。",
+    "message": "お気に入りフォルダアイコン(📂)をクリックしてフォルダを折りたたんだり展開したりします。",
     "description": "Guide: favorite folder icon for selection or creation"
   },
   "butler_guide_favorite_list_rename_with_double_click": {
-    "message": "双击收藏列表中的名称可重命名它。",
+    "message": "お気に入りリスト名をダブルクリックして名前を変更します。",
     "description": "Guide: input for favorite folder name"
   },
   "butler_guide_favorite_file_icon_remove_with_click": {
-    "message": "点击 ⭐ 图标可从收藏夹中删除项目。",
+    "message": "⭐ アイコンをクリックしてお気に入りからアイテムを削除します。",
     "description": "Guide: remove favorite item with trash icon"
   },
   "butler_guide_favorite_file_drag_and_drop": {
-    "message": "您可以拖放收藏项目在文件夹之间移动。",
+    "message": "お気に入りアイテムをドラッグアンドドロップしてフォルダ間で移動できます。",
     "description": "Guide: drag and drop favorite item to move between folders"
   },
   "butler_guide_start_confirm": {
-    "message": "点击\"确定\"开始指南。您可以随时在设置中返回此指南。",
+    "message": "「OK」をクリックしてガイドを開始します。設定からいつでもこのガイドに戻ることができます。",
     "description": "Guide: start confirmation button"
   },
   "history_group_today": {
-    "message": "今天",
+    "message": "今日",
     "description": "Header for today's search history group"
   },
   "history_group_yesterday": {
-    "message": "昨天",
+    "message": "昨日",
     "description": "Header for yesterday's search history group"
   },
   "history_group_last_week": {
-    "message": "上周",
+    "message": "先週",
     "description": "Header for last week's search history group"
   },
   "history_group_older": {
-    "message": "更早",
+    "message": "それ以前",
     "description": "Header for older search history group"
   },
   "already_in_favorites": {
-    "message": "此项目已在您的收藏夹中:\n$1\n您想再次添加它吗？",
+    "message": "このアイテムは既にお気に入りに追加されています:\n$1\n再度追加しますか？",
     "description": "Message shown when trying to add an already-favorited item"
   },
   "history_item_last_searched": {
-    "message": "最后搜索: $1",
+    "message": "最終検索: $1",
     "description": "Tooltip: last searched date/time for a history item"
   },
   "history_item_total_searches": {
-    "message": "总搜索次数: $1",
+    "message": "検索回数: $1",
     "description": "Tooltip: total search count for a history item"
   },
   "history_item_previous_searches": {
-    "message": "以前的搜索:",
+    "message": "過去の検索:",
     "description": "Tooltip: previous search dates for a history item"
   },
   "popup_installed_version": {
-    "message": "已安装版本",
+    "message": "インストール済みバージョン",
     "description": "Label for installed extension version in popup"
   },
   "popup_latest_version": {
-    "message": "最新版本！",
+    "message": "最新バージョンです！",
     "description": "Shown when installed version is up to date"
   },
   "popup_new_version_available": {
-    "message": "新版本可用！$1",
+    "message": "新しいバージョンが利用可能です！ $1",
     "description": "Shown when a new version is available (shows latest version)"
   },
   "popup_powered_by": {
@@ -429,99 +429,99 @@
     "description": "Popup: powered by message"
   },
   "popup_support_please": {
-    "message": "请支持玩POE2的电费！",
+    "message": "POE2をプレイするための電気代をサポートしてください！",
     "description": "Popup: donation/sponsor message"
   },
   "popup_dev_version": {
-    "message": "开发版本！",
+    "message": "開発バージョン！",
     "description": "Shown when installed version is higher than the latest release"
   },
   "button_import": {
-    "message": "导入",
+    "message": "インポート",
     "description": "Button text for importing favorites"
   },
   "button_export": {
-    "message": "导出",
+    "message": "エクスポート",
     "description": "Button text for exporting favorites"
   },
   "alert_import_to_folder": {
-    "message": "导入到文件夹: $1\n(仅此文件夹中的项目会受影响。)",
+    "message": "フォルダにインポート: $1\n(このフォルダ内のアイテムのみが影響を受けます。)",
     "description": "Alert message when importing to a folder"
   },
   "alert_export_from_folder": {
-    "message": "从文件夹导出: $1\n(仅此文件夹中的项目会被导出。)",
+    "message": "フォルダからエクスポート: $1\n(このフォルダ内のアイテムのみがエクスポートされます。)",
     "description": "Alert message when exporting from a folder"
   },
   "alert_select_folder_first": {
-    "message": "请先选择一个文件夹。",
+    "message": "最初にフォルダを選択してください。",
     "description": "Alert message when no folder is selected"
   },
   "popup_check_version_again": {
-    "message": "再次检查 $1",
+    "message": "再確認 $1",
     "description": "Button text to check for updates again in the popup"
   },
   "popup_feedback": {
-    "message": "反馈",
+    "message": "フィードバック",
     "description": "Popup: feedback button text"
   },
   "popup_review_this_extension": {
-    "message": "评价此扩展",
+    "message": "この拡張機能をレビュー",
     "description": "Popup: button text to review the extension"
   },
   "info_backdrop_detected": {
-    "message": "检测到登录页面。请登录以打开 sidebar。",
+    "message": "ログインページが検出されました。サイドバーを開くにはログインしてください。",
     "description": "Info message when backdrop is detected"
   },
   "confirm_redirect_to_other_server": {
-    "message": "该搜索记录属于不同的服务器（$1），当前服务器为（$2）。是否继续？",
+    "message": "現在のサーバー($2)とは異なるサーバー($1)の検索履歴です。続行しますか？",
     "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
   },
   "settings": {
-    "message": "设置",
+    "message": "設定",
     "description": "Settings button text"
   },
   "settings_tab_general": {
-    "message": "常规",
+    "message": "一般設定",
     "description": "Settings tab for general settings"
   },
   "settings_option_select_language": {
-    "message": "选择语言",
+    "message": "言語を選択",
     "description": "Settings option for selecting language"
   },
   "settings_option_select_language_description": {
-    "message": "请选择扩展程序的语言。默认情况下将遵循浏览器设置。",
+    "message": "拡張機能の言語を選択してください。デフォルトはブラウザの設定に従います。",
     "description": "Description for the language selection option in settings"
   },
   "settings_option_select_language_default": {
-    "message": "默认 ($1)",
+    "message": "デフォルト ($1)",
     "description": "Settings option for selecting default language"
   },
   "settings_changes_applied": {
-    "message": "设置更改已应用。",
+    "message": "設定の変更が適用されました。",
     "description": "Message shown when settings changes are successfully applied"
   },
   "settings_no_changes": {
-    "message": "未对设置进行更改。",
+    "message": "設定に変更はありませんでした。",
     "description": "Message shown when no changes were made to settings"
   },
   "settings_option_show_guide_again": {
-    "message": "再次显示指南",
+    "message": "ガイドを再表示する",
     "description": "Settings option to show the Butler guide again"
   },
   "settings_option_show_guide_again_enabled": {
-    "message": "指南将再次显示。刷新后将显示。",
+    "message": "ガイドを再表示する設定が有効になりました。リフレッシュ後にガイドが再表示されます。",
     "description": "Settings option to enable showing the Butler guide again"
   },
   "settings_tab_info": {
-    "message": "信息",
+    "message": "情報",
     "description": "Settings tab for information"
   },
   "settings_changes_discard_confirm": {
-    "message": "您有未保存的更改。是否放弃它们并退出设置？",
+    "message": "設定に保存されていない変更があります。変更を破棄して設定を終了しますか？",
     "description": "Confirmation message when there are unsaved changes in settings"
   },
   "extension_reloaded_notice": {
-    "message": "扩展已重新加载。页面将自动刷新。",
+    "message": "拡張機能が更新されました。ページは自動的にリフレッシュされます。",
     "description": "Notice shown when the extension is reloaded"
   }
 }

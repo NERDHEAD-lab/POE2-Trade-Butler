@@ -11,6 +11,8 @@ trading experience.
 
 ---
 
+<!-- prettier-ignore-start -->
+
 | Chrome Extension                                                       | Downloads                                                                        | GitHub Release                                                 |
 |------------------------------------------------------------------------|----------------------------------------------------------------------------------|----------------------------------------------------------------|
 | [![Chrome Web Store][chrome-web-store-version]][chrome-web-store-link] | [![Chrome Web Store Users][chrome-web-store-users-badge]][chrome-web-store-link] | [![GitHub release][github-release-badge]][github-release-link] |
@@ -22,6 +24,8 @@ trading experience.
 | Sponsors                                                          | Buy Me a Coffee                                                   |
 |-------------------------------------------------------------------|-------------------------------------------------------------------|
 | [![GitHub sponsors][github-sponsors-badge]][github-sponsors-link] | [![Buy Me a Coffee][buy-me-a-coffee-badge]][buy-me-a-coffee-link] |
+
+<!-- prettier-ignore-end -->
 
 <!-- Badges -->
 [chrome-web-store-users-badge]: https://img.shields.io/chrome-web-store/users/ipnemofnhodcgcplnnfekbfpmngeeocm

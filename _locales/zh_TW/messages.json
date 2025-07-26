@@ -1,4 +1,8 @@
 {
+  "current_language": {
+    "message": "繁體中文",
+    "description": "Print the current language."
+  },
   "extension_name": {
     "message": "POE2 交易助手",
     "description": "The name of the Chrome extension"
@@ -259,6 +263,10 @@
     "message": "取消",
     "description": "Button text for canceling"
   },
+  "button_apply": {
+    "message": "應用",
+    "description": "Button text for applying changes"
+  },
   "placeholder_item_name": {
     "message": "項目名稱 (默認: $1)",
     "description": "Placeholder text for item name input"
@@ -463,5 +471,53 @@
   "info_backdrop_detected": {
     "message": "檢測到登錄頁面。請登錄以打開 sidebar。",
     "description": "Info message when backdrop is detected"
+  },
+  "confirm_redirect_to_other_server": {
+    "message": "此搜尋紀錄來自不同伺服器（$1），當前伺服器為（$2）。是否繼續？",
+    "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
+  },
+  "settings": {
+    "message": "設定",
+    "description": "Settings button text"
+  },
+  "settings_tab_general": {
+    "message": "一般",
+    "description": "Settings tab for general settings"
+  },
+  "settings_option_select_language": {
+    "message": "選擇語言",
+    "description": "Settings option for selecting language"
+  },
+  "settings_option_select_language_description": {
+    "message": "請選擇擴充功能的語言。預設會依照瀏覽器設定。",
+    "description": "Description for the language selection option in settings"
+  },
+  "settings_option_select_language_default": {
+    "message": "預設 ($1)",
+    "description": "Settings option for selecting default language"
+  },
+  "settings_changes_applied": {
+    "message": "設定變更已成功應用。",
+    "description": "Message shown when settings changes are successfully applied"
+  },
+  "settings_no_changes": {
+    "message": "未對設定進行任何更改。",
+    "description": "Message shown when no changes were made to settings"
+  },
+  "settings_option_show_guide_again": {
+    "message": "再次顯示指南",
+    "description": "Settings option to show the Butler guide again"
+  },
+  "settings_option_show_guide_again_enabled": {
+    "message": "指南將再次顯示。刷新後會顯示。",
+    "description": "Settings option to enable showing the Butler guide again"
+  },
+  "settings_changes_discard_confirm": {
+    "message": "您有未保存的更改。是否放棄這些更改並退出設定？",
+    "description": "Confirmation message when there are unsaved changes in settings"
+  },
+  "extension_reloaded_notice": {
+    "message": "擴展已重新加載。頁面將自動刷新。",
+    "description": "Notice shown when the extension is reloaded"
   }
 }

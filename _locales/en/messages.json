@@ -1,4 +1,8 @@
 {
+  "current_language": {
+    "message": "English",
+    "description": "Print the current language"
+  },
   "extension_name": {
     "message": "POE2 Trade Butler",
     "description": "The name of the Chrome extension"
@@ -291,6 +295,10 @@
     "message": "Cancel",
     "description": "Button text for canceling"
   },
+  "button_apply": {
+    "message": "Apply",
+    "description": "Button text for applying changes"
+  },
   "placeholder_item_name": {
     "message": "Item name (default: $1)",
     "description": "Placeholder text for item name input"
@@ -463,5 +471,57 @@
   "info_backdrop_detected": {
     "message": "Login page detected. Please log in to open the sidebar.",
     "description": "Info message when backdrop is detected"
+  },
+  "confirm_redirect_to_other_server": {
+    "message": "This search history is from a different server ($1) than your current server ($2). Do you want to continue?",
+    "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
+  },
+  "settings": {
+    "message": "Settings",
+    "description": "Settings button text"
+  },
+  "settings_tab_general": {
+    "message": "General",
+    "description": "Settings tab for general settings"
+  },
+  "settings_option_select_language": {
+    "message": "Select Language",
+    "description": "Settings option for selecting language"
+  },
+  "settings_option_select_language_description": {
+    "message": "Select the language for the extension. The default is to follow the browser settings.",
+    "description": "Description for the language selection option in settings"
+  },
+  "settings_option_select_language_default": {
+    "message": "Default ($1)",
+    "description": "Settings option for selecting default language"
+  },
+  "settings_changes_applied": {
+    "message": "Settings changes have been applied.",
+    "description": "Message shown when settings changes are successfully applied"
+  },
+  "settings_no_changes": {
+    "message": "No changes were made to settings.",
+    "description": "Message shown when no changes were made to settings"
+  },
+  "settings_option_show_guide_again": {
+    "message": "Show Guide Again",
+    "description": "Settings option to show the Butler guide again"
+  },
+  "settings_option_show_guide_again_enabled": {
+    "message": "Shown Guide Again enabled, Guide will be shown again after refresh.",
+    "description": "Settings option to enable showing the Butler guide again"
+  },
+  "settings_tab_info": {
+    "message": "Info",
+    "description": "Settings tab for information"
+  },
+  "settings_changes_discard_confirm": {
+    "message": "You have unsaved changes. Do you want to discard them and exit settings?",
+    "description": "Confirmation message when there are unsaved changes in settings"
+  },
+  "extension_reloaded_notice": {
+    "message": "Extension was updated. The page will refresh automatically.",
+    "description": "Notice shown when the extension is reloaded"
   }
 }

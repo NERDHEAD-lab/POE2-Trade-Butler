@@ -1,4 +1,8 @@
 {
+  "current_language": {
+    "message": "한국어",
+    "description": "Print the current language"
+  },
   "extension_name": {
     "message": "POE2 거래 도우미",
     "description": "The name of the Chrome extension"
@@ -259,6 +263,10 @@
     "message": "취소",
     "description": "Button text for canceling"
   },
+  "button_apply": {
+    "message": "적용",
+    "description": "Button text for applying changes"
+  },
   "placeholder_item_name": {
     "message": "항목 이름 (기본값: $1)",
     "description": "Placeholder text for item name input"
@@ -463,5 +471,57 @@
   "info_backdrop_detected": {
     "message": "로그인 페이지 감지. sidebar를 열려면 로그인 후 다시 시도하세요.",
     "description": "Info message when backdrop is detected"
+  },
+  "confirm_redirect_to_other_server": {
+    "message": "현재 서버($1)와 다른 서버($2)의 검색 기록입니다. 계속 이동하시겠습니까?",
+    "description": "Show a confirmation message when the user is trying to move to a trade search history entry from a different game server."
+  },
+  "settings": {
+    "message": "설정",
+    "description": "Settings button text"
+  },
+  "settings_tab_general": {
+    "message": "일반",
+    "description": "Settings tab for general settings"
+  },
+  "settings_option_select_language": {
+    "message": "언어 선택",
+    "description": "Settings option for selecting language"
+  },
+  "settings_option_select_language_description": {
+    "message": "확장 프로그램의 언어를 선택하세요. 기본값은 브라우저 설정을 따라갑니다.",
+    "description": "Description for the language selection option in settings"
+  },
+  "settings_option_select_language_default": {
+    "message": "기본값 ($1)",
+    "description": "Settings option for selecting default language"
+  },
+  "settings_changes_applied": {
+    "message": "설정 변경이 적용되었습니다.",
+    "description": "Message shown when settings changes are successfully applied"
+  },
+  "settings_no_changes": {
+    "message": "설정에 변경 사항이 없습니다.",
+    "description": "Message shown when no changes were made to settings"
+  },
+  "settings_option_show_guide_again": {
+    "message": "가이드를 다시 표시",
+    "description": "Settings option to show the Butler guide again"
+  },
+  "settings_option_show_guide_again_enabled": {
+    "message": "가이드가 다시 표시됩니다. 새로고침 후 표시됩니다.",
+    "description": "Settings option to enable showing the Butler guide again"
+  },
+  "settings_tab_info": {
+    "message": "정보",
+    "description": "Settings tab for information"
+  },
+  "settings_changes_discard_confirm": {
+    "message": "저장되지 않은 변경 사항이 있습니다. 설정을 종료하고 변경 사항을 취소하시겠습니까?",
+    "description": "Confirmation message when there are unsaved changes in settings"
+  },
+  "extension_reloaded_notice": {
+    "message": "확장 프로그램이 업데이트되었습니다. 페이지가 자동으로 새로고침됩니다.",
+    "description": "Notice shown when the extension is reloaded"
   }
 }
