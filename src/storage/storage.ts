@@ -1,4 +1,4 @@
-import { getMessage } from '../utils/_locale';
+// import { getMessage } from '../utils/_locale';
 
 const StorageTypeEnum = {
   local: {
@@ -17,7 +17,7 @@ const StorageTypeEnum = {
 
 export type StorageType = keyof typeof StorageTypeEnum;
 
-export interface StorageDefinition<VALUE_TYPE> {
+interface StorageDefinition<VALUE_TYPE> {
   type: StorageType;
   key: string;
   description: string;
@@ -32,15 +32,16 @@ function defineStorage<T>(type: StorageType, key: string): StorageDefinition<T> 
     throw new Error(`Storage key "${key}" is already defined. Please use a unique key.`);
   }
 
-  const description = getMessage(`storage_definition_${key}`);
-  if (!description) {
-    console.warn(`No description found for storage key: ${key}`);
-  }
+  // const description = getMessage(`storage_definition_${key}`);
+  // if (!description) {
+  //   console.warn(`No description found for storage key: ${key}`);
+  // }
 
   const definition: StorageDefinition<T> = {
     type,
     key,
-    description,
+    // description,
+    description: '',
 
     __type: undefined // Placeholder for TypeScript type inference
   };
@@ -73,6 +74,12 @@ export class StorageManager<ENTITY> {
         totalSize: 0
       }
     );
+  }
+
+  static async usageInfoAll(): Promise<{
+    [K in StorageType]: Array<{ key: string; totalSize: number }>;
+  }> {
+    return usageInfoAll();
   }
 
   addOnChangeListener(listener: (newValue: ENTITY, oldValue: ENTITY) => void): void {
@@ -110,7 +117,7 @@ function get<T>(storageType: StorageType, key: string, defaultValue: T): Promise
   });
 }
 
-export async function usageInfoAll(): Promise<{
+async function usageInfoAll(): Promise<{
   [K in StorageType]: Array<{ key: string; totalSize: number }>;
 }> {
   const result = {} as {
