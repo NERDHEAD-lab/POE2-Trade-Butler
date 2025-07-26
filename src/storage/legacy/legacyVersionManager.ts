@@ -1,10 +1,15 @@
-import { get, localStorage, set, StorageType } from '../storage';
+import { StorageManager, StorageType } from '../storage';
 import { getMessage } from '../../utils/_locale';
-
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const CURRENT_STORAGE_VERSION_KEY = 'poe2trade_storage_version';
 const CURRENT_STORAGE_VERSION = 2;
+
+const versionStorage: StorageManager<number> = new StorageManager(
+  'local',
+  CURRENT_STORAGE_VERSION_KEY,
+  () => 0
+);
 
 interface LegacyVersionMigrator<LEGACY> {
   key: string;
@@ -23,30 +28,30 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
       const currentEntity: SearchHistoryEntity_v2[] = [];
       const currentPreviewData: Record<string, PreviewPanelSnapshot_v2> = {};
 
-      legacy
-        .forEach((entry) => {
-          currentEntity.push({
-            id: entry.id,
-            url: entry.url,
-            lastSearched: entry.lastSearched,
-            previousSearches: entry.previousSearches
-          });
-
-          if (!entry.etc?.previewInfo) return;
-          const previewData = entry.etc.previewInfo;
-
-          currentPreviewData[entry.id] = {
-            searchKeyword: previewData.searchKeyword,
-            outerHTML: previewData.outerHTML,
-            attributes: previewData.attributes,
-            timestamp: previewData.timestamp
-          };
+      legacy.forEach(entry => {
+        currentEntity.push({
+          id: entry.id,
+          url: entry.url,
+          lastSearched: entry.lastSearched,
+          previousSearches: entry.previousSearches
         });
 
-      await set('local', 'searchHistory', currentEntity);
-      await set('local', 'previewPanelSnapshots', currentPreviewData);
+        if (!entry.etc?.previewInfo) return;
+        const previewData = entry.etc.previewInfo;
+
+        currentPreviewData[entry.id] = {
+          searchKeyword: previewData.searchKeyword,
+          outerHTML: previewData.outerHTML,
+          attributes: previewData.attributes,
+          timestamp: previewData.timestamp
+        };
+      });
+
+      await chrome.storage.local.set({ ['searchHistory']: currentEntity }); // Remove old v1 storage
+      await chrome.storage.local.set({ ['previewPanelSnapshots']: currentPreviewData }); // Save preview data
     },
-    description: 'Migrate search history from v1 to v2 format, extracting history entries and preview data.'
+    description:
+      'Migrate search history from v1 to v2 format, extracting history entries and preview data.'
   },
   {
     key: 'favoriteFolders',
@@ -104,8 +109,8 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
       legacy.folders?.forEach(folder => exportFolder(folder, root.id));
 
       await chrome.storage.local.remove('favoriteFolders'); // Remove old v1 storage
-      await set('sync', 'favoriteFolders', currentEntities); // Save as v2 format
-      await set('local', 'previewPanelSnapshots', currentPreviewData); // Save preview data
+      await chrome.storage.sync.set({ ['favoriteFolders']: currentEntities }); // Save as v2 format
+      await chrome.storage.local.set({ ['previewPanelSnapshots']: currentPreviewData }); // Save preview data
     },
     description: 'Migrate favorite folders from v1 to v2 format, ensuring root folder structure.'
   }
@@ -120,7 +125,9 @@ export async function executeLegacyVersionMigrations(): Promise<void> {
 
   legacyVersionMigrators.sort((a, b) => a.version - b.version);
 
-  console.log(getMessage('log_migration_start', currentVersion.toString(), CURRENT_STORAGE_VERSION.toString()));
+  console.log(
+    getMessage('log_migration_start', currentVersion.toString(), CURRENT_STORAGE_VERSION.toString())
+  );
   for (const migrator of legacyVersionMigrators) {
     if (migrator.version >= currentVersion && migrator.version < CURRENT_STORAGE_VERSION) {
       try {
@@ -130,7 +137,7 @@ export async function executeLegacyVersionMigrations(): Promise<void> {
 
         if (error instanceof Error) {
           msg = error.message;
-        } else if (typeof error === "string") {
+        } else if (typeof error === 'string') {
           msg = error;
         } else {
           msg = JSON.stringify(error);
@@ -141,26 +148,26 @@ export async function executeLegacyVersionMigrations(): Promise<void> {
   }
 
   // 마이그레이션 완료 후 현재 버전 업데이트
-  await set('local', CURRENT_STORAGE_VERSION_KEY, CURRENT_STORAGE_VERSION);
+  await versionStorage.set(CURRENT_STORAGE_VERSION);
 }
 
-
 function getCurrentStorageVersion(): Promise<number> {
-  return new Promise((resolve) => {
-    localStorage.get([CURRENT_STORAGE_VERSION_KEY], (result) => {
-      resolve(result[CURRENT_STORAGE_VERSION_KEY] || 0);
-    });
+  return new Promise(resolve => {
+    versionStorage.get().then(version => resolve(version));
   });
 }
 
 async function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<void> {
-  const storage = migrator.storageType;
+  const storageType = migrator.storageType;
   const key = migrator.key;
 
   try {
-    const legacyData = await get(storage, key, []);
+    // const legacyData = await storage.get(storageType, key, []);
+    const legacyData = await chrome.storage[storageType]
+      .get(key)
+      .then(result => result[key] || null);
 
-    console.log(getMessage('log_migration_key', key, storage));
+    console.log(getMessage('log_migration_key', key, storageType));
     if (legacyData) {
       await migrator.migrate(legacyData);
     } else {
@@ -173,7 +180,7 @@ async function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<v
 
     if (error instanceof Error) {
       msg = error.message;
-    } else if (typeof error === "string") {
+    } else if (typeof error === 'string') {
       msg = error;
     } else {
       msg = JSON.stringify(error);
@@ -182,7 +189,6 @@ async function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<v
     throw error;
   }
 }
-
 
 /* ****************************************************************************** */
 /* Legacy Version Manager for Poe2Trade Storage ********************************* */
@@ -217,26 +223,25 @@ export interface FavoriteFolderRoot_v1 {
 }
 
 export interface FavoriteItem_v1 {
-  id: string;       // SearchHistoryEntity.id
-  name?: string;    // 사용자 지정 별칭 (기본값: id)
-  url: string;      // SearchHistoryEntity.url
+  id: string; // SearchHistoryEntity.id
+  name?: string; // 사용자 지정 별칭 (기본값: id)
+  url: string; // SearchHistoryEntity.url
   etc?: Record<string, any>; // 기타 정보 (예: 프리뷰 데이터 등)
 }
 
 export interface FavoriteFolder_v1 {
-  name: string;                   // 폴더 표시 이름
-  folders?: FavoriteFolder_v1[];     // 하위 폴더
-  items?: FavoriteItem_v1[];         // 포함된 즐겨찾기 항목
+  name: string; // 폴더 표시 이름
+  folders?: FavoriteFolder_v1[]; // 하위 폴더
+  items?: FavoriteItem_v1[]; // 포함된 즐겨찾기 항목
 }
 
 export type FileSystemEntry_2 = FileEntry_2 | FolderEntry_2;
-
 
 interface BaseEntry_2 {
   readonly id: string;
   name: string;
   readonly type: 'file' | 'folder';
-  parentId: string | null;  // null이면 루트
+  parentId: string | null; // null이면 루트
   createdAt: string;
   modifiedAt: string;
 }

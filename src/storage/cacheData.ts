@@ -1,9 +1,16 @@
-import { localStorage } from './storage';
+import { StorageManager } from './storage';
 
 interface CachedData<T> {
   timestamp: number;
   data: T;
 }
+// key: {timestamp: number, data: T}
+
+const cacheStorage = new StorageManager<Record<string, CachedData<unknown>>>(
+  'local',
+  'caches',
+  () => ({}) as Record<string, CachedData<unknown>>
+);
 
 export async function getOrFetchCache<T>(
   key: string,
@@ -21,10 +28,10 @@ export async function getOrFetchCache<T>(
 }
 
 async function getCachedData<T>(key: string, maxAge: number): Promise<T | null> {
-  return new Promise((resolve) => {
-    localStorage.get([key], (result) => {
-      const cached = result[key] as CachedData<T> | undefined;
-      if (cached && (Date.now() - cached.timestamp < maxAge)) {
+  return new Promise(resolve => {
+    cacheStorage.get().then(result => {
+      const cached = result[key] as CachedData<T>;
+      if (cached && Date.now() - cached.timestamp < maxAge) {
         resolve(cached.data);
       } else {
         resolve(null);
@@ -35,12 +42,15 @@ async function getCachedData<T>(key: string, maxAge: number): Promise<T | null> 
 
 async function setCachedData<T>(key: string, data: T): Promise<void> {
   const cachedData: CachedData<T> = {
-    timestamp: Date.now(),
-    data
+    data,
+    timestamp: Date.now()
   };
-  return new Promise((resolve) => {
-    localStorage.set({ [key]: cachedData }, () => {
-      resolve();
+  return new Promise(resolve => {
+    cacheStorage.get().then(result => {
+      result[key] = cachedData;
+      cacheStorage.set(result).then(() => {
+        resolve();
+      });
     });
   });
 }
