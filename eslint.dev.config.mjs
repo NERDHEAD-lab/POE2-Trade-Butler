@@ -7,7 +7,7 @@ import chalk from 'chalk';
 
 export default defineConfig([
   { ignores: ['dist/**'] },
-  { files: ['**/*.js'], languageOptions: { sourceType: 'commonjs' } },
+  { files: ['**/*.js'], languageOptions: { sourceType: 'module' } },
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
     languageOptions: {

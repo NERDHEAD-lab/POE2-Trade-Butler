@@ -28,13 +28,8 @@ export default (env, argv = {}) => {
     module: {
       rules: [
         {
-          test: /\.ts$/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: ['@babel/preset-env', '@babel/preset-typescript']
-            }
-          },
+          test: /\.[jt]sx?$/,
+          use: { loader: 'babel-loader' },
           exclude: /node_modules/
         },
         {
@@ -77,5 +72,5 @@ export default (env, argv = {}) => {
       new MiniCssExtractPlugin()
     ],
     devtool: mode === 'development' ? 'source-map' : 'hidden-source-map'
-  }
+  };
 }
