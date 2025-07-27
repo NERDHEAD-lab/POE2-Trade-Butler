@@ -4,11 +4,29 @@ import * as favorite from './storage/favoriteStorage';
 import * as previewStorage from './storage/previewStorage';
 import { getCachedCheckVersion } from './utils/versionChecker';
 import * as settingStorage from './storage/settingStorage';
+import * as storageUsage from './storage/storageUsage';
 
 Promise.resolve()
   .then(() => settingStorage.flushI18n())
   .then(() => executeLegacyVersionMigrations())
   .then(() => previewStorage.cleanExpiredOrphanSnapshots())
+  // for validation. if descriptions do not exist at i18n.json, it will warn in the console
+  .then(() => storageUsage.usageInfoAll())
+  .then(usageInfos => {
+    console.log('Storage usage info:',
+      Object.keys(usageInfos).map(type => {
+        return {
+          type: type,
+          items: usageInfos[type as keyof typeof usageInfos].map(item => ({
+            key: item.key,
+            //to MB (00.00MB)
+            totalSize: (item.totalSize / 1024 / 1024).toFixed(2) + 'MB',
+            description: item.description || 'No description available'
+          }))
+        };
+      }
+    ));
+  })
   .then(() => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === 'RELOAD_EXTENSION') {

@@ -6,11 +6,11 @@ const i18n: Record<string, Record<string, { message: string }>> = await getI18n(
 
 // If the language is 'default', we will use the browser's default i18n API
 async function getI18n(): Promise<Record<string, Record<string, { message: string }>>> {
-  return settingStorage.getOrFetchI18n(async () => {
-    const i18n: Record<string, Record<string, { message: string }>> = {};
-    // background cannot access "chrome-extension://" URL, so we need to fetch the localization files directly
-    if (isBackground()) return i18n;
+  const i18n: Record<string, Record<string, { message: string }>> = {};
+  // background cannot access "chrome-extension://" URL, so we need to fetch the localization files directly
+  if (isBackground()) return i18n;
 
+  return settingStorage.getOrFetchI18n(async () => {
     const fetches = Object.keys(LANGUAGE_NATIVE_NAMES).map(async (lang) => {
       const url = chrome.runtime.getURL(`_locales/${lang}/messages.json`);
       try {

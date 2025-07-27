@@ -1,5 +1,3 @@
-// import { getMessage } from '../utils/_locale';
-
 const StorageTypeEnum = {
   local: {
     module: chrome.storage.local,
@@ -17,36 +15,35 @@ const StorageTypeEnum = {
 
 export type StorageType = keyof typeof StorageTypeEnum;
 
-interface StorageDefinition<VALUE_TYPE> {
-  type: StorageType;
-  key: string;
-  description: string;
+class StorageDefinition<VALUE_TYPE> {
+  constructor(
+    public type: StorageType,
+    public key: string
+  ) {
+  }
 
-  __type?: VALUE_TYPE; // For TypeScript type inference, not used at runtime
+  // 타입 추론용
+  __type?: VALUE_TYPE;
 }
 
-const storageDefinitions: Record<string, StorageDefinition<unknown>> = {};
+const storageDefinitions: StorageDefinition<unknown>[] = [];
 
 function defineStorage<T>(type: StorageType, key: string): StorageDefinition<T> {
-  if (storageDefinitions[key]) {
+  if (storageDefinitions.some(def => def.key === key)) {
     throw new Error(`Storage key "${key}" is already defined. Please use a unique key.`);
   }
 
-  // const description = getMessage(`storage_definition_${key}`);
-  // if (!description) {
-  //   console.warn(`No description found for storage key: ${key}`);
-  // }
-
-  const definition: StorageDefinition<T> = {
+  const definition: StorageDefinition<T> = new StorageDefinition<T>(
     type,
-    key,
-    // description,
-    description: '',
+    key
+  );
 
-    __type: undefined // Placeholder for TypeScript type inference
-  };
-  storageDefinitions[key] = definition;
+  storageDefinitions.push(definition);
   return definition;
+}
+
+export function getStorageDefinitions(): StorageDefinition<unknown>[] {
+  return storageDefinitions;
 }
 
 export class StorageManager<ENTITY> {
@@ -62,24 +59,16 @@ export class StorageManager<ENTITY> {
     return set(this.definition.type, this.definition.key, value);
   }
 
+  get type(): StorageType {
+    return this.definition.type;
+  }
+
+  get key(): string {
+    return this.definition.key;
+  }
+
   async get(): Promise<ENTITY> {
     return get(this.definition.type, this.definition.key, this.defaultValueSupplier());
-  }
-
-  async usageInfo(): Promise<{ key: string; totalSize: number }> {
-    const info = await usageInfoAll();
-    return (
-      info[this.definition.type].find(item => item.key === this.definition.key) || {
-        key: this.definition.key,
-        totalSize: 0
-      }
-    );
-  }
-
-  static async usageInfoAll(): Promise<{
-    [K in StorageType]: Array<{ key: string; totalSize: number }>;
-  }> {
-    return usageInfoAll();
   }
 
   addOnChangeListener(listener: (newValue: ENTITY, oldValue: ENTITY) => void): void {
@@ -115,26 +104,6 @@ function get<T>(storageType: StorageType, key: string, defaultValue: T): Promise
       }
     });
   });
-}
-
-async function usageInfoAll(): Promise<{
-  [K in StorageType]: Array<{ key: string; totalSize: number }>;
-}> {
-  const result = {} as {
-    [K in StorageType]: Array<{ key: string; totalSize: number }>;
-  };
-
-  const storageTypes = Object.keys(StorageTypeEnum) as StorageType[];
-
-  for (const type of storageTypes) {
-    const allItems = await getAllStorageItems(type);
-    result[type] = Object.entries(allItems).map(([key, value]) => ({
-      key,
-      totalSize: getEncodedSize({ [key]: value })
-    }));
-  }
-
-  return result;
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -175,7 +144,8 @@ function removeOnChangeListener<T>(
   }
 }
 
-function getAllStorageItems(storageType: StorageType): Promise<Record<string, unknown>> {
+// returns { [key: string]: value: unknown }
+export function getAllStorageItems(storageType: StorageType): Promise<Record<string, unknown>> {
   const storageObj = StorageTypeEnum[storageType].module;
 
   return new Promise((resolve, reject) => {
@@ -187,9 +157,4 @@ function getAllStorageItems(storageType: StorageType): Promise<Record<string, un
       }
     });
   });
-}
-
-function getEncodedSize(data: unknown): number {
-  const encoder = new TextEncoder();
-  return encoder.encode(JSON.stringify(data)).length;
 }
