@@ -14,6 +14,7 @@ const StorageTypeEnum = {
 } as const;
 
 export type StorageType = keyof typeof StorageTypeEnum;
+export const STORAGE_TYPES = Object.keys(StorageTypeEnum) as StorageType[];
 
 class StorageDefinition<VALUE_TYPE> {
   constructor(

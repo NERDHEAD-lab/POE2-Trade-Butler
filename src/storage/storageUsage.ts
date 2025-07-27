@@ -1,5 +1,5 @@
 import { getMessage } from '../utils/_locale';
-import { getAllStorageItems, getStorageDefinitions, StorageManager, StorageType } from './storage';
+import { getAllStorageItems, getStorageDefinitions, StorageManager, StorageType, STORAGE_TYPES } from './storage';
 
 export async function usageInfo(storageManager: StorageManager<unknown>): Promise<{
   key: string;
@@ -16,48 +16,27 @@ export async function usageInfo(storageManager: StorageManager<unknown>): Promis
 }
 
 export async function usageInfoAll(): Promise<{
-  [K in StorageType]: Array<{ key: string; totalSize: number, description?: string }>;
+  [K in StorageType]: Array<{ key: string; totalSize: number; description?: string }>;
 }> {
   const result = {} as {
-    [K in StorageType]: Array<{ key: string; totalSize: number, description?: string }>;
+    [K in StorageType]: Array<{ key: string; totalSize: number; description?: string }>;
   };
 
   const storageDefinitions = getStorageDefinitions();
-  for (const definition of storageDefinitions) {
-    const type = definition.type;
 
-    const data = await chrome.storage[definition.type].get(definition.key);
-    const totalSize = getEncodedSize({ [definition.key]: data });
-    const description = getStorageDescription(definition.key);
-
-    if (!result[type]) {
-      result[type] = [];
-    }
-    result[type].push({
-      key: definition.key,
-      totalSize,
-      description
-    });
-  }
-
-  // storageDefinitions의 key들을 제외한 나머지
-  const storageTypes = (['local', 'sync', 'session'] as StorageType[]);
-  for (const type of storageTypes) {
+  for (const type of STORAGE_TYPES) {
+    result[type] = [];
 
     const entities = await getAllStorageItems(type);
+
     for (const key in entities) {
-      if (!result[type].some(item => item.key === key)) {
-        const totalSize = getEncodedSize({ [key]: entities[key] });
-        const description = getStorageDescription('unknown_key');
-        result[type].push({
-          key,
-          totalSize,
-          description
-        });
-      }
+      const isDefined = storageDefinitions.some(def => def.type === type && def.key === key);
+      const description = getStorageDescription(isDefined ? key : 'unknown_key');
+      const totalSize = getEncodedSize({ [key]: entities[key] });
+
+      result[type].push({ key, totalSize, description });
     }
   }
-
 
   return result;
 }
