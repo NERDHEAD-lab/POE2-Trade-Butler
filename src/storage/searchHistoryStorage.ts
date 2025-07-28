@@ -1,8 +1,4 @@
-import * as storage from './storage';
-import { get, set, StorageType } from './storage';
-
-const SEARCH_HISTORY_STORAGE_TYPE: StorageType = 'local';
-const SEARCH_HISTORY_KEY = 'searchHistory';
+import { StorageManager } from './storage';
 
 export interface SearchHistoryEntity {
   id: string;
@@ -11,16 +7,20 @@ export interface SearchHistoryEntity {
   previousSearches: string[];
 }
 
+const searchHistoryStorage = new StorageManager<SearchHistoryEntity[]>(
+  'local',
+  'searchHistory',
+  () => []
+);
+
 export function addOnChangeListener(
   listener: (newValue: SearchHistoryEntity[], oldValue: SearchHistoryEntity[]) => void
 ): void {
-  storage.addOnChangeListener(SEARCH_HISTORY_STORAGE_TYPE, SEARCH_HISTORY_KEY, listener);
+  searchHistoryStorage.addOnChangeListener(listener);
 }
 
-export function addOnDeletedListener(
-  listener: (deletedId: string) => void
-): void {
-  storage.addOnChangeListener<SearchHistoryEntity[]>(SEARCH_HISTORY_STORAGE_TYPE, SEARCH_HISTORY_KEY, (newValue, oldValue) => {
+export function addOnDeletedListener(listener: (deletedId: string) => void): void {
+  searchHistoryStorage.addOnChangeListener((newValue, oldValue) => {
     const newIds = new Set(newValue.map(entry => entry.id));
     const oldIds = new Set(oldValue.map(entry => entry.id));
 
@@ -30,7 +30,7 @@ export function addOnDeletedListener(
 }
 
 export async function getAll(): Promise<SearchHistoryEntity[]> {
-  return get(SEARCH_HISTORY_STORAGE_TYPE, SEARCH_HISTORY_KEY, []);
+  return searchHistoryStorage.get();
 }
 
 export async function addOrUpdate(id: string, url: string): Promise<boolean> {
@@ -44,7 +44,7 @@ export async function addOrUpdate(id: string, url: string): Promise<boolean> {
       id: id,
       url: url,
       lastSearched: new Date().toISOString(),
-      previousSearches: [],
+      previousSearches: []
     });
   } else {
     const existing = history[index];
@@ -52,7 +52,7 @@ export async function addOrUpdate(id: string, url: string): Promise<boolean> {
     existing.lastSearched = new Date().toISOString();
   }
 
-  await set(SEARCH_HISTORY_STORAGE_TYPE, SEARCH_HISTORY_KEY, history);
+  await searchHistoryStorage.set(history);
 
   return isNewEntry;
 }
@@ -60,7 +60,7 @@ export async function addOrUpdate(id: string, url: string): Promise<boolean> {
 export async function deleteById(id: string): Promise<void> {
   const history = await getAll();
   const updated = history.filter(entry => entry.id !== id);
-  await set(SEARCH_HISTORY_STORAGE_TYPE, SEARCH_HISTORY_KEY, updated);
+  await searchHistoryStorage.set(updated);
 }
 
 export async function exists(id: string): Promise<boolean> {
@@ -69,5 +69,5 @@ export async function exists(id: string): Promise<boolean> {
 }
 
 export async function removeAll(): Promise<void> {
-  await set(SEARCH_HISTORY_STORAGE_TYPE, SEARCH_HISTORY_KEY, []);
+  await searchHistoryStorage.set([]);
 }

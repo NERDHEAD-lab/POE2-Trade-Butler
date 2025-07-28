@@ -1,6 +1,6 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
-import { showToast } from '../utils/api';
+import { getCurrentServerRegion, getServerRegion, showToast } from '../utils/api';
 import { getCurrentLocale, getMessage } from '../utils/_locale';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as searchHistoryStorage from '../storage/searchHistoryStorage';
@@ -9,6 +9,7 @@ import { TradePreviewer } from '../utils/tradePreviewInjector';
 import * as previewStorage from '../storage/previewStorage';
 import * as favoriteUI from '../ui/favoriteFileSystemUI';
 import * as fs from '../ui/fileSystemEntry';
+import * as settings from '../ui/settingsModal';
 import { openFavoriteFolderModal } from '../ui/newFavoriteModal';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
@@ -17,6 +18,7 @@ const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
 const sidebarHtml = `
 <div id="sidebar-header">
   <h2 class="sidebar-header-title">${getMessage('sidebar_title')}</h2>
+  <button id="setting"/>
 </div>
 <div id="poe2-sidebar-resizer"></div>
 <div id="sidebar-menu">
@@ -85,7 +87,7 @@ export function renderSidebar(container: HTMLElement): void {
       // 스크롤이 배너 높이 이하일 땐 점점 올라가고, 초과시 0으로 고정
       const newTop = Math.max(minTop, bannerHeight - scrollTop);
       sidebar.style.top = newTop + 'px';
-    })
+    });
   }
 
   const resizer = sidebar.querySelector<HTMLDivElement>('#poe2-sidebar-resizer');
@@ -149,6 +151,12 @@ export function renderSidebar(container: HTMLElement): void {
       settingStorage.setHistoryAutoAddEnabled(isChecked);
       showToast(getMessage('toast_history_auto_add', isChecked ? 'enabled' : 'disabled'));
     });
+  })();
+
+  (async () => {
+    const settingButton = sidebar.querySelector<HTMLButtonElement>('#setting');
+    if (!settingButton) throw new Error('setting button not found');
+    void settings.attachSettingOnClick(settingButton);
   })();
 
 
@@ -318,7 +326,13 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
 
   // history-item 클릭 시
   li.addEventListener('click', () => {
-    window.location.href = api.getUrlFromSearchHistory(entry);
+    if (!(getServerRegion(new URL(entry.url)) === getCurrentServerRegion())) {
+      if(!confirm(getMessage('confirm_redirect_to_other_server', getServerRegion(new URL(entry.url)), getCurrentServerRegion()))) {
+        return;
+      }
+    }
+
+    window.location.href = entry.url;
   });
 
 
@@ -526,7 +540,7 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
       .then(() => console.log(getMessage('log_search_history_updated', currentUrl)));
 
   } catch (err) {
-    console.info(`Unexpected error while handling URL change: ${currentUrl}`, err);
+    console.info(getMessage('error_handle_url_change', currentUrl), err);
     if (process.env.NODE_ENV === 'development') {
       const errMsg = (err instanceof Error) ? err.toString() : String(err);
       console.error(getMessage('error_handle_url_change', errMsg));

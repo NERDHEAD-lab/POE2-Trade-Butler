@@ -1,6 +1,8 @@
 {
+  "plugins": ["@babel/plugin-syntax-dynamic-import"],
+  "sourceType": "unambiguous",
   "presets": [
-    "@babel/preset-env",
+    ["@babel/preset-env", { "modules": "auto" }],
     "@babel/preset-typescript"
   ]
 }

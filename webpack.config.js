@@ -28,18 +28,24 @@ export default (env, argv = {}) => {
     module: {
       rules: [
         {
-          test: /\.ts$/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: ['@babel/preset-env', '@babel/preset-typescript']
-            }
-          },
+          test: /\.[jt]sx?$/,
+          use: { loader: 'babel-loader' },
           exclude: /node_modules/
         },
         {
           test: /\.css$/i,
-          use: [MiniCssExtractPlugin.loader, 'css-loader']
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader'
+          ]
+        },
+        {
+          test: /\.scss$/i,
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            'sass-loader'
+          ]
         },
         {
           test: /\.(png|jpg|jpeg|gif|svg)$/i,
@@ -66,5 +72,5 @@ export default (env, argv = {}) => {
       new MiniCssExtractPlugin()
     ],
     devtool: mode === 'development' ? 'source-map' : 'hidden-source-map'
-  }
+  };
 }

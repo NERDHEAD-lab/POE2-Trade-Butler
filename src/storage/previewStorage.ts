@@ -1,10 +1,6 @@
-import * as storage from './storage';
-import { get, set, StorageType } from './storage';
+import { StorageManager } from './storage';
 import * as searchHistory from './searchHistoryStorage';
 import * as favorite from './favoriteStorage';
-
-const PREVIEW_STORAGE_TYPE: StorageType = 'local';
-const PREVIEW_STORAGE_KEY = 'previewPanelSnapshots';
 
 export interface PreviewPanelSnapshot {
   searchKeyword: string;
@@ -13,25 +9,33 @@ export interface PreviewPanelSnapshot {
   timestamp: number;
 }
 
+const previewStorage = new StorageManager<Record<string, PreviewPanelSnapshot>>(
+  'local',
+  'previewPanelSnapshots',
+  () => ({}) as Record<string, PreviewPanelSnapshot>
+);
+
 export function addOnChangeListener(
-  listener: (newValue: Record<string, PreviewPanelSnapshot>, oldValue: Record<string, PreviewPanelSnapshot>) => void
+  listener: (
+    newValue: Record<string, PreviewPanelSnapshot>,
+    oldValue: Record<string, PreviewPanelSnapshot>
+  ) => void
 ): void {
-  storage.addOnChangeListener(PREVIEW_STORAGE_TYPE, PREVIEW_STORAGE_KEY, listener);
+  previewStorage.addOnChangeListener(listener);
 }
 
 async function getAll(): Promise<Record<string, PreviewPanelSnapshot>> {
-  return get(PREVIEW_STORAGE_TYPE, PREVIEW_STORAGE_KEY, {} as Record<string, PreviewPanelSnapshot>);
+  return previewStorage.get();
 }
 
 async function deleteById(id: string): Promise<void> {
   const currentSnapshots: Record<string, PreviewPanelSnapshot> = await getAll();
   delete currentSnapshots[id];
-  await set(PREVIEW_STORAGE_TYPE, PREVIEW_STORAGE_KEY, currentSnapshots);
+  await previewStorage.set(currentSnapshots);
 }
 
 export async function getById(id: string): Promise<PreviewPanelSnapshot> {
-  return get(PREVIEW_STORAGE_TYPE, PREVIEW_STORAGE_KEY, {} as Record<string, PreviewPanelSnapshot>)
-    .then(result => result[id] || null);
+  return previewStorage.get().then(result => result[id] || null);
 }
 
 export async function addOrUpdateById(id: string, snapshot: PreviewPanelSnapshot): Promise<void> {
@@ -43,7 +47,7 @@ export async function addOrUpdateById(id: string, snapshot: PreviewPanelSnapshot
 
   // Update or add the snapshot
   currentSnapshots[id] = snapshot;
-  await set(PREVIEW_STORAGE_TYPE, PREVIEW_STORAGE_KEY, currentSnapshots);
+  await previewStorage.set(currentSnapshots);
 }
 
 export async function exists(id: string): Promise<boolean> {
@@ -52,7 +56,10 @@ export async function exists(id: string): Promise<boolean> {
 }
 
 //다른 저장소에서 id 확인 후 참조가 없는 경우에만 삭제
-export async function deleteIfOrphaned(deletedId: string, triggered: 'searchHistory' | 'favorite'): Promise<void> {
+export async function deleteIfOrphaned(
+  deletedId: string,
+  triggered: 'searchHistory' | 'favorite'
+): Promise<void> {
   const currentSnapshots: Record<string, PreviewPanelSnapshot> = await getAll();
   const snapshots: PreviewPanelSnapshot = currentSnapshots[deletedId] || {};
 

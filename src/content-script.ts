@@ -1,8 +1,11 @@
+import './storage/initStorage';
 import { renderSidebar } from './components/sidebar';
 import './styles/sidebar.css';
 import { getMessage } from './utils/_locale';
 import * as butlerGuide from './support/butlerGuide';
+import { registerExtensionContextAutoReload } from './utils/extensionContextWatcher';
 
+registerExtensionContextAutoReload();
 
 const content = document.querySelector('.content') as HTMLElement;
 if (!content) {

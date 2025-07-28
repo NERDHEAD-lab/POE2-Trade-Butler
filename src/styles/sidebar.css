@@ -106,7 +106,7 @@
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 5px 10px;
+    padding: 0;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
 }
@@ -342,8 +342,9 @@ input:checked + .slider:before {
     color: #fff;
     padding: 10px 20px 20px;
     border-radius: 8px;
-    width: 450px;
-    max-width: 90%;
+    width: auto;
+    min-width: 450px;
+    max-width: unset;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     text-align: center;
 }
@@ -358,6 +359,8 @@ input:checked + .slider:before {
 }
 
 .poe2-modal-title {
+    border-radius: 8px;
+    padding: 4px 10px;
     background-color: rgba(0, 0, 0, 0.5);
     font-size: 24px;
     margin-top: 0;

@@ -3,12 +3,16 @@
   "version": "2.7.0",
   "main": "index.js",
   "scripts": {
-    "build": "npm run lint && webpack --mode production && npm run zip",
-    "build:dev": "webpack --mode development && npm run lint:dev",
+    "build": "npm run lint && npm run pre:build && webpack --mode production && npm run script:zip",
+    "build:dev": "npm run pre:build && webpack --mode development && npm run lint:dev",
     "lint": "eslint .",
     "lint:dev": "eslint . --config eslint.dev.config.mjs",
-    "format": "prettier --write .",
-    "zip": "tsx scripts/create-zip.ts"
+    "prettier": "prettier --write .",
+
+    "pre:build": "npm run script:generate:langs && npm run script:generate:storage-init",
+    "script:generate:langs": "tsx scripts/generate-supported-languages.ts",
+    "script:generate:storage-init": "tsx scripts/generate-storage-manager-initializer.ts",
+    "script:zip": "tsx scripts/create-zip.ts"
   },
   "type": "module",
   "keywords": [
@@ -23,6 +27,7 @@
   "description": "A Chrome Extension for POE2 Trade with a sidebar and history management.",
   "devDependencies": {
     "@babel/core": "^7.26.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-typescript": "^7.27.1",
     "@types/archiver": "^6.0.3",
@@ -41,6 +46,8 @@
     "globals": "^16.2.0",
     "npm-check-updates": "^18.0.1",
     "prettier": "^3.4.2",
+    "sass": "^1.89.2",
+    "sass-loader": "^16.0.5",
     "tsx": "^4.20.3",
     "typescript-eslint": "^8.35.0",
     "webpack": "^5.97.1",

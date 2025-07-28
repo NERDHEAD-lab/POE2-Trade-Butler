@@ -1,14 +1,15 @@
 import { getMessage } from './_locale';
+
 /*
-  http(s)://www.pathofexile.com/trade2/search/poe2/{serverName}/{id}
+  http(s)://(www|jp|br|ru|th|de|fr|es).pathofexile.com/trade2/search/poe2/{serverName}/{id}
   http(s)://poe.game.daum.net/trade2/search/poe2/{serverName}/{id}
  */
 export function parseSearchUrl(url: string): { serverName: string, id: string } | null {
-  const regex = /^https?:\/\/(www\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)\/([^/]+)$/;
+  const regex = /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)\/([^/]+)$/;
   const match = url.match(regex);
   if (!match) return null;
 
-  const [, , serverNameRaw, id] = match;
+  const [, , , serverNameRaw, id] = match;
   try {
     const serverName = decodeURIComponent(serverNameRaw);
     return { serverName, id };
@@ -35,7 +36,7 @@ export function getUrlFromSearchHistory(
   },
   currentUrl: string = window.location.href
 ): string {
-  const regex = /^https?:\/\/(www\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)(?:\/[^/]+)?\/?$/;
+  const regex = /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)(?:\/[^/]+)?\/?$/;
 
   const match = currentUrl.match(regex);
   if (!match) {
@@ -43,13 +44,32 @@ export function getUrlFromSearchHistory(
     return history.url;
   }
 
-  const base = `https://${match[1]}/trade2/search/poe2/${match[2]}`;
+  const base = `https://${match[1]}/trade2/search/poe2/${match[3]}`;
   return `${base}/${history.id}`;
 }
 
 export function isKoreanServer(): boolean {
-  const currentUrl = window.location.href;
-  return currentUrl.includes('poe.game.daum.net');
+  const currentUrl = new URL(window.location.href);
+  return currentUrl.hostname === 'poe.game.daum.net';
+}
+
+export function getCurrentServerRegion(): string {
+  return getServerRegion(new URL(window.location.href));
+}
+
+export function getServerRegion(url: URL): string {
+  const hostname = url.hostname;
+
+  if (hostname === 'poe.game.daum.net') return 'kr';
+  if (hostname === 'jp.pathofexile.com') return 'jp';
+  if (hostname === 'br.pathofexile.com') return 'br';
+  if (hostname === 'ru.pathofexile.com') return 'ru';
+  if (hostname === 'th.pathofexile.com') return 'th';
+  if (hostname === 'de.pathofexile.com') return 'de';
+  if (hostname === 'fr.pathofexile.com') return 'fr';
+  if (hostname === 'es.pathofexile.com') return 'es';
+  if (hostname === 'www.pathofexile.com') return 'global';
+  return 'global'; // Default for www.pathofexile.com
 }
 
 export function showToast(message: string, color = '#fff', duration = 3000) {
@@ -99,7 +119,27 @@ export function showToast(message: string, color = '#fff', duration = 3000) {
  */
 export type ButtonListener = (modal: HTMLDivElement) => Promise<boolean>;
 
-interface ModalOptions {
+/**
+ * 모달 옵션 인터페이스
+ * @property title - 모달 제목 (선택 사항)
+ * @property div - 모달에 표시할 HTMLDivElement
+ * @property confirm - 확인 버튼 텍스트 (기본값: '저장')
+ * @property cancel - 취소 버튼 텍스트 (기본값: '취소')
+ *
+ * listener는 모달의 확인/취소 버튼 클릭 시 호출되는 함수입니다.
+ * return 값이 true이면 모달이 닫히고, false이면 닫히지 않습니다.
+ * @property onConfirmListener - 확인 버튼 클릭 시 호출되는 리스너 (선택 사항)
+ * @property onCancelListener - 취소 버튼 클릭 시 호출되는 리스너 (선택 사항)
+ * @property onOverlayClickListener - 모달 외부 클릭 시 호출되는 리스너 (선택 사항)
+ *
+ * @property etcButtons - 추가 버튼들 (선택 사항)
+ * - 각 버튼은 이름과 클릭 시 호출되는 리스너를 포함합니다.
+ *   name: 버튼 이름
+ *   listener: 버튼 클릭 시 호출되는 리스너
+ *
+ * @property hideCancel - 취소 버튼 숨기기 (기본값: false)
+ */
+export interface ModalOptions {
   title?: string;
   div: HTMLDivElement;
   confirm?: string;
@@ -176,7 +216,7 @@ export function showModal(options: ModalOptions): void {
     btn.textContent = label;
 
     const baseStyle = {
-      padding: '6px 12px',
+      padding: '6px 18px',
       fontSize: '14px',
       borderRadius: '4px',
       border: '1px solid transparent',
@@ -200,6 +240,7 @@ export function showModal(options: ModalOptions): void {
         border: '1px solid #d4b060'
       },
       cancel: {
+        padding: '6px 12px',
         backgroundColor: '#2a2a2a',
         color: '#ccc',
         border: '1px solid #555'
@@ -227,15 +268,24 @@ export function showModal(options: ModalOptions): void {
   }
 
   for (const btn of etcButtons) {
-    leftBtnGroup.appendChild(
-      makeButton(btn.name, btn.listener, 'normal') // 예: 폴더 삭제 같은 위험 행동
-    );
+    leftBtnGroup.appendChild(makeButton(btn.name, btn.listener, 'normal'));
   }
 
 // 오른쪽 버튼들
-  rightBtnGroup.appendChild(makeButton(confirm, onConfirmListener, 'confirm'));
+  const confirmBtn = makeButton(confirm, onConfirmListener, 'confirm');
+  rightBtnGroup.appendChild(confirmBtn);
   if (!hideCancel) {
-    rightBtnGroup.appendChild(makeButton(cancel, onCancelListener, 'cancel'));
+    const cancelBtn = makeButton(cancel, onCancelListener, 'cancel');
+    rightBtnGroup.appendChild(cancelBtn);
+    // 확인 버튼은 적어도 취소 버튼보다는 같거나 큰 크기로 설정
+    // confirmBtn.style.minWidth = cancelBtn.offsetWidth + 'px';
+    requestAnimationFrame(() => {
+      confirmBtn.style.minWidth = `${cancelBtn.offsetWidth}px`;
+      const etcButtons = leftBtnGroup.querySelectorAll('button');
+      etcButtons.forEach((btn) => {
+        btn.style.minWidth = `${cancelBtn.offsetWidth}px`;
+      });
+    });
   }
 
   btnWrapper.appendChild(leftBtnGroup);
