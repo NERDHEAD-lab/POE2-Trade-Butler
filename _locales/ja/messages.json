@@ -575,5 +575,25 @@
   "storage_description_poe2trade_settings_redirectPoe2TradeEnabled": {
     "message": "POE2取引ページへの自動リダイレクト設定です。",
     "description": "Toggles automatic redirect to POE2 trade page"
+  },
+  "settings_tab_storage": {
+    "message": "ストレージ",
+    "description": "Settings tab for storage management"
+  },
+  "settings_option_storage_local": {
+    "message": "ローカルストレージ",
+    "description": "Settings option to enable local storage for the extension"
+  },
+  "settings_option_storage_local_description": {
+    "message": "設定とデータをローカルストレージに保存します。\nブラウザを閉じた後も保持されます。",
+    "description": "Description for local storage option in settings"
+  },
+  "settings_option_storage_sync": {
+    "message": "Googleアカウント同期ストレージ",
+    "description": "Settings option to enable Google Account sync for storage"
+  },
+  "settings_option_storage_sync_description": {
+    "message": "Googleアカウント同期を利用して設定とデータを保存します。\n同じアカウントでログインしているすべてのデバイスで同期されます。",
+    "description": "Description for Google Account sync storage option in settings"
   }
 }

@@ -3,9 +3,17 @@ import '../styles/settings.scss';
 import { getMessage } from '../utils/_locale';
 import { ModalOptions, showModal, showToast } from '../utils/api';
 import { LANGUAGE_NATIVE_NAMES } from '../utils/supportedLanguages';
-import { CheckboxDetailOption, DivTextDetailOption, SelectDetailOption, SettingManager, Settings } from '../utils/settingManager';
+import {
+  AnyDetailOption,
+  CheckboxDetailOption,
+  DivTextDetailOption,
+  SelectDetailOption,
+  SettingManager, SettingOption,
+  Settings
+} from '../utils/settingManager';
 import * as settingStorage from '../storage/settingStorage';
 import * as information from './information';
+import * as storageUsage from '../storage/storageUsage';
 
 const settings: Settings = {
   tabs: [
@@ -69,6 +77,11 @@ const settings: Settings = {
       ]
     },
     {
+      name: getMessage('settings_tab_storage'),
+      iconUrl: chrome.runtime.getURL('assets/database_24dp_E9E5DE.svg'),
+      options: () => generateStorageOptions()
+    },
+    {
       name: getMessage('settings_tab_info'),
       iconUrl: chrome.runtime.getURL('assets/info_24dp_E9E5DE.svg'),
       options: [
@@ -77,7 +90,7 @@ const settings: Settings = {
           name: '',
           optionDetail: {
             type: 'text',
-            value: createInformationDiv(),
+            value: createInformationDiv()
           } as DivTextDetailOption
         }
       ]
@@ -102,12 +115,12 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
   });
 
 
-  parent.addEventListener('click', () => {
+  parent.addEventListener('click', async () => {
     const settingManager = new SettingManager(settings);
 
     const modalOptions: ModalOptions = {
       title: getMessage('settings'),
-      div: settingManager.generateSettingsDiv(),
+      div: await settingManager.generateSettingsDiv(),
       confirm: getMessage('button_save'),
       cancel: getMessage('button_cancel'),
       onConfirmListener: async (): Promise<boolean> => {
@@ -169,7 +182,6 @@ function defaultLanguage(): string {
     LANGUAGE_NATIVE_NAMES.en;
 }
 
-
 function createInformationDiv(): HTMLDivElement {
   const infoDiv = document.createElement('div');
   infoDiv.className = 'poe2-settings-option-information';
@@ -181,4 +193,129 @@ async function i18nIndex(): Promise<number> {
   const language = await settingStorage.getLanguage();
   const index = Object.keys(LANGUAGE_NATIVE_NAMES).indexOf(language);
   return index === -1 ? 0 : index + 1; // +1 because the first option is "default"
+}
+
+async function generateStorageOptions(): Promise<SettingOption<AnyDetailOption>[]> {
+  const result: SettingOption<AnyDetailOption>[] = [];
+
+  const usageInfo = await storageUsage.usageInfoAll();
+
+  Object.keys(usageInfo).forEach(storageType => {
+    const usage = usageInfo[storageType as keyof typeof usageInfo];
+    if (usage.totalSize === 0) return;
+
+    result.push(generateStorageOption(storageType, usage));
+  });
+
+  return result;
+}
+
+function generateStorageOption(
+  storageType: string,
+  usageInfo: storageUsage.StorageTypeUsage
+): SettingOption<AnyDetailOption> {
+  const id = `${storageType}-storage`;
+  const name = getMessage(`settings_option_storage_${storageType}`);
+  return {
+    id,
+    name: `${name} (${usageInfo.totalSize_f})`,
+    description: getMessage(`settings_option_storage_${storageType}_description`),
+    iconUrl: chrome.runtime.getURL(`assets/storage_24dp_E9E5DE.svg`),
+    optionDetail: {
+      type: 'text',
+      value: createStorageDiv(usageInfo)
+    }
+  };
+}
+
+function createStorageDiv(usage: storageUsage.StorageTypeUsage): HTMLDivElement {
+  const container = document.createElement('div');
+  container.className = 'poe2-settings-option-storage-usage';
+
+  const totalSize = usage.totalSize || 1;
+
+  const undefinedDetails = document.createElement('details');
+  undefinedDetails.className = 'storage-undefined-details';
+  let undefinedTotalSize = 0;
+
+  usage.entities.forEach(entry => {
+    const { key, description, size, size_f, isDefined } = entry;
+    const percent = Math.min(100, (size / totalSize) * 100);
+
+    const block = document.createElement('div');
+    block.className = 'storage-entry';
+
+    const label = document.createElement('div');
+    label.className = 'storage-label';
+    label.textContent = key;
+
+    if (isDefined) {
+      const desc = document.createElement('div');
+      desc.className = 'storage-description';
+      desc.textContent = `- ${description}`;
+      label.appendChild(desc);
+    }
+
+    const barContainer = createBarContainer(percent, size_f);
+
+    block.appendChild(label);
+    block.appendChild(barContainer);
+
+    if (!isDefined) {
+      undefinedDetails.appendChild(block);
+      undefinedTotalSize += size;
+    } else {
+      container.appendChild(block);
+    }
+  });
+
+  if (undefinedDetails.childElementCount > 1) {
+    const undefinedContainer = document.createElement('div');
+    undefinedContainer.className = 'storage-undefined-container';
+
+    const undefinedTotalSize_f = storageUsage.formatFileSize(undefinedTotalSize);
+    const percent = Math.min(100, (undefinedTotalSize / totalSize) * 100);
+
+
+    const undefinedSummary = document.createElement('summary');
+
+    const undefinedSummarySpan = document.createElement('span');
+    undefinedSummarySpan.className = 'storage-undefined-summary';
+    undefinedSummarySpan.textContent = `undefined(legacy) data (${undefinedTotalSize_f} / ${usage.totalSize_f})`;
+
+    const barContainer = createBarContainer(percent, undefinedTotalSize_f);
+
+    undefinedSummary.appendChild(undefinedSummarySpan);
+    undefinedSummary.appendChild(barContainer);
+
+    undefinedDetails.appendChild(undefinedSummary);
+
+    undefinedContainer.appendChild(undefinedDetails);
+
+    container.appendChild(undefinedContainer);
+  }
+
+  return container;
+}
+
+function createBarContainer(percent: number, size_f: string): HTMLDivElement {
+  const barContainer = document.createElement('div');
+  barContainer.className = 'storage-bar-container';
+
+  const barWrapper = document.createElement('div');
+  barWrapper.className = 'storage-bar-wrapper';
+
+  const bar = document.createElement('div');
+  bar.className = 'storage-bar';
+  bar.style.width = `${percent}%`;
+
+  const sizeText = document.createElement('div');
+  sizeText.className = 'storage-size';
+  sizeText.textContent = `${size_f} (${percent.toFixed(2)}%)`;
+
+  barWrapper.appendChild(bar);
+  barContainer.appendChild(barWrapper);
+  barContainer.appendChild(sizeText);
+
+  return barContainer;
 }

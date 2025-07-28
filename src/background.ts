@@ -1,4 +1,4 @@
-import { executeLegacyVersionMigrations } from './storage/legacy/legacyVersionManager';
+import * as legacy from './storage/legacy/legacyVersionManager';
 import * as searchHistory from './storage/searchHistoryStorage';
 import * as favorite from './storage/favoriteStorage';
 import * as previewStorage from './storage/previewStorage';
@@ -8,7 +8,7 @@ import * as storageUsage from './storage/storageUsage';
 
 Promise.resolve()
   .then(() => settingStorage.flushI18n())
-  .then(() => executeLegacyVersionMigrations())
+  .then(() => legacy.executeLegacyVersionMigrations())
   .then(() => previewStorage.cleanExpiredOrphanSnapshots())
   .then(() => {
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

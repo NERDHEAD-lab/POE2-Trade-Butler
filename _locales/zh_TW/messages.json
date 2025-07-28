@@ -571,5 +571,25 @@
   "storage_description_poe2trade_settings_redirectPoe2TradeEnabled": {
     "message": "POE2 交易頁面的自動重新導向設定。",
     "description": "Toggles automatic redirect to POE2 trade page"
+  },
+  "settings_tab_storage": {
+    "message": "儲存空間",
+    "description": "Settings tab for storage management"
+  },
+  "settings_option_storage_local": {
+    "message": "本機儲存",
+    "description": "Settings option to enable local storage for the extension"
+  },
+  "settings_option_storage_local_description": {
+    "message": "使用本機儲存來保存您的設定和資料。\n即使關閉瀏覽器也會保留。",
+    "description": "Description for local storage option in settings"
+  },
+  "settings_option_storage_sync": {
+    "message": "Google 帳戶同步儲存",
+    "description": "Settings option to enable Google Account sync for storage"
+  },
+  "settings_option_storage_sync_description": {
+    "message": "使用 Google 帳戶同步來保存您的設定和資料。\n將在所有登入相同帳戶的裝置上同步。",
+    "description": "Description for Google Account sync storage option in settings"
   }
 }

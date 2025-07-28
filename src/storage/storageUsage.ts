@@ -1,14 +1,15 @@
 import { getMessage } from '../utils/_locale';
 import { getAllStorageItems, getStorageDefinitions, StorageManager, StorageType, STORAGE_TYPES } from './storage';
 
-interface StorageEntryUsage {
+export interface StorageEntryUsage {
   key: string;
   size: number;
   size_f: string;
+  isDefined: boolean;
   description: string;
 }
 
-interface StorageTypeUsage {
+export interface StorageTypeUsage {
   entities: StorageEntryUsage[];
   totalSize: number;
   totalSize_f: string;
@@ -27,6 +28,7 @@ export async function usageInfo(storageManager: StorageManager<unknown>): Promis
     key: storageManager.key,
     size: 0,
     size_f: '0.00B',
+    isDefined: false,
     description: getStorageDescription(storageManager.key)
   };
 }
@@ -56,6 +58,7 @@ export async function usageInfoAll(): Promise<UsageInfoFormatted> {
         key,
         size,
         size_f: formattedSize,
+        isDefined,
         description
       });
     }
@@ -85,7 +88,7 @@ function getStorageDescription(key: string): string {
   return description;
 }
 
-function formatFileSize(size: number): string {
+export function formatFileSize(size: number): string {
   const units = ['B', 'KB', 'MB', 'GB', 'TB'];
   for (let i = 0; i < units.length; i++) {
     if (size < 1024 || i === units.length - 1) {

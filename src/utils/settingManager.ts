@@ -5,10 +5,11 @@ export interface Settings {
 interface SettingTab {
   name: string;
   iconUrl: string;
-  options: SettingOption<AnyDetailOption>[];
+  options: SettingOption<AnyDetailOption>[] | (() => SettingOption<AnyDetailOption>[]) | (() => Promise<SettingOption<AnyDetailOption>[]>);
 }
 
-interface SettingOption<T extends AnyDetailOption> {
+
+export interface SettingOption<T extends AnyDetailOption> {
   id: string;
   name: string;
   iconUrl?: string;
@@ -16,7 +17,12 @@ interface SettingOption<T extends AnyDetailOption> {
   optionDetail: T;
 }
 
-type AnyDetailOption = CheckboxDetailOption | SelectDetailOption | DivTextDetailOption | NumberDetailOption | SwitchDetailOption;
+export type AnyDetailOption =
+  CheckboxDetailOption
+  | SelectDetailOption
+  | DivTextDetailOption
+  | NumberDetailOption
+  | SwitchDetailOption;
 
 interface DetailOption<T> {
   type: 'checkbox' | 'select' | 'text' | 'number' | 'switch';
@@ -73,7 +79,7 @@ export class SettingManager {
     this.settings = settings;
   }
 
-  public generateSettingsDiv(): HTMLDivElement {
+  public async generateSettingsDiv(): Promise<HTMLDivElement> {
     const settingsDiv = document.createElement('div');
     settingsDiv.className = 'poe2-settings';
 
@@ -91,7 +97,7 @@ export class SettingManager {
     if (this.settings.tabs.length === 0) return settingsDiv;
 
     this.createTab(tabListDiv, contentDiv, tabOptionsMap);
-    this.createContent(contentDiv, tabOptionsMap);
+    await this.createContent(contentDiv, tabOptionsMap);
 
     settingsDiv.appendChild(tabListDiv);
     settingsDiv.appendChild(contentDiv);
@@ -100,20 +106,21 @@ export class SettingManager {
   }
 
 
-  private createContent(contentDiv: HTMLDivElement, tabOptionsMap: Map<string, HTMLElement>) {
-    this.settings.tabs.forEach((tab, idx) => {
+  private async createContent(contentDiv: HTMLDivElement, tabOptionsMap: Map<string, HTMLElement>) {
+    for (const tab of this.settings.tabs) {
+      const idx = this.settings.tabs.indexOf(tab);
       const tabContent = document.createElement('div');
       tabContent.className = 'poe2-settings-content-tab';
       if (idx !== 0) tabContent.style.display = 'none'; // 첫 탭만 보이게
 
       const titleBar = this.createContentTitle(tab);
-      const optionsDiv = this.createOptions(tab);
+      const optionsDiv = await this.createOptions(tab);
 
       tabContent.appendChild(titleBar);
       tabContent.appendChild(optionsDiv);
       contentDiv.appendChild(tabContent);
       tabOptionsMap.set(tab.name, tabContent);
-    });
+    }
   }
 
   // 탭 제목 "-----일반------------------------" 이런 스타일의 제목을 추가
@@ -134,11 +141,14 @@ export class SettingManager {
     return titleBar;
   }
 
-  private createOptions(tab: SettingTab): HTMLDivElement {
+  private async createOptions(tab: SettingTab): Promise<HTMLDivElement> {
     const optionsDiv = document.createElement('div');
     optionsDiv.className = 'poe2-settings-options';
 
-    tab.options.forEach(option => {
+    const rawOptions = typeof tab.options === 'function' ? tab.options() : tab.options;
+    const options = rawOptions instanceof Promise ? await rawOptions : rawOptions;
+
+    options.forEach(option => {
       const optionDiv = document.createElement('div');
       optionDiv.className = 'poe2-settings-option';
 
@@ -156,7 +166,7 @@ export class SettingManager {
       optionDiv.appendChild(label);
 
       // input 렌더링 (switch, checkbox, select)
-      let optionElement: HTMLInputElement | HTMLSelectElement | HTMLLabelElement | HTMLDivElement;
+      let optionElement: HTMLElement;
       switch (option.optionDetail.type) {
         case 'checkbox': {
           const opt = option.optionDetail;
@@ -217,6 +227,7 @@ export class SettingManager {
         }
         case 'text': {
           const textOpt = option.optionDetail;
+
           optionElement = document.createElement('div');
           optionElement.className = 'poe2-settings-option-text';
           if (textOpt.value instanceof HTMLDivElement) {

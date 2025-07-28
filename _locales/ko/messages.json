@@ -575,5 +575,25 @@
   "storage_description_poe2trade_settings_redirectPoe2TradeEnabled": {
     "message": "POE2 거래소로 자동 리디렉션 설정입니다.",
     "description": "Toggles automatic redirect to POE2 trade page"
+  },
+  "settings_tab_storage": {
+    "message": "저장소",
+    "description": "Settings tab for storage management"
+  },
+  "settings_option_storage_local": {
+    "message": "로컬 저장소",
+    "description": "Settings option to enable local storage for the extension"
+  },
+  "settings_option_storage_local_description": {
+    "message": "설정과 데이터를 로컬 저장소에 저장합니다.\n브라우저를 종료한 후에도 유지됩니다.",
+    "description": "Description for local storage option in settings"
+  },
+  "settings_option_storage_sync": {
+    "message": "Google 계정 동기화 저장소",
+    "description": "Settings option to enable Google Account sync for storage"
+  },
+  "settings_option_storage_sync_description": {
+    "message": "Google 계정 동기화를 통해 설정과 데이터를 저장합니다.\n같은 계정으로 로그인된 모든 기기에서 동기화됩니다.",
+    "description": "Description for Google Account sync storage option in settings"
   }
 }

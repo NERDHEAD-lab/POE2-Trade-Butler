@@ -9,7 +9,7 @@ import { TradePreviewer } from '../utils/tradePreviewInjector';
 import * as previewStorage from '../storage/previewStorage';
 import * as favoriteUI from '../ui/favoriteFileSystemUI';
 import * as fs from '../ui/fileSystemEntry';
-import * as settings from '../ui/settings';
+import * as settings from '../ui/settingsModal';
 import { openFavoriteFolderModal } from '../ui/newFavoriteModal';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';

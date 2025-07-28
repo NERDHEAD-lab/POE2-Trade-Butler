@@ -575,5 +575,25 @@
   "storage_description_poe2trade_settings_redirectPoe2TradeEnabled": {
     "message": "POE2 trade redirect setting.",
     "description": "Toggles automatic redirect to POE2 trade page"
+  },
+  "settings_tab_storage": {
+    "message": "Storage",
+    "description": "Settings tab for storage management"
+  },
+  "settings_option_storage_local": {
+    "message": "Local storage",
+    "description": "Settings option to enable local storage for the extension"
+  },
+  "settings_option_storage_local_description": {
+    "message": "Use local storage to save your settings and data.\nThis will persist even after the browser is closed.",
+    "description": "Description for local storage option in settings"
+  },
+  "settings_option_storage_sync": {
+    "message": "Google Account Sync Storage",
+    "description": "Settings option to enable Google Account sync for storage"
+  },
+  "settings_option_storage_sync_description": {
+    "message": "Use Google Account sync to save your settings and data.\nThis will sync across all devices where you are logged in with the same account.",
+    "description": "Description for Google Account sync storage option in settings"
   }
 }
