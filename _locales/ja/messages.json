@@ -11,7 +11,6 @@
     "message": "サイドバーと履歴管理機能を備えたPOE2トレード用のChrome拡張機能です。",
     "description": "Description of the Chrome extension"
   },
-
   "log_migration_start": {
     "message": "バージョン $1 から $2 へのマイグレーションを開始しています",
     "description": "Log message when starting migrations"
@@ -36,7 +35,6 @@
     "message": "エントリの表示を切り替えています: $1 (ID: $2)",
     "description": "Log message when toggling visibility for an entry"
   },
-
   "error_clear_history": {
     "message": "検索履歴のクリア中にエラーが発生しました: $1",
     "description": "Error message when clearing search history"
@@ -129,12 +127,10 @@
     "message": "詳細パネルが時間内に展開されませんでした",
     "description": "Error message when advanced panel did not expand in time"
   },
-
   "warn_no_data_for_migration": {
     "message": "マイグレーション用のデータが見つかりません: $1",
     "description": "Warning message when no data is found for migration"
   },
-
   "toast_history_cleared": {
     "message": "検索履歴が正常にクリアされました。",
     "description": "Toast message when history is cleared"
@@ -523,5 +519,61 @@
   "extension_reloaded_notice": {
     "message": "拡張機能が更新されました。ページは自動的にリフレッシュされます。",
     "description": "Notice shown when the extension is reloaded"
+  },
+  "storage_description_unknown_key": {
+    "message": "不明なストレージキーです。削除されたか、非推奨になった可能性があります。",
+    "description": "Description for unknown keys in storage"
+  },
+  "storage_description_caches": {
+    "message": "拡張機能のキャッシュです。一時データを保存し、より高速なアクセスを可能にします。",
+    "description": "Description for storage caches"
+  },
+  "storage_description_favoriteFolders": {
+    "message": "拡張機能のお気に入りフォルダです。お気に入り項目を保存するために使用されます。",
+    "description": "Description for storage favorite folders"
+  },
+  "storage_description_poe2trade_settings_i18n": {
+    "message": "拡張機能の翻訳データキャッシュです。",
+    "description": "Stores i18n translation data per language"
+  },
+  "storage_description_poe2trade_settings_latestSearchUrl": {
+    "message": "最近使用した検索URLです。",
+    "description": "Most recent trade search URL"
+  },
+  "storage_description_poe2trade_settings_sidebarCollapsed": {
+    "message": "サイドバーの折りたたみ状態です。",
+    "description": "Indicates whether the sidebar is collapsed"
+  },
+  "storage_description_poe2trade_storage_version": {
+    "message": "拡張機能のストレージバージョンです。",
+    "description": "Tracks current version of the storage schema"
+  },
+  "storage_description_previewPanelSnapshots": {
+    "message": "取引プレビューパネルのスナップショットです。",
+    "description": "Temporary snapshots used in trade preview panel"
+  },
+  "storage_description_searchHistory": {
+    "message": "検索履歴のエントリです。",
+    "description": "Tracks previously searched trade URLs"
+  },
+  "storage_description_poe2trade_settings_butlerGuideShown": {
+    "message": "バトラーガイドの表示状態です。",
+    "description": "Which Butler guides have been shown to the user"
+  },
+  "storage_description_poe2trade_settings_historyAutoAddEnabled": {
+    "message": "検索履歴への自動追加が有効になっています。",
+    "description": "Whether searches are automatically added to history"
+  },
+  "storage_description_poe2trade_settings_language": {
+    "message": "ユーザーインターフェースの言語設定です。",
+    "description": "Language preference for the extension UI"
+  },
+  "storage_description_poe2trade_settings_latestTap": {
+    "message": "最後に選択されたUIタブです。",
+    "description": "Which UI tab was last selected by the user"
+  },
+  "storage_description_poe2trade_settings_redirectPoe2TradeEnabled": {
+    "message": "POE2取引ページへの自動リダイレクト設定です。",
+    "description": "Toggles automatic redirect to POE2 trade page"
   }
 }

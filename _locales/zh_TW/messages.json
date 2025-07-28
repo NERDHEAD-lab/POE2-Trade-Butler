@@ -11,7 +11,6 @@
     "message": "一個用於POE2交易的Chrome擴展程序，提供側邊欄和歷史記錄管理功能。",
     "description": "Description of the Chrome extension"
   },
-
   "log_migration_start": {
     "message": "開始從版本 $1 遷移到 $2",
     "description": "Log message when starting migrations"
@@ -36,7 +35,6 @@
     "message": "切換條目可見性: $1 (ID: $2)",
     "description": "Log message when toggling visibility for an entry"
   },
-
   "error_clear_history": {
     "message": "清除搜索歷史時出錯: $1",
     "description": "Error message when clearing search history"
@@ -129,12 +127,10 @@
     "message": "高級面板未能及時展開",
     "description": "Error message when advanced panel did not expand in time"
   },
-
   "warn_no_data_for_migration": {
     "message": "未找到遷移數據: $1",
     "description": "Warning message when no data is found for migration"
   },
-
   "toast_history_cleared": {
     "message": "搜索歷史已成功清除。",
     "description": "Toast message when history is cleared"
@@ -519,5 +515,61 @@
   "extension_reloaded_notice": {
     "message": "擴展已重新加載。頁面將自動刷新。",
     "description": "Notice shown when the extension is reloaded"
+  },
+  "storage_description_unknown_key": {
+    "message": "未知的儲存鍵。可能已被移除或不再使用。",
+    "description": "Description for unknown keys in storage"
+  },
+  "storage_description_caches": {
+    "message": "擴充功能的快取。用於儲存暫存資料以加快存取速度。",
+    "description": "Description for storage caches"
+  },
+  "storage_description_favoriteFolders": {
+    "message": "擴充功能的最愛資料夾。用於儲存你的最愛項目。",
+    "description": "Description for storage favorite folders"
+  },
+  "storage_description_poe2trade_settings_i18n": {
+    "message": "擴充功能的翻譯資料快取。",
+    "description": "Stores i18n translation data per language"
+  },
+  "storage_description_poe2trade_settings_latestSearchUrl": {
+    "message": "最近使用的搜尋網址。",
+    "description": "Most recent trade search URL"
+  },
+  "storage_description_poe2trade_settings_sidebarCollapsed": {
+    "message": "側邊欄的摺疊狀態。",
+    "description": "Indicates whether the sidebar is collapsed"
+  },
+  "storage_description_poe2trade_storage_version": {
+    "message": "擴充功能的儲存版本。",
+    "description": "Tracks current version of the storage schema"
+  },
+  "storage_description_previewPanelSnapshots": {
+    "message": "交易預覽面板的快照。",
+    "description": "Temporary snapshots used in trade preview panel"
+  },
+  "storage_description_searchHistory": {
+    "message": "搜尋紀錄項目。",
+    "description": "Tracks previously searched trade URLs"
+  },
+  "storage_description_poe2trade_settings_butlerGuideShown": {
+    "message": "管家指南的顯示狀態。",
+    "description": "Which Butler guides have been shown to the user"
+  },
+  "storage_description_poe2trade_settings_historyAutoAddEnabled": {
+    "message": "已啟用自動加入搜尋紀錄功能。",
+    "description": "Whether searches are automatically added to history"
+  },
+  "storage_description_poe2trade_settings_language": {
+    "message": "使用者介面語言設定。",
+    "description": "Language preference for the extension UI"
+  },
+  "storage_description_poe2trade_settings_latestTap": {
+    "message": "最近選取的介面標籤頁。",
+    "description": "Which UI tab was last selected by the user"
+  },
+  "storage_description_poe2trade_settings_redirectPoe2TradeEnabled": {
+    "message": "POE2 交易頁面的自動重新導向設定。",
+    "description": "Toggles automatic redirect to POE2 trade page"
   }
 }

@@ -11,7 +11,6 @@
     "message": "A Chrome Extension for POE2 Trade with a sidebar and history management.",
     "description": "Description of the Chrome extension"
   },
-
   "log_migration_start": {
     "message": "Starting migrations from version $1 to $2",
     "description": "Log message when starting migrations"
@@ -36,7 +35,6 @@
     "message": "Toggling visibility for entry: $1 (ID: $2)",
     "description": "Log message when toggling visibility for an entry"
   },
-
   "error_clear_history": {
     "message": "Error clearing search history: $1",
     "description": "Error message when clearing search history"
@@ -129,12 +127,10 @@
     "message": "Advanced panel did not expand in time",
     "description": "Error message when advanced panel did not expand in time"
   },
-
   "warn_no_data_for_migration": {
     "message": "No data found for migration: $1",
     "description": "Warning message when no data is found for migration"
   },
-
   "sidebar_title": {
     "message": "Trade Butler",
     "description": "Sidebar title"
@@ -523,5 +519,61 @@
   "extension_reloaded_notice": {
     "message": "Extension was updated. The page will refresh automatically.",
     "description": "Notice shown when the extension is reloaded"
+  },
+  "storage_description_unknown_key": {
+    "message": "Unknown storage key. It might have been removed or deprecated.",
+    "description": "Description for unknown keys in storage"
+  },
+  "storage_description_caches": {
+    "message": "Caches for the extension. This is used to store temporary data for faster access.",
+    "description": "Description for storage caches"
+  },
+  "storage_description_favoriteFolders": {
+    "message": "Favorite folders for the extension. This is used to store your favorite items.",
+    "description": "Description for storage favorite folders"
+  },
+  "storage_description_poe2trade_settings_i18n": {
+    "message": "Cached translation data for the extension.",
+    "description": "Stores i18n translation data per language"
+  },
+  "storage_description_poe2trade_settings_latestSearchUrl": {
+    "message": "Last used search URL.",
+    "description": "Most recent trade search URL"
+  },
+  "storage_description_poe2trade_settings_sidebarCollapsed": {
+    "message": "Sidebar collapsed state.",
+    "description": "Indicates whether the sidebar is collapsed"
+  },
+  "storage_description_poe2trade_storage_version": {
+    "message": "Storage version of the extension.",
+    "description": "Tracks current version of the storage schema"
+  },
+  "storage_description_previewPanelSnapshots": {
+    "message": "Trade preview panel snapshots.",
+    "description": "Temporary snapshots used in trade preview panel"
+  },
+  "storage_description_searchHistory": {
+    "message": "Search history entries.",
+    "description": "Tracks previously searched trade URLs"
+  },
+  "storage_description_poe2trade_settings_butlerGuideShown": {
+    "message": "Butler guide walkthrough status.",
+    "description": "Which Butler guides have been shown to the user"
+  },
+  "storage_description_poe2trade_settings_historyAutoAddEnabled": {
+    "message": "Auto-add to search history enabled.",
+    "description": "Whether searches are automatically added to history"
+  },
+  "storage_description_poe2trade_settings_language": {
+    "message": "User interface language setting.",
+    "description": "Language preference for the extension UI"
+  },
+  "storage_description_poe2trade_settings_latestTap": {
+    "message": "Most recently used UI tab.",
+    "description": "Which UI tab was last selected by the user"
+  },
+  "storage_description_poe2trade_settings_redirectPoe2TradeEnabled": {
+    "message": "POE2 trade redirect setting.",
+    "description": "Toggles automatic redirect to POE2 trade page"
   }
 }
