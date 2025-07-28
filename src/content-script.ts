@@ -1,3 +1,4 @@
+import './storage/initStorage';
 import { renderSidebar } from './components/sidebar';
 import './styles/sidebar.css';
 import { getMessage } from './utils/_locale';

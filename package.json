@@ -9,6 +9,7 @@
     "lint:dev": "eslint . --config eslint.dev.config.mjs",
     "prettier": "prettier --write .",
     "script:generate:langs": "tsx scripts/generate-supported-languages.ts",
+    "script:generate:storage-init": "tsx scripts/generate-storage-manager-initializer.ts",
     "script:zip": "tsx scripts/create-zip.ts"
   },
   "type": "module",
