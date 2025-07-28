@@ -163,6 +163,8 @@ export class SettingManager {
         icon.src = option.iconUrl;
         icon.className = 'poe2-settings-option-icon';
         optionHeader.appendChild(icon);
+      } else {
+        optionHeader.classList.add('no-icon');
       }
 
       const name = document.createElement('span');
@@ -175,6 +177,8 @@ export class SettingManager {
         description.textContent = option.description;
         description.className = 'poe2-settings-option-description';
         optionHeader.appendChild(description);
+      } else {
+        optionHeader.classList.add('no-description');
       }
 
       // input 렌더링 (switch, checkbox, select)
