@@ -270,7 +270,7 @@ function createStorageDiv(usage: storageUsage.StorageTypeUsage): HTMLDivElement 
     }
   });
 
-  if (undefinedDetails.childElementCount > 1) {
+  if (undefinedDetails.childElementCount > 0) {
     const undefinedContainer = document.createElement('div');
     undefinedContainer.className = 'storage-undefined-container';
 
