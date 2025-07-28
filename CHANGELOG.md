@@ -1,5 +1,54 @@
 # CHANGE LOG
 
+## [2.8.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.7.0...2.8.0) (2025-07-28)
+
+
+### Features
+
+* **legacy:** legacyVersionManager에서 migration 뿐 만 아니라 사용하지 않는 entity를 제거 할 수 있는 기능 추가 ([4fbd7dc](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/4fbd7dc014ad48373f362bf847cbb73f970d0379))
+* **legacy:** 미사용 데이터 제거 동작 추가 ([72b610a](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/72b610ac78ccc77ad4e478163b75308d425d59ac))
+* poe2 trade 페이지 지원 범위 추가 ([54fcffb](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/54fcffb70c7fc8431dc27ec3176b3a82fb9b47db))
+* poe2-modal title이 좀더 자연스럽도록 스타일 개선 ([4e8d627](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/4e8d627e44cce2e92f8961b1984d0f29d5ac162d))
+* **settings:** DivTextDetailOption을 사용 할 때 접을 수 있는 기능 추가 ( isExpandable ) ([7e488a8](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/7e488a8a17f429999ec005245cd28544188e83cf))
+* **settings:** optionHeader 구성요소의 스타일 최적화 ([b4e8e53](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/b4e8e531bf72cbca5c926bb82c95fb4299870028))
+* **settings:** 설정창에 저장소 사용량 확인 기능 추가 ([c87f336](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/c87f3366713b8dadb96506bfba9980f76363263b))
+* 설정 버튼 및 UI 추가 ([fbfa03f](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/fbfa03fb07a7beeaf0bd79b103b64da89ba13e5d))
+* 설정 버튼 및 UI 추가 - 2 ([170efaa](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/170efaafa2b112fd3e1d125c81e16014e5a6a60e))
+* 설정 버튼 및 UI 추가 - 3 ([111b639](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/111b6393b711cf6e81b77d3ef1c5db4f4743ee17))
+* 설정 버튼 및 UI 추가 - 4 ([49ea704](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/49ea704c4818adf971b8138d6e3ef9892dd2dd7b))
+* 설정 버튼 및 UI 추가 - 5 ([54ba24f](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/54ba24fa2b73e1d6957bda70da556d895201febc))
+* 설정 버튼 및 UI 추가 - 6 ([e2662b2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/e2662b2314542ea73dcdf2bb1b881fb6d0ee13bb))
+* 설정 버튼 및 UI 추가 - 6 ([9619389](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/9619389315f53dfafd5bce52b5097aab07f33884))
+* 설정 버튼 및 UI 추가 - 7 ([fa12800](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/fa12800d0f22c1f753b3c8fba4bbd4c4cb661f88))
+* 설정 버튼 및 UI 추가 - 8 ([7f95a5d](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/7f95a5dd80558d24db58177fe6d0c828c168c499))
+* 설정 버튼 및 UI 추가 - 9 ([d670cf5](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/d670cf59353d84d252424cc7fdd908394eb36378))
+* 수동으로 언어를 설정 할 수 있는 기능 추가 - 1 ([03324d1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/03324d171689e0792c664235f2c27a9ce7bb4652))
+* 일본어 추가 ([02f8e88](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/02f8e8867205c8a90b2250369ffb977cdd999511))
+* 플러그인 아이콘 클릭시 나오는 popup 창 로드 속도 개선 ([e203d4b](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/e203d4b1aa217bac23767aff04e51508d89ebd0c))
+* 항상 StorageManager를 사용하는 ts들을 로드하도록 개선 ([06b45be](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/06b45be4ad384995e7a3d836c3841f6ffaee6737))
+
+
+### Bug Fixes
+
+* **background:** service worker에서 StorageManager를 로드 못하는 문제 수정 - 1 ([8edfadc](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/8edfadcc4a4b9d95ee13adab7cf19588f204cdba))
+* **background:** service worker에서 StorageManager를 로드 못하는 문제 수정 - 2 ([77f35f5](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/77f35f5687a584b59ccb7a81448c729c4f643b33))
+* **background:** service worker에서 StorageManager를 로드 못하는 문제 수정 - 3 ([f79c89e](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f79c89ea72c5b53fb8d3f6e0c7dd454c5cc6d8e0))
+* magration 도구 (legacyVersionManager) 타입 오류 수정 ([e56e4b8](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/e56e4b83b4a95c0d54a08d0378e3b35c59312ae6))
+* **popup:** 간헐적으로 popup이 로드되지 않는 문제 개선 ([fa91da5](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/fa91da57174f2b57c42e85be7fffb62e534157e5))
+* **settings:** undefined data가 하나일때 표시되지 않는 문제 수정 ([0502d0f](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/0502d0f6f8d37cd940da9a989c1a42cd525f5c5c))
+* **storage:** defaultLatestSearchUrl에서 사용하는 document가 background에서 오류를 발생시키는 문제 수정 ([abd2db2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/abd2db24b386609892a0bf23735892c9ebdb4140))
+* 플러그인이 재시작되거나 업데이트 되었을 때 sidebar가 동작하지 않는 문제 개선 ([7125b5d](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/7125b5debb1ad7c915096b83d8161e7616c8ae1d))
+* 현재 검색 id만으로 현재 region url에서 redirection되지 않아 검색당시 region의 url로 redirection 하도록 조치 ([923a725](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/923a72504349a28ec5cbf0a5aa08d1c9c1c7a128))
+* 현재 검색 id만으로 현재 region url에서 redirection되지 않아 검색당시 region의 url로 redirection 하도록 조치 - 2 ([cdf9388](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/cdf938893ce547efed276a4c84ab471c60c238a8))
+* 현재 검색 id만으로 현재 region url에서 redirection되지 않아 검색당시 region의 url로 redirection 하도록 조치 - 3 ([4e589ab](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/4e589aba3b478ba69ea89f52a75b9683956a934c))
+
+
+### Code Refactoring
+
+* settingManager 코드 정리 ([0aeefa8](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/0aeefa84421e646d87deef0236af98357d65c59d))
+* storage 자료구조 개선 ([12eabf9](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/12eabf9d6d64a257e90ca1242cdbd86d0e2e97c1))
+* **storageUsage:** 루프 최적화 및 STORAGE_TYPES 사용하여 storage의 자료구조가 변경 될 때 동적으로 대응하도록 개선 ([8010d08](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/8010d0876868abd1a153b9ab4fc483b5e52a5fd3))
+
 ## [2.7.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.6.1...2.7.0) (2025-07-18)
 
 
