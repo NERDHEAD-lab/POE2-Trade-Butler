@@ -595,5 +595,13 @@
   "settings_option_storage_sync_description": {
     "message": "Googleアカウント同期を利用して設定とデータを保存します。\n同じアカウントでログインしているすべてのデバイスで同期されます。",
     "description": "Description for Google Account sync storage option in settings"
+  },
+  "log_migration_skip_remove": {
+    "message": "キーが定義されているか、すでに削除されたキーです: ストレージタイプ: $1, キー: $2",
+    "description": "Log message when skipping migration for a key that is already defined or removed"
+  },
+  "log_migration_remove_old_data": {
+    "message": "古いデータを削除しています: ストレージタイプ: $1, キー: $2",
+    "description": "Log message when removing old data during migration"
   }
 }

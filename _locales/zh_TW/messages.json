@@ -508,6 +508,10 @@
     "message": "指南將再次顯示。刷新後會顯示。",
     "description": "Settings option to enable showing the Butler guide again"
   },
+  "settings_tab_info": {
+    "message": "資訊",
+    "description": "Settings tab for information"
+  },
   "settings_changes_discard_confirm": {
     "message": "您有未保存的更改。是否放棄這些更改並退出設定？",
     "description": "Confirmation message when there are unsaved changes in settings"
@@ -591,5 +595,13 @@
   "settings_option_storage_sync_description": {
     "message": "使用 Google 帳戶同步來保存您的設定和資料。\n將在所有登入相同帳戶的裝置上同步。",
     "description": "Description for Google Account sync storage option in settings"
+  },
+  "log_migration_skip_remove": {
+    "message": "跳過遷移，因為鍵已定義或已被移除: 儲存類型: $1, 鍵: $2",
+    "description": "Log message when skipping migration for a key that is already defined or removed"
+  },
+  "log_migration_remove_old_data": {
+    "message": "移除舊數據: 儲存類型: $1, 鍵: $2",
+    "description": "Log message when removing old data during migration"
   }
 }

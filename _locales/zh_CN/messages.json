@@ -595,5 +595,13 @@
   "settings_option_storage_sync_description": {
     "message": "使用Google账户同步来保存您的设置和数据。\n将在所有登录同一账户的设备上同步。",
     "description": "Description for Google Account sync storage option in settings"
+  },
+  "log_migration_skip_remove": {
+    "message": "跳过迁移键: $1，存储类型: $2（已定义或已删除）",
+    "description": "Log message when skipping migration for a key that is already defined or removed"
+  },
+  "log_migration_remove_old_data": {
+    "message": "移除旧数据: 存储类型: $1, 键: $2",
+    "description": "Log message when removing old data during migration"
   }
 }

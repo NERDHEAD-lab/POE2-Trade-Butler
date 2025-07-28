@@ -1,5 +1,6 @@
 import { StorageManager, StorageType } from '../storage';
 import { getMessage } from '../../utils/_locale';
+import * as storageUsage from '../storageUsage';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const CURRENT_STORAGE_VERSION_KEY = 'poe2trade_storage_version';
@@ -15,7 +16,8 @@ interface LegacyVersionMigrator<LEGACY> {
   key: string;
   storageType: StorageType;
   version: number;
-  migrate: (legacy: LEGACY) => Promise<void>;
+  migrate?: (legacy: LEGACY) => Promise<void>;
+  removeAfter?: boolean;
   description: string;
 }
 
@@ -168,10 +170,20 @@ async function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<v
       .then(result => result[key] || null);
 
     console.log(getMessage('log_migration_key', key, storageType));
-    if (legacyData) {
+    if (legacyData && migrator.migrate) {
       await migrator.migrate(legacyData);
     } else {
-      console.warn(getMessage('warn_no_data_for_migration', migrator.description));
+      console.log(getMessage('warn_no_data_for_migration', migrator.description));
+    }
+
+    if (migrator.removeAfter) {
+      if (!await isStoredButUndefined(storageType, key)) {
+        // 이미 없거나, 정의되어 있는(사용 중인) 경우 스킵
+        console.log(getMessage('log_migration_skip_remove', key, storageType));
+        return;
+      }
+      await chrome.storage[storageType].remove(key);
+      console.log(getMessage('log_migration_remove_old_data', key, storageType));
     }
 
     console.log(getMessage('log_migration_completed', migrator.description));
@@ -188,6 +200,19 @@ async function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<v
     console.error(getMessage('error_migration_description_failed', migrator.description, msg));
     throw error;
   }
+}
+
+// type과 key로 조회는 되지만, isDefined가 false인 경우, storageManager를 통해 정의된 키가 아니므로 undefined로 간주
+async function isStoredButUndefined(storageType: StorageType, key: string): Promise<boolean> {
+  const usage = await storageUsage.usageInfoAll();
+
+  const typeUsage = usage[storageType];
+  if (!typeUsage) return false;
+
+  const entry = typeUsage.entities.find(e => e.key === key);
+  if (!entry) return false;
+
+  return !entry.isDefined;
 }
 
 /* ****************************************************************************** */

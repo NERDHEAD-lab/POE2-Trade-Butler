@@ -595,5 +595,13 @@
   "settings_option_storage_sync_description": {
     "message": "Use Google Account sync to save your settings and data.\nThis will sync across all devices where you are logged in with the same account.",
     "description": "Description for Google Account sync storage option in settings"
+  },
+  "log_migration_skip_remove": {
+    "message": "Skipping migration for key: $1, storage type: $2",
+    "description": "Log message when skipping migration for a key that is already defined or removed"
+  },
+  "log_migration_remove_old_data": {
+    "message": "Removing old data for migration: storageType: $1, key: $2",
+    "description": "Log message when removing old data during migration"
   }
 }

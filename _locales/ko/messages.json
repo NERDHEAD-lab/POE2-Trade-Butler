@@ -595,5 +595,13 @@
   "settings_option_storage_sync_description": {
     "message": "Google 계정 동기화를 통해 설정과 데이터를 저장합니다.\n같은 계정으로 로그인된 모든 기기에서 동기화됩니다.",
     "description": "Description for Google Account sync storage option in settings"
+  },
+  "log_migration_skip_remove": {
+    "message": "키가 정의되어 있거나, 이미 제거된 키입니다: storageType: $1, key: $2",
+    "description": "Log message when skipping migration for a key that is already defined or removed"
+  },
+  "log_migration_remove_old_data": {
+    "message": "이전 버전의 데이터를 제거합니다: storageType: $1, key: $2",
+    "description": "Log message when removing old data during migration"
   }
 }
