@@ -4,7 +4,7 @@ import * as storageUsage from '../storageUsage';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const CURRENT_STORAGE_VERSION_KEY = 'poe2trade_storage_version';
-const CURRENT_STORAGE_VERSION = 2;
+const CURRENT_STORAGE_VERSION = 3;
 
 const versionStorage: StorageManager<number> = new StorageManager(
   'local',
@@ -115,6 +115,54 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
       await chrome.storage.local.set({ ['previewPanelSnapshots']: currentPreviewData }); // Save preview data
     },
     description: 'Migrate favorite folders from v1 to v2 format, ensuring root folder structure.'
+  },
+  {
+    key: 'lscache-trade2items',
+    storageType: 'local',
+    version: 2,
+    removeAfter: true,
+    description:
+      'Remove legacy lscache-trade2items cache data from local storage. This data is no longer used in the current version.'
+  },
+  {
+    key: 'lscache-trade2filters',
+    storageType: 'local',
+    version: 2,
+    removeAfter: true,
+    description:
+      'Remove legacy lscache-trade2filters cache data from local storage. This data is no longer used in the current version.'
+  },
+  {
+    key: 'lscache-trade2stats',
+    storageType: 'local',
+    version: 2,
+    removeAfter: true,
+    description:
+      'Remove legacy lscache-trade2stats cache data from local storage. This data is no longer used in the current version.'
+  },
+  {
+    key: 'lscache-trade2data',
+    storageType: 'local',
+    version: 2,
+    removeAfter: true,
+    description:
+      'Remove legacy lscache-trade2data cache data from local storage. This data is no longer used in the current version.'
+  },
+  {
+    key: 'favoriteFolders',
+    storageType: 'local',
+    version: 2,
+    removeAfter: true,
+    description:
+      'Remove legacy favoriteFolders data from local storage. This data is no longer used in the current version.'
+  },
+  {
+    key: 'version-check',
+    storageType: 'local',
+    version: 2,
+    removeAfter: true,
+    description:
+      'Remove legacy version-check data from local storage. This data is no longer used in the current version.'
   }
 ] satisfies LegacyVersionMigrator<any>[];
 
