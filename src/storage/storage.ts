@@ -6,11 +6,11 @@ const StorageTypeEnum = {
   sync: {
     module: chrome.storage.sync,
     description: 'Sync storage'
-  },
+  }/*,
   session: {
     module: chrome.storage.session,
     description: 'Session-only storage'
-  }
+  }*/
 } as const;
 
 export type StorageType = keyof typeof StorageTypeEnum;
