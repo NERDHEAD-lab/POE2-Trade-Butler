@@ -50,6 +50,7 @@ interface SelectEntity {
 // just for description, no listener
 export interface DivTextDetailOption extends DetailOption<void> {
   type: 'text';
+  isExpandable: boolean;
   value: HTMLDivElement | string;
 }
 
@@ -152,18 +153,29 @@ export class SettingManager {
       const optionDiv = document.createElement('div');
       optionDiv.className = 'poe2-settings-option';
 
+      const optionHeader = document.createElement('div');
+      optionHeader.className = 'poe2-settings-option-header';
+      optionDiv.appendChild(optionHeader);
+
       // 아이콘 렌더링
       if (option.iconUrl) {
         const icon = document.createElement('img');
         icon.src = option.iconUrl;
         icon.className = 'poe2-settings-option-icon';
-        optionDiv.appendChild(icon);
+        optionHeader.appendChild(icon);
       }
 
-      const label = document.createElement('label');
-      label.textContent = option.name;
-      label.className = 'poe2-settings-option-label';
-      optionDiv.appendChild(label);
+      const name = document.createElement('span');
+      name.textContent = option.name;
+      name.className = 'poe2-settings-option-name';
+      optionHeader.appendChild(name);
+
+      if (option.description) {
+        const description = document.createElement('p');
+        description.textContent = option.description;
+        description.className = 'poe2-settings-option-description';
+        optionHeader.appendChild(description);
+      }
 
       // input 렌더링 (switch, checkbox, select)
       let optionElement: HTMLElement;
@@ -235,18 +247,34 @@ export class SettingManager {
           } else {
             optionElement.textContent = textOpt.value as string;
           }
+
+          if (textOpt.isExpandable) {
+            // optionDiv
+            optionHeader.classList.add('poe2-settings-option-expandable');
+            optionDiv.onclick = e => {
+              // 자식이 클릭 된경우엔 무시한다. (optionElement)
+              if (optionElement.contains(e.target as Node)) return;
+
+              optionDiv.classList.toggle('expanded');
+              // optionElement를 숨긴다
+              if (optionDiv.classList.contains('expanded')) {
+                optionElement.style.display = '';
+              } else {
+                optionElement.style.display = 'none';
+              }
+            }
+
+            // 처음에는 숨김
+            optionElement.style.display = 'none';
+          }
+
           break;
         }
         default:
           throw new Error(`Unsupported option type: ${option.optionDetail.type}`);
       }
       optionElement.className = `poe2-settings-option-${option.optionDetail.type}`;
-      if (option.description) {
-        const description = document.createElement('p');
-        description.textContent = option.description;
-        description.className = 'poe2-settings-option-description';
-        optionDiv.appendChild(description);
-      }
+
       optionDiv.appendChild(optionElement);
       optionsDiv.appendChild(optionDiv);
     });

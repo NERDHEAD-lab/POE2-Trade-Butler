@@ -223,6 +223,7 @@ function generateStorageOption(
     iconUrl: chrome.runtime.getURL(`assets/storage_24dp_E9E5DE.svg`),
     optionDetail: {
       type: 'text',
+      isExpandable: true,
       value: createStorageDiv(usageInfo)
     }
   };
