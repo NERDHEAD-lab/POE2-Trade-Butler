@@ -3,11 +3,13 @@
   "version": "2.7.0",
   "main": "index.js",
   "scripts": {
-    "build": "npm run lint && webpack --mode production && npm run script:zip",
-    "build:dev": "webpack --mode development && npm run lint:dev",
+    "build": "npm run lint && npm run pre:build && webpack --mode production && npm run script:zip",
+    "build:dev": "npm run pre:build && webpack --mode development && npm run lint:dev",
     "lint": "eslint .",
     "lint:dev": "eslint . --config eslint.dev.config.mjs",
     "prettier": "prettier --write .",
+
+    "pre:build": "npm run script:generate:langs && npm run script:generate:storage-init",
     "script:generate:langs": "tsx scripts/generate-supported-languages.ts",
     "script:generate:storage-init": "tsx scripts/generate-storage-manager-initializer.ts",
     "script:zip": "tsx scripts/create-zip.ts"

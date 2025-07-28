@@ -42,3 +42,5 @@ export const LANGUAGE_NATIVE_NAMES: Record<SupportedLanguage, string> = ${JSON.s
 fs.writeFileSync(targetFile, content);
 console.log(`[generate-supported-languages] Supported languages: ${languages.join(', ')}`);
 console.log(`[generate-supported-languages] Native names: ${JSON.stringify(languageNativeNames)}`);
+
+console.log(`✅  Successfully generated ${path.relative(__dirname, targetFile)}`);
