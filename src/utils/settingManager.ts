@@ -255,21 +255,46 @@ export class SettingManager {
           if (textOpt.isExpandable) {
             // optionDiv
             optionHeader.classList.add('poe2-settings-option-expandable');
+
+            optionElement.style.overflow = 'hidden';
+            optionElement.style.maxHeight = '0px';
+            optionElement.style.transition = 'max-height 0.3s ease';
+
+            let isAnimating = false;
+
             optionDiv.onclick = e => {
-              // 자식이 클릭 된경우엔 무시한다. (optionElement)
               if (optionElement.contains(e.target as Node)) return;
+              if (isAnimating) return;
 
-              optionDiv.classList.toggle('expanded');
-              // optionElement를 숨긴다
-              if (optionDiv.classList.contains('expanded')) {
-                optionElement.style.display = '';
+              const isExpanded = optionDiv.classList.toggle('expanded');
+              isAnimating = true;
+
+              if (isExpanded) {
+                optionElement.style.maxHeight = optionElement.scrollHeight + 'px';
+
+                const onExpandEnd = () => {
+                  optionElement.style.maxHeight = 'none';
+                  optionElement.removeEventListener('transitionend', onExpandEnd);
+                  isAnimating = false;
+                };
+
+                optionElement.addEventListener('transitionend', onExpandEnd);
               } else {
-                optionElement.style.display = 'none';
-              }
-            }
+                // 닫기: none → scrollHeight → 0 (transition을 위해 일단 scrollHeight 재설정)
+                optionElement.style.maxHeight = optionElement.scrollHeight + 'px';
 
-            // 처음에는 숨김
-            optionElement.style.display = 'none';
+                requestAnimationFrame(() => {
+                  optionElement.style.maxHeight = '0px';
+                });
+
+                const onCollapseEnd = () => {
+                  optionElement.removeEventListener('transitionend', onCollapseEnd);
+                  isAnimating = false;
+                };
+
+                optionElement.addEventListener('transitionend', onCollapseEnd);
+              }
+            };
           }
 
           break;
@@ -277,7 +302,7 @@ export class SettingManager {
         default:
           throw new Error(`Unsupported option type: ${option.optionDetail.type}`);
       }
-      optionElement.className = `poe2-settings-option-${option.optionDetail.type}`;
+      optionElement.classList.add(`poe2-settings-option-${option.optionDetail.type}`);
 
       optionDiv.appendChild(optionElement);
       optionsDiv.appendChild(optionDiv);
