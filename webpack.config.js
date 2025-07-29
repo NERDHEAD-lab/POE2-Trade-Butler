@@ -34,18 +34,11 @@ export default (env, argv = {}) => {
         },
         {
           test: /\.css$/i,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader'
-          ]
+          use: [MiniCssExtractPlugin.loader, 'css-loader']
         },
         {
           test: /\.scss$/i,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader',
-            'sass-loader'
-          ]
+          use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
         },
         {
           test: /\.(png|jpg|jpeg|gif|svg)$/i,
@@ -73,4 +66,4 @@ export default (env, argv = {}) => {
     ],
     devtool: mode === 'development' ? 'source-map' : 'hidden-source-map'
   };
-}
+};

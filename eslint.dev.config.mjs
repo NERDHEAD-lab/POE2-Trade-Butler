@@ -4,7 +4,6 @@ import parser from '@typescript-eslint/parser';
 import globals from 'globals';
 import chalk from 'chalk';
 
-
 export default defineConfig([
   { ignores: ['dist/**'] },
   { files: ['**/*.js'], languageOptions: { sourceType: 'module' } },
@@ -17,10 +16,13 @@ export default defineConfig([
       globals: globals.browser
     },
     rules: {
-      'no-warning-comments': ['warn', {
-        terms: ['todo', 'fixme'],
-        location: 'anywhere'  // ← 이거 중요
-      }],
+      'no-warning-comments': [
+        'warn',
+        {
+          terms: ['todo', 'fixme'],
+          location: 'anywhere' // ← 이거 중요
+        }
+      ],
       'no-unused-vars': 'off',
       'no-undef': 'off',
       'no-console': 'off',
@@ -41,9 +43,6 @@ export default defineConfig([
   }))
 ]);
 
-
 console.warn(
-  chalk.yellowBright(
-    '*************** TODO must be registered in GITHUB Issue ***************'
-  )
+  chalk.yellowBright('*************** TODO must be registered in GITHUB Issue ***************')
 );

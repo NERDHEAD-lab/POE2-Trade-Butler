@@ -5,7 +5,7 @@ export interface BaseEntry {
   readonly id: string;
   name: string;
   readonly type: 'file' | 'folder';
-  parentId: string | null;  // null이면 루트
+  parentId: string | null; // null이면 루트
   createdAt: string;
   modifiedAt: string;
 }

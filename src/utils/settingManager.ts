@@ -5,9 +5,11 @@ export interface Settings {
 interface SettingTab {
   name: string;
   iconUrl: string;
-  options: SettingOption<AnyDetailOption>[] | (() => SettingOption<AnyDetailOption>[]) | (() => Promise<SettingOption<AnyDetailOption>[]>);
+  options:
+    | SettingOption<AnyDetailOption>[]
+    | (() => SettingOption<AnyDetailOption>[])
+    | (() => Promise<SettingOption<AnyDetailOption>[]>);
 }
-
 
 export interface SettingOption<T extends AnyDetailOption> {
   id: string;
@@ -18,7 +20,7 @@ export interface SettingOption<T extends AnyDetailOption> {
 }
 
 export type AnyDetailOption =
-  CheckboxDetailOption
+  | CheckboxDetailOption
   | SelectDetailOption
   | DivTextDetailOption
   | NumberDetailOption
@@ -73,7 +75,7 @@ export interface onOptionChangeListener<T> {
 }
 
 export class SettingManager {
-  private applyChangedQueue: (Record<string, () => void>) = {};
+  private applyChangedQueue: Record<string, () => void> = {};
   private readonly settings: Settings;
 
   public constructor(settings: Settings) {
@@ -105,7 +107,6 @@ export class SettingManager {
 
     return settingsDiv;
   }
-
 
   private async createContent(contentDiv: HTMLDivElement, tabOptionsMap: Map<string, HTMLElement>) {
     for (const tab of this.settings.tabs) {
@@ -255,21 +256,46 @@ export class SettingManager {
           if (textOpt.isExpandable) {
             // optionDiv
             optionHeader.classList.add('poe2-settings-option-expandable');
+
+            optionElement.style.overflow = 'hidden';
+            optionElement.style.maxHeight = '0px';
+            optionElement.style.transition = 'max-height 0.3s ease';
+
+            let isAnimating = false;
+
             optionDiv.onclick = e => {
-              // 자식이 클릭 된경우엔 무시한다. (optionElement)
               if (optionElement.contains(e.target as Node)) return;
+              if (isAnimating) return;
 
-              optionDiv.classList.toggle('expanded');
-              // optionElement를 숨긴다
-              if (optionDiv.classList.contains('expanded')) {
-                optionElement.style.display = '';
+              const isExpanded = optionDiv.classList.toggle('expanded');
+              isAnimating = true;
+
+              if (isExpanded) {
+                optionElement.style.maxHeight = optionElement.scrollHeight + 'px';
+
+                const onExpandEnd = () => {
+                  optionElement.style.maxHeight = 'none';
+                  optionElement.removeEventListener('transitionend', onExpandEnd);
+                  isAnimating = false;
+                };
+
+                optionElement.addEventListener('transitionend', onExpandEnd);
               } else {
-                optionElement.style.display = 'none';
-              }
-            }
+                // 닫기: none → scrollHeight → 0 (transition을 위해 일단 scrollHeight 재설정)
+                optionElement.style.maxHeight = optionElement.scrollHeight + 'px';
 
-            // 처음에는 숨김
-            optionElement.style.display = 'none';
+                requestAnimationFrame(() => {
+                  optionElement.style.maxHeight = '0px';
+                });
+
+                const onCollapseEnd = () => {
+                  optionElement.removeEventListener('transitionend', onCollapseEnd);
+                  isAnimating = false;
+                };
+
+                optionElement.addEventListener('transitionend', onCollapseEnd);
+              }
+            };
           }
 
           break;
@@ -277,7 +303,7 @@ export class SettingManager {
         default:
           throw new Error(`Unsupported option type: ${option.optionDetail.type}`);
       }
-      optionElement.className = `poe2-settings-option-${option.optionDetail.type}`;
+      optionElement.classList.add(`poe2-settings-option-${option.optionDetail.type}`);
 
       optionDiv.appendChild(optionElement);
       optionsDiv.appendChild(optionDiv);
@@ -286,7 +312,11 @@ export class SettingManager {
     return optionsDiv;
   }
 
-  private createTab(tabListDiv: HTMLDivElement, contentDiv: HTMLDivElement, tabOptionsMap: Map<string, HTMLElement>) {
+  private createTab(
+    tabListDiv: HTMLDivElement,
+    contentDiv: HTMLDivElement,
+    tabOptionsMap: Map<string, HTMLElement>
+  ) {
     this.settings.tabs.forEach((tab, idx) => {
       const tabBtn = document.createElement('button');
       tabBtn.className = 'poe2-settings-tab-btn' + (idx === 0 ? ' active' : '');
@@ -308,7 +338,7 @@ export class SettingManager {
         Array.from(tabListDiv.children).forEach(b => b.classList.remove('active'));
         tabBtn.classList.add('active');
         // 컨텐츠 전환
-        Array.from(contentDiv.children).forEach(el => (el as HTMLElement).style.display = 'none');
+        Array.from(contentDiv.children).forEach(el => ((el as HTMLElement).style.display = 'none'));
         const thisContent = tabOptionsMap.get(tab.name);
         if (thisContent) thisContent.style.display = '';
       };
@@ -333,4 +363,3 @@ export class SettingManager {
     this.applyChangedQueue = {};
   }
 }
-

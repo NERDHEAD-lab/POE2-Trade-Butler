@@ -6,7 +6,7 @@ const StorageTypeEnum = {
   sync: {
     module: chrome.storage.sync,
     description: 'Sync storage'
-  }/*,
+  } /*,
   session: {
     module: chrome.storage.session,
     description: 'Session-only storage'
@@ -20,8 +20,7 @@ class StorageDefinition<VALUE_TYPE> {
   constructor(
     public type: StorageType,
     public key: string
-  ) {
-  }
+  ) {}
 
   // 타입 추론용
   __type?: VALUE_TYPE;
@@ -34,10 +33,7 @@ function defineStorage<T>(type: StorageType, key: string): StorageDefinition<T> 
     throw new Error(`Storage key "${key}" is already defined. Please use a unique key.`);
   }
 
-  const definition: StorageDefinition<T> = new StorageDefinition<T>(
-    type,
-    key
-  );
+  const definition: StorageDefinition<T> = new StorageDefinition<T>(type, key);
 
   storageDefinitions.push(definition);
   return definition;

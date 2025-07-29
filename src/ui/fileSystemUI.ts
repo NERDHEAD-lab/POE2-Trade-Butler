@@ -3,7 +3,9 @@ import { FileSystemEntry } from './fileSystemEntry';
 export class FileSystemUI {
   private root: FileSystemEntry[];
   private parentElement: HTMLElement | null = null;
-  private renderLiElement: ((entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement | void) | null = null;
+  private renderLiElement:
+    | ((entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement | void)
+    | null = null;
   private className: string | null = null;
   private ulElement: HTMLUListElement | null = null;
   private onLiElementAdded: ((li: HTMLLIElement, entry: FileSystemEntry) => void)[] = [];
@@ -23,7 +25,9 @@ export class FileSystemUI {
 
   public create(): FileSystemUI {
     if (!this.parentElement || !this.renderLiElement) {
-      throw new Error('FileSystemUI must be configured with parentElement and renderLiElement before calling create().');
+      throw new Error(
+        'FileSystemUI must be configured with parentElement and renderLiElement before calling create().'
+      );
     }
 
     // 기존 내용 초기화
@@ -73,20 +77,23 @@ export class FileSystemUI {
   public addOnDestroyed(callback: () => void): void {
     this.onDestroyed.push(callback);
   }
-
 }
 
 class FileSystemUIBuilder {
   private readonly root: FileSystemEntry[];
   private parentElement: HTMLElement | null = null;
   private className: string | null = null;
-  private renderLiElement: ((entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement | void) | null = null;
+  private renderLiElement:
+    | ((entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement | void)
+    | null = null;
 
   constructor(root: FileSystemEntry[]) {
     this.root = root;
   }
 
-  public htmlLiElement(fn: (entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement | void): FileSystemUIBuilder {
+  public htmlLiElement(
+    fn: (entries: FileSystemEntry[], entry: FileSystemEntry) => HTMLLIElement | void
+  ): FileSystemUIBuilder {
     this.renderLiElement = fn;
     return this;
   }

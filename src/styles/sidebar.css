@@ -1,461 +1,460 @@
 #poe2-sidebar {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    bottom: 20px;
-    right: 0;
-    width: 300px;
-    min-width: 200px;
-    max-width: 600px;
-    height: auto;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-left: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
-    transition: transform 0.35s ease-in-out;
-    max-height: calc(100vh - 20px);
-    border-radius: 10px 0 0 10px;
-    will-change: transform;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 20px;
+  right: 0;
+  width: 300px;
+  min-width: 200px;
+  max-width: 600px;
+  height: auto;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  transition: transform 0.35s ease-in-out;
+  max-height: calc(100vh - 20px);
+  border-radius: 10px 0 0 10px;
+  will-change: transform;
 }
 
 #poe2-sidebar.collapsed {
-    transform: translateX(100%);
+  transform: translateX(100%);
 }
 
 #poe2-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 #poe2-content-wrapper {
-    transition: padding 0.3s ease-in-out;
-    padding-right: 300px;
+  transition: padding 0.3s ease-in-out;
+  padding-right: 300px;
 }
 
 #poe2-content-wrapper.collapsed {
-    padding-right: 0;
+  padding-right: 0;
 }
 
 #poe2-sidebar-toggle-button {
-    position: absolute;
-    top: 10px;
-    left: -40px;
-    width: 30px;
-    height: 30px;
-    background-color: rgba(0, 0, 0, 0.3);
-    color: white;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 30px;
-    cursor: pointer;
-    z-index: 10001;
+  position: absolute;
+  top: 10px;
+  left: -40px;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  z-index: 10001;
 }
 
 #poe2-sidebar-toggle-button:hover {
-    background-color: #666;
+  background-color: #666;
 }
 
 #poe2-sidebar-resizer {
-    position: absolute;
-    top: 0;
-    left: -6px;
-    width: 8px;
-    height: 100%;
-    cursor: ew-resize;
-    z-index: 10002;
-    background: transparent;
-    transition: background 0.2s;
+  position: absolute;
+  top: 0;
+  left: -6px;
+  width: 8px;
+  height: 100%;
+  cursor: ew-resize;
+  z-index: 10002;
+  background: transparent;
+  transition: background 0.2s;
 }
 #poe2-sidebar-resizer:hover {
-    background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 #sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-    background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-header-title {
-    /*bold*/
-    font-family: 'Cinzel', serif;
-    font-weight: 900;
-    font-size: 20px;
-    letter-spacing: 1px;
-    color: #d7c185;
-    text-shadow:
-            1px 1px 0 #000,
-            2px 2px 2px #000,
-            0 0 5px #a97c50;
-    text-transform: uppercase;
+  /*bold*/
+  font-family: 'Cinzel', serif;
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #d7c185;
+  text-shadow:
+    1px 1px 0 #000,
+    2px 2px 2px #000,
+    0 0 5px #a97c50;
+  text-transform: uppercase;
 }
 
-
 #sidebar-header h2 {
-    margin: 0;
+  margin: 0;
 }
 
 #sidebar-header button {
-    background-color: #444;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 0;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
 #sidebar-header button:hover {
-    background-color: #666;
+  background-color: #666;
 }
 
 /* Sidebar menu */
 #sidebar-menu {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
 }
 
 .menu-tab {
-    flex: 1;
-    text-align: center;
-    padding: 10px;
-    cursor: pointer;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: white;
-    transition: background-color 0.2s ease-in-out;
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  transition: background-color 0.2s ease-in-out;
 }
 
 .menu-tab.active {
-    background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .menu-tab:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Sidebar content */
 #sidebar-content {
-    flex: auto;
-    padding: 10px;
-    height: 100%;
+  flex: auto;
+  padding: 10px;
+  height: 100%;
 }
 
 #sidebar-content h3 {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0;
-    gap: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  gap: 10px;
 }
 
 .history-title-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 #clear-history {
-    background-color: #444;
-    color: white;
-    border: none;
-    border-radius: 2px;
-    padding: 5px 12px;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out, color 0.2s;
-    font-size: 0.7em;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s;
+  font-size: 0.7em;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
 
 #clear-history:hover {
-    background-color: #c0392b;
-    color: #fff;
+  background-color: #c0392b;
+  color: #fff;
 }
 
 #history > h3 > #clear-history {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 /* Favorite button */
 #add-favorite {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 5px;
-    font-size: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-bottom: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 5px;
+  font-size: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+  margin-bottom: 10px;
 }
 
 #add-favorite:hover {
-    background-color: #0056b3; /* 호버 시 색상 */
-    transform: scale(1.05); /* 약간 확대 효과 */
+  background-color: #0056b3; /* 호버 시 색상 */
+  transform: scale(1.05); /* 약간 확대 효과 */
 }
 
 #add-favorite:active {
-    background-color: #003f7f; /* 클릭 시 색상 */
-    transform: scale(0.95); /* 클릭 시 약간 축소 */
+  background-color: #003f7f; /* 클릭 시 색상 */
+  transform: scale(0.95); /* 클릭 시 약간 축소 */
 }
 
 #favorites h3 > * {
-    margin-right: 10px; /* 버튼/제목 간 여백 */
+  margin-right: 10px; /* 버튼/제목 간 여백 */
 }
 
-
-
 .tab-content {
-    display: none;
+  display: none;
 }
 
 .tab-content.active {
-    margin-bottom: 10px;
-    display: flex;
-    flex: auto;
-    flex-direction: column;
-    height: 100%;
+  margin-bottom: 10px;
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+  height: 100%;
 }
 
 #history-list {
-    max-height: calc(100vh - 180px); /* 최대 높이 설정 TODO: 정밀하게 */
-    overflow-y: auto;
-    margin-top: 10px;
-    padding-left: 0;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 5px;
+  max-height: calc(100vh - 180px); /* 최대 높이 설정 TODO: 정밀하게 */
+  overflow-y: auto;
+  margin-top: 10px;
+  padding-left: 0;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
 }
 
 /* History item */
 .history-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  gap: 8px;
 }
 
 .history-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .history-name {
-    display: block;
-    text-align: left;
-    flex-grow: 1;
-    min-width: 0;
-    /* overflow: hidden;
+  display: block;
+  text-align: left;
+  flex-grow: 1;
+  min-width: 0;
+  /* overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap; */
 }
 
 /* Favorite star */
 .favorite-star {
-    font-size: 25px;
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.1);
-    transition: color 0.2s ease-in-out;
+  font-size: 25px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.1);
+  transition: color 0.2s ease-in-out;
 }
 
 .favorite-star:hover {
-    color: rgba(255, 255, 255, 1);
+  color: rgba(255, 255, 255, 1);
 }
 
 .favorite-star.active {
-    color: gold;
+  color: gold;
 }
 
 .favorite-star.active:hover {
-    color: gold;
+  color: gold;
 }
 
 /* Switch */
 .switch {
-    position: relative;
-    display: inline-block;
-    width: 34px;
-    height: 20px;
-    margin-left: 10px;
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 20px;
+  margin-left: 10px;
 }
 
 .switch input {
-    display: none; /* 기본 체크박스 숨기기 */
+  display: none; /* 기본 체크박스 숨기기 */
 }
 
 .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 20px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 20px;
 }
 
 .slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;
-    width: 14px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
+  position: absolute;
+  content: '';
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
 }
 
 input:checked + .slider {
-    background-color: #007bff;
+  background-color: #007bff;
 }
 
 input:checked + .slider:before {
-    transform: translateX(14px);
+  transform: translateX(14px);
 }
 
 .poe2-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10001;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
 }
 .poe2-modal {
-    background-color: rgba(34,34,34, 0.9);
-    color: #fff;
-    padding: 10px 20px 20px;
-    border-radius: 8px;
-    width: auto;
-    min-width: 450px;
-    max-width: unset;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    text-align: center;
+  background-color: rgba(34, 34, 34, 0.9);
+  color: #fff;
+  padding: 10px 20px 20px;
+  border-radius: 8px;
+  width: auto;
+  min-width: 450px;
+  max-width: unset;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  text-align: center;
 }
 
-
 .poe2-modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .poe2-modal-title {
-    border-radius: 8px;
-    padding: 4px 10px;
-    background-color: rgba(0, 0, 0, 0.5);
-    font-size: 24px;
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-weight: bold;
-    color: #d7c185;
-    text-shadow:
-            1px 1px 0 #000,
-            2px 2px 2px #000,
-            0 0 5px #a97c50;
+  border-radius: 8px;
+  padding: 4px 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 24px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #d7c185;
+  text-shadow:
+    1px 1px 0 #000,
+    2px 2px 2px #000,
+    0 0 5px #a97c50;
 }
 
-
 #poe2-sidebar * {
-    user-select: none;
+  user-select: none;
 }
 
 #poe2-sidebar textarea,
-#poe2-sidebar input[type="text"],
-#poe2-sidebar input[type="search"] {
-    user-select: text;
+#poe2-sidebar input[type='text'],
+#poe2-sidebar input[type='search'] {
+  user-select: text;
 }
 
 .poe2-modal * {
-    user-select: none;
+  user-select: none;
 }
 
 .poe2-modal textarea,
-.poe2-modal input[type="text"],
-.poe2-modal input[type="search"] {
-    user-select: text;
+.poe2-modal input[type='text'],
+.poe2-modal input[type='search'] {
+  user-select: text;
 }
 
 .history-group-header {
-    font-weight: bold;
-    color: #d7c185;
-    background: rgba(255,255,255,0.08);
-    padding: 8px 12px 4px 12px;
-    margin-top: 10px;
-    border-top: 1.5px solid rgba(255,255,255,0.18);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    border-radius: 6px 6px 0 0;
-    letter-spacing: 0.5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
+  font-weight: bold;
+  color: #d7c185;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 8px 12px 4px 12px;
+  margin-top: 10px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px 6px 0 0;
+  letter-spacing: 0.5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
 }
 
 .history-group-header span:last-child {
-    opacity: 0.7;
-    font-size: clamp(11px, 2vw, 14px);
-    max-width: 60%;
-    text-align: right;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  opacity: 0.7;
+  font-size: clamp(11px, 2vw, 14px);
+  max-width: 60%;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .favorite-import-export-bottom {
-    flex-shrink: 0;
-    margin-top: 10px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 10px;
-    background: rgba(0,0,0,0.15);
-    display: flex;
-    gap: 10px;
-    justify-content: space-between;
-    z-index: 2;
+  flex-shrink: 0;
+  margin-top: 10px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  z-index: 2;
 }
 
 .favorite-import-btn,
 .favorite-export-btn {
-    flex: 1 1 0;
-    background-color: #444;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 0;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.2s;
-    text-align: center;
-    margin: 0;
-    min-width: 0;
+  flex: 1 1 0;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 0;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s;
+  text-align: center;
+  margin: 0;
+  min-width: 0;
 }
 
 .favorite-import-btn:hover,
 .favorite-export-btn:hover {
-    background-color: #007bff;
-    color: #fff;
+  background-color: #007bff;
+  color: #fff;
 }
 
 #favorite-import-export {
-    margin-top: auto;
+  margin-top: auto;
 }

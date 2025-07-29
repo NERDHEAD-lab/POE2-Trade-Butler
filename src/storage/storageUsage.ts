@@ -1,5 +1,11 @@
 import { getMessage } from '../utils/_locale';
-import { getAllStorageItems, getStorageDefinitions, StorageManager, StorageType, STORAGE_TYPES } from './storage';
+import {
+  getAllStorageItems,
+  getStorageDefinitions,
+  StorageManager,
+  StorageType,
+  STORAGE_TYPES
+} from './storage';
 
 export interface StorageEntryUsage {
   key: string;
@@ -19,18 +25,20 @@ type UsageInfoFormatted = {
   [K in StorageType]: StorageTypeUsage;
 };
 
-export async function usageInfo(storageManager: StorageManager<unknown>): Promise<StorageEntryUsage> {
+export async function usageInfo(
+  storageManager: StorageManager<unknown>
+): Promise<StorageEntryUsage> {
   const info = await usageInfoAll();
 
-  return info[storageManager.type]?.entities.find(
-    entry => entry.key === storageManager.key
-  ) || {
-    key: storageManager.key,
-    size: 0,
-    size_f: '0.00B',
-    isDefined: false,
-    description: getStorageDescription(storageManager.key)
-  };
+  return (
+    info[storageManager.type]?.entities.find(entry => entry.key === storageManager.key) || {
+      key: storageManager.key,
+      size: 0,
+      size_f: '0.00B',
+      isDefined: false,
+      description: getStorageDescription(storageManager.key)
+    }
+  );
 }
 
 export async function usageInfoAll(): Promise<UsageInfoFormatted> {

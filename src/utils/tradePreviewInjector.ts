@@ -6,7 +6,10 @@ export class TradePreviewer {
   private static readonly PREVIEW_PANEL_ID = 'trade-preview-panel';
   private static _previewPanel: HTMLDivElement | null = null;
 
-  public static async waitWhileCurrentPanelExists(count: number = 20, interval: number = 100): Promise<void> {
+  public static async waitWhileCurrentPanelExists(
+    count: number = 20,
+    interval: number = 100
+  ): Promise<void> {
     while (count-- > 0) {
       if (TradePreviewer.currentPanel) return;
       await new Promise(resolve => setTimeout(resolve, interval));
@@ -48,16 +51,19 @@ export class TradePreviewer {
     };
   }
 
-  public static addHoverEventListener(target: HTMLElement, id: string, appendPreviewIconTarget?: HTMLElement): void {
+  public static addHoverEventListener(
+    target: HTMLElement,
+    id: string,
+    appendPreviewIconTarget?: HTMLElement
+  ): void {
     TradePreviewer.waitWhileCurrentPanelExists()
       .then(() => {
         target.addEventListener('mouseenter', () => {
           target.classList.add('hovered');
-          previewStorage.getById(id)
-            .then(previewInfo => {
-              if (!previewInfo) return;
-              TradePreviewer.showAsPreviewPanel(previewInfo)
-            });
+          previewStorage.getById(id).then(previewInfo => {
+            if (!previewInfo) return;
+            TradePreviewer.showAsPreviewPanel(previewInfo);
+          });
         });
 
         target.addEventListener('mouseleave', () => {
@@ -67,28 +73,28 @@ export class TradePreviewer {
 
         // currentPanel에 마우스가 들어오면 미리보기 제거
         // TradePreviewer.currentPanel?.addEventListener('mouseenter', () => {
-        document.querySelector('div#poe2-content-wrapper div.wrapper')?.addEventListener('mouseenter', () => {
-          target.classList.remove('hovered');
-          TradePreviewer.hidePreviewPanel();
-        });
-
-
-        previewStorage.getById(id)
-          .then(previewInfo => {
-            if (!appendPreviewIconTarget) return;
-            const icon = document.createElement('span');
-            icon.className = 'preview-icon';
-            icon.textContent = '🔍';
-            icon.style.marginLeft = '1px';
-            icon.style.fontSize = '0.8em';
-            icon.style.verticalAlign = 'middle';
-            if (!previewInfo) {
-              icon.style.opacity = '0.1';
-              icon.style.color = 'gray';
-            }
-
-            appendPreviewIconTarget.insertAdjacentElement('afterend', icon);
+        document
+          .querySelector('div#poe2-content-wrapper div.wrapper')
+          ?.addEventListener('mouseenter', () => {
+            target.classList.remove('hovered');
+            TradePreviewer.hidePreviewPanel();
           });
+
+        previewStorage.getById(id).then(previewInfo => {
+          if (!appendPreviewIconTarget) return;
+          const icon = document.createElement('span');
+          icon.className = 'preview-icon';
+          icon.textContent = '🔍';
+          icon.style.marginLeft = '1px';
+          icon.style.fontSize = '0.8em';
+          icon.style.verticalAlign = 'middle';
+          if (!previewInfo) {
+            icon.style.opacity = '0.1';
+            icon.style.color = 'gray';
+          }
+
+          appendPreviewIconTarget.insertAdjacentElement('afterend', icon);
+        });
       })
       .catch(error => {
         console.debug(getMessage('error_wait_for_injector', error.toString()));
@@ -153,7 +159,10 @@ export class TradePreviewer {
     }
   }
 
-  private static async waitUntilSearchButtonEnabled(retry: number = 20, delay: number = 100): Promise<void> {
+  private static async waitUntilSearchButtonEnabled(
+    retry: number = 20,
+    delay: number = 100
+  ): Promise<void> {
     for (let i = 0; i < retry; i++) {
       const button = TradePreviewer.currentPanel?.querySelector<HTMLButtonElement>('.search-btn');
       if (button && !button.disabled) return;
@@ -168,14 +177,19 @@ export class TradePreviewer {
   }
 
   public static async expandPanel(): Promise<void> {
-    const btn = TradePreviewer.currentPanel?.querySelector('.controls .toggle-search-btn') as HTMLButtonElement | null;
+    const btn = TradePreviewer.currentPanel?.querySelector(
+      '.controls .toggle-search-btn'
+    ) as HTMLButtonElement | null;
     if (btn && TradePreviewer.isPanelCollapsed()) {
       btn.click();
       await TradePreviewer.waitUntilAdvancedVisible();
     }
   }
 
-  private static async waitUntilAdvancedVisible(retry: number = 20, delay: number = 100): Promise<void> {
+  private static async waitUntilAdvancedVisible(
+    retry: number = 20,
+    delay: number = 100
+  ): Promise<void> {
     for (let i = 0; i < retry; i++) {
       const advanced = TradePreviewer.currentPanel?.querySelector('.search-bar.search-advanced');
 
@@ -187,9 +201,10 @@ export class TradePreviewer {
     throw new Error(getMessage('error_advanced_panel_not_expanded'));
   }
 
-
   public static collapsePanel(): void {
-    const btn = TradePreviewer.currentPanel?.querySelector('.controls .toggle-search-btn') as HTMLButtonElement | null;
+    const btn = TradePreviewer.currentPanel?.querySelector(
+      '.controls .toggle-search-btn'
+    ) as HTMLButtonElement | null;
     if (btn && !TradePreviewer.isPanelCollapsed()) {
       btn.click();
     }
@@ -200,7 +215,9 @@ export class TradePreviewer {
   }
 
   private static get currentSearchLeftValue(): string {
-    const searchLeft = this.currentPanel?.querySelector('.search-bar .search-left input') as HTMLInputElement | null;
+    const searchLeft = this.currentPanel?.querySelector(
+      '.search-bar .search-left input'
+    ) as HTMLInputElement | null;
     return searchLeft ? searchLeft.value.trim() : '';
   }
 
@@ -212,7 +229,9 @@ export class TradePreviewer {
   }
 
   private static set previewPanelSearchLeftValue(value: string) {
-    const searchLeft = this.previewPanel?.querySelector('.search-bar .search-left input') as HTMLInputElement | null;
+    const searchLeft = this.previewPanel?.querySelector(
+      '.search-bar .search-left input'
+    ) as HTMLInputElement | null;
     if (!searchLeft) {
       console.error(getMessage('error_search_input_not_found'));
       return;

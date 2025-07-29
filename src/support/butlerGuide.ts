@@ -21,7 +21,9 @@ const butlerGuides: ButlerGuide[] = [
     focusTarget: ['#poe2-sidebar'],
     onBefore: () => {
       const sidebarElement = document.querySelector('#poe2-sidebar') as HTMLElement;
-      const buttonElement = document.querySelector('#poe2-sidebar #poe2-sidebar-toggle-button') as HTMLButtonElement;
+      const buttonElement = document.querySelector(
+        '#poe2-sidebar #poe2-sidebar-toggle-button'
+      ) as HTMLButtonElement;
       if (!buttonElement) {
         return;
       }
@@ -31,7 +33,9 @@ const butlerGuides: ButlerGuide[] = [
       }
     },
     onAfter: () => {
-      const element = document.querySelector('#poe2-sidebar #poe2-sidebar-toggle-button') as HTMLButtonElement;
+      const element = document.querySelector(
+        '#poe2-sidebar #poe2-sidebar-toggle-button'
+      ) as HTMLButtonElement;
       if (!element) {
         console.error('Toggle button not found in the sidebar.');
         return;
@@ -45,7 +49,9 @@ const butlerGuides: ButlerGuide[] = [
     description: getMessage('butler_guide_toggle_sidebar'),
     focusTarget: ['#poe2-sidebar'],
     onAfter: () => {
-      const element = document.querySelector('#poe2-sidebar #poe2-sidebar-toggle-button') as HTMLButtonElement;
+      const element = document.querySelector(
+        '#poe2-sidebar #poe2-sidebar-toggle-button'
+      ) as HTMLButtonElement;
       if (!element) {
         console.error('Toggle button not found in the sidebar.');
         return;
@@ -59,8 +65,12 @@ const butlerGuides: ButlerGuide[] = [
     description: getMessage('butler_guide_switch_tab'),
     focusTarget: ['#sidebar-menu'],
     onBefore: () => {
-      const historyTab = document.querySelector('#sidebar-menu button[data-tab="history"]') as HTMLButtonElement;
-      const favoritesTab = document.querySelector('#sidebar-menu button[data-tab="favorites"]') as HTMLButtonElement;
+      const historyTab = document.querySelector(
+        '#sidebar-menu button[data-tab="history"]'
+      ) as HTMLButtonElement;
+      const favoritesTab = document.querySelector(
+        '#sidebar-menu button[data-tab="favorites"]'
+      ) as HTMLButtonElement;
       if (!historyTab || !favoritesTab) {
         console.error('History or Favorites tab not found in the sidebar.');
         return;
@@ -71,7 +81,9 @@ const butlerGuides: ButlerGuide[] = [
       }
     },
     onAfter: () => {
-      const favoritesTab = document.querySelector('#sidebar-menu button[data-tab="favorites"]') as HTMLButtonElement;
+      const favoritesTab = document.querySelector(
+        '#sidebar-menu button[data-tab="favorites"]'
+      ) as HTMLButtonElement;
       if (!favoritesTab) {
         console.error('Favorites tab not found in the sidebar.');
         return;
@@ -85,7 +97,9 @@ const butlerGuides: ButlerGuide[] = [
     description: getMessage('butler_guide_switch_tab'),
     focusTarget: ['#sidebar-menu'],
     onAfter: () => {
-      const historyTab = document.querySelector('#sidebar-menu button[data-tab="history"]') as HTMLButtonElement;
+      const historyTab = document.querySelector(
+        '#sidebar-menu button[data-tab="history"]'
+      ) as HTMLButtonElement;
       if (!historyTab) {
         console.error('History tab not found in the sidebar.');
         return;
@@ -105,12 +119,16 @@ const butlerGuides: ButlerGuide[] = [
     description: getMessage('butler_guide_history_item'),
     focusTarget: ['#sidebar-content'],
     onBefore: () => {
-      loadHistoryList(Promise.resolve([{
-        id: 'dummy',
-        url: 'https://example.com',
-        lastSearched: new Date().toISOString(),
-        previousSearches: []
-      } as SearchHistoryEntity]));
+      loadHistoryList(
+        Promise.resolve([
+          {
+            id: 'dummy',
+            url: 'https://example.com',
+            lastSearched: new Date().toISOString(),
+            previousSearches: []
+          } as SearchHistoryEntity
+        ])
+      );
     }
   },
   {
@@ -139,7 +157,9 @@ const butlerGuides: ButlerGuide[] = [
     description: getMessage('butler_guide_add_favorite_button'),
     focusTarget: ['#sidebar-content'],
     onBefore: () => {
-      const favoritesTab = document.querySelector('#sidebar-menu button[data-tab="favorites"]') as HTMLButtonElement;
+      const favoritesTab = document.querySelector(
+        '#sidebar-menu button[data-tab="favorites"]'
+      ) as HTMLButtonElement;
       if (!favoritesTab) {
         console.error('Favorites tab not found in the sidebar.');
         return;
@@ -155,23 +175,25 @@ const butlerGuides: ButlerGuide[] = [
     onBefore: async () => {
       const favoriteWrapper = document.getElementById('favorites-list-wrapper') as HTMLDivElement;
       favoriteWrapper.querySelector('.favorite-folder-list')?.remove();
-      await favoriteUI.loadFavoriteFileSystemUI(favoriteWrapper)
-        .then(favoriteUI => {
-          const entries: fs.FileSystemEntry[] = [{
+      await favoriteUI.loadFavoriteFileSystemUI(favoriteWrapper).then(favoriteUI => {
+        const entries: fs.FileSystemEntry[] = [
+          {
             id: 'root',
             type: 'folder',
             name: '/',
             parentId: null,
             createdAt: new Date().toISOString(),
             modifiedAt: new Date().toISOString()
-          }, {
+          },
+          {
             id: 'dummy-favorite',
             type: 'folder',
             name: 'Dummy Favorite Folder',
             parentId: 'root',
             createdAt: new Date().toISOString(),
             modifiedAt: new Date().toISOString()
-          }, {
+          },
+          {
             id: 'dummy-file',
             type: 'file',
             name: 'Dummy Favorite',
@@ -179,9 +201,10 @@ const butlerGuides: ButlerGuide[] = [
             createdAt: new Date().toISOString(),
             modifiedAt: new Date().toISOString(),
             metadata: { id: 'dummy-file-metadata-id', url: 'https://example.com/dummy-file' }
-          }];
-          favoriteUI.update(entries);
-        });
+          }
+        ];
+        favoriteUI.update(entries);
+      });
     }
   },
   {
@@ -241,7 +264,6 @@ export async function runButlerGuides() {
         await new Promise(resolve => setTimeout(resolve, 500));
       }
 
-
       // 오버레이 추가
       // let focusRects: DOMRect[] = [];
       if (guide.focusTarget && guide.focusTarget.length > 0) {
@@ -285,10 +307,10 @@ export async function runButlerGuides() {
         const target = document.querySelector(guide.guideTarget) as HTMLElement;
         if (target && highlightBox) {
           const rect = target.getBoundingClientRect();
-          highlightBox.style.left = (rect.left - margin) + 'px';
-          highlightBox.style.top = (rect.top - margin) + 'px';
-          highlightBox.style.width = (rect.width + margin * 2) + 'px';
-          highlightBox.style.height = (rect.height + margin * 2) + 'px';
+          highlightBox.style.left = rect.left - margin + 'px';
+          highlightBox.style.top = rect.top - margin + 'px';
+          highlightBox.style.width = rect.width + margin * 2 + 'px';
+          highlightBox.style.height = rect.height + margin * 2 + 'px';
         }
         frameHandle = requestAnimationFrame(updateHighlightBox);
       }
@@ -298,10 +320,10 @@ export async function runButlerGuides() {
         highlightBox = document.createElement('div');
         highlightBox.id = 'butler-guide-highlight-box';
         highlightBox.style.position = 'fixed';
-        highlightBox.style.left = (rect.left - margin) + 'px';
-        highlightBox.style.top = (rect.top - margin) + 'px';
-        highlightBox.style.width = (rect.width + margin * 2) + 'px';
-        highlightBox.style.height = (rect.height + margin * 2) + 'px';
+        highlightBox.style.left = rect.left - margin + 'px';
+        highlightBox.style.top = rect.top - margin + 'px';
+        highlightBox.style.width = rect.width + margin * 2 + 'px';
+        highlightBox.style.height = rect.height + margin * 2 + 'px';
         highlightBox.style.border = '3px solid #ffb300';
         highlightBox.style.borderRadius = '12px';
         highlightBox.style.boxShadow = '0 0 20px 10px rgba(255,180,0,0.25)';
@@ -376,10 +398,14 @@ export async function runButlerGuides() {
       try {
         await new Promise<void>(resolve => {
           if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-              guide.onAfter?.();
-              resolve();
-            }, { once: true });
+            nextBtn.addEventListener(
+              'click',
+              () => {
+                guide.onAfter?.();
+                resolve();
+              },
+              { once: true }
+            );
           } else {
             guide.onAfter?.();
             resolve();
