@@ -6,8 +6,8 @@ trading experience.
 <img src="src/assets/icon.png" alt="icon" align="left" style="margin-right: 12px;"/>
 
 > **Disclaimer**  
-> *Not affiliated with Grinding Gear Games; no access to client or API.  
-> It simply enhances information shown on the PoE2 trade web page in your browser.*
+> _Not affiliated with Grinding Gear Games; no access to client or API.  
+> It simply enhances information shown on the PoE2 trade web page in your browser._
 
 ---
 
@@ -28,6 +28,7 @@ trading experience.
 <!-- prettier-ignore-end -->
 
 <!-- Badges -->
+
 [chrome-web-store-users-badge]: https://img.shields.io/chrome-web-store/users/ipnemofnhodcgcplnnfekbfpmngeeocm
 [github-release-badge]: https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler
 [build-status-badge]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/release-please.yml/badge.svg
@@ -35,7 +36,9 @@ trading experience.
 [privacy-policy-badge]: https://img.shields.io/badge/Privacy%20Policy-Read%20Here-blue
 [github-sponsors-badge]: https://img.shields.io/github/sponsors/NERDHEAD-lab?logo=github&logoColor=white
 [buy-me-a-coffee-badge]: https://img.shields.io/badge/Buy%20Me%20a%20Coffee-yellow?logo=buymeacoffee&logoColor=white
+
 <!-- Links -->
+
 [chrome-web-store-version]: https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm?label=Chrome%20Web%20Store
 [chrome-web-store-link]: https://chrome.google.com/webstore/detail/poe2-trade-butler/ipnemofnhodcgcplnnfekbfpmngeeocm
 [github-release-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases
@@ -93,14 +96,14 @@ Follow these steps to install the extension:
    ```bash
    npm run build
    ```
-    - Build the project with no minification (for development):
-      ```bash
-      npm run build:dev
-      ```
+   - Build the project with no minification (for development):
+     ```bash
+     npm run build:dev
+     ```
 4. Load the extension in Chrome:
-    - Open Chrome and go to `chrome://extensions/`.
-    - Enable **Developer Mode**.
-    - Click **Load Unpacked** and select the `dist` folder.
+   - Open Chrome and go to `chrome://extensions/`.
+   - Enable **Developer Mode**.
+   - Click **Load Unpacked** and select the `dist` folder.
 
 ---
 

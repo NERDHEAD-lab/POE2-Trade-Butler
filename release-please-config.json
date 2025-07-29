@@ -12,7 +12,7 @@
         { "type": "feat", "section": "Features" },
         { "type": "fix", "section": "Bug Fixes" },
         { "type": "refactor", "section": "Code Refactoring" },
-        { "type": "internal", "section": "Internal Changes", "hidden" : true },
+        { "type": "internal", "section": "Internal Changes", "hidden": true },
         { "type": "chore", "section": "Chores", "hidden": true }
       ],
       "extra-files": [

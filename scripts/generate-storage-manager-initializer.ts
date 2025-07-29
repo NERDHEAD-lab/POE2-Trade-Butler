@@ -15,7 +15,7 @@ function findImportFiles(): string[] {
   const files = glob.sync('**/*.ts', {
     cwd: PROJECT_ROOT,
     absolute: true,
-    ignore: ['storage/initStorage.ts', '**/*.d.ts', '**/*.test.ts'],
+    ignore: ['storage/initStorage.ts', '**/*.d.ts', '**/*.test.ts']
   });
 
   return files.filter(file => {
@@ -28,7 +28,8 @@ function findImportFiles(): string[] {
 
 function generateInitStorageContent(files: string[]): string {
   const imports = files.map((file, idx) => {
-    const relativePath = path.relative(path.dirname(TARGET_FILE), file)
+    const relativePath = path
+      .relative(path.dirname(TARGET_FILE), file)
       .replace(/\\/g, '/')
       .replace(/\.ts$/, '');
 
@@ -38,7 +39,6 @@ function generateInitStorageContent(files: string[]): string {
     return `import '${importPath}'; // auto-imported [${idx + 1}]`;
   });
 
-
   return [
     '/* ********************************************************************************************* */',
     '/* This file is auto-generated to ensure all StorageManager instances are included in the bundle */',
@@ -47,7 +47,7 @@ function generateInitStorageContent(files: string[]): string {
     // '/* eslint-disable @typescript-eslint/no-unused-vars */',
     // '',
     ...imports,
-    '',
+    ''
   ].join('\n');
 }
 

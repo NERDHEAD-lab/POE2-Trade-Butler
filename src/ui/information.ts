@@ -19,7 +19,6 @@ export function attachInformationSections(parent: HTMLElement) {
   const versionSection = document.createElement('div');
   informationElement.appendChild(versionSection);
 
-
   void attachBadgeSection(badgeSection);
   void attachLogoSection(logoSection);
   void attachVersionSection(versionSection);
@@ -74,7 +73,8 @@ function attachBadgeSection(badgeSection: HTMLDivElement): Promise<HTMLDivElemen
 }
 
 async function attachLogoSection(logo: HTMLDivElement): Promise<HTMLDivElement> {
-  return version.checkVersion()
+  return version
+    .checkVersion()
     .then(version => version.versionType)
     .then(versionType => {
       const iconUrl = chrome.runtime.getURL('assets/icon.png');
@@ -106,74 +106,75 @@ async function attachLogoSection(logo: HTMLDivElement): Promise<HTMLDivElement> 
     });
 }
 
-async function attachVersionSection(versionSection: HTMLDivElement, refreshForce: boolean = false): Promise<HTMLDivElement> {
-  return version.getInstalledVersion()
-    .then(installedVersion => {
-      versionSection.className = 'version-section';
-      versionSection.style.marginTop = '18px';
-      versionSection.style.textAlign = 'center';
+async function attachVersionSection(
+  versionSection: HTMLDivElement,
+  refreshForce: boolean = false
+): Promise<HTMLDivElement> {
+  return version.getInstalledVersion().then(installedVersion => {
+    versionSection.className = 'version-section';
+    versionSection.style.marginTop = '18px';
+    versionSection.style.textAlign = 'center';
 
-      const contentNode: HTMLElement = document.createElement('div');
-      contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${installedVersion}</b> <span style="color:#aaa;">(${createSpinner().outerHTML})</span>`;
-      versionSection.appendChild(contentNode);
+    const contentNode: HTMLElement = document.createElement('div');
+    contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${installedVersion}</b> <span style="color:#aaa;">(${createSpinner().outerHTML})</span>`;
+    versionSection.appendChild(contentNode);
 
-      async function updateVersionSection() {
-        const versionCheckResult = await version.getCachedCheckVersion(refreshForce);
-        switch (versionCheckResult.versionType) {
-          case 'LATEST':
-            contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:green;">(${getMessage('popup_latest_version')})</span>`;
-            break;
-          case 'NEW_VERSION_AVAILABLE':
-            // contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(<a href="https://chrome.google.com/webstore/detail/${version.CHROME_WEBSTORE_ID}" target="_blank" rel="noopener" style="color:orange;text-decoration:underline;font-weight:bold;">${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}</a>)</span>`;
-            // use requestUpdateCheck
-            contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(${getMessage('popup_new_version_available', versionCheckResult.latestVersion)})</span>`;
-            const update = document.createElement('span');
-            update.innerHTML = `${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}`;
-            Object.assign(update.style, {
-              color: '#007bff',
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px'
-            });
+    async function updateVersionSection() {
+      const versionCheckResult = await version.getCachedCheckVersion(refreshForce);
+      switch (versionCheckResult.versionType) {
+        case 'LATEST':
+          contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:green;">(${getMessage('popup_latest_version')})</span>`;
+          break;
+        case 'NEW_VERSION_AVAILABLE':
+          // contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(<a href="https://chrome.google.com/webstore/detail/${version.CHROME_WEBSTORE_ID}" target="_blank" rel="noopener" style="color:orange;text-decoration:underline;font-weight:bold;">${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}</a>)</span>`;
+          // use requestUpdateCheck
+          contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:orange;">(${getMessage('popup_new_version_available', versionCheckResult.latestVersion)})</span>`;
+          const update = document.createElement('span');
+          update.innerHTML = `${getMessage('popup_new_version_available', versionCheckResult.latestVersion)}`;
+          Object.assign(update.style, {
+            color: '#007bff',
+            cursor: 'pointer',
+            textDecoration: 'underline',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px'
+          });
 
-            update.addEventListener('click', () => chrome.runtime.requestUpdateCheck());
-            break;
-          case 'DEV':
-            contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:#007bff;">(${getMessage('popup_dev_version')})</span>`;
-            break;
-          default:
-            const refresh = document.createElement('span');
-            const spinner = createSpinner();
-            refresh.innerHTML = `(${getMessage('popup_check_version_again')} ${spinner.outerHTML})`;
-            Object.assign(refresh.style, {
-              color: '#aaa',
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px'
-            });
+          update.addEventListener('click', () => chrome.runtime.requestUpdateCheck());
+          break;
+        case 'DEV':
+          contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b> <span style="color:#007bff;">(${getMessage('popup_dev_version')})</span>`;
+          break;
+        default:
+          const refresh = document.createElement('span');
+          const spinner = createSpinner();
+          refresh.innerHTML = `(${getMessage('popup_check_version_again')} ${spinner.outerHTML})`;
+          Object.assign(refresh.style, {
+            color: '#aaa',
+            cursor: 'pointer',
+            textDecoration: 'underline',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px'
+          });
 
-            // 스피너를 클릭하면 강제로 최신 버전 확인
-            refresh.addEventListener('click', () => {
-              refresh.closest('.version-section')?.remove();
-              attachVersionSection(versionSection, true);
-            });
+          // 스피너를 클릭하면 강제로 최신 버전 확인
+          refresh.addEventListener('click', () => {
+            refresh.closest('.version-section')?.remove();
+            attachVersionSection(versionSection, true);
+          });
 
-            contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b>`;
-            contentNode.appendChild(refresh);
-        }
+          contentNode.innerHTML = `<b>${getMessage('popup_installed_version')}: ${versionCheckResult.installedVersion}</b>`;
+          contentNode.appendChild(refresh);
       }
+    }
 
-      //0.1 ~ 2초 후 실행 - 로딩 중 표시를 위해
-      setTimeout(updateVersionSection, Math.random() * 1900 + 100);
+    //0.1 ~ 2초 후 실행 - 로딩 중 표시를 위해
+    setTimeout(updateVersionSection, Math.random() * 1900 + 100);
 
-      return versionSection;
-    });
+    return versionSection;
+  });
 }
-
 
 function createSpinner(size: number = 14) {
   const spinner = document.createElement('span');

@@ -39,14 +39,16 @@ export async function checkVersion(): Promise<VersionCheckResult> {
   } else if (versionType === 'LATEST') {
     console.info(`You are using the latest version: ${installedVersion}`);
   } else {
-    console.info(`Unable to determine version status. Installed: ${installedVersion}, Latest: ${latestVersion}`);
+    console.info(
+      `Unable to determine version status. Installed: ${installedVersion}, Latest: ${latestVersion}`
+    );
   }
 
   return { installedVersion, latestVersion, versionType };
 }
 
 export async function getInstalledVersion(): Promise<string> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     if (chrome && chrome.runtime && chrome.runtime.getManifest) {
       resolve(chrome.runtime.getManifest().version);
     } else {
@@ -77,7 +79,9 @@ function compareVersions(installedVersion: string, latestVersion: string): versi
  */
 async function getLatestVersionFromBadge(): Promise<string> {
   try {
-    const res = await fetch(`https://img.shields.io/chrome-web-store/v/${CHROME_WEBSTORE_ID}?label=Chrome%20Web%20Store`);
+    const res = await fetch(
+      `https://img.shields.io/chrome-web-store/v/${CHROME_WEBSTORE_ID}?label=Chrome%20Web%20Store`
+    );
     if (!res.ok) {
       console.error('Failed to fetch latest version from badge:', res.status, res.statusText);
       return '0.0.0';
@@ -95,7 +99,10 @@ async function getLatestVersionFromBadge(): Promise<string> {
     }
 
     const checkPageNotFound = svg.match(/Chrome Web Store: \s*([^"]+)/);
-    console.error('Failed to extract version. Badge might be not found or malformed:', checkPageNotFound ? checkPageNotFound[1] : 'Unknown error');
+    console.error(
+      'Failed to extract version. Badge might be not found or malformed:',
+      checkPageNotFound ? checkPageNotFound[1] : 'Unknown error'
+    );
     return '0.0.0';
   } catch {
     console.error('Failed to fetch latest version from badge');

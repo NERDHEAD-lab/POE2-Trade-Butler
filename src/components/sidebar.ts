@@ -96,7 +96,7 @@ export function renderSidebar(container: HTMLElement): void {
   let startWidth = 0;
 
   if (resizer) {
-    resizer.addEventListener('mousedown', (e) => {
+    resizer.addEventListener('mousedown', e => {
       isResizing = true;
       startX = e.clientX;
       startWidth = sidebar.offsetWidth;
@@ -104,7 +104,7 @@ export function renderSidebar(container: HTMLElement): void {
       document.body.style.userSelect = 'none';
     });
 
-    document.addEventListener('mousemove', (e) => {
+    document.addEventListener('mousemove', e => {
       if (!isResizing) return;
       const dx = startX - e.clientX;
       let newWidth = startWidth + dx;
@@ -130,12 +130,15 @@ export function renderSidebar(container: HTMLElement): void {
   const clearHistoryButton = sidebar.querySelector<HTMLButtonElement>('#clear-history');
   clearHistoryButton?.addEventListener('click', () => {
     if (confirm(getMessage('confirm_clear_history'))) {
-      searchHistoryStorage.removeAll().then(() => {
-        showToast(getMessage('toast_history_cleared'));
-      }).catch(error => {
-        console.error(getMessage('error_clear_history', error.toString()));
-        showToast(getMessage('toast_history_clear_failed'), '#f00');
-      });
+      searchHistoryStorage
+        .removeAll()
+        .then(() => {
+          showToast(getMessage('toast_history_cleared'));
+        })
+        .catch(error => {
+          console.error(getMessage('error_clear_history', error.toString()));
+          showToast(getMessage('toast_history_clear_failed'), '#f00');
+        });
     }
   });
 
@@ -159,17 +162,17 @@ export function renderSidebar(container: HTMLElement): void {
     void settings.attachSettingOnClick(settingButton);
   })();
 
-
-  const addFavoriteButton = sidebar.querySelector<HTMLButtonElement>('#add-favorite') as HTMLButtonElement;
+  const addFavoriteButton = sidebar.querySelector<HTMLButtonElement>(
+    '#add-favorite'
+  ) as HTMLButtonElement;
   attachCreateFavoriteEvent(addFavoriteButton, () => {
-      const searchHistoryFromUrl = api.getSearchHistoryFromUrl(window.location.href);
+    const searchHistoryFromUrl = api.getSearchHistoryFromUrl(window.location.href);
 
-      return {
-        id: searchHistoryFromUrl.id,
-        url: searchHistoryFromUrl.url
-      };
-    }
-  );
+    return {
+      id: searchHistoryFromUrl.id,
+      url: searchHistoryFromUrl.url
+    };
+  });
 
   // sidebar 여닫기
   (async () => {
@@ -200,7 +203,6 @@ export function renderSidebar(container: HTMLElement): void {
     }
   })();
 
-
   const favoriteWrapper = document.getElementById('favorites-list-wrapper') as HTMLDivElement;
 
   // import/export 버튼 이벤트 연결 (탭 하단 고정)
@@ -208,7 +210,9 @@ export function renderSidebar(container: HTMLElement): void {
     .then(() => loadHistoryList(searchHistoryStorage.getAll()))
     .then(() => favoriteUI.loadFavoriteFileSystemUI(favoriteWrapper))
     .then(() => {
-      searchHistoryStorage.addOnChangeListener((newValue) => loadHistoryList(Promise.resolve(newValue)));
+      searchHistoryStorage.addOnChangeListener(newValue =>
+        loadHistoryList(Promise.resolve(newValue))
+      );
       previewStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
       favoriteStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
 
@@ -237,7 +241,6 @@ export function renderSidebar(container: HTMLElement): void {
         };
       }
     });
-
 
   // 탭 전환 이벤트
   (async () => {
@@ -276,42 +279,54 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   const removeButton = li.querySelector('.remove-history') as HTMLButtonElement;
   const favoriteStar = li.querySelector('.favorite-star') as HTMLSpanElement;
 
-  previewStorage.getById(entry.id)
-    .then(previewInfo => {
-      if (previewInfo && previewInfo.searchKeyword) {
-        nameSpan.textContent = previewInfo.searchKeyword;
-      } else {
-        nameSpan.textContent = entry.id;
-      }
-    });
+  previewStorage.getById(entry.id).then(previewInfo => {
+    if (previewInfo && previewInfo.searchKeyword) {
+      nameSpan.textContent = previewInfo.searchKeyword;
+    } else {
+      nameSpan.textContent = entry.id;
+    }
+  });
 
   // title에 정보 표시
   const locale = getCurrentLocale();
-  const lastSearchedStr = getMessage('history_item_last_searched', new Date(entry.lastSearched).toLocaleString(locale, {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  }));
-  const totalSearchesStr = getMessage('history_item_total_searches', String(entry.previousSearches.length + 1));
+  const lastSearchedStr = getMessage(
+    'history_item_last_searched',
+    new Date(entry.lastSearched).toLocaleString(locale, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    })
+  );
+  const totalSearchesStr = getMessage(
+    'history_item_total_searches',
+    String(entry.previousSearches.length + 1)
+  );
   let prevSearchesStr = '';
   if (entry.previousSearches.length > 0) {
-    prevSearchesStr = '\n' + getMessage('history_item_previous_searches') + '\n' + entry.previousSearches
-      .map(search => new Date(search).toLocaleString(locale, {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      }))
-      .join('\n');
+    prevSearchesStr =
+      '\n' +
+      getMessage('history_item_previous_searches') +
+      '\n' +
+      entry.previousSearches
+        .map(search =>
+          new Date(search).toLocaleString(locale, {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          })
+        )
+        .join('\n');
   }
   li.title = `${lastSearchedStr}\n${totalSearchesStr}${prevSearchesStr}`;
 
-  favoriteStorage.existsByMetadataId(entry.id)
+  favoriteStorage
+    .existsByMetadataId(entry.id)
     .then(isFavorite => {
       if (isFavorite) {
         favoriteStar.classList.add('active');
@@ -327,7 +342,15 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   // history-item 클릭 시
   li.addEventListener('click', () => {
     if (!(getServerRegion(new URL(entry.url)) === getCurrentServerRegion())) {
-      if(!confirm(getMessage('confirm_redirect_to_other_server', getServerRegion(new URL(entry.url)), getCurrentServerRegion()))) {
+      if (
+        !confirm(
+          getMessage(
+            'confirm_redirect_to_other_server',
+            getServerRegion(new URL(entry.url)),
+            getCurrentServerRegion()
+          )
+        )
+      ) {
         return;
       }
     }
@@ -335,15 +358,14 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
     window.location.href = entry.url;
   });
 
-
   attachCreateFavoriteEvent(favoriteStar, () => ({
     id: entry.id,
     url: entry.url
   }));
 
-  removeButton.addEventListener('click', (e) => {
+  removeButton.addEventListener('click', e => {
     e.stopPropagation();
-    searchHistoryStorage.deleteById(entry.id).catch((error) => {
+    searchHistoryStorage.deleteById(entry.id).catch(error => {
       console.error(getMessage('error_delete_history', error.toString()));
     });
     li.remove();
@@ -352,7 +374,9 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   return li;
 }
 
-export function loadHistoryList(historyList: Promise<searchHistoryStorage.SearchHistoryEntity[]>): void {
+export function loadHistoryList(
+  historyList: Promise<searchHistoryStorage.SearchHistoryEntity[]>
+): void {
   historyList.then(entries => {
     const historyListElement = document.getElementById('history-list');
     if (!historyListElement) {
@@ -379,10 +403,10 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
 
     // 그룹별로 분류
     const groups: { [key: string]: searchHistoryStorage.SearchHistoryEntity[] } = {
-      '오늘': [],
-      '어제': [],
-      '일주일전': [],
-      '오래됨': []
+      오늘: [],
+      어제: [],
+      일주일전: [],
+      오래됨: []
     };
     const dateGroups: { [date: string]: searchHistoryStorage.SearchHistoryEntity[] } = {};
 
@@ -405,13 +429,19 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
     });
 
     // 그룹 렌더링 함수
-    function renderGroup(header: string, items: searchHistoryStorage.SearchHistoryEntity[], dateLabel?: string) {
+    function renderGroup(
+      header: string,
+      items: searchHistoryStorage.SearchHistoryEntity[],
+      dateLabel?: string
+    ) {
       if (items.length === 0) return;
       const headerLi = document.createElement('li');
       headerLi.className = 'history-group-header';
       // i18n 적용
       const headerText = getMessage(header) || header;
-      headerLi.innerHTML = dateLabel ? `<span>${headerText}</span><span style="float:right;opacity:0.7;font-size:13px;">${dateLabel}</span>` : headerText;
+      headerLi.innerHTML = dateLabel
+        ? `<span>${headerText}</span><span style="float:right;opacity:0.7;font-size:13px;">${dateLabel}</span>`
+        : headerText;
       list.appendChild(headerLi);
       items.forEach(entry => {
         const item = createHistoryItem(entry);
@@ -459,8 +489,14 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
 
     // 일주일전
     if (groups['일주일전'].length > 0) {
-      const min = groups['일주일전'].reduce((min, e) => new Date(e.lastSearched) < new Date(min.lastSearched) ? e : min, groups['일주일전'][0]);
-      const max = groups['일주일전'].reduce((max, e) => new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max, groups['일주일전'][0]);
+      const min = groups['일주일전'].reduce(
+        (min, e) => (new Date(e.lastSearched) < new Date(min.lastSearched) ? e : min),
+        groups['일주일전'][0]
+      );
+      const max = groups['일주일전'].reduce(
+        (max, e) => (new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max),
+        groups['일주일전'][0]
+      );
       const minDate = new Date(min.lastSearched);
       const maxDate = new Date(max.lastSearched);
       const rangeStr = `${minDate.toLocaleDateString(locale, {
@@ -471,14 +507,16 @@ export function loadHistoryList(historyList: Promise<searchHistoryStorage.Search
       renderGroup('history_group_last_week', groups['일주일전'], rangeStr);
     }
     if (groups['오래됨'].length > 0) {
-      const max = groups['오래됨'].reduce((max, e) => new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max, groups['오래됨'][0]);
+      const max = groups['오래됨'].reduce(
+        (max, e) => (new Date(e.lastSearched) > new Date(max.lastSearched) ? e : max),
+        groups['오래됨'][0]
+      );
       const maxDate = new Date(max.lastSearched);
       const rangeStr = `~ ${maxDate.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })}`;
       renderGroup('history_group_older', groups['오래됨'], rangeStr);
     }
   });
 }
-
 
 function observeUrlChange() {
   let lastUrl = window.location.href;
@@ -505,7 +543,6 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
     console.debug('Already handling URL change, skipping:', currentUrl);
     return;
   }
-
 
   const parseSearchUrl = api.parseSearchUrl(currentUrl);
   if (parseSearchUrl === null) {
@@ -535,14 +572,14 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
       return;
     }
 
-    await searchHistoryStorage.addOrUpdate(entity.id, entity.url)
+    await searchHistoryStorage
+      .addOrUpdate(entity.id, entity.url)
       .then(() => settingStorage.setLatestSearchUrl(currentUrl))
       .then(() => console.log(getMessage('log_search_history_updated', currentUrl)));
-
   } catch (err) {
     console.info(getMessage('error_handle_url_change', currentUrl), err);
     if (process.env.NODE_ENV === 'development') {
-      const errMsg = (err instanceof Error) ? err.toString() : String(err);
+      const errMsg = err instanceof Error ? err.toString() : String(err);
       console.error(getMessage('error_handle_url_change', errMsg));
     }
   } finally {
@@ -550,11 +587,7 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
   }
 }
 
-
-export function attachPreviewHoverEvents(
-  element: HTMLElement,
-  entryId: string
-): void {
+export function attachPreviewHoverEvents(element: HTMLElement, entryId: string): void {
   TradePreviewer.addHoverEventListener(
     element,
     entryId,
@@ -569,12 +602,13 @@ export function attachCreateFavoriteEvent(
     url: string;
   }
 ): void {
-  element.addEventListener('click', (e) => {
+  element.addEventListener('click', e => {
     e.stopPropagation();
     try {
       const entry = entrySupplier();
 
-      favoriteStorage.getAll()
+      favoriteStorage
+        .getAll()
         .then(favorites => {
           return favorites
             .filter(fav => fav.id === entry.id)
@@ -582,7 +616,10 @@ export function attachCreateFavoriteEvent(
         })
         .then(favoritesPath => {
           if (favoritesPath.length > 0) {
-            const message = getMessage('already_in_favorites', favoritesPath.map(path => `- ${path}`).join('\n'));
+            const message = getMessage(
+              'already_in_favorites',
+              favoritesPath.map(path => `- ${path}`).join('\n')
+            );
             if (!confirm(message)) {
               return;
             }

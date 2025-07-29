@@ -11,7 +11,7 @@ async function getI18n(): Promise<Record<string, Record<string, { message: strin
   if (isBackground()) return i18n;
 
   return settingStorage.getOrFetchI18n(async () => {
-    const fetches = Object.keys(LANGUAGE_NATIVE_NAMES).map(async (lang) => {
+    const fetches = Object.keys(LANGUAGE_NATIVE_NAMES).map(async lang => {
       const url = chrome.runtime.getURL(`_locales/${lang}/messages.json`);
       try {
         const response = await fetch(url);
@@ -32,7 +32,6 @@ async function getCurrentLanguage(): Promise<string> {
   return language;
 }
 
-
 /**
  * Gets a localized message from the _locales directory.
  * Falls back to the default locale if the message is not found in the current locale.
@@ -46,11 +45,12 @@ export function getMessage(key: string, ...substitutions: string[]): string {
     return chrome.i18n.getMessage(key, substitutions);
   }
 
-
   try {
     const message: string = i18n[currentLanguage]?.[key].message;
     if (!message) {
-      console.warn(`Message key "${key}" not found in locale "${currentLanguage}". Falling back to default.`);
+      console.warn(
+        `Message key "${key}" not found in locale "${currentLanguage}". Falling back to default.`
+      );
       return chrome.i18n.getMessage(key, substitutions);
     }
 
@@ -64,12 +64,10 @@ export function getMessage(key: string, ...substitutions: string[]): string {
   } catch {
     return chrome.i18n.getMessage(key, substitutions); // Fallback to default locale
   }
-
 }
 
 function isBackground(): boolean {
   return typeof window === 'undefined';
-
 }
 
 /**

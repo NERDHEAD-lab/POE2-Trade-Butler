@@ -5,10 +5,7 @@ import * as fs from './fileSystemEntry';
 import { FileEntry } from './fileSystemEntry';
 import { getMessage } from '../utils/_locale';
 
-export async function openFavoriteFolderModal(
-  id: string,
-  url: string
-): Promise<void> {
+export async function openFavoriteFolderModal(id: string, url: string): Promise<void> {
   return Promise.resolve(document.createElement('div'))
     .then(async wrapper => {
       const nameInput = document.createElement('input');
@@ -19,7 +16,7 @@ export async function openFavoriteFolderModal(
       nameInput.dataset.url = url;
 
       wrapper.appendChild(nameInput);
-      const favoriteUI = await folderUI.loadFavoriteFileSystemUI(wrapper, false)
+      const favoriteUI = await folderUI.loadFavoriteFileSystemUI(wrapper, false);
       return { favoriteUI, wrapper };
     })
     .then(({ favoriteUI, wrapper }) => {
@@ -53,12 +50,18 @@ export async function openFavoriteFolderModal(
                 showToast(getMessage('toast_folder_name_too_long'), '#f66');
                 return false;
               } else if (exceptions.some(exception => name.includes(exception))) {
-                showToast(getMessage('toast_folder_name_invalid_chars', exceptions.join(', ')), '#f66');
+                showToast(
+                  getMessage('toast_folder_name_invalid_chars', exceptions.join(', ')),
+                  '#f66'
+                );
                 return false;
               }
 
-              return favoriteStorage.getAll()
-                .then(async favorites => fs.addEntry(favorites, { name: name, type: 'folder' }, parentId))
+              return favoriteStorage
+                .getAll()
+                .then(async favorites =>
+                  fs.addEntry(favorites, { name: name, type: 'folder' }, parentId)
+                )
                 .then(newEntry => favoriteStorage.saveAll(newEntry))
                 .then(() => {
                   showToast(getMessage('toast_folder_created'), name);
@@ -87,9 +90,8 @@ export async function openFavoriteFolderModal(
                 }
               }
 
-              return favoriteStorage.saveAll(
-                favoriteEntries.filter(entry => entry.id !== selectedFolder.id)
-              )
+              return favoriteStorage
+                .saveAll(favoriteEntries.filter(entry => entry.id !== selectedFolder.id))
                 .then(() => {
                   showToast(getMessage('toast_folder_deleted', selectedFolder.name));
                   return false;
@@ -131,7 +133,8 @@ export function onConfirmCreateFavoriteModal(wrapper: HTMLDivElement): ButtonLis
     }
 
     // 폴더 선택 여부 확인 필요
-    return favoriteStorage.getAll()
+    return favoriteStorage
+      .getAll()
       .then(async favorites => {
         const selectedFolder = await folderUI.getSelectedFolder(wrapper);
         const newEntry: Omit<FileEntry, 'id' | 'createdAt' | 'modifiedAt' | 'parentId'> = {
@@ -140,8 +143,7 @@ export function onConfirmCreateFavoriteModal(wrapper: HTMLDivElement): ButtonLis
           metadata: { id: id, url: url }
         };
 
-        return fs.addEntry(
-          favorites, newEntry, selectedFolder.id);
+        return fs.addEntry(favorites, newEntry, selectedFolder.id);
       })
       .then(newEntry => favoriteStorage.saveAll(newEntry))
       .then(() => {

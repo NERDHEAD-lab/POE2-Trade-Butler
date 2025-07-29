@@ -7,7 +7,6 @@ const LSCACHE_TRADE2FILTERS = 'https://poe.game.daum.net/api/trade2/data/filters
 const LSCACHE_TRADE2STATS = 'https://poe.game.daum.net/api/trade2/data/stats';
 const LSCACHE_TRADE2DATA = 'https://poe.game.daum.net/api/trade2/data/static';
 
-
 export async function applyKoreanTranslate() {
   if (isKoreanServer()) {
     return;
@@ -47,7 +46,6 @@ export async function applyKoreanTranslate() {
 //   return dict;
 // }
 
-
 async function translateLscaches() {
   await setItem('lscache-trade2items', LSCACHE_TRADE2ITEMS);
   await setItem('lscache-trade2filters', LSCACHE_TRADE2FILTERS);
@@ -56,7 +54,9 @@ async function translateLscaches() {
 }
 
 async function setItem(key: string, fetchUrl: string) {
-  const response = await cacheData.getOrFetchCache(key, 1000 * 60 * 60, () => fetchFromBackground(fetchUrl));
+  const response = await cacheData.getOrFetchCache(key, 1000 * 60 * 60, () =>
+    fetchFromBackground(fetchUrl)
+  );
   if (!response.data) {
     console.error(response.error);
     throw new Error(`Failed to fetch data from ${fetchUrl}`);
@@ -68,7 +68,7 @@ async function setItem(key: string, fetchUrl: string) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function fetchFromBackground(url: string): Promise<any> {
   return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({ type: 'FETCH', url }, (response) => {
+    chrome.runtime.sendMessage({ type: 'FETCH', url }, response => {
       if (chrome.runtime.lastError) {
         reject(new Error(chrome.runtime.lastError.message));
       } else {
@@ -79,7 +79,7 @@ async function fetchFromBackground(url: string): Promise<any> {
 }
 
 async function waitForDOM(): Promise<void> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     if (document.readyState === 'complete') {
       resolve();
     } else {

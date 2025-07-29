@@ -8,7 +8,8 @@ import {
   CheckboxDetailOption,
   DivTextDetailOption,
   SelectDetailOption,
-  SettingManager, SettingOption,
+  SettingManager,
+  SettingOption,
   Settings
 } from '../utils/settingManager';
 import * as settingStorage from '../storage/settingStorage';
@@ -33,25 +34,33 @@ const settings: Settings = {
               ...Object.values(LANGUAGE_NATIVE_NAMES)
             ],
             selectedIndex: await i18nIndex(),
-            onChangeListener: (option) => {
+            onChangeListener: option => {
               console.log('Language changed to:', option.options[option.selectedIndex]);
               if (option.selectedIndex === 0) {
                 settingStorage.setLanguage('default').then(() => {
-                  showToast(getMessage('settings_option_select_language_default_enabled', defaultLanguage()));
+                  showToast(
+                    getMessage('settings_option_select_language_default_enabled', defaultLanguage())
+                  );
                 });
               } else {
                 const selectedLanguage = option.options[option.selectedIndex];
                 // value -> key
                 const languageKey = Object.keys(LANGUAGE_NATIVE_NAMES).find(
-                  key => LANGUAGE_NATIVE_NAMES[key as keyof typeof LANGUAGE_NATIVE_NAMES] === selectedLanguage
+                  key =>
+                    LANGUAGE_NATIVE_NAMES[key as keyof typeof LANGUAGE_NATIVE_NAMES] ===
+                    selectedLanguage
                 );
 
                 if (languageKey) {
                   settingStorage.setLanguage(languageKey).then(() => {
-                    showToast(getMessage('settings_option_select_language_enabled', selectedLanguage));
+                    showToast(
+                      getMessage('settings_option_select_language_enabled', selectedLanguage)
+                    );
                   });
                 } else {
-                  showToast(getMessage('settings_option_select_language_invalid', selectedLanguage));
+                  showToast(
+                    getMessage('settings_option_select_language_invalid', selectedLanguage)
+                  );
                 }
               }
             }
@@ -98,7 +107,6 @@ const settings: Settings = {
   ]
 };
 
-
 export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
   const img = document.createElement('img');
   const settingIconUrl = chrome.runtime.getURL('assets/settings_24dp_1F1F1F.svg');
@@ -113,7 +121,6 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
     height: '36px',
     cursor: 'pointer'
   });
-
 
   parent.addEventListener('click', async () => {
     const settingManager = new SettingManager(settings);
@@ -177,9 +184,11 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
 function defaultLanguage(): string {
   const language = navigator?.language.replace('-', '_');
 
-  return LANGUAGE_NATIVE_NAMES[language as keyof typeof LANGUAGE_NATIVE_NAMES] ||
+  return (
+    LANGUAGE_NATIVE_NAMES[language as keyof typeof LANGUAGE_NATIVE_NAMES] ||
     LANGUAGE_NATIVE_NAMES[language?.split('_')[0] as keyof typeof LANGUAGE_NATIVE_NAMES] ||
-    LANGUAGE_NATIVE_NAMES.en;
+    LANGUAGE_NATIVE_NAMES.en
+  );
 }
 
 function createInformationDiv(): HTMLDivElement {
@@ -276,7 +285,6 @@ function createStorageDiv(usage: storageUsage.StorageTypeUsage): HTMLDivElement 
 
     const undefinedTotalSize_f = storageUsage.formatFileSize(undefinedTotalSize);
     const percent = Math.min(100, (undefinedTotalSize / totalSize) * 100);
-
 
     const undefinedSummary = document.createElement('summary');
 

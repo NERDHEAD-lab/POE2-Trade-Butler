@@ -5,9 +5,11 @@ export interface Settings {
 interface SettingTab {
   name: string;
   iconUrl: string;
-  options: SettingOption<AnyDetailOption>[] | (() => SettingOption<AnyDetailOption>[]) | (() => Promise<SettingOption<AnyDetailOption>[]>);
+  options:
+    | SettingOption<AnyDetailOption>[]
+    | (() => SettingOption<AnyDetailOption>[])
+    | (() => Promise<SettingOption<AnyDetailOption>[]>);
 }
-
 
 export interface SettingOption<T extends AnyDetailOption> {
   id: string;
@@ -18,7 +20,7 @@ export interface SettingOption<T extends AnyDetailOption> {
 }
 
 export type AnyDetailOption =
-  CheckboxDetailOption
+  | CheckboxDetailOption
   | SelectDetailOption
   | DivTextDetailOption
   | NumberDetailOption
@@ -73,7 +75,7 @@ export interface onOptionChangeListener<T> {
 }
 
 export class SettingManager {
-  private applyChangedQueue: (Record<string, () => void>) = {};
+  private applyChangedQueue: Record<string, () => void> = {};
   private readonly settings: Settings;
 
   public constructor(settings: Settings) {
@@ -105,7 +107,6 @@ export class SettingManager {
 
     return settingsDiv;
   }
-
 
   private async createContent(contentDiv: HTMLDivElement, tabOptionsMap: Map<string, HTMLElement>) {
     for (const tab of this.settings.tabs) {
@@ -311,7 +312,11 @@ export class SettingManager {
     return optionsDiv;
   }
 
-  private createTab(tabListDiv: HTMLDivElement, contentDiv: HTMLDivElement, tabOptionsMap: Map<string, HTMLElement>) {
+  private createTab(
+    tabListDiv: HTMLDivElement,
+    contentDiv: HTMLDivElement,
+    tabOptionsMap: Map<string, HTMLElement>
+  ) {
     this.settings.tabs.forEach((tab, idx) => {
       const tabBtn = document.createElement('button');
       tabBtn.className = 'poe2-settings-tab-btn' + (idx === 0 ? ' active' : '');
@@ -333,7 +338,7 @@ export class SettingManager {
         Array.from(tabListDiv.children).forEach(b => b.classList.remove('active'));
         tabBtn.classList.add('active');
         // 컨텐츠 전환
-        Array.from(contentDiv.children).forEach(el => (el as HTMLElement).style.display = 'none');
+        Array.from(contentDiv.children).forEach(el => ((el as HTMLElement).style.display = 'none'));
         const thisContent = tabOptionsMap.get(tab.name);
         if (thisContent) thisContent.style.display = '';
       };
@@ -358,4 +363,3 @@ export class SettingManager {
     this.applyChangedQueue = {};
   }
 }
-

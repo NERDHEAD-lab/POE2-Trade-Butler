@@ -7,22 +7,19 @@ const __dirname = path.dirname(__filename);
 
 const localesDir = path.resolve(__dirname, '../_locales');
 
-const languages = fs.readdirSync(localesDir).filter((name) => {
+const languages = fs.readdirSync(localesDir).filter(name => {
   return fs.statSync(path.join(localesDir, name)).isDirectory();
 });
 
 // 각 언어의 current_language 메시지 추출
 const languageNativeNames: Record<string, string> = {};
 
-languages.forEach((lang) => {
+languages.forEach(lang => {
   const msgPath = path.join(localesDir, lang, 'messages.json');
   if (fs.existsSync(msgPath)) {
     try {
       const messages = JSON.parse(fs.readFileSync(msgPath, 'utf8'));
-      if (
-        messages.current_language &&
-        typeof messages.current_language.message === 'string'
-      ) {
+      if (messages.current_language && typeof messages.current_language.message === 'string') {
         languageNativeNames[lang] = messages.current_language.message;
       }
     } catch {

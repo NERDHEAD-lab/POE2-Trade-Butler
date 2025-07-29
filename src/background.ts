@@ -32,11 +32,11 @@ Promise.resolve()
       }
     });
 
-    searchHistory.addOnDeletedListener((deletedId) => {
+    searchHistory.addOnDeletedListener(deletedId => {
       void previewStorage.deleteIfOrphaned(deletedId, 'searchHistory');
     });
 
-    favorite.addOnDeletedListener((deletedId) => {
+    favorite.addOnDeletedListener(deletedId => {
       void previewStorage.deleteIfOrphaned(deletedId, 'favorite');
     });
 
@@ -51,36 +51,37 @@ Promise.resolve()
     };
 
     function alertVersion() {
-      getCachedCheckVersion()
-        .then(result => {
-          if (result.versionType === 'NEW_VERSION_AVAILABLE') {
-            void chrome.action.setBadgeText({ text: '🔄' });
-            void chrome.action.setBadgeBackgroundColor({ color: '#ff9800' });
-          } else if (result.versionType === 'DEV') {
-            void chrome.action.setBadgeText({ text: '' });
-            void chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
-            void chrome.action.setIcon({ path: devIcon });
-          } else {
-            void chrome.action.setBadgeText({ text: '' });
-            void chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
-            void chrome.action.setIcon({ path: defaultIcon });
-          }
-          console.info(`Version check completed: ${result.installedVersion} (Latest: ${result.latestVersion})`);
-        });
+      getCachedCheckVersion().then(result => {
+        if (result.versionType === 'NEW_VERSION_AVAILABLE') {
+          void chrome.action.setBadgeText({ text: '🔄' });
+          void chrome.action.setBadgeBackgroundColor({ color: '#ff9800' });
+        } else if (result.versionType === 'DEV') {
+          void chrome.action.setBadgeText({ text: '' });
+          void chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
+          void chrome.action.setIcon({ path: devIcon });
+        } else {
+          void chrome.action.setBadgeText({ text: '' });
+          void chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
+          void chrome.action.setIcon({ path: defaultIcon });
+        }
+        console.info(
+          `Version check completed: ${result.installedVersion} (Latest: ${result.latestVersion})`
+        );
+      });
     }
 
     chrome.runtime.onStartup.addListener(() => {
       alertVersion();
     });
 
-    chrome.runtime.onInstalled.addListener((details) => {
+    chrome.runtime.onInstalled.addListener(details => {
       console.log(`Extension installed or updated: ${details.reason}`);
       if (details.reason === 'install' || details.reason === 'update') {
         alertVersion();
       }
     });
 
-    chrome.runtime.onUpdateAvailable.addListener((e) => {
+    chrome.runtime.onUpdateAvailable.addListener(e => {
       console.log(`Update available: ${e.version}`);
       chrome.runtime.reload();
     });

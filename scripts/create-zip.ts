@@ -22,7 +22,7 @@ function createZip() {
     console.log(`ZIP file created: ${outputZip} (${archive.pointer()} total bytes)`);
   });
 
-  archive.on('error', (err) => {
+  archive.on('error', err => {
     throw err;
   });
 

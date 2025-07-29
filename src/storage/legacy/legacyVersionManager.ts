@@ -225,7 +225,7 @@ async function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<v
     }
 
     if (migrator.removeAfter) {
-      if (!await isStoredButUndefined(storageType, key)) {
+      if (!(await isStoredButUndefined(storageType, key))) {
         // 이미 없거나, 정의되어 있는(사용 중인) 경우 스킵
         console.log(getMessage('log_migration_skip_remove', key, storageType));
         return;

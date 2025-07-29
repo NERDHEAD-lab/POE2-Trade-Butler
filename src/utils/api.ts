@@ -4,8 +4,9 @@ import { getMessage } from './_locale';
   http(s)://(www|jp|br|ru|th|de|fr|es).pathofexile.com/trade2/search/poe2/{serverName}/{id}
   http(s)://poe.game.daum.net/trade2/search/poe2/{serverName}/{id}
  */
-export function parseSearchUrl(url: string): { serverName: string, id: string } | null {
-  const regex = /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)\/([^/]+)$/;
+export function parseSearchUrl(url: string): { serverName: string; id: string } | null {
+  const regex =
+    /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)\/([^/]+)$/;
   const match = url.match(regex);
   if (!match) return null;
 
@@ -19,7 +20,8 @@ export function parseSearchUrl(url: string): { serverName: string, id: string } 
 }
 
 export function getSearchHistoryFromUrl(url: string): {
-  id: string; url: string;
+  id: string;
+  url: string;
 } {
   const parsed = parseSearchUrl(url);
   if (!parsed) {
@@ -36,7 +38,8 @@ export function getUrlFromSearchHistory(
   },
   currentUrl: string = window.location.href
 ): string {
-  const regex = /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)(?:\/[^/]+)?\/?$/;
+  const regex =
+    /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)(?:\/[^/]+)?\/?$/;
 
   const match = currentUrl.match(regex);
   if (!match) {
@@ -94,7 +97,7 @@ export function showToast(message: string, color = '#fff', duration = 3000) {
 
   // 기존 toast가 있으면 위로 올리기
   const existingToasts = document.querySelectorAll('.poe2-toast') as NodeListOf<HTMLDivElement>;
-  existingToasts.forEach((el) => {
+  existingToasts.forEach(el => {
     el.style.bottom = el.style.bottom ? `${parseInt(el.style.bottom) + 50}px` : '80px';
   });
 
@@ -170,7 +173,7 @@ export function showModal(options: ModalOptions): void {
   const overlay = document.createElement('div');
   overlay.className = 'poe2-modal-overlay';
 
-  overlay.onclick = (e) => {
+  overlay.onclick = e => {
     if (e.target === overlay) {
       if (onOverlayClickListener) {
         onOverlayClickListener(overlay).then(close => {
@@ -271,7 +274,7 @@ export function showModal(options: ModalOptions): void {
     leftBtnGroup.appendChild(makeButton(btn.name, btn.listener, 'normal'));
   }
 
-// 오른쪽 버튼들
+  // 오른쪽 버튼들
   const confirmBtn = makeButton(confirm, onConfirmListener, 'confirm');
   rightBtnGroup.appendChild(confirmBtn);
   if (!hideCancel) {
@@ -282,7 +285,7 @@ export function showModal(options: ModalOptions): void {
     requestAnimationFrame(() => {
       confirmBtn.style.minWidth = `${cancelBtn.offsetWidth}px`;
       const etcButtons = leftBtnGroup.querySelectorAll('button');
-      etcButtons.forEach((btn) => {
+      etcButtons.forEach(btn => {
         btn.style.minWidth = `${cancelBtn.offsetWidth}px`;
       });
     });
