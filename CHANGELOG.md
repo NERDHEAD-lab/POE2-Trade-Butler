@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## [2.9.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.8.0...2.9.0) (2025-07-29)
+
+
+### Features
+
+* **settings:** 설정 창 UI 개선 - 1 ([f8d69e8](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f8d69e88597cec037cbbee366a5619da3a15ab5d))
+
 ## [2.8.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.7.0...2.8.0) (2025-07-28)
 
 
