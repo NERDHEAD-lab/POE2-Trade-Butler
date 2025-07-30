@@ -17,9 +17,7 @@ const formatArray = (arr: string[]): string => {
 };
 
 const stringifyObjectWithSingleQuotes = (obj: Record<string, string>): string => {
-  const entries = Object.entries(obj).map(
-    ([key, value]) => `  ${key}: '${value}'`
-  );
+  const entries = Object.entries(obj).map(([key, value]) => `  ${key}: '${value}'`);
   return `{\n${entries.join(',\n')}\n}`;
 };
 
