@@ -46,10 +46,10 @@ const sidebarHtml = `
       <button id="add-favorite">${getMessage('manage_favorites')}</button>
     </h3>
     <div id="favorites-list-wrapper"></div>
-<!--    <div id="favorite-import-export" class="favorite-import-export-bottom">-->
-<!--      <button id="favorite-import-btn" class="favorite-import-btn">${getMessage('button_import')}</button>-->
-<!--      <button id="favorite-export-btn" class="favorite-export-btn">${getMessage('button_export')}</button>-->
-<!--    </div>-->
+    <div id="favorite-import-export" class="favorite-import-export-bottom">
+      <button id="favorite-import-btn" class="favorite-import-btn">${getMessage('button_import')}</button>
+      <button id="favorite-export-btn" class="favorite-export-btn">${getMessage('button_export')}</button>
+    </div>
   </div>
 </div>
 
