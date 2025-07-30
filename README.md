@@ -29,9 +29,9 @@ trading experience.
 
 <!-- Badges -->
 
-[chrome-web-store-version-badge]: https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm?label=Chrome%20Web%20Store
-[chrome-web-store-users-badge]: https://img.shields.io/chrome-web-store/users/ipnemofnhodcgcplnnfekbfpmngeeocm
-[github-release-badge]: https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler
+[chrome-web-store-version-badge]: https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm?label=Chrome%20Web%20Store&logo=chromewebstore
+[chrome-web-store-users-badge]: https://img.shields.io/chrome-web-store/users/ipnemofnhodcgcplnnfekbfpmngeeocm?logo=chromewebstore
+[github-release-badge]: https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler?logo=github
 [build-status-badge]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/release-please.yml/badge.svg
 [github-license-badge]: https://img.shields.io/github/license/NERDHEAD-lab/POE2-Trade-Butler
 [privacy-policy-badge]: https://img.shields.io/badge/Privacy%20Policy-Read%20Here-blue
