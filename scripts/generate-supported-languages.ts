@@ -6,10 +6,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const localesDir = path.resolve(__dirname, '../_locales');
+const targetFile = path.resolve(__dirname, '../src/utils/supportedLanguages.ts');
 
 const languages = fs.readdirSync(localesDir).filter(name => {
   return fs.statSync(path.join(localesDir, name)).isDirectory();
 });
+
+const formatArray = (arr: string[]): string => {
+  return `[${arr.map(lang => `'${lang}'`).join(', ')}]`;
+};
+
+const stringifyObjectWithSingleQuotes = (obj: Record<string, string>): string => {
+  const entries = Object.entries(obj).map(([key, value]) => `  ${key}: '${value}'`);
+  return `{\n${entries.join(',\n')}\n}`;
+};
 
 // 각 언어의 current_language 메시지 추출
 const languageNativeNames: Record<string, string> = {};
@@ -28,12 +38,11 @@ languages.forEach(lang => {
   }
 });
 
-const targetFile = path.resolve(__dirname, '../src/utils/supportedLanguages.ts');
 const content = `// ⚡️ This file is auto-generated. Do not edit manually.
-export const SUPPORTED_LANGUAGES = ${JSON.stringify(languages)} as const;
-export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number];
+export const SUPPORTED_LANGUAGES = ${formatArray(languages)} as const;
+export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
-export const LANGUAGE_NATIVE_NAMES: Record<SupportedLanguage, string> = ${JSON.stringify(languageNativeNames, null, 2)} as const;
+export const LANGUAGE_NATIVE_NAMES: Record<SupportedLanguage, string> = ${stringifyObjectWithSingleQuotes(languageNativeNames)} as const;
 `;
 
 fs.writeFileSync(targetFile, content);
