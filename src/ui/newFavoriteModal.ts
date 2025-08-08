@@ -64,7 +64,7 @@ export async function openFavoriteFolderModal(id: string, url: string): Promise<
                 )
                 .then(newEntry => favoriteStorage.saveAll(newEntry))
                 .then(() => {
-                  showToast(getMessage('toast_folder_created'), name);
+                  showToast(getMessage('toast_folder_created', name));
                   return false;
                 })
                 .catch(error => {
