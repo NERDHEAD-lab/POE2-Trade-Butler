@@ -12,3 +12,6 @@ poe2-trade-butler.zip
 
 # Ignore generated release notes
 release_notes_*.md
+
+# Ignore schema json files
+SimplifiedFolder.schema.json
