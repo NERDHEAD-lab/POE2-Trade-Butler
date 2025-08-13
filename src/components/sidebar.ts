@@ -11,6 +11,7 @@ import * as favoriteUI from '../ui/favoriteFileSystemUI';
 import * as fs from '../ui/fileSystemEntry';
 import * as settings from '../ui/settingsModal';
 import { openFavoriteFolderModal } from '../ui/newFavoriteModal';
+import { buildSimplifiedTree } from '../utils/shareFavorites';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
@@ -234,7 +235,10 @@ export function renderSidebar(container: HTMLElement): void {
             const folder = await favoriteUI.getSelectedFolder(favoriteWrapper);
             const path = fs.getPath(await favoriteStorage.getAll(), folder);
             alert(getMessage('alert_export_from_folder', path));
-            // 실제 export 로직은 여기에 구현
+            //TODO
+            const tree = buildSimplifiedTree(await favoriteStorage.getAll(), folder.id);
+            console.info(tree);
+            console.info(JSON.stringify(tree, null, 2));
           } catch {
             alert(getMessage('alert_select_folder_first'));
           }
