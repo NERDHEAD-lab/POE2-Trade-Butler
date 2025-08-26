@@ -1,0 +1,32 @@
+name: Generate Directory Index on gh-pages
+
+on:
+  push:
+    branches:
+      - gh-pages
+
+jobs:
+  build_and_deploy:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+
+      - name: Generate directory listing index.html
+        run: |
+          echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Directory Listing for POE2-Trade-Butler</title></head><body>' > index.html
+          echo '<h1>Directory Listing for POE2-Trade-Butler</h1><hr><pre>' >> index.html
+          # index.html 자기 자신과 .github 폴더는 목록에서 제외
+          find . -type f -name "*" ! -name "index.html" ! -path "./.github/*" | sed 's|^\./||' | sort | while read -r file; do
+            echo "<a href=\"$file\">$file</a>" >> index.html
+          done
+          echo '</pre><hr></body></html>' >> index.html
+
+      - name: Deploy generated index.html back to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          keep_files: true
+          commit_message: 'docs: Auto-generate index.html [skip ci] 🚀'
