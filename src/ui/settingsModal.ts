@@ -10,7 +10,7 @@ import {
   SelectDetailOption,
   SettingManager,
   SettingOption,
-  Settings
+  Settings, SliderDetailOption
 } from '../utils/settingManager';
 import * as settingStorage from '../storage/settingStorage';
 import * as information from './information';
@@ -82,6 +82,31 @@ const settings: Settings = {
               });
             }
           } as CheckboxDetailOption
+        }
+      ]
+    },
+    {
+      name: getMessage('settings_tab_display'),
+      iconUrl: chrome.runtime.getURL('assets/view_sidebar_24dp_E9E5DE.svg'),
+      options: [
+        {
+          id: 'sidebar-opacity',
+          name: getMessage('settings_option_sidebar_opacity'),
+          iconUrl: chrome.runtime.getURL('assets/opacity_24dp_E9E5DE.svg'),
+          description: getMessage('settings_option_sidebar_opacity_description'),
+          optionDetail: {
+            type: 'slider',
+            min: 0.1,
+            max: 1.0,
+            step: 0.1,
+            value: await settingStorage.getSidebarOpacity(),
+            valueFormat: (value: number) => `${(value * 100).toFixed(0)}%`,
+            onChangeListener: (value: number) => {
+              settingStorage.setSidebarOpacity(value).then(() => {
+                showToast(getMessage('settings_option_sidebar_opacity_changed', (value * 100).toFixed(0)));
+              });
+            }
+          } as SliderDetailOption
         }
       ]
     },

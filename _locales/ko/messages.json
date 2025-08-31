@@ -576,6 +576,10 @@
     "message": "POE2 거래소로 자동 리디렉션 설정입니다.",
     "description": "Toggles automatic redirect to POE2 trade page"
   },
+  "storage_description_poe2trade_settings_sidebarOpacity": {
+    "message": "사이드바 불투명도 설정입니다.",
+    "description": "Opacity setting for the sidebar"
+  },
   "settings_tab_storage": {
     "message": "저장소",
     "description": "Settings tab for storage management"
@@ -603,5 +607,17 @@
   "log_migration_remove_old_data": {
     "message": "이전 버전의 데이터를 제거합니다: storageType: $1, key: $2",
     "description": "Log message when removing old data during migration"
+  },
+  "settings_tab_display": {
+    "message": "화면",
+    "description": "Settings tab for display options"
+  },
+  "settings_option_sidebar_opacity": {
+    "message": "사이드바 불투명도 설정",
+    "description": "Settings option for sidebar opacity"
+  },
+  "settings_option_sidebar_opacity_description": {
+    "message": "사이드바의 불투명도를 설정합니다. 0%는 완전히 투명, 100%는 완전히 불투명입니다.",
+    "description": "Description for sidebar opacity setting"
   }
 }

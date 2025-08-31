@@ -24,10 +24,11 @@ export type AnyDetailOption =
   | SelectDetailOption
   | DivTextDetailOption
   | NumberDetailOption
-  | SwitchDetailOption;
+  | SwitchDetailOption
+  | SliderDetailOption;
 
 interface DetailOption<T> {
-  type: 'checkbox' | 'select' | 'text' | 'number' | 'switch';
+  type: 'checkbox' | 'select' | 'text' | 'number' | 'switch' | 'slider';
   onChangeListener?: onOptionChangeListener<T>;
 }
 
@@ -68,6 +69,16 @@ export interface SwitchDetailOption extends DetailOption<boolean> {
   type: 'switch';
   checked: boolean;
   onChangeListener: onOptionChangeListener<boolean>;
+}
+
+export interface SliderDetailOption extends DetailOption<number> {
+  type: 'slider';
+  value: number;
+  valueFormat?: (value: number) => string;
+  min: number;
+  max: number;
+  step: number;
+  onChangeListener: onOptionChangeListener<number>;
 }
 
 export interface onOptionChangeListener<T> {
@@ -298,6 +309,35 @@ export class SettingManager {
             };
           }
 
+          break;
+        }
+        case 'slider' : {
+          const sliderOpt = option.optionDetail;
+          optionElement = document.createElement('input');
+          (optionElement as HTMLInputElement).type = 'range';
+          (optionElement as HTMLInputElement).min = sliderOpt.min.toString();
+          (optionElement as HTMLInputElement).max = sliderOpt.max.toString();
+          (optionElement as HTMLInputElement).step = sliderOpt.step.toString();
+          (optionElement as HTMLInputElement).value = sliderOpt.value.toString();
+
+          const valueDisplay = document.createElement('span');
+          valueDisplay.className = 'poe2-settings-slider-value';
+          valueDisplay.textContent = sliderOpt.valueFormat ? sliderOpt.valueFormat(sliderOpt.value) : sliderOpt.value.toString();
+          optionDiv.appendChild(valueDisplay);
+
+          optionElement.oninput = () => {
+            const val = parseFloat((optionElement as HTMLInputElement).value);
+            valueDisplay.textContent = sliderOpt.valueFormat ? sliderOpt.valueFormat(val) : val.toString();
+          };
+
+          optionElement.onchange = () => {
+            this.addToApplyQueue(option, () => {
+              if (option.optionDetail.onChangeListener) {
+                const val = parseFloat((optionElement as HTMLInputElement).value);
+                sliderOpt.onChangeListener(val);
+              }
+            });
+          };
           break;
         }
         default:
