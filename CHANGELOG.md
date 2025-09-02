@@ -1,5 +1,23 @@
 # CHANGE LOG
 
+## [2.10.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.9.0...2.10.0) (2025-09-02)
+
+
+### Features
+
+* background 불투명도 조절 기능 추가 ([c13067c](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/c13067c290f2234affd7353392827ffc23641675))
+* **CI/CD:** gh-pages 관리를 위한 workflow 추가 ([168a233](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/168a23349f4a7d1e0b4f7bedc98d753771097b68))
+* **favShare:** 즐겨찾기 공유 기능 개발 - 1 ([7685f9a](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/7685f9af75a661bcb481843cddb33092a5a91a11))
+* 즐겨찾기 공유 구조에 대한 정의(json schema)에 대한 workflow 추가 ([eb3300f](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/eb3300fdab7bd75ed8ff8b25d261364753971997))
+* 즐겨찾기 공유 기능 일부 개발 및 테스트 추가 ([fb2b383](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/fb2b38391a5af6ea1c8b4231ab5e45abd1b3b815))
+
+
+### Bug Fixes
+
+* background 불투명도 조절 ([0e5b8b9](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/0e5b8b99974ee323a33e2d9953961294387aa314))
+* **tscofnig:** 사용하지 않는webpack-env types 제거 ([1360c30](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/1360c3023fa4c605291bfe09eff3a51ba5c4786c))
+* 폴더 생성 시, toast message가 비정상적인 문제 수정 ([c7b2c94](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/c7b2c9439dc2244271c135d82f71378bbbaac1d9))
+
 ## [2.9.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.8.0...2.9.0) (2025-07-29)
 
 
