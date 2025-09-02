@@ -11,7 +11,9 @@
     "pre:build": "npm run script:generate:langs && npm run script:generate:storage-init",
     "script:generate:langs": "tsx scripts/generate-supported-languages.ts",
     "script:generate:storage-init": "tsx scripts/generate-storage-manager-initializer.ts",
-    "script:zip": "tsx scripts/create-zip.ts"
+    "script:zip": "tsx scripts/create-zip.ts",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "export:schema": "ts-json-schema-generator --path 'src/**/*.ts' --type SimplifiedFolder --expose export --out SimplifiedFolder.schema.json"
   },
   "type": "module",
   "keywords": [
@@ -31,6 +33,7 @@
     "@babel/preset-typescript": "^7.27.1",
     "@types/archiver": "^6.0.3",
     "@types/chrome": "^0.0.293",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.3",
     "@typescript-eslint/parser": "^8.35.0",
     "archiver": "^7.0.1",
@@ -43,10 +46,13 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^16.2.0",
+    "jest": "^30.0.5",
     "npm-check-updates": "^18.0.1",
     "prettier": "^3.4.2",
     "sass": "^1.89.2",
     "sass-loader": "^16.0.5",
+    "ts-jest": "^29.4.1",
+    "ts-json-schema-generator": "^2.4.0",
     "tsx": "^4.20.3",
     "typescript-eslint": "^8.35.0",
     "webpack": "^5.97.1",

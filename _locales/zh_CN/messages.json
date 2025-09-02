@@ -576,6 +576,10 @@
     "message": "POE2交易页面的自动重定向设置。",
     "description": "Toggles automatic redirect to POE2 trade page"
   },
+  "storage_description_poe2trade_settings_sidebarOpacity": {
+    "message": "侧边栏不透明度设置。",
+    "description": "Opacity setting for the sidebar"
+  },
   "settings_tab_storage": {
     "message": "存储",
     "description": "Settings tab for storage management"
@@ -603,5 +607,17 @@
   "log_migration_remove_old_data": {
     "message": "移除旧数据: 存储类型: $1, 键: $2",
     "description": "Log message when removing old data during migration"
+  },
+  "settings_tab_display": {
+    "message": "显示",
+    "description": "Settings tab for display options"
+  },
+  "settings_option_sidebar_opacity": {
+    "message": "侧边栏不透明度",
+    "description": "Settings option for sidebar opacity"
+  },
+  "settings_option_sidebar_opacity_description": {
+    "message": "设置侧边栏的不透明度。0%表示完全透明，100%表示完全不透明。",
+    "description": "Description for sidebar opacity setting"
   }
 }

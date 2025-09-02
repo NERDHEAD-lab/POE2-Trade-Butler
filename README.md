@@ -13,9 +13,9 @@ trading experience.
 
 <!-- prettier-ignore-start -->
 
-| Chrome Extension                                                       | Downloads                                                                        | GitHub Release                                                 |
-|------------------------------------------------------------------------|----------------------------------------------------------------------------------|----------------------------------------------------------------|
-| [![Chrome Web Store][chrome-web-store-version]][chrome-web-store-link] | [![Chrome Web Store Users][chrome-web-store-users-badge]][chrome-web-store-link] | [![GitHub release][github-release-badge]][github-release-link] |
+| Chrome Extension                                                             | Downloads                                                                        | GitHub Release                                                 |
+|------------------------------------------------------------------------------|----------------------------------------------------------------------------------|----------------------------------------------------------------|
+| [![Chrome Web Store][chrome-web-store-version-badge]][chrome-web-store-link] | [![Chrome Web Store Users][chrome-web-store-users-badge]][chrome-web-store-link] | [![GitHub release][github-release-badge]][github-release-link] |
 
 | Build Status                                             | License                                                        | Privacy Policy                                                        |
 |----------------------------------------------------------|----------------------------------------------------------------|-----------------------------------------------------------------------|
@@ -29,8 +29,9 @@ trading experience.
 
 <!-- Badges -->
 
-[chrome-web-store-users-badge]: https://img.shields.io/chrome-web-store/users/ipnemofnhodcgcplnnfekbfpmngeeocm
-[github-release-badge]: https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler
+[chrome-web-store-version-badge]: https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm?label=Chrome%20Web%20Store&logo=chromewebstore
+[chrome-web-store-users-badge]: https://img.shields.io/chrome-web-store/users/ipnemofnhodcgcplnnfekbfpmngeeocm?logo=chromewebstore
+[github-release-badge]: https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler?logo=github
 [build-status-badge]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/release-please.yml/badge.svg
 [github-license-badge]: https://img.shields.io/github/license/NERDHEAD-lab/POE2-Trade-Butler
 [privacy-policy-badge]: https://img.shields.io/badge/Privacy%20Policy-Read%20Here-blue
@@ -39,7 +40,6 @@ trading experience.
 
 <!-- Links -->
 
-[chrome-web-store-version]: https://img.shields.io/chrome-web-store/v/ipnemofnhodcgcplnnfekbfpmngeeocm?label=Chrome%20Web%20Store
 [chrome-web-store-link]: https://chrome.google.com/webstore/detail/poe2-trade-butler/ipnemofnhodcgcplnnfekbfpmngeeocm
 [github-release-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases
 [build-status-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions

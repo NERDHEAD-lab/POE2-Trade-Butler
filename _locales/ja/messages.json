@@ -576,6 +576,10 @@
     "message": "POE2取引ページへの自動リダイレクト設定です。",
     "description": "Toggles automatic redirect to POE2 trade page"
   },
+  "storage_description_poe2trade_settings_sidebarOpacity": {
+    "message": "サイドバーの不透明度設定です。",
+    "description": "Opacity setting for the sidebar"
+  },
   "settings_tab_storage": {
     "message": "ストレージ",
     "description": "Settings tab for storage management"
@@ -603,5 +607,17 @@
   "log_migration_remove_old_data": {
     "message": "古いデータを削除しています: ストレージタイプ: $1, キー: $2",
     "description": "Log message when removing old data during migration"
+  },
+  "settings_tab_display": {
+    "message": "表示",
+    "description": "Settings tab for display options"
+  },
+  "settings_option_sidebar_opacity": {
+    "message": "サイドバーの不透明度を設定",
+    "description": "Settings option for sidebar opacity"
+  },
+  "settings_option_sidebar_opacity_description": {
+    "message": "サイドバーの不透明度を設定します。0%は完全に透明、100%は完全に不透明です。",
+    "description": "Description for sidebar opacity setting"
   }
 }

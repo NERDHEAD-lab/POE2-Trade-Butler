@@ -576,6 +576,10 @@
     "message": "POE2 trade redirect setting.",
     "description": "Toggles automatic redirect to POE2 trade page"
   },
+  "storage_description_poe2trade_settings_sidebarOpacity": {
+    "message": "Sidebar opacity setting.",
+    "description": "Opacity setting for the sidebar"
+  },
   "settings_tab_storage": {
     "message": "Storage",
     "description": "Settings tab for storage management"
@@ -603,5 +607,17 @@
   "log_migration_remove_old_data": {
     "message": "Removing old data for migration: storageType: $1, key: $2",
     "description": "Log message when removing old data during migration"
+  },
+  "settings_tab_display": {
+    "message": "Display",
+    "description": "Settings tab for display options"
+  },
+  "settings_option_sidebar_opacity": {
+    "message": "Sidebar Opacity",
+    "description": "Settings option for sidebar opacity"
+  },
+  "settings_option_sidebar_opacity_description": {
+    "message": "Set the opacity of the sidebar. 0% is fully transparent, 100% is fully opaque.",
+    "description": "Description for sidebar opacity setting"
   }
 }

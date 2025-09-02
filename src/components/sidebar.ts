@@ -11,6 +11,7 @@ import * as favoriteUI from '../ui/favoriteFileSystemUI';
 import * as fs from '../ui/fileSystemEntry';
 import * as settings from '../ui/settingsModal';
 import { openFavoriteFolderModal } from '../ui/newFavoriteModal';
+// import { buildSimplifiedTree } from '../utils/shareFavorites';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
 const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
@@ -76,6 +77,13 @@ export function renderSidebar(container: HTMLElement): void {
   sidebar.id = POE2_SIDEBAR_ID;
   sidebar.innerHTML = sidebarHtml;
   container.appendChild(sidebar);
+
+
+  // 사이드바 배경 투명도 설정
+  settingStorage.getSidebarOpacity().then(opacity => {
+    sidebar.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
+    console.info(`Set sidebar background opacity to ${opacity}`);
+  });
 
   if (api.isKoreanServer()) {
     //poe2-sidebar top 80px 설정
@@ -216,30 +224,32 @@ export function renderSidebar(container: HTMLElement): void {
       previewStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
       favoriteStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
 
-      const importBtn = document.getElementById('favorite-import-btn') as HTMLButtonElement | null;
-      const exportBtn = document.getElementById('favorite-export-btn') as HTMLButtonElement | null;
-      if (importBtn && exportBtn) {
-        importBtn.onclick = async () => {
-          try {
-            const folder = await favoriteUI.getSelectedFolder(favoriteWrapper);
-            const path = fs.getPath(await favoriteStorage.getAll(), folder);
-            alert(getMessage('alert_import_to_folder', path));
-            // 실제 import 로직은 여기에 구현
-          } catch {
-            alert(getMessage('alert_select_folder_first'));
-          }
-        };
-        exportBtn.onclick = async () => {
-          try {
-            const folder = await favoriteUI.getSelectedFolder(favoriteWrapper);
-            const path = fs.getPath(await favoriteStorage.getAll(), folder);
-            alert(getMessage('alert_export_from_folder', path));
-            // 실제 export 로직은 여기에 구현
-          } catch {
-            alert(getMessage('alert_select_folder_first'));
-          }
-        };
-      }
+      // const importBtn = document.getElementById('favorite-import-btn') as HTMLButtonElement | null;
+      // const exportBtn = document.getElementById('favorite-export-btn') as HTMLButtonElement | null;
+      // if (importBtn && exportBtn) {
+      //   importBtn.onclick = async () => {
+      //     try {
+      //       const folder = await favoriteUI.getSelectedFolder(favoriteWrapper);
+      //       const path = fs.getPath(await favoriteStorage.getAll(), folder);
+      //       alert(getMessage('alert_import_to_folder', path));
+      //       // 실제 import 로직은 여기에 구현
+      //     } catch {
+      //       alert(getMessage('alert_select_folder_first'));
+      //     }
+      //   };
+      //   exportBtn.onclick = async () => {
+      //     try {
+      //       const folder = await favoriteUI.getSelectedFolder(favoriteWrapper);
+      //       const path = fs.getPath(await favoriteStorage.getAll(), folder);
+      //       alert(getMessage('alert_export_from_folder', path));
+      //       const tree = buildSimplifiedTree(await favoriteStorage.getAll(), folder.id);
+      //       console.info(tree);
+      //       console.info(JSON.stringify(tree, null, 2));
+      //     } catch {
+      //       alert(getMessage('alert_select_folder_first'));
+      //     }
+      //   };
+      // }
     });
 
   // 탭 전환 이벤트

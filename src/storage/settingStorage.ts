@@ -179,3 +179,21 @@ export async function flushI18n(): Promise<void> {
   const version = await versionChecker.getInstalledVersion();
   await setI18n({ [version]: {} });
 }
+
+const defaultSidebarOpacity = 0.8;
+const sidebarOpacityConfig = createStorageManager<number>(
+  'sync',
+  'sidebarOpacity',
+  defaultSidebarOpacity
+);
+
+export function setSidebarOpacity(opacity: number): Promise<void> {
+  if (opacity < 0 || opacity > 1) {
+    throw new Error('Opacity must be between 0 and 1');
+  }
+  return sidebarOpacityConfig.set(opacity);
+}
+
+export function getSidebarOpacity(): Promise<number> {
+  return sidebarOpacityConfig.get();
+}
