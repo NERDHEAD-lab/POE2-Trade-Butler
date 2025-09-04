@@ -1,4 +1,4 @@
-import { ButtonListener, showModal } from '../utils/api';
+import { ButtonListener, ModalConsumer, showModal } from '../utils/api';
 import { showToast } from '../utils/toast';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as folderUI from './favoriteFileSystemUI';
@@ -18,9 +18,25 @@ export async function openFavoriteFolderModal(id: string, url: string): Promise<
 
       wrapper.appendChild(nameInput);
       const favoriteUI = await folderUI.loadFavoriteFileSystemUI(wrapper, false);
-      return { favoriteUI, wrapper };
+
+      const modalConsumer: ModalConsumer = (ctx) => {
+        nameInput.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+            ctx.confirm();
+          }
+        });
+
+        // esc 키로 모달 닫기
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            ctx.cancel();
+          }
+        });
+      }
+
+      return { favoriteUI, wrapper, modalConsumer };
     })
-    .then(({ favoriteUI, wrapper }) => {
+    .then(({ favoriteUI, wrapper, modalConsumer }) => {
       showModal({
         title: getMessage('modal_add_to_favorite_folder'),
         div: wrapper,
@@ -104,7 +120,8 @@ export async function openFavoriteFolderModal(id: string, url: string): Promise<
                 });
             }
           }
-        ]
+        ],
+        consumer: modalConsumer
       });
     });
 }

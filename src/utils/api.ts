@@ -82,6 +82,15 @@ export function getServerRegion(url: URL): string {
  */
 export type ButtonListener = (modal: HTMLDivElement) => Promise<boolean>;
 
+export type ModalConsumer = (ctx: ModalButtonContext) => void;
+
+export interface ModalButtonContext {
+  root: HTMLDivElement;
+  confirm: () => void;
+  cancel: () => void;
+  etc: (name: string) => void;
+}
+
 /**
  * 모달 옵션 인터페이스
  * @property title - 모달 제목 (선택 사항)
@@ -115,6 +124,7 @@ export interface ModalOptions {
     listener: ButtonListener;
   }[];
   hideCancel?: boolean;
+  consumer?: ModalConsumer;
 }
 
 export function showModal(options: ModalOptions): void {
@@ -125,9 +135,10 @@ export function showModal(options: ModalOptions): void {
     cancel = getMessage('button_cancel'),
     onConfirmListener,
     onCancelListener,
-    onOverlayClickListener,
+    onOverlayClickListener = () => Promise.resolve(true),
     etcButtons = [],
-    hideCancel = false
+    hideCancel = false,
+    consumer
   } = options;
 
   const overlay = document.createElement('div');
@@ -135,13 +146,9 @@ export function showModal(options: ModalOptions): void {
 
   overlay.onclick = e => {
     if (e.target === overlay) {
-      if (onOverlayClickListener) {
-        onOverlayClickListener(overlay).then(close => {
-          if (close) overlay.remove();
-        });
-      } else {
-        overlay.remove();
-      }
+      onOverlayClickListener(overlay).then(close => {
+        if (close) overlay.remove();
+      });
     }
   };
 
@@ -230,15 +237,18 @@ export function showModal(options: ModalOptions): void {
     return btn;
   }
 
+  const etcButtonElements: Record<string, HTMLButtonElement> = {};
   for (const btn of etcButtons) {
-    leftBtnGroup.appendChild(makeButton(btn.name, btn.listener, 'normal'));
+    const buttonElement = makeButton(btn.name, btn.listener, 'normal');
+    leftBtnGroup.appendChild(buttonElement);
+    etcButtonElements[btn.name] = buttonElement;
   }
 
   // 오른쪽 버튼들
   const confirmBtn = makeButton(confirm, onConfirmListener, 'confirm');
   rightBtnGroup.appendChild(confirmBtn);
+  const cancelBtn = makeButton(cancel, onCancelListener, 'cancel');
   if (!hideCancel) {
-    const cancelBtn = makeButton(cancel, onCancelListener, 'cancel');
     rightBtnGroup.appendChild(cancelBtn);
     // 확인 버튼은 적어도 취소 버튼보다는 같거나 큰 크기로 설정
     // confirmBtn.style.minWidth = cancelBtn.offsetWidth + 'px';
@@ -250,6 +260,13 @@ export function showModal(options: ModalOptions): void {
       });
     });
   }
+
+  consumer?.({
+    root: overlay,
+    confirm: () => confirmBtn.click(),
+    cancel: () => cancelBtn.click(),
+    etc: (name) => etcButtonElements[name]?.click()
+  });
 
   btnWrapper.appendChild(leftBtnGroup);
   btnWrapper.appendChild(rightBtnGroup);
