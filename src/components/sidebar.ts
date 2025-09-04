@@ -1,6 +1,7 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
-import { getCurrentServerRegion, getServerRegion, showToast } from '../utils/api';
+import { getCurrentServerRegion, getServerRegion } from '../utils/api';
+import { showToast} from '../utils/toast';
 import { getCurrentLocale, getMessage } from '../utils/_locale';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as searchHistoryStorage from '../storage/searchHistoryStorage';

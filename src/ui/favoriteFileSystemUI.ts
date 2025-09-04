@@ -4,7 +4,7 @@ import * as fs from './fileSystemEntry';
 import { FileEntry, FileSystemEntry, FolderEntry } from './fileSystemEntry';
 import { FileSystemUI } from './fileSystemUI';
 import { TradePreviewer } from '../utils/tradePreviewInjector';
-import { showToast } from '../utils/api';
+import { showToast } from '../utils/toast';
 import { getMessage } from '../utils/_locale';
 
 /**

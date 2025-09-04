@@ -1,7 +1,8 @@
 import '../styles/settings.scss';
 
 import { getMessage } from '../utils/_locale';
-import { ModalOptions, showModal, showToast } from '../utils/api';
+import { ModalOptions, showModal } from '../utils/api';
+import { showToast } from '../utils/toast';
 import { LANGUAGE_NATIVE_NAMES } from '../utils/supportedLanguages';
 import {
   AnyDetailOption,

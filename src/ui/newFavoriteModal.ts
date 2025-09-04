@@ -1,4 +1,5 @@
-import { ButtonListener, showModal, showToast } from '../utils/api';
+import { ButtonListener, showModal } from '../utils/api';
+import { showToast } from '../utils/toast';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as folderUI from './favoriteFileSystemUI';
 import * as fs from './fileSystemEntry';
