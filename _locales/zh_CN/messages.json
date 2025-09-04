@@ -111,6 +111,10 @@
     "message": "找不到 .content 元素",
     "description": "Error message when content element is not found"
   },
+  "error_sidebar_render_failed": {
+    "message": "侧边栏渲染失败: $1",
+    "description": "Error message when sidebar rendering fails"
+  },
   "error_invalid_url_format": {
     "message": "当前URL格式无效($1)，将使用历史URL代替。",
     "description": "Error message when URL format is invalid"
