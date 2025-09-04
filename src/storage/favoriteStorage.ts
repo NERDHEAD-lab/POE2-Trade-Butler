@@ -38,8 +38,8 @@ export async function saveAll(favorites: FileSystemEntry[]): Promise<void> {
   await favoriteStorage.set(favorites);
 }
 
-export async function existsByMetadataId(id: string): Promise<boolean> {
-  return getAll()
+export async function existsByMetadataId(id: string, favoriteStoragePromise= getAll()): Promise<boolean> {
+  return favoriteStoragePromise
     .then(favorites => favorites.filter(entry => entry.type === 'file'))
     .then(favorites => favorites.some(entry => entry.metadata.id === id));
 }

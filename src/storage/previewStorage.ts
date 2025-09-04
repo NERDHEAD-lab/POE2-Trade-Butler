@@ -24,7 +24,7 @@ export function addOnChangeListener(
   previewStorage.addOnChangeListener(listener);
 }
 
-async function getAll(): Promise<Record<string, PreviewPanelSnapshot>> {
+export async function getAll(): Promise<Record<string, PreviewPanelSnapshot>> {
   return previewStorage.get();
 }
 
@@ -34,8 +34,8 @@ async function deleteById(id: string): Promise<void> {
   await previewStorage.set(currentSnapshots);
 }
 
-export async function getById(id: string): Promise<PreviewPanelSnapshot> {
-  return previewStorage.get().then(result => result[id] || null);
+export async function getById(id: string, previewStoragePromise = getAll()): Promise<PreviewPanelSnapshot | null> {
+  return previewStoragePromise.then(result => result[id] || null);
 }
 
 export async function addOrUpdateById(id: string, snapshot: PreviewPanelSnapshot): Promise<void> {
@@ -83,11 +83,12 @@ export async function deleteIfOrphaned(
  */
 export async function cleanExpiredOrphanSnapshots(): Promise<void> {
   const now = Date.now();
+  const favoritePromise = favorite.getAll();
   await getAll()
     .then(snapshots => {
       return Object.fromEntries(
         Object.entries(snapshots).filter(([key]) => {
-          return !searchHistory.exists(key) && !favorite.existsByMetadataId(key);
+          return !searchHistory.exists(key) && !favorite.existsByMetadataId(key, favoritePromise);
         })
       );
     })
