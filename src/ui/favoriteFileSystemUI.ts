@@ -47,6 +47,7 @@ class FavoriteFileSystemUILoader {
       .then(fileSystemUI => {
         // storage가 변경될 때마다 UI를 업데이트합니다.
         const onChangeListener = (newValue: FileSystemEntry[]) => {
+          this.favoriteStoragePromise = Promise.resolve(newValue);
           return fileSystemUI.update(fs.sortEntries(newValue));
         };
 
@@ -362,7 +363,6 @@ class FavoriteFileSystemUILoader {
           return fs.moveEntry(favorites, draggedEntry.id, entry.id);
         })
         .then(updatedFavorites => favorite.saveAll(updatedFavorites))
-        .then(() => this.favoriteStoragePromise = favorite.getAll())
         .then(() => showToast(getMessage('toast_item_moved', draggedEntry.name, entry.name)))
         .catch(err => {
           console.error(getMessage('error_drag_drop', err.toString()));
@@ -401,7 +401,6 @@ class FavoriteFileSystemUILoader {
             });
             return favorite.saveAll(updatedFavorites);
           })
-          .then(() => this.favoriteStoragePromise = favorite.getAll())
           .then(() => alert(getMessage('alert_favorite_renamed', entry.name, newName)))
           .catch(err => {
             console.error(getMessage('error_rename_favorite', err.toString()));
