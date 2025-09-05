@@ -1,10 +1,10 @@
-import { StorageManager, StorageType } from '../storage';
+import { createStorageStrategy, resolveStorageArea, StorageManager, StorageType } from '../storage';
 import { getMessage } from '../../utils/_locale';
 import * as storageUsage from '../storageUsage';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const CURRENT_STORAGE_VERSION_KEY = 'poe2trade_storage_version';
-const CURRENT_STORAGE_VERSION = 3;
+const CURRENT_STORAGE_VERSION = 4;
 
 const versionStorage: StorageManager<number> = new StorageManager(
   'local',
@@ -163,6 +163,26 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
     removeAfter: true,
     description:
       'Remove legacy version-check data from local storage. This data is no longer used in the current version.'
+  },
+  {
+    key: 'favoriteFolders',
+    storageType: 'sync',
+    version: 3,
+    migrate: async (legacy: FileSystemEntry_2) => {
+      // await chrome.storage.sync.remove('favoriteFolders');
+      const storage = createStorageStrategy<FileSystemEntry_2[]>(
+        'sync',
+        'favoriteFolders',
+        () => [DEFAULT_FAVORITE_ROOT()],
+        'chunk'
+      );
+
+      await storage.set([legacy]);
+
+    },
+    description:
+    // sync 8kb 제한으로 인해 chunking 전략을 사용하므로, 기존 데이터를 chunk 방식으로 이전
+      'Migrate favoriteFolders from sync to chunk storage strategy to handle larger data sizes.',
   }
 ] satisfies LegacyVersionMigrator<any>[];
 
@@ -213,7 +233,8 @@ async function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<v
 
   try {
     // const legacyData = await storage.get(storageType, key, []);
-    const legacyData = await chrome.storage[storageType]
+    // const legacyData = await chrome.storage[storageType]
+    const legacyData = await resolveStorageArea(storageType)
       .get(key)
       .then(result => result[key] || null);
 
@@ -230,7 +251,8 @@ async function executeMigration(migrator: LegacyVersionMigrator<any>): Promise<v
         console.log(getMessage('log_migration_skip_remove', key, storageType));
         return;
       }
-      await chrome.storage[storageType].remove(key);
+      // await chrome.storage[storageType].remove(key);
+      await resolveStorageArea(storageType).remove(key);
       console.log(getMessage('log_migration_remove_old_data', key, storageType));
     }
 
