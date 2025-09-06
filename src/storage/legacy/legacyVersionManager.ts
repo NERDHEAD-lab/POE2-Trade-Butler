@@ -168,16 +168,16 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
     key: 'favoriteFolders',
     storageType: 'sync',
     version: 3,
-    migrate: async (legacy: FileSystemEntry_2) => {
+    migrate: async (legacy: FileSystemEntry_2[]) => {
       // await chrome.storage.sync.remove('favoriteFolders');
       const storage = createStorageStrategy<FileSystemEntry_2[]>(
         'sync',
         'favoriteFolders',
         () => [DEFAULT_FAVORITE_ROOT()],
-        'chunk'
+        'chunkedArray'
       );
 
-      await storage.set([legacy]);
+      await storage.set(legacy);
 
     },
     description:

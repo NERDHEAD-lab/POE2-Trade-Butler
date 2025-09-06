@@ -73,7 +73,7 @@ export async function usageInfoAll(): Promise<UsageInfoFormatted> {
         const keyBase = key
           .replace(/^__chunk__:/, '')
           .replace(/::__meta$/, '');
-        entity = createStorageStrategy(type, keyBase, () => ({}), 'chunk').get();
+        entity = createStorageStrategy(type, keyBase, () => ({}), 'chunkedArray').get();
       } else {
         entity = entities[key];
       }

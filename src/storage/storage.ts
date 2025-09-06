@@ -1,3 +1,5 @@
+import { ChunkifyUtil } from '../utils/ChunkifyUtil';
+
 const StorageTypeEnum: Record<'local' | 'sync', StorageTypeInfo> = {
   local: {
     module: chrome.storage.local,
@@ -18,7 +20,7 @@ interface StorageTypeInfo {
   description: string;
 }
 
-type StorageStrategyType = 'default' | 'chunk';
+type StorageStrategyType = 'default' | 'chunkedArray';
 
 interface StorageStrategy<ENTITY> {
   set(value: ENTITY): Promise<void>;
@@ -53,9 +55,10 @@ class DefaultStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
 
 type ChunkMeta = { v: 1; parts: number; chunkSize: number; };
 
-class ChunkedStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
+// 추후 Array, Record 등 다양한 타입에 대해 별도의 전략을 구현할 수 있도록 재설계 필요
+class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
   private readonly META_KEY = `__chunk__:${this.key}::__meta`;
-  private readonly chunkSize = 7000;
+  private readonly chunkSize = 7500;
   // Placeholder for a more complex strategy that handles large data with chunking
   constructor(
     private type: StorageType,
@@ -67,44 +70,46 @@ class ChunkedStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
     return `__chunk__:${this.key}::_part_${index}`;
   }
 
-  private async combineChunks(): Promise<string | null> {
+  private async combineChunks(): Promise<ENTITY | null> {
     const meta = await get<ChunkMeta | null>(this.type, this.META_KEY, null);
     if (!meta || !meta.parts) return null;
 
-    let out = '';
+    const pieces: ENTITY[] = [];
     for (let i = 0; i < meta.parts; i++) {
-      const piece = await get<string | null>(this.type, this.chunkKey(i), null);
-      if (piece == null) return null;
+      const piece = await get<ENTITY | null>(this.type, this.chunkKey(i), null);
+      if (piece === null) {
+        console.warn(`Missing chunk ${i} for key ${this.key}`);
+        return null; // Missing chunk, cannot reconstruct
+      }
 
-      out += piece;
+      pieces.push(piece);
     }
-    return out;
+    return ChunkifyUtil.combineChunks(pieces as unknown[][]) as ENTITY;
   }
 
-  private chunkifyUtf8(json: string, maxBytes: number): string[] {
-    const enc = new TextEncoder();
-    const dec = new TextDecoder();
-    const bytes = enc.encode(json);
-    const parts: string[] = [];
-    for (let o = 0; o < bytes.length; o += maxBytes) {
-      parts.push(dec.decode(bytes.subarray(o, Math.min(o + maxBytes, bytes.length))));
+  private chunkify(entity: ENTITY, maxBytes: number): ENTITY[] {
+    if (typeof entity !== 'object' || Array.isArray(entity) === false) {
+      throw new Error('ChunkedArrayStorageStrategy only supports array or object types.');
     }
-    return parts;
+
+    return ChunkifyUtil.chunkifyArray(entity as unknown[], maxBytes) as ENTITY[];
   }
 
   async set(value: ENTITY): Promise<void> {
-    const json = JSON.stringify(value);
+    if (value === null || value === undefined) {
+      throw new Error('Cannot store null or undefined value.');
+    }
 
     const oldMeta = await get<ChunkMeta | null>(this.type, this.META_KEY, null);
 
-    const parts = this.chunkifyUtf8(json, this.chunkSize);
+    const parts = this.chunkify(value, this.chunkSize);
     const meta: ChunkMeta = { v: 1, parts: parts.length, chunkSize: this.chunkSize };
 
     console.log(`current storage QUOTA:`, chrome.storage.sync.QUOTA_BYTES_PER_ITEM);
-    console.log(`Storing ${json.length} chars in ${parts.length} chunks of up to ${this.chunkSize} bytes each.`, parts, meta);
+    console.log(`Storing ${JSON.stringify(value).length} chars in ${parts.length} chunks of up to ${this.chunkSize} bytes each.`, parts, meta);
 
     for (let i = 0; i < parts.length; i++) {
-      console.log(`Storing chunk ${i + 1}/${parts.length}, ${parts[i].length} chars.`);
+      console.log(`Storing chunk ${i + 1}/${parts.length}, ${JSON.stringify(parts[i]).length} chars.`);
       await set(this.type, this.chunkKey(i), parts[i]);
     }
     await set(this.type, this.META_KEY, meta);
@@ -122,7 +127,7 @@ class ChunkedStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
     const joined = await this.combineChunks();
     if (!joined) return this.defaultValueSupplier();
     try {
-      return JSON.parse(joined) as ENTITY;
+      return joined;
     } catch (e) {
       console.error('Failed to parse stored data:', e);
       return this.defaultValueSupplier();
@@ -151,8 +156,9 @@ export function createStorageStrategy<ENTITY>(
   switch (strategyType) {
     case 'default':
       return new DefaultStorageStrategy<ENTITY>(type, key, defaultValueSupplier);
-    case 'chunk':
-      return new ChunkedStorageStrategy<ENTITY>(type, key, defaultValueSupplier);
+    case 'chunkedArray':
+      //Type 'ENTITY' does not satisfy the constraint 'unknown[]'.
+      return new ChunkedArrayStorageStrategy<ENTITY>(type, key, defaultValueSupplier);
     default:
       throw new Error(`Unknown storage strategy type: ${strategyType}`);
   }
