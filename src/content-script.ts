@@ -20,5 +20,8 @@ if (content.querySelector('.backdrop')) {
     .then(async () => {
       // Butler Guide: 처음 실행 시 가이드 실행
       await butlerGuide.runButlerGuides();
-    });
+    })
+  .catch((error) => {
+      console.error(getMessage('error_sidebar_render_failed'), error);
+  });
 }

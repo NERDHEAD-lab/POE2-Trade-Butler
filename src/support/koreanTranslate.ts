@@ -1,4 +1,5 @@
-import { isKoreanServer, showToast } from '../utils/api';
+import { isKoreanServer } from '../utils/api';
+import { showToast } from '../utils/toast';
 import * as cacheData from '../storage/cacheData';
 import { getMessage } from '../utils/_locale';
 

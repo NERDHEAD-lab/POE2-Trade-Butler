@@ -1,4 +1,4 @@
-import { showToast } from './api';
+import { showToast } from './toast';
 import { getMessage } from './_locale';
 
 /**

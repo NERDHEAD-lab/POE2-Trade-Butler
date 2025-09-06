@@ -111,6 +111,10 @@
     "message": ".content 요소를 찾을 수 없습니다",
     "description": "Error message when content element is not found"
   },
+  "error_sidebar_render_failed": {
+    "message": "사이드바 렌더링 실패: $1",
+    "description": "Error message when sidebar rendering fails"
+  },
   "error_invalid_url_format": {
     "message": "유효하지 않은 현재 URL 형식($1), 대신 기록 URL을 사용합니다.",
     "description": "Error message when URL format is invalid"

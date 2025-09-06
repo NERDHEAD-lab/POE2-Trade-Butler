@@ -1,8 +1,16 @@
 name: Publish schema on GitHub Release
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["release-please.yml"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to publish (e.g., v1.2.3)'
+        required: true
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -15,12 +23,36 @@ concurrency:
 
 jobs:
   build:
+    if: >
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
+      (github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source at release tag
+      - name: Resolve target tag
+        id: tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ inputs.release_tag }}"
+          else
+            # 방금 publish된 최신 릴리즈 태그를 조회 (정식/프리릴리즈 모두 허용하려면 아래 주석 풀기)
+            # TAG=$(gh api repos/${{ github.repository }}/releases --jq 'map(select(.draft==false)) | sort_by(.created_at) | last.tag_name')
+            TAG=$(gh api repos/${{ github.repository }}/releases/latest --jq .tag_name)
+          fi
+          
+          if [ -z "$TAG" ]; then
+            echo "No tag resolved. Abort."
+            exit 1
+          fi
+          
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Resolved tag: $TAG"
+
+      - name: Checkout source at resolved tag
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ steps.tag.outputs.tag }}
 
       - name: Setup Node
         uses: actions/setup-node@v4

@@ -75,52 +75,21 @@ export function getServerRegion(url: URL): string {
   return 'global'; // Default for www.pathofexile.com
 }
 
-export function showToast(message: string, color = '#fff', duration = 3000) {
-  const toast = document.createElement('div');
-  toast.className = 'poe2-toast';
-  toast.textContent = message;
-
-  Object.assign(toast.style, {
-    position: 'fixed',
-    bottom: '30px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    backgroundColor: '#333',
-    color: color,
-    padding: '10px 20px',
-    borderRadius: '6px',
-    fontSize: '14px',
-    zIndex: '10000',
-    opacity: '0',
-    transition: 'opacity 0.3s ease-in-out'
-  });
-
-  // 기존 toast가 있으면 위로 올리기
-  const existingToasts = document.querySelectorAll('.poe2-toast') as NodeListOf<HTMLDivElement>;
-  existingToasts.forEach(el => {
-    el.style.bottom = el.style.bottom ? `${parseInt(el.style.bottom) + 50}px` : '80px';
-  });
-
-  document.body.appendChild(toast);
-
-  // Fade in
-  requestAnimationFrame(() => {
-    toast.style.opacity = '1';
-  });
-
-  // Auto remove
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    setTimeout(() => toast.remove(), 300);
-  }, duration);
-}
-
 /**
  * 모달 버튼 클릭 시 호출되는 리스너 타입
  * @param modal - 모달 요소
  * @return true를 반환하면 모달이 닫히고, false를 반환하면 모달이 닫히지 않습니다.
  */
 export type ButtonListener = (modal: HTMLDivElement) => Promise<boolean>;
+
+export type ModalConsumer = (ctx: ModalButtonContext) => void;
+
+export interface ModalButtonContext {
+  root: HTMLDivElement;
+  confirm: () => void;
+  cancel: () => void;
+  etc: (name: string) => void;
+}
 
 /**
  * 모달 옵션 인터페이스
@@ -155,6 +124,7 @@ export interface ModalOptions {
     listener: ButtonListener;
   }[];
   hideCancel?: boolean;
+  consumer?: ModalConsumer;
 }
 
 export function showModal(options: ModalOptions): void {
@@ -165,9 +135,10 @@ export function showModal(options: ModalOptions): void {
     cancel = getMessage('button_cancel'),
     onConfirmListener,
     onCancelListener,
-    onOverlayClickListener,
+    onOverlayClickListener = () => Promise.resolve(true),
     etcButtons = [],
-    hideCancel = false
+    hideCancel = false,
+    consumer
   } = options;
 
   const overlay = document.createElement('div');
@@ -175,13 +146,9 @@ export function showModal(options: ModalOptions): void {
 
   overlay.onclick = e => {
     if (e.target === overlay) {
-      if (onOverlayClickListener) {
-        onOverlayClickListener(overlay).then(close => {
-          if (close) overlay.remove();
-        });
-      } else {
-        overlay.remove();
-      }
+      onOverlayClickListener(overlay).then(close => {
+        if (close) overlay.remove();
+      });
     }
   };
 
@@ -270,15 +237,18 @@ export function showModal(options: ModalOptions): void {
     return btn;
   }
 
+  const etcButtonElements: Record<string, HTMLButtonElement> = {};
   for (const btn of etcButtons) {
-    leftBtnGroup.appendChild(makeButton(btn.name, btn.listener, 'normal'));
+    const buttonElement = makeButton(btn.name, btn.listener, 'normal');
+    leftBtnGroup.appendChild(buttonElement);
+    etcButtonElements[btn.name] = buttonElement;
   }
 
   // 오른쪽 버튼들
   const confirmBtn = makeButton(confirm, onConfirmListener, 'confirm');
   rightBtnGroup.appendChild(confirmBtn);
+  const cancelBtn = makeButton(cancel, onCancelListener, 'cancel');
   if (!hideCancel) {
-    const cancelBtn = makeButton(cancel, onCancelListener, 'cancel');
     rightBtnGroup.appendChild(cancelBtn);
     // 확인 버튼은 적어도 취소 버튼보다는 같거나 큰 크기로 설정
     // confirmBtn.style.minWidth = cancelBtn.offsetWidth + 'px';
@@ -290,6 +260,13 @@ export function showModal(options: ModalOptions): void {
       });
     });
   }
+
+  consumer?.({
+    root: overlay,
+    confirm: () => confirmBtn.click(),
+    cancel: () => cancelBtn.click(),
+    etc: (name) => etcButtonElements[name]?.click()
+  });
 
   btnWrapper.appendChild(leftBtnGroup);
   btnWrapper.appendChild(rightBtnGroup);
