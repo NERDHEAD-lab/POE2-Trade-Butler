@@ -140,16 +140,24 @@ class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
     }
   }
 
+  private wrappedListenerMap = new WeakMap<
+    (newValue: ENTITY, oldValue: ENTITY) => void,
+    () => void
+  >();
+
   addOnChangeListener(listener: (newValue: ENTITY, oldValue: ENTITY) => void): void {
-    addOnChangeListener(this.type, this.META_KEY, async () => {
+    const listenerWrapper = async () => {
       const newValue = await this.get();
       const oldValue = this.previousEntity || newValue;
       listener(newValue, oldValue);
-    });
+    }
+    addOnChangeListener(this.type, this.META_KEY, listenerWrapper);
+    this.wrappedListenerMap.set(listener, listenerWrapper);
   }
 
   removeOnChangeListener(listener: (newValue: ENTITY, oldValue: ENTITY) => void): void {
-    removeOnChangeListener(this.type, listener);
+    removeOnChangeListener(this.type, this.wrappedListenerMap.get(listener)!);
+    this.wrappedListenerMap.delete(listener);
   }
 }
 
