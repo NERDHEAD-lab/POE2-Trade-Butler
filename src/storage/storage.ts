@@ -59,6 +59,8 @@ type ChunkMeta = { v: 1; parts: number; chunkSize: number; originalSize: number 
 class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
   private readonly META_KEY = `__chunk__:${this.key}::__meta`;
   private readonly chunkSize = 7500;
+
+  private previousEntity : ENTITY | null = null;
   // Placeholder for a more complex strategy that handles large data with chunking
   constructor(
     private type: StorageType,
@@ -101,6 +103,10 @@ class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
     }
 
     const oldMeta = await get<ChunkMeta | null>(this.type, this.META_KEY, null);
+    this.previousEntity = await this.get();
+    if (this.previousEntity && JSON.stringify(this.previousEntity) === JSON.stringify(value)) {
+      return; // No change, do not update
+    }
 
     const parts = this.chunkify(value, this.chunkSize);
     const meta: ChunkMeta = { v: 1, parts: parts.length, chunkSize: this.chunkSize, originalSize: JSON.stringify(value).length };
@@ -135,9 +141,9 @@ class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
   }
 
   addOnChangeListener(listener: (newValue: ENTITY, oldValue: ENTITY) => void): void {
-    addOnChangeListener(this.type, this.META_KEY, async (newMilestone, oldMilestone) => {
+    addOnChangeListener(this.type, this.META_KEY, async () => {
       const newValue = await this.get();
-      const oldValue = oldMilestone === 0 ? this.defaultValueSupplier() : await this.get();
+      const oldValue = this.previousEntity || newValue;
       listener(newValue, oldValue);
     });
   }
