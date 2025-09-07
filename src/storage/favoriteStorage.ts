@@ -12,9 +12,12 @@ const DEFAULT_FAVORITE_ROOT: () => FolderEntry = () => {
   };
 };
 
-const favoriteStorage = new StorageManager<FileSystemEntry[]>('sync', 'favoriteFolders', () => [
-  DEFAULT_FAVORITE_ROOT()
-], 'chunkedArray');
+const favoriteStorage = new StorageManager<FileSystemEntry[]>(
+  'sync',
+  'favoriteFolders',
+  () => [DEFAULT_FAVORITE_ROOT()],
+  'chunkedArray'
+);
 
 export async function getAll(): Promise<FileSystemEntry[]> {
   return favoriteStorage.get();

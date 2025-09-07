@@ -53,7 +53,7 @@ class DefaultStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
   }
 }
 
-type ChunkMeta = { v: 1; parts: number; chunkSize: number; };
+type ChunkMeta = { v: 1; parts: number; chunkSize: number; originalSize: number };
 
 // 추후 Array, Record 등 다양한 타입에 대해 별도의 전략을 구현할 수 있도록 재설계 필요
 class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
@@ -103,13 +103,13 @@ class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
     const oldMeta = await get<ChunkMeta | null>(this.type, this.META_KEY, null);
 
     const parts = this.chunkify(value, this.chunkSize);
-    const meta: ChunkMeta = { v: 1, parts: parts.length, chunkSize: this.chunkSize };
+    const meta: ChunkMeta = { v: 1, parts: parts.length, chunkSize: this.chunkSize, originalSize: JSON.stringify(value).length };
 
-    console.log(`current storage QUOTA:`, chrome.storage.sync.QUOTA_BYTES_PER_ITEM);
-    console.log(`Storing ${JSON.stringify(value).length} chars in ${parts.length} chunks of up to ${this.chunkSize} bytes each.`, parts, meta);
+    // console.log(`current storage QUOTA:`, chrome.storage.sync.QUOTA_BYTES_PER_ITEM);
+    // console.log(`Storing ${JSON.stringify(value).length} chars in ${parts.length} chunks of up to ${this.chunkSize} bytes each.`, parts, meta);
 
     for (let i = 0; i < parts.length; i++) {
-      console.log(`Storing chunk ${i + 1}/${parts.length}, ${JSON.stringify(parts[i]).length} chars.`);
+      // console.log(`Storing chunk ${i + 1}/${parts.length}, ${JSON.stringify(parts[i]).length} chars.`);
       await set(this.type, this.chunkKey(i), parts[i]);
     }
     await set(this.type, this.META_KEY, meta);
