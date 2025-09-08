@@ -1,12 +1,12 @@
 name: Generate Directory Index on gh-pages
 
 on:
-  push:
-    branches:
-      - gh-pages
+  workflow_run:
+    workflows: ["Publish schema on GitHub Release"]
+    types: [completed]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build_and_deploy:
