@@ -13,12 +13,10 @@ on:
         type: string
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: "pages"
+  group: "pages-gh-branch"
   cancel-in-progress: true
 
 jobs:
@@ -36,8 +34,6 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             TAG="${{ inputs.release_tag }}"
           else
-            # 방금 publish된 최신 릴리즈 태그를 조회 (정식/프리릴리즈 모두 허용하려면 아래 주석 풀기)
-            # TAG=$(gh api repos/${{ github.repository }}/releases --jq 'map(select(.draft==false)) | sort_by(.created_at) | last.tag_name')
             TAG=$(gh api repos/${{ github.repository }}/releases/latest --jq .tag_name)
           fi
           
@@ -75,19 +71,12 @@ jobs:
           mkdir -p public/simple-server/${{ steps.pkg.outputs.version }}/
           mv SimplifiedFolder.schema.json public/simple-server/${{ steps.pkg.outputs.version }}/
           cp -f public/simple-server/${{ steps.pkg.outputs.version }}/SimplifiedFolder.schema.json public/
+          touch public/.nojekyll
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: public
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: public
+          commit_message: "docs(schema): publish ${{ steps.pkg.outputs.version }} from ${{ steps.tag.outputs.tag }}"
