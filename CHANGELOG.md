@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## [2.11.2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.11.1...2.11.2) (2025-09-08)
+
+
+### Bug Fixes
+
+* **CI/CD:** fix workflow ([8f0e911](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/8f0e9119cc5e4286b1f20b83c8801d6ff98514ad))
+
 ## [2.11.1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.11.0...2.11.1) (2025-09-08)
 
 
