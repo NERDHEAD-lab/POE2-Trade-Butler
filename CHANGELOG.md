@@ -1,5 +1,14 @@
 # CHANGE LOG
 
+## [2.11.1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.11.0...2.11.1) (2025-09-08)
+
+
+### Bug Fixes
+
+* **CI/CD:** update generate-index.yml ([57ed98a](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/57ed98afc53df3bc3b1a29a034604e7b1676fbbc))
+* **CI/CD:** update publish-schema-on-release.yml ([ed67131](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/ed67131be6c7c105e37c3971765be8c0a11d787f))
+* **CI/CD:** update publish-schema-on-release.yml ([d6d9b2f](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/d6d9b2f3175d75801553cd0999e7fcf745265658))
+
 ## [2.11.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.10.0...2.11.0) (2025-09-08)
 
 
