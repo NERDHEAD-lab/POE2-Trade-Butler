@@ -1,5 +1,32 @@
 # CHANGE LOG
 
+## [2.11.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.10.0...2.11.0) (2025-09-08)
+
+
+### Features
+
+* showModal에서 생성된 context에 대한 이벤트 처리 기능 개선 및 즐겨 찾기 추가에 반영 ([5b4f690](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/5b4f690fe66568baafa58a897a426780c5ded564))
+* sidebar render 실패 처리 강화 ([9dea8dc](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/9dea8dc554df45cfe765bcbd60647de18e84d3e4))
+* 디버깅 환경 개선 ([a1f7925](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/a1f7925c3b6aac5f5c5965f0e4ea57838de98b82))
+* 잦은 storage 호출 최적화 ([8867693](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/88676934f3de2c720d03322823d396cd16a90a47))
+
+
+### Bug Fixes
+
+* ChunkedArrayStorageStrategy addOnChangeListener 정상화 ([6acb462](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/6acb4623d72b1ef22d54dd50eb986c1f5fc2228c))
+* ChunkedArrayStorageStrategy removeOnChangeListener 정상화 ([a64d674](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/a64d674b6fcc5d4739031e23bf3447cb2be4896c))
+* publish-schema-on-release.yml 수정 ([1efce9d](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/1efce9dec563d258f32f4f6533191320c8fd9ca7))
+* storage 호출 최적화 후 일부 최신화 되지않는 로직 수정 ([b652fab](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/b652fabee39e2ca114cc7b48870e9017ee279a12))
+* storageUsage chunkedArray 분석 정상화 ([f2157e9](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f2157e988b39c844d70ebeaf56f0778e1976b7bc))
+* 즐겨 찾기 전체 데이터가 8kb를 초과 시 추가 하지 못하는 문제 수정 ([351fe45](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/351fe45d4f78e9c0829aa1799f8388e42fbb5e22))
+* 즐겨 찾기 전체 데이터가 8kb를 초과 시 추가 하지 못하는 문제 수정 - 2 ([2e874ad](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/2e874addea473b228e31189d75458f8eada165c2))
+* 즐겨 찾기 전체 데이터가 8kb를 초과 시 추가 하지 못하는 문제 수정 - 3 ([90a2cbd](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/90a2cbd9492ceedfc6f18d90236ec2fd81881ebe))
+
+
+### Code Refactoring
+
+* showToast를 api.ts에서 분리 ([f9de6c3](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f9de6c3488fe38ff27e578bc7240a8b8fbde2f50))
+
 ## [2.10.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.9.0...2.10.0) (2025-09-02)
 
 
