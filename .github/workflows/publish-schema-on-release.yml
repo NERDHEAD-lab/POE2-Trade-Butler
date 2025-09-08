@@ -1,9 +1,8 @@
 name: Publish schema on GitHub Release
 
 on:
-  workflow_run:
-    workflows: ["release-please.yml"]
-    types: [completed]
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       release_tag:
