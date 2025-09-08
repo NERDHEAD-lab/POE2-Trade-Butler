@@ -4,7 +4,7 @@ import {
   getStorageDefinitions,
   StorageManager,
   StorageType,
-  STORAGE_TYPES
+  STORAGE_TYPES, createStorageStrategy
 } from './storage';
 
 export interface StorageEntryUsage {
@@ -55,9 +55,32 @@ export async function usageInfoAll(): Promise<UsageInfoFormatted> {
     const formattedEntities: StorageEntryUsage[] = [];
 
     for (const key in entities) {
+      let entity: unknown;
+
+      function isChunkStorage(key: string): boolean {
+        // __chunk__:${this.key}::_part_${index}
+        return /^__chunk__:.+::_part_\d+$/.test(key);
+      }
+
+      function isChunkMilestone(key: string): boolean {
+        // __chunk__:${this.key}::__meta
+        return /^__chunk__:.+::__meta$/.test(key);
+      }
+
+      if (isChunkStorage(key)) {
+        continue; // Skip chunk keys
+      } else if(isChunkMilestone(key)) {
+        const keyBase = key
+          .replace(/^__chunk__:/, '')
+          .replace(/::__meta$/, '');
+        entity = await createStorageStrategy(type, keyBase, () => ({}), 'chunkedArray').get();
+      } else {
+        entity = entities[key];
+      }
+
       const isDefined = storageDefinitions.some(def => def.type === type && def.key === key);
       const description = getStorageDescription(isDefined ? key : 'unknown_key');
-      const size = getEncodedSize({ [key]: entities[key] });
+      const size = getEncodedSize({ [key]: entity });
       const formattedSize = formatFileSize(size);
 
       totalSize += size;

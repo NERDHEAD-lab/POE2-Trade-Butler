@@ -12,9 +12,12 @@ const DEFAULT_FAVORITE_ROOT: () => FolderEntry = () => {
   };
 };
 
-const favoriteStorage = new StorageManager<FileSystemEntry[]>('sync', 'favoriteFolders', () => [
-  DEFAULT_FAVORITE_ROOT()
-]);
+const favoriteStorage = new StorageManager<FileSystemEntry[]>(
+  'sync',
+  'favoriteFolders',
+  () => [DEFAULT_FAVORITE_ROOT()],
+  'chunkedArray'
+);
 
 export async function getAll(): Promise<FileSystemEntry[]> {
   return favoriteStorage.get();
@@ -38,8 +41,8 @@ export async function saveAll(favorites: FileSystemEntry[]): Promise<void> {
   await favoriteStorage.set(favorites);
 }
 
-export async function existsByMetadataId(id: string): Promise<boolean> {
-  return getAll()
+export async function existsByMetadataId(id: string, favoriteStoragePromise= getAll()): Promise<boolean> {
+  return favoriteStoragePromise
     .then(favorites => favorites.filter(entry => entry.type === 'file'))
     .then(favorites => favorites.some(entry => entry.metadata.id === id));
 }

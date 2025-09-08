@@ -1,6 +1,7 @@
 import '../styles/sidebar.css';
 import * as api from '../utils/api';
-import { getCurrentServerRegion, getServerRegion, showToast } from '../utils/api';
+import { getCurrentServerRegion, getServerRegion } from '../utils/api';
+import { showToast} from '../utils/toast';
 import { getCurrentLocale, getMessage } from '../utils/_locale';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as searchHistoryStorage from '../storage/searchHistoryStorage';
@@ -11,6 +12,8 @@ import * as favoriteUI from '../ui/favoriteFileSystemUI';
 import * as fs from '../ui/fileSystemEntry';
 import * as settings from '../ui/settingsModal';
 import { openFavoriteFolderModal } from '../ui/newFavoriteModal';
+import { PreviewPanelSnapshot } from '../storage/previewStorage';
+import { FileSystemEntry } from '../ui/fileSystemEntry';
 // import { buildSimplifiedTree } from '../utils/shareFavorites';
 
 const POE2_SIDEBAR_ID = 'poe2-sidebar';
@@ -280,7 +283,11 @@ export function renderSidebar(container: HTMLElement): void {
 }
 
 //history-name-input -> placeHolder=${entry.id}
-function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTMLElement {
+function createHistoryItem(
+  entry: searchHistoryStorage.SearchHistoryEntity,
+  previewStoragePromise: Promise<Record<string, PreviewPanelSnapshot>>,
+  favoriteStoragePromise: Promise<FileSystemEntry[]>
+): HTMLElement {
   const li = document.createElement('li');
   li.className = 'history-item';
   li.innerHTML = historyItem;
@@ -289,7 +296,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   const removeButton = li.querySelector('.remove-history') as HTMLButtonElement;
   const favoriteStar = li.querySelector('.favorite-star') as HTMLSpanElement;
 
-  previewStorage.getById(entry.id).then(previewInfo => {
+  previewStorage.getById(entry.id, previewStoragePromise).then(previewInfo => {
     if (previewInfo && previewInfo.searchKeyword) {
       nameSpan.textContent = previewInfo.searchKeyword;
     } else {
@@ -336,7 +343,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
   li.title = `${lastSearchedStr}\n${totalSearchesStr}${prevSearchesStr}`;
 
   favoriteStorage
-    .existsByMetadataId(entry.id)
+    .existsByMetadataId(entry.id, favoriteStoragePromise)
     .then(isFavorite => {
       if (isFavorite) {
         favoriteStar.classList.add('active');
@@ -347,7 +354,7 @@ function createHistoryItem(entry: searchHistoryStorage.SearchHistoryEntity): HTM
     });
 
   // hover 시 미리보기 패널 표시
-  attachPreviewHoverEvents(li, entry.id);
+  attachPreviewHoverEvents(li, entry.id, previewStoragePromise);
 
   // history-item 클릭 시
   li.addEventListener('click', () => {
@@ -438,6 +445,9 @@ export function loadHistoryList(
       }
     });
 
+    const previewStoragePromise = previewStorage.getAll();
+    const favoriteStoragePromise = favoriteStorage.getAll();
+
     // 그룹 렌더링 함수
     function renderGroup(
       header: string,
@@ -453,8 +463,9 @@ export function loadHistoryList(
         ? `<span>${headerText}</span><span style="float:right;opacity:0.7;font-size:13px;">${dateLabel}</span>`
         : headerText;
       list.appendChild(headerLi);
+
       items.forEach(entry => {
-        const item = createHistoryItem(entry);
+        const item = createHistoryItem(entry, previewStoragePromise, favoriteStoragePromise);
         list.appendChild(item);
       });
     }
@@ -597,10 +608,15 @@ async function updateHistoryFromUrl(currentUrl: string): Promise<void> {
   }
 }
 
-export function attachPreviewHoverEvents(element: HTMLElement, entryId: string): void {
+export function attachPreviewHoverEvents(
+  element: HTMLElement,
+  entryId: string,
+  previewStoragePromise: Promise<Record<string, PreviewPanelSnapshot>>
+): void {
   TradePreviewer.addHoverEventListener(
     element,
     entryId,
+    previewStoragePromise,
     element.querySelector('.history-name') as HTMLElement
   );
 }

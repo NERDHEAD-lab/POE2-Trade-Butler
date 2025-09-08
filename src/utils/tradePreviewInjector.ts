@@ -54,13 +54,16 @@ export class TradePreviewer {
   public static addHoverEventListener(
     target: HTMLElement,
     id: string,
+    previewStoragePromise: Promise<Record<string, PreviewPanelSnapshot>>,
     appendPreviewIconTarget?: HTMLElement
   ): void {
     TradePreviewer.waitWhileCurrentPanelExists()
       .then(() => {
+        const previewPromise = previewStorage.getById(id, previewStoragePromise);
+
         target.addEventListener('mouseenter', () => {
           target.classList.add('hovered');
-          previewStorage.getById(id).then(previewInfo => {
+          previewPromise.then(previewInfo => {
             if (!previewInfo) return;
             TradePreviewer.showAsPreviewPanel(previewInfo);
           });
@@ -80,7 +83,7 @@ export class TradePreviewer {
             TradePreviewer.hidePreviewPanel();
           });
 
-        previewStorage.getById(id).then(previewInfo => {
+        previewPromise.then(previewInfo => {
           if (!appendPreviewIconTarget) return;
           const icon = document.createElement('span');
           icon.className = 'preview-icon';

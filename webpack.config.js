@@ -3,15 +3,20 @@ import { fileURLToPath } from 'url';
 import CopyPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default (env, argv = {}) => {
   const mode = argv.mode || 'production';
+  const isDev = mode === 'development';
+  const tsconfigFile = isDev ? 'tsconfig.dev.json' : 'tsconfig.json';
 
   return {
     mode,
+    devtool: isDev ? 'inline-source-map' : false,
     entry: {
       popup: './src/components/popup.ts',
       background: './src/background.ts',
@@ -29,7 +34,27 @@ export default (env, argv = {}) => {
       rules: [
         {
           test: /\.[jt]sx?$/,
-          use: { loader: 'babel-loader' },
+          use: {
+            loader: 'babel-loader',
+            options: {
+              sourceMaps: isDev,
+              presets: [
+                ...(isDev ? [[
+                  '@babel/preset-env',
+                  {
+                    targets: { chrome: '120' },
+                    bugfixes: true,
+                    modules: false,
+                    exclude: [
+                      '@babel/plugin-transform-async-to-generator',
+                      '@babel/plugin-transform-regenerator'
+                    ]
+                  }
+                ]] : []),
+                '@babel/preset-typescript'
+              ]
+            }
+          },
           exclude: /node_modules/
         },
         {
@@ -62,8 +87,11 @@ export default (env, argv = {}) => {
           { from: '_locales', to: '_locales' }
         ]
       }),
-      new MiniCssExtractPlugin()
+      new MiniCssExtractPlugin(),
+      new ForkTsCheckerWebpackPlugin({
+        typescript: { configFile: tsconfigFile }
+      })
     ],
-    devtool: mode === 'development' ? 'source-map' : 'hidden-source-map'
+    optimization: { minimize: !isDev }
   };
 };
