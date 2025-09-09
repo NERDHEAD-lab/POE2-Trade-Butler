@@ -99,4 +99,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: public
+          keep_files: 'true'
+          user_name: 'github-actions[bot]'
+          user_email: '41898282+github-actions[bot]@users.noreply.github.com'
           commit_message: "docs(schema): publish ${{ steps.pkg.outputs.version }} from ${{ needs.check.outputs.tag_name }}"
