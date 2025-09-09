@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## [2.11.3](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.11.2...2.11.3) (2025-09-09)
+
+
+### Bug Fixes
+
+* favoriteFolders migrate 이후 제거하도록 수정 ([1d15f00](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/1d15f00d41dd2d5cfdc43d910916c178b34e188a))
+
 ## [2.11.2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.11.1...2.11.2) (2025-09-09)
 
 
