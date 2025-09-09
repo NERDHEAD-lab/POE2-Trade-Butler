@@ -28,6 +28,8 @@ jobs:
     steps:
       - name: Determine if publish is needed
         id: set_output
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "Manual trigger detected. Will publish."
