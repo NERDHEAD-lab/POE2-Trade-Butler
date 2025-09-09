@@ -33,7 +33,7 @@ jobs:
           echo "Manual trigger detected. Will publish."
           echo "should_publish=true" >> $GITHUB_OUTPUT
           echo "tag_name=${{ github.event.inputs.release_tag }}" >> $GITHUB_OUTPUT
-        if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+        elif [[ "${{ github.event_name }}" == "workflow_run" ]]; then
           RUN_ID=${{ github.event.workflow_run.id }}
           # get job 'release-job' status
           conclusion=$(gh api "/repos/${{ github.repository }}/actions/runs/$RUN_ID/jobs" --jq '.jobs[] | select(.name=="release-job") | .conclusion')
