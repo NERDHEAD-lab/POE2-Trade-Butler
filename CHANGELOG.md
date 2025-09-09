@@ -1,5 +1,12 @@
 # CHANGE LOG
 
+## [2.11.2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.11.1...2.11.2) (2025-09-09)
+
+
+### Bug Fixes
+
+* **CI/CD:** fix workflow for gh-pages keep_files ([fb994de](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/fb994ded724543ea883f601fcfbb0019b2cc8545))
+
 ## [2.11.1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.11.0...2.11.1) (2025-09-09)
 
 
