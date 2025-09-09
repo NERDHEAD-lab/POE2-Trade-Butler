@@ -22,10 +22,21 @@ jobs:
         run: |
           echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Directory Listing for POE2-Trade-Butler</title></head><body>' > index.html
           echo '<h1>Directory Listing for POE2-Trade-Butler</h1><hr><pre>' >> index.html
-          # index.html 자기 자신과 .github 폴더는 목록에서 제외
-          find . -type f -name "*" ! -name "index.html" ! -path "./.github/*" | sed 's|^\./||' | sort | while read -r file; do
-            echo "<a href=\"$file\">$file</a>" >> index.html
+
+          exclude_targets=( "index.html" ".nojekyll" "./.git/*" )
+          find_args=()
+          for target in "${exclude_targets[@]}"; do
+            if [[ "$target" == *"/"* ]]; then
+              find_args+=("!" "-path" "$target")
+            else
+              find_args+=("!" "-name" "$target")
+            fi
           done
+               
+          find . -type f "${find_args[@]}" | sed 's|^\./||' | sort | while read -r file; do
+            echo "<a href=\"$file\">$file</a>" >> index.html
+          done   
+          
           echo '</pre><hr></body></html>' >> index.html
 
       - name: Deploy generated index.html back to gh-pages
