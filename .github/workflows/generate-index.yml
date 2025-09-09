@@ -17,6 +17,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
       - name: Generate directory listing index.html
         run: |
