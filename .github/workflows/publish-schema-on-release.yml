@@ -26,34 +26,34 @@ jobs:
       should_publish: ${{ steps.set_output.outputs.should_publish }}
       tag_name: ${{ steps.check_conditions.outputs.tag_name }}
     steps:
-    - name: Determine if publish is needed
-      id: set_output
-      run: |
-        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-          echo "Manual trigger detected. Will publish."
-          echo "should_publish=true" >> $GITHUB_OUTPUT
-          echo "tag_name=${{ github.event.inputs.release_tag }}" >> $GITHUB_OUTPUT
-        elif [[ "${{ github.event_name }}" == "workflow_run" ]]; then
-          RUN_ID=${{ github.event.workflow_run.id }}
-          # get job 'release-job' status
-          conclusion=$(gh api "/repos/${{ github.repository }}/actions/runs/$RUN_ID/jobs" --jq '.jobs[] | select(.name=="release-job") | .conclusion')
-        
-          if [ "$conclusion" != "success" ]; then
-              echo "Upstream workflow did not succeed. No publish."
-              echo "should_publish=false" >> $GITHUB_OUTPUT
-              exit 0
-          fi
+      - name: Determine if publish is needed
+        id: set_output
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual trigger detected. Will publish."
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+            echo "tag_name=${{ github.event.inputs.release_tag }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+            RUN_ID=${{ github.event.workflow_run.id }}
+            # get job 'release-job' status
+            conclusion=$(gh api "/repos/${{ github.repository }}/actions/runs/$RUN_ID/jobs" --jq '.jobs[] | select(.name=="release-job") | .conclusion')
           
-          echo "Upstream workflow succeeded. Will publish."
-          echo "should_publish=true" >> $GITHUB_OUTPUT
+            if [ "$conclusion" != "success" ]; then
+                echo "Upstream workflow did not succeed. No publish."
+                echo "should_publish=false" >> $GITHUB_OUTPUT
+                exit 0
+            fi
+            
+            echo "Upstream workflow succeeded. Will publish."
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          
+            TAG=$(gh release view --json tagName --jq .tagName)
+            echo "tag_name=$TAG" >> $GITHUB_OUTPUT
         
-          TAG=$(gh release view --json tagName --jq .tagName)
-          echo "tag_name=$TAG" >> $GITHUB_OUTPUT
-      
-        else
-          echo "No publish needed."
-          echo "should_publish=false" >> $GITHUB_OUTPUT
-        fi
+          else
+            echo "No publish needed."
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          fi
   build:
     if: needs.check.outputs.should_publish == 'true'
     runs-on: ubuntu-latest
