@@ -26,6 +26,8 @@ jobs:
       should_publish: ${{ steps.set_output.outputs.should_publish }}
       tag_name: ${{ steps.check_conditions.outputs.tag_name }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Determine if publish is needed
         id: set_output
         env:
