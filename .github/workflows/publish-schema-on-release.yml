@@ -37,8 +37,8 @@ jobs:
             echo "tag_name=${{ github.event.inputs.release_tag }}" >> $GITHUB_OUTPUT
           elif [[ "${{ github.event_name }}" == "workflow_run" ]]; then
             RUN_ID=${{ github.event.workflow_run.id }}
-            # get job 'release-job' status
-            conclusion=$(gh api "/repos/${{ github.repository }}/actions/runs/$RUN_ID/jobs" --jq '.jobs[] | select(.name=="release-job") | .conclusion')
+            # get job 'released-job' status
+            conclusion=$(gh api "/repos/${{ github.repository }}/actions/runs/$RUN_ID/jobs" --jq '.jobs[] | select(.name=="released-job") | .conclusion')
           
             if [ "$conclusion" != "success" ]; then
                 echo "Upstream workflow did not succeed. No publish."
