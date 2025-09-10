@@ -4,7 +4,7 @@ import * as storageUsage from '../storageUsage';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const CURRENT_STORAGE_VERSION_KEY = 'poe2trade_storage_version';
-const CURRENT_STORAGE_VERSION = 4;
+const CURRENT_STORAGE_VERSION = 5;
 
 const versionStorage: StorageManager<number> = new StorageManager(
   'local',
@@ -179,6 +179,20 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
 
       await storage.set(legacy);
 
+    },
+    removeAfter: true,
+    description:
+    // sync 8kb 제한으로 인해 chunking 전략을 사용하므로, 기존 데이터를 chunk 방식으로 이전
+      'Migrate favoriteFolders from sync to chunk storage strategy to handle larger data sizes.',
+  },
+  {
+    key: '__chunk__:undefined::__meta',
+    storageType: 'sync',
+    version: 4,
+    migrate: async (legacy: ChunkMeta_v1) => {
+      if (!legacy) return;
+
+      await chrome.storage.sync.set({ ['__chunk__:favoriteFolders::__meta']: legacy });
     },
     removeAfter: true,
     description:
@@ -362,3 +376,6 @@ const DEFAULT_FAVORITE_ROOT: () => FolderEntry_2 = () => {
     modifiedAt: new Date().toISOString()
   };
 };
+
+
+type ChunkMeta_v1 = { v: 1; parts: number; chunkSize: number; originalSize: number };
