@@ -14,7 +14,7 @@ Promise.resolve()
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === 'RELOAD_EXTENSION') {
         chrome.runtime.reload();
-      } else if (message.type === 'FETCH') {
+      } else if (message.type === 'FETCH_LSCACHE') {
         fetch(message.url)
           .then(response => {
             if (!response.ok) {
