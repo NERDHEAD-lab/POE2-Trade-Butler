@@ -88,9 +88,9 @@ jobs:
 
       - name: Prepare publish directory
         run: |
-          mkdir -p public/simple-server/${{ steps.pkg.outputs.version }}/
-          mv SimplifiedFolder.schema.json public/simple-server/${{ steps.pkg.outputs.version }}/
-          cp -f public/simple-server/${{ steps.pkg.outputs.version }}/SimplifiedFolder.schema.json public/
+          mkdir -p public/schema/${{ steps.pkg.outputs.version }}/
+          mv SimplifiedFolder.schema.json public/schema/${{ steps.pkg.outputs.version }}/
+          cp -f public/schema/${{ steps.pkg.outputs.version }}/SimplifiedFolder.schema.json public/
           touch public/.nojekyll
 
       - name: Deploy to gh-pages branch
