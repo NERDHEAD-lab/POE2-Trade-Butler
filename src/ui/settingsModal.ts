@@ -83,6 +83,17 @@ const settings: Settings = {
               });
             }
           } as CheckboxDetailOption
+        },
+        {
+          id: 'configure-preview-overlay',
+          name: getMessage('settings_option_configure_preview_overlay'),
+          iconUrl: chrome.runtime.getURL('assets/preview_24dp_E9E5DE.svg'),
+          description: getMessage('settings_option_configure_preview_overlay_description'),
+          optionDetail: {
+            type: 'checkbox',
+            checked: await settingStorage.getPreviewOverlayEnabled(),
+            onChangeListener: (checked: boolean) => settingStorage.setPreviewOverlayEnabled(checked)
+          } as CheckboxDetailOption
         }
       ]
     },

@@ -197,3 +197,20 @@ export function setSidebarOpacity(opacity: number): Promise<void> {
 export function getSidebarOpacity(): Promise<number> {
   return sidebarOpacityConfig.get();
 }
+
+//getPreviewOverlayEnabled
+
+const defaultPreviewOverlayEnabled = true;
+const previewOverlayEnabledConfig = createStorageManager<boolean>(
+  'sync',
+  'previewOverlayEnabled',
+  defaultPreviewOverlayEnabled
+);
+
+export function setPreviewOverlayEnabled(enabled: boolean): Promise<void> {
+  return previewOverlayEnabledConfig.set(enabled);
+}
+
+export function getPreviewOverlayEnabled(): Promise<boolean> {
+  return previewOverlayEnabledConfig.get();
+}

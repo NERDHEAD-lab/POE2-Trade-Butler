@@ -623,5 +623,17 @@
   "settings_option_sidebar_opacity_description": {
     "message": "사이드바의 불투명도를 설정합니다. 0%는 완전히 투명, 100%는 완전히 불투명입니다.",
     "description": "Description for sidebar opacity setting"
+  },
+  "storage_description_poe2trade_settings_previewOverlayEnabled": {
+    "message": "거래 미리보기 오버레이 활성화 상태입니다.",
+    "description": "Whether the trade preview overlay is enabled"
+  },
+  "settings_option_configure_preview_overlay": {
+    "message": "미리보기 오버레이 활성화/비활성화",
+    "description": "Settings option to configure the trade preview overlay"
+  },
+  "settings_option_configure_preview_overlay_description": {
+    "message": "거래 미리보기 오버레이를 활성화하거나 비활성화합니다. 비활성화하면 기록 및 즐겨찾기 목록에 마우스 오버 시 미리보기가 표시되지 않습니다.",
+    "description": "Description for configuring the trade preview overlay"
   }
 }
