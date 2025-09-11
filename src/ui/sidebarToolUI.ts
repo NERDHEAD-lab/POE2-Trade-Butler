@@ -43,7 +43,6 @@ const sidebarTools: SidebarTool[] = [
 ];
 
 
-
 interface SidebarTool {
   id: string;
   iconUrl: string;
@@ -87,12 +86,17 @@ export async function renderSidebarTools(): Promise<void> {
     icon.alt = sidebarTool.description;
     icon.title = sidebarTool.description;
 
+    icon.style.height = '100%';
+    icon.style.width = '100%';
+
     button.appendChild(icon);
     button.onclick = () => sidebarTool.onClick({ button, icon, sidebar, wrapper });
 
-    sidebar.appendChild(button)
+    sidebar.appendChild(button);
     topPosition += spacing;
 
-    await sidebarTool.onRender({ button, icon, sidebar, wrapper });
+    if (sidebarTool.onRender) {
+      await sidebarTool.onRender({ button, icon, sidebar, wrapper });
+    }
   }
 }
