@@ -1,4 +1,4 @@
-| [한국어](../ko/notice.md) | [English](../en/notice.md) | [日本語](../ja/notice.md) | [简体中文](../zh-cn/notice.md) | **繁體中文** |
+| [한국어](../ko/notice.md) | [English](../en/notice.md) | [日本語](../ja/notice.md) | [简体中文](../zh_CN/notice.md) | **繁體中文** |
 |---|---|---|---|---|
 
 ## Roadmap (Next Update)
