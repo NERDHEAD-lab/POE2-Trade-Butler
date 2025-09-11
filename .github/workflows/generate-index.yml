@@ -4,6 +4,11 @@ on:
   workflow_run:
     workflows: ["Publish schema on GitHub Release"]
     types: [completed]
+  push:
+    branches:
+      - gh-pages
+    paths:
+      - 'notice/**/*'
 
 permissions:
   contents: write
