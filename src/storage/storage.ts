@@ -57,15 +57,15 @@ type ChunkMeta = { v: 1; parts: number; chunkSize: number; originalSize: number 
 
 // 추후 Array, Record 등 다양한 타입에 대해 별도의 전략을 구현할 수 있도록 재설계 필요
 class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
-  private readonly META_KEY = `__chunk__:${this.key}::__meta`;
   private readonly chunkSize = 7500;
-
   private previousEntity : ENTITY | null = null;
+
   // Placeholder for a more complex strategy that handles large data with chunking
   constructor(
     private type: StorageType,
     private key: string,
-    private defaultValueSupplier: () => ENTITY
+    private defaultValueSupplier: () => ENTITY,
+    private META_KEY = `__chunk__:${key}::__meta`
   ) {}
 
   private chunkKey(index: number): string {

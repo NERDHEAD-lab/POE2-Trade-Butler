@@ -14,10 +14,11 @@ import * as settings from '../ui/settingsModal';
 import { openFavoriteFolderModal } from '../ui/newFavoriteModal';
 import { PreviewPanelSnapshot } from '../storage/previewStorage';
 import { FileSystemEntry } from '../ui/fileSystemEntry';
+import { renderSidebarTools } from '../ui/sidebarToolUI';
 // import { buildSimplifiedTree } from '../utils/shareFavorites';
 
-const POE2_SIDEBAR_ID = 'poe2-sidebar';
-const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
+export const POE2_SIDEBAR_ID = 'poe2-sidebar';
+export const POE2_CONTENT_WRAPPER_ID = 'poe2-content-wrapper';
 
 const sidebarHtml = `
 <div id="sidebar-header">
@@ -28,6 +29,7 @@ const sidebarHtml = `
 <div id="sidebar-menu">
   <button class="menu-tab active" data-tab="history">${getMessage('history_tab')}</button>
   <button class="menu-tab" data-tab="favorites">${getMessage('favorites_tab')}</button>
+  
 </div>
 
 <div id="sidebar-content">
@@ -56,8 +58,6 @@ const sidebarHtml = `
 <!--    </div>-->
   </div>
 </div>
-
-<button id="poe2-sidebar-toggle-button">⮜</button>
 `;
 
 const historyItem = `
@@ -185,34 +185,7 @@ export function renderSidebar(container: HTMLElement): void {
     };
   });
 
-  // sidebar 여닫기
-  (async () => {
-    const toggleButton = sidebar.querySelector<HTMLButtonElement>('#poe2-sidebar-toggle-button');
-    if (!toggleButton) throw new Error('toggle button not found');
-
-    let isOpen = true;
-
-    toggleButton.addEventListener('click', () => {
-      isOpen = !isOpen;
-      sidebar.classList.toggle('collapsed', !isOpen);
-      wrapper.classList.toggle('collapsed', !isOpen);
-      toggleButton.textContent = isOpen ? '⮜' : '⮞';
-      settingStorage.setSidebarCollapsed(!isOpen);
-
-      if (!isOpen) {
-        wrapper.style.paddingRight = '0';
-      } else {
-        wrapper.style.paddingRight = sidebar.offsetWidth + 'px';
-      }
-    });
-
-    const isCollapsed = await settingStorage.isSidebarCollapsed();
-    if (isCollapsed) {
-      toggleButton.click(); // 초기 상태 동기화
-    } else {
-      wrapper.style.paddingRight = sidebar.offsetWidth + 'px';
-    }
-  })();
+  void renderSidebarTools();
 
   const favoriteWrapper = document.getElementById('favorites-list-wrapper') as HTMLDivElement;
 

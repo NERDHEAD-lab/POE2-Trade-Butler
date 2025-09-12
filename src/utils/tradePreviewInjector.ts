@@ -1,4 +1,5 @@
 import { PreviewPanelSnapshot } from '../storage/previewStorage';
+import * as settings from '../storage/settingStorage';
 import * as previewStorage from '../storage/previewStorage';
 import { getMessage } from './_locale';
 
@@ -57,54 +58,61 @@ export class TradePreviewer {
     previewStoragePromise: Promise<Record<string, PreviewPanelSnapshot>>,
     appendPreviewIconTarget?: HTMLElement
   ): void {
-    TradePreviewer.waitWhileCurrentPanelExists()
-      .then(() => {
-        const previewPromise = previewStorage.getById(id, previewStoragePromise);
+    settings.getPreviewOverlayEnabled()
+      .then(enabled => {
+        if (!enabled) return;
 
-        target.addEventListener('mouseenter', () => {
-          target.classList.add('hovered');
-          previewPromise.then(previewInfo => {
-            if (!previewInfo) return;
-            TradePreviewer.showAsPreviewPanel(previewInfo);
+        TradePreviewer.waitWhileCurrentPanelExists()
+          .then(() => {
+            const previewPromise = previewStorage.getById(id, previewStoragePromise);
+
+            target.addEventListener('mouseenter', () => {
+              target.classList.add('hovered');
+              previewPromise.then(previewInfo => {
+                if (!previewInfo) return;
+                TradePreviewer.showAsPreviewPanel(previewInfo);
+              });
+            });
+
+            target.addEventListener('mouseleave', () => {
+              target.classList.remove('hovered');
+              TradePreviewer.hidePreviewPanel();
+            });
+
+            // currentPanel에 마우스가 들어오면 미리보기 제거
+            // TradePreviewer.currentPanel?.addEventListener('mouseenter', () => {
+            document
+              .querySelector('div#poe2-content-wrapper div.wrapper')
+              ?.addEventListener('mouseenter', () => {
+                target.classList.remove('hovered');
+                TradePreviewer.hidePreviewPanel();
+              });
+
+            previewPromise.then(previewInfo => {
+              if (!appendPreviewIconTarget) return;
+              const icon = document.createElement('span');
+              icon.className = 'preview-icon';
+              icon.textContent = '🔍';
+              icon.style.marginLeft = '1px';
+              icon.style.fontSize = '0.8em';
+              icon.style.verticalAlign = 'middle';
+              if (!previewInfo) {
+                icon.style.opacity = '0.1';
+                icon.style.color = 'gray';
+              }
+
+              appendPreviewIconTarget.insertAdjacentElement('afterend', icon);
+            });
+          })
+          .catch(error => {
+            console.debug(getMessage('error_wait_for_injector', error.toString()));
           });
-        });
+      }
+    )
 
-        target.addEventListener('mouseleave', () => {
-          target.classList.remove('hovered');
-          TradePreviewer.hidePreviewPanel();
-        });
-
-        // currentPanel에 마우스가 들어오면 미리보기 제거
-        // TradePreviewer.currentPanel?.addEventListener('mouseenter', () => {
-        document
-          .querySelector('div#poe2-content-wrapper div.wrapper')
-          ?.addEventListener('mouseenter', () => {
-            target.classList.remove('hovered');
-            TradePreviewer.hidePreviewPanel();
-          });
-
-        previewPromise.then(previewInfo => {
-          if (!appendPreviewIconTarget) return;
-          const icon = document.createElement('span');
-          icon.className = 'preview-icon';
-          icon.textContent = '🔍';
-          icon.style.marginLeft = '1px';
-          icon.style.fontSize = '0.8em';
-          icon.style.verticalAlign = 'middle';
-          if (!previewInfo) {
-            icon.style.opacity = '0.1';
-            icon.style.color = 'gray';
-          }
-
-          appendPreviewIconTarget.insertAdjacentElement('afterend', icon);
-        });
-      })
-      .catch(error => {
-        console.debug(getMessage('error_wait_for_injector', error.toString()));
-      });
   }
 
-  public static showAsPreviewPanel(snapshot: PreviewPanelSnapshot): void {
+  private static showAsPreviewPanel(snapshot: PreviewPanelSnapshot): void {
     TradePreviewer.hideCurrentPanel();
 
     const wrapper = document.createElement('div');
@@ -174,7 +182,7 @@ export class TradePreviewer {
     throw new Error(getMessage('error_search_button_not_enabled'));
   }
 
-  public static isPanelCollapsed(): boolean {
+  private static isPanelCollapsed(): boolean {
     const btn = TradePreviewer.currentPanel?.querySelector('.controls .toggle-search-btn');
     return btn?.querySelector('.chevron')?.classList.contains('collapsed') ?? false;
   }
@@ -204,7 +212,7 @@ export class TradePreviewer {
     throw new Error(getMessage('error_advanced_panel_not_expanded'));
   }
 
-  public static collapsePanel(): void {
+  private static collapsePanel(): void {
     const btn = TradePreviewer.currentPanel?.querySelector(
       '.controls .toggle-search-btn'
     ) as HTMLButtonElement | null;

@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows: ["Publish schema on GitHub Release"]
     types: [completed]
+  workflow_dispatch:
 
 permissions:
   contents: write
