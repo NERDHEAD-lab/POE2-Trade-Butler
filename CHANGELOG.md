@@ -1,5 +1,19 @@
 # CHANGE LOG
 
+## [2.12.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.11.3...2.12.0) (2025-09-12)
+
+
+### Features
+
+* preivew 기능 활성화/비활성화 추가 ([0d4d7ee](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/0d4d7eeae06a3086cc540f171cc93edeb41c5816))
+* sidebar toggle button 코드 분리 ([533451a](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/533451a9e55ea51bdddab8ba13d932424371c1e7))
+
+
+### Bug Fixes
+
+* sidebarToolUI onRender 처리 강화 ([3607516](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/36075163d6e9574279fd1fe174a4459307f3f44e))
+* 저장소의 favoriteFolders meta key값이 undefined로 초기화 되는 문제 수정 ([29c01bb](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/29c01bb11863862805c7b087a494988a5edc1164))
+
 ## [2.11.3](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.11.2...2.11.3) (2025-09-09)
 
 
