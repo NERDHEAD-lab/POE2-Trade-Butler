@@ -24,10 +24,7 @@ We plan to migrate the storage to Google Drive Appdata.
 ## [2.10.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.9.0...2.10.0) (2025-09-02)
 
 > I was also busy playing POE2 during the weekend, so the patch was delayed. Sorry about that.
-> 
-> 
 > When I went to the trade page to gear up, I noticed that in Season 3 the background image became brighter, making the extension’s sidebar less visible...
-> 
 
 ### Features
 
