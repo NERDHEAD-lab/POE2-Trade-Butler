@@ -85,7 +85,6 @@ export function renderSidebar(container: HTMLElement): void {
   // 사이드바 배경 투명도 설정
   settingStorage.getSidebarOpacity().then(opacity => {
     sidebar.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
-    console.info(`Set sidebar background opacity to ${opacity}`);
   });
 
   if (api.isKoreanServer()) {

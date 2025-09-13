@@ -137,6 +137,10 @@ export async function renderSidebarTools(): Promise<void> {
     button.className = SIDEBAR_TOOL_CLASS;
     button.style.top = `${topPosition}px`;
 
+    settingStorage.getSidebarOpacity().then(opacity => {
+      button.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
+    });
+
     const icon = document.createElement('img');
     icon.className = SIDEBAR_TOOL_ICON_CLASS;
     icon.src = sidebarTool.iconUrl;
