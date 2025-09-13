@@ -208,6 +208,11 @@ export class SettingManager {
               }
             });
           };
+          if (option.description) {
+            // right margin at description
+            const description = optionHeader.querySelector('.poe2-settings-option-description') as HTMLParagraphElement;
+            description.style.marginRight = '35px';
+          }
           break;
         }
         case 'select': {
