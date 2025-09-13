@@ -16,13 +16,13 @@ interface ButlerGuide {
 
 const butlerGuides: ButlerGuide[] = [
   {
-    guideTarget: '#poe2-sidebar #poe2-sidebar-toggle-button',
+    guideTarget: '#poe2-sidebar #poe2-tool-sidebar-toggle-button',
     description: getMessage('butler_guide_toggle_sidebar'),
     focusTarget: ['#poe2-sidebar'],
     onBefore: () => {
       const sidebarElement = document.querySelector('#poe2-sidebar') as HTMLElement;
       const buttonElement = document.querySelector(
-        '#poe2-sidebar #poe2-sidebar-toggle-button'
+        '#poe2-sidebar #poe2-tool-sidebar-toggle-button'
       ) as HTMLButtonElement;
       if (!buttonElement) {
         return;
@@ -34,7 +34,7 @@ const butlerGuides: ButlerGuide[] = [
     },
     onAfter: () => {
       const element = document.querySelector(
-        '#poe2-sidebar #poe2-sidebar-toggle-button'
+        '#poe2-sidebar #poe2-tool-sidebar-toggle-button'
       ) as HTMLButtonElement;
       if (!element) {
         console.error('Toggle button not found in the sidebar.');
@@ -45,12 +45,12 @@ const butlerGuides: ButlerGuide[] = [
     }
   },
   {
-    guideTarget: '#poe2-sidebar #poe2-sidebar-toggle-button',
+    guideTarget: '#poe2-sidebar #poe2-tool-sidebar-toggle-button',
     description: getMessage('butler_guide_toggle_sidebar'),
     focusTarget: ['#poe2-sidebar'],
     onAfter: () => {
       const element = document.querySelector(
-        '#poe2-sidebar #poe2-sidebar-toggle-button'
+        '#poe2-sidebar #poe2-tool-sidebar-toggle-button'
       ) as HTMLButtonElement;
       if (!element) {
         console.error('Toggle button not found in the sidebar.');
