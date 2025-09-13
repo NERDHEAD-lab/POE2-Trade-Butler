@@ -1,0 +1,36 @@
+.markdown-body {
+  text-align: left;
+  // padding 10 추가
+  padding: 10px;
+  // 배경 반투명
+  background-color: rgba(0, 0, 0, 0.8);
+
+  scrollbar-width: thin;
+  scrollbar-color: #555 transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #777;
+  }
+
+  table {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  th, td {
+    text-align: center;
+  }
+}

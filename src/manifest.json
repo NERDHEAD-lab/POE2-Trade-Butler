@@ -40,7 +40,8 @@
     "https://de.pathofexile.com/trade2/*",
     "https://fr.pathofexile.com/trade2/*",
     "https://es.pathofexile.com/trade2/*",
-    "https://poe.game.daum.net/trade2/*"
+    "https://poe.game.daum.net/trade2/*",
+    "https://nerdhead-lab.github.io/*"
   ],
   "content_scripts": [
     {

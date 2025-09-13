@@ -61,7 +61,9 @@
     "webpack-dev-server": "^5.2.0"
   },
   "dependencies": {
+    "github-markdown-css": "^5.8.1",
     "html-webpack-plugin": "^5.6.3",
+    "marked": "^16.2.1",
     "mini-css-extract-plugin": "^2.9.2"
   }
 }

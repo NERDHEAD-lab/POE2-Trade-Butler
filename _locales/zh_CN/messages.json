@@ -623,5 +623,37 @@
   "settings_option_sidebar_opacity_description": {
     "message": "设置侧边栏的不透明度。0%表示完全透明，100%表示完全不透明。",
     "description": "Description for sidebar opacity setting"
+  },
+  "sidebar_tool_notice_button_modal_close": {
+    "message": "关闭",
+    "description": "Button text to close the sidebar tool notice"
+  },
+  "storage_description_poe2trade_settings_noticeContext": {
+    "message": "缓存的通知内容。",
+    "description": "The content of the cached notices"
+  },
+  "storage_description_poe2trade_settings_noticeUnread": {
+    "message": "未读通知状态。",
+    "description": "Whether the user has unread notices"
+  },
+  "sidebar_tool_notice_button_modal_error_no_content": {
+    "message": "无法加载公告内容。请稍后再试。",
+    "description": "Error message when notice content cannot be loaded"
+  },
+  "sidebar_tool_notice_button_modal_error_fetch_failed": {
+    "message": "获取公告内容时出错: $1",
+    "description": "Error message when fetching notice content fails"
+  },
+  "sidebar_tool_sidebar_toggle_button_description": {
+    "message": "打开/关闭侧边栏",
+    "description": "Description for the sidebar toggle button"
+  },
+  "sidebar_tool_notice_button_description": {
+    "message": "打开公告",
+    "description": "Description for the sidebar tool notice button"
+  },
+  "sidebar_tool_notice_button_modal_title": {
+    "message": "公告",
+    "description": "Title for the sidebar tool notice modal"
   }
 }

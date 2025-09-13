@@ -1,0 +1,37 @@
+.poe2-sidebar-tool-button {
+  position: absolute;
+  top: 10px;
+  left: -50px;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  z-index: 10001;
+}
+
+.poe2-sidebar-tool-button:hover {
+  background-color: #666;
+}
+
+@keyframes flash-and-hold-glow {
+  0%   { filter: drop-shadow(0 0 0px yellow); }
+  12%  { filter: drop-shadow(0 0 8px yellow); }
+  25%  { filter: drop-shadow(0 0 0px yellow); }
+  37%  { filter: drop-shadow(0 0 8px yellow); }
+  50%  { filter: drop-shadow(0 0 0px yellow); }
+  62%  { filter: drop-shadow(0 0 8px yellow); }
+  75%  { filter: drop-shadow(0 0 0px yellow); }
+  87%  { filter: drop-shadow(0 0 8px yellow); }
+  100% { filter: drop-shadow(0 0 8px yellow); }
+}
+
+.start-flash-and-hold {
+  animation-name: flash-and-hold-glow;
+  animation-duration: 5s;
+  animation-fill-mode: forwards;
+}

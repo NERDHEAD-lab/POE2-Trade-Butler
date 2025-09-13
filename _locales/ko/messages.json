@@ -635,5 +635,37 @@
   "settings_option_configure_preview_overlay_description": {
     "message": "거래 미리보기 오버레이를 활성화하거나 비활성화합니다. 비활성화하면 기록 및 즐겨찾기 목록에 마우스 오버 시 미리보기가 표시되지 않습니다.",
     "description": "Description for configuring the trade preview overlay"
+  },
+  "sidebar_tool_notice_button_modal_close": {
+    "message": "닫기",
+    "description": "Button text to close the sidebar tool notice"
+  },
+  "storage_description_poe2trade_settings_noticeContext": {
+    "message": "캐시된 공지사항의 내용입니다.",
+    "description": "The content of the cached notices"
+  },
+  "storage_description_poe2trade_settings_noticeUnread": {
+    "message": "공지사항 확인 여부입니다.",
+    "description": "Whether the user has unread notices"
+  },
+  "sidebar_tool_notice_button_modal_error_no_content": {
+    "message": "공지사항 내용을 불러올 수 없습니다. 나중에 다시 시도해주세요.",
+    "description": "Error message when notice content cannot be loaded"
+  },
+  "sidebar_tool_notice_button_modal_error_fetch_failed": {
+    "message": "공지사항을 불러오는 중 오류가 발생했습니다: $1",
+    "description": "Error message when fetching notice content fails"
+  },
+  "sidebar_tool_sidebar_toggle_button_description": {
+    "message": "사이드바 열기/닫기",
+    "description": "Description for the sidebar toggle button"
+  },
+  "sidebar_tool_notice_button_description": {
+    "message": "공지사항 열기",
+    "description": "Description for the sidebar tool notice button"
+  },
+  "sidebar_tool_notice_button_modal_title": {
+    "message": "공지사항",
+    "description": "Title for the sidebar tool notice modal"
   }
 }

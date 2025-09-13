@@ -5,6 +5,7 @@ import * as previewStorage from './storage/previewStorage';
 import { getCachedCheckVersion } from './utils/versionChecker';
 import * as settingStorage from './storage/settingStorage';
 import * as storageUsage from './storage/storageUsage';
+import { marked } from 'marked';
 
 Promise.resolve()
   .then(() => settingStorage.flushI18n())
@@ -29,6 +30,47 @@ Promise.resolve()
             sendResponse({ error: error.message });
           });
         return true;
+      } else if (message.type === 'FETCH_MARKDOWN') {
+          async function handleFetchMarkdown(url: string, forceFetch: boolean): Promise<{ data?: string; error?: string }> {
+            try {
+              const noticeContext = await settingStorage.getNoticeContext(url);
+              const lastModified = noticeContext.lastModified;
+              let content = noticeContext.content;
+
+              const response = await fetch(url, {
+                headers: lastModified && !forceFetch ? { 'If-Modified-Since': lastModified } : {},
+              });
+
+              if (response.status === 304) return { data: marked.parse(content, { breaks: true }) as string };
+
+              if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.statusText}`);
+              }
+
+              content = await response.text();
+
+              response.headers.forEach((value, key) => {
+                console.log(`${key}: ${value}`);
+              });
+              if (!forceFetch) {
+                await settingStorage.setNoticeContext(url, {
+                  lastModified: response.headers.get('Last-Modified') || '',
+                  content
+                });
+              }
+
+              const html = marked.parse(content, { breaks: true }) as string;
+
+              console.info(`Fetched and parsed markdown from ${message.url}`);
+              return { data: html };
+            } catch (error) {
+              console.error('Error fetching markdown content:', error);
+              return { error: (error as Error).message };
+            }
+          }
+
+          handleFetchMarkdown(message.url, message.forceFetch).then(sendResponse);
+          return true;
       }
     });
 
