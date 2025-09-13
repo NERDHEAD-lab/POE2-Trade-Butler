@@ -420,27 +420,26 @@ export async function runButlerGuides() {
           }
         });
       } finally {
-        if (descDiv) descDiv.remove();
-        if (nextBtn) nextBtn.remove();
-        if (overlay) overlay.remove();
-        if (highlightBox) highlightBox.remove();
+        document.getElementById('butler-guide-desc')?.remove();
+        document.getElementById('butler-guide-next-btn')?.remove();
+        document.getElementById('butler-guide-blur-overlay')?.remove();
+        document.getElementById('butler-guide-highlight-box')?.remove();
         running = false;
-        if (frameHandle !== null) {
-          cancelAnimationFrame(frameHandle);
-        }
+
+        if (frameHandle) cancelAnimationFrame(frameHandle);
       }
     }
   } catch (e) {
     console.error('Error during Butler guides:', e);
     throw e;
   } finally {
-    if (descDiv) descDiv.remove();
-    if (nextBtn) nextBtn.remove();
-    if (overlay) overlay.remove();
-    if (highlightBox) highlightBox.remove();
-    if (frameHandle !== null) {
-      cancelAnimationFrame(frameHandle);
-    }
+    document.getElementById('butler-guide-desc')?.remove();
+    document.getElementById('butler-guide-next-btn')?.remove();
+    document.getElementById('butler-guide-blur-overlay')?.remove();
+    document.getElementById('butler-guide-highlight-box')?.remove();
+
+    if (frameHandle) cancelAnimationFrame(frameHandle);
+
     await settingStorage.setButlerGuideShown(true);
     console.log('Butler guides completed.');
   }
