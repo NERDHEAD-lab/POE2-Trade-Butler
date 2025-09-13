@@ -118,7 +118,9 @@ const butlerGuides: ButlerGuide[] = [
     guideTarget: '#sidebar-content #history-list li.history-item',
     description: getMessage('butler_guide_history_item'),
     focusTarget: ['#sidebar-content'],
-    onBefore: () => {
+    onBefore: async () => {
+      const previewOverlayEnabled = await settingStorage.getPreviewOverlayEnabled();
+      await settingStorage.setPreviewOverlayEnabled(true);
       loadHistoryList(
         Promise.resolve([
           {
@@ -129,6 +131,12 @@ const butlerGuides: ButlerGuide[] = [
           } as SearchHistoryEntity
         ])
       );
+
+      await waitForElement('#sidebar-content #history-list li.history-item span.preview-icon', 5000)
+        .then(() => {
+          settingStorage.setPreviewOverlayEnabled(previewOverlayEnabled);
+        });
+
     }
   },
   {
@@ -436,4 +444,24 @@ export async function runButlerGuides() {
     await settingStorage.setButlerGuideShown(true);
     console.log('Butler guides completed.');
   }
+}
+
+
+function waitForElement(selector: string, timeout: number = 10000): Promise<HTMLElement> {
+  return new Promise((resolve, reject) => {
+    const interval = 100;
+    let elapsed = 0;
+
+    const checkExist = setInterval(() => {
+      const element = document.querySelector<HTMLElement>(selector);
+      if (element) {
+        clearInterval(checkExist);
+        resolve(element);
+      } else if (elapsed >= timeout) {
+        clearInterval(checkExist);
+        reject(new Error(`Element ${selector} not found within ${timeout}ms`));
+      }
+      elapsed += interval;
+    }, interval);
+  });
 }
