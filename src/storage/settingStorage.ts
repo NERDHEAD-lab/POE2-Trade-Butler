@@ -238,7 +238,7 @@ const noticeContextConfig = createStorageManager<NoticeContextMap>(
 
 export async function setNoticeContext(url: string, context: NoticeContext): Promise<void> {
   const map = await noticeContextConfig.get();
-  map[url.toString()] = context;
+  map[url] = context;
   return await noticeContextConfig.set(map);
 }
 

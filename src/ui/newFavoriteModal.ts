@@ -6,21 +6,27 @@ import * as fs from './fileSystemEntry';
 import { FileEntry } from './fileSystemEntry';
 import { getMessage } from '../utils/_locale';
 
-export async function openFavoriteFolderModal(id: string, url: string): Promise<void> {
+type FavoriteItem = { id: string; url: string };
+
+export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void> {
   return Promise.resolve(document.createElement('div'))
     .then(async wrapper => {
-      const nameInput = document.createElement('input');
-      nameInput.className = 'favorite-name';
-      nameInput.type = 'text';
-      nameInput.placeholder = getMessage('placeholder_item_name', id);
-      nameInput.dataset.id = id;
-      nameInput.dataset.url = url;
+      let nameInput: HTMLInputElement;
+      if (item) {
+        const { id, url } = item;
+        nameInput = document.createElement('input');
+        nameInput.className = 'favorite-name';
+        nameInput.type = 'text';
+        nameInput.placeholder = getMessage('placeholder_item_name', id);
+        nameInput.dataset.id = id;
+        nameInput.dataset.url = url;
 
-      wrapper.appendChild(nameInput);
+        wrapper.appendChild(nameInput);
+      }
       const favoriteUI = await folderUI.loadFavoriteFileSystemUI(wrapper, false);
 
       const modalConsumer: ModalConsumer = (ctx) => {
-        nameInput.addEventListener('keydown', (event) => {
+        nameInput?.addEventListener('keydown', (event) => {
           if (event.key === 'Enter') {
             ctx.confirm();
           }

@@ -148,7 +148,7 @@
     "description": "Toast message for history auto-add toggle"
   },
   "toast_favorite_add_error": {
-    "message": "添加到收藏夾失敗: $1",
+    "message": "添加到收藏夾失敗。請在搜索結果頁面嘗試。",
     "description": "Toast message for favorite add error"
   },
   "toast_favorite_add_unknown_error": {
@@ -655,5 +655,9 @@
   "sidebar_tool_notice_button_modal_title": {
     "message": "公告",
     "description": "Title for the sidebar tool notice modal"
+  },
+  "sidebar_tool_favorite_add_button_description": {
+    "message": "添加到收藏夾",
+    "description": "Description for the sidebar tool favorite add button"
   }
 }

@@ -1,12 +1,17 @@
 import * as settingStorage from '../storage/settingStorage';
 import { POE2_CONTENT_WRAPPER_ID, POE2_SIDEBAR_ID } from '../components/sidebar';
 import { getMessage } from '../utils/_locale';
+import * as api from '../utils/api';
 import { showModal } from '../utils/api';
 
 import '../styles/sidebarTools.scss';
 import 'github-markdown-css/github-markdown-dark.css';
 import '../styles/customMarkdown.scss';
 import { LANGUAGE_NATIVE_NAMES } from '../utils/supportedLanguages';
+import * as favoriteStorage from '../storage/favoriteStorage';
+import * as fs from './fileSystemEntry';
+import { openFavoriteFolderModal } from './newFavoriteModal';
+import { showToast } from '../utils/toast';
 
 const SIDEBAR_TOOL_CLASS = 'poe2-sidebar-tool-button';
 const SIDEBAR_TOOL_ICON_CLASS = 'poe2-sidebar-tool-icon';
@@ -17,6 +22,8 @@ const icon_toggle_left = chrome.runtime.getURL('assets/expand_circle_left_24dp_E
 const icon_toggle_right = chrome.runtime.getURL('assets/expand_circle_right_24dp_E9E5DE.svg');
 const icon_notice = chrome.runtime.getURL('assets/mail_24dp_E9E5DE.svg');
 const icon_notice_unread = chrome.runtime.getURL('assets/mail_asterisk_24dp_E9E5DE.svg');
+const icon_unstar = chrome.runtime.getURL('assets/unstar_24dp_000000.svg');
+const icon_star = chrome.runtime.getURL('assets/star_24dp_FFD700.svg');
 
 let isCollapsed = false;
 let isNoticeUnread = await settingStorage.isNoticeUnread();
@@ -95,6 +102,54 @@ const sidebarTools: SidebarTool[] = [
       if (isNoticeUnread) {
         buttonContext.icon.classList.add('start-flash-and-hold');
       }
+    }
+  },
+  {
+    id: 'poe2-tool-favorite-add-button',
+    iconUrl: icon_unstar,
+    description: getMessage('sidebar_tool_favorite_add_button_description'),
+    onClick: async () => {
+      openFavoriteModal();
+    },
+    onRender: async (buttonContext) => {
+      let url = window.location.href;
+      function updateFavoriteIcon() {
+        let id;
+        try {
+          id = api.getSearchHistoryFromUrl(url).id;
+        } catch {
+          buttonContext.icon.src = icon_unstar;
+          return;
+        }
+
+        favoriteStorage.getAll().then(favorites => {
+          const icon = buttonContext.icon;
+
+          favoriteStorage.existsByMetadataId(id, Promise.resolve(favorites))
+            .then(exists => {
+              icon.src = exists ? icon_star : icon_unstar;
+              console.info(`Favorite add button rendered. Metadata ID: ${id}, Exists in favorites: ${exists}`);
+            });
+
+          favoriteStorage.addOnChangeListener(
+            (updatedFavorites) => {
+              favoriteStorage.existsByMetadataId(id, Promise.resolve(updatedFavorites))
+                .then(exists => icon.src = exists ? icon_star : icon_unstar);
+            }
+          );
+        });
+      }
+
+      updateFavoriteIcon();
+
+      //url 변경 감지
+      new MutationObserver(() => {
+        if (window.location.href === url) {
+          return;
+        }
+        url = window.location.href;
+        updateFavoriteIcon();
+      }).observe(document.body, { childList: true, subtree: true } );
     }
   }
 ];
@@ -199,7 +254,7 @@ async function noticeDiv(): Promise<HTMLDivElement> {
           link.title = href;
           link.href = link.href.replace(link.href, '');
 
-          console.info(`Binding notice link: ${href}`);
+          // console.info(`Binding notice link: ${href}`);
           link.onclick = (e) => {
             e.preventDefault();
             if (href) bindNotice(href, true);
@@ -247,5 +302,48 @@ async function noticeUrl(lang?: string): Promise<string> {
   }
 
   return `https://nerdhead-lab.github.io/POE2-Trade-Butler/notice/${lang}/notice.md`;
+}
+
+function openFavoriteModal(): void {
+  const url = window.location.href;
+  // const id = api.getSearchHistoryFromUrl(url).id;
+  let id: string;
+  try {
+    id = api.getSearchHistoryFromUrl(url).id;
+  } catch (error) {
+    if (error instanceof Error) {
+      showToast(getMessage('toast_favorite_add_error'), '#f00');
+    } else {
+      showToast(getMessage('toast_favorite_add_unknown_error'), '#f00');
+    }
+  }
+
+  try {
+    favoriteStorage
+      .getAll()
+      .then(favorites => {
+        return favorites
+          .filter(fav => fav.id === id)
+          .map(fav => fs.getPath(favorites, fav));
+      })
+      .then(favoritesPath => {
+        if (favoritesPath.length > 0) {
+          const message = getMessage(
+            'already_in_favorites',
+            favoritesPath.map(path => `- ${path}`).join('\n')
+          );
+          if (!confirm(message)) {
+            return;
+          }
+        }
+        return openFavoriteFolderModal({id, url});
+      });
+  } catch (error) {
+    if (error instanceof Error) {
+      showToast(getMessage('toast_favorite_add_error', error.message), '#f00');
+    } else {
+      showToast(getMessage('toast_favorite_add_unknown_error'), '#f00');
+    }
+  }
 }
 

@@ -175,13 +175,10 @@ export function renderSidebar(container: HTMLElement): void {
   const addFavoriteButton = sidebar.querySelector<HTMLButtonElement>(
     '#add-favorite'
   ) as HTMLButtonElement;
-  attachCreateFavoriteEvent(addFavoriteButton, () => {
-    const searchHistoryFromUrl = api.getSearchHistoryFromUrl(window.location.href);
 
-    return {
-      id: searchHistoryFromUrl.id,
-      url: searchHistoryFromUrl.url
-    };
+  addFavoriteButton.addEventListener('click', e => {
+    e.stopPropagation();
+    void openFavoriteFolderModal();
   });
 
   void renderSidebarTools();
@@ -622,11 +619,11 @@ export function attachCreateFavoriteEvent(
               return;
             }
           }
-          return openFavoriteFolderModal(entry.id, entry.url);
+          return openFavoriteFolderModal({id: entry.id, url: entry.url});
         });
     } catch (error) {
       if (error instanceof Error) {
-        showToast(getMessage('toast_favorite_add_error', error.message), '#f00');
+        showToast(getMessage('toast_favorite_add_error'), '#f00');
       } else {
         showToast(getMessage('toast_favorite_add_unknown_error'), '#f00');
       }
