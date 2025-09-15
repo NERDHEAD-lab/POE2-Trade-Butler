@@ -41,7 +41,10 @@ Promise.resolve()
                 headers: lastModified && !forceFetch ? { 'If-Modified-Since': lastModified } : {},
               });
 
-              if (response.status === 304) return { data: marked.parse(content, { breaks: true }) as string };
+              if (response.status === 304) {
+                console.info(`Markdown not modified since last fetch. Using cached content for ${url}`);
+                return { data: marked.parse(content, { breaks: true }) as string };
+              }
 
               if (!response.ok) {
                 throw new Error(`Network response was not ok: ${response.statusText}`);
@@ -82,38 +85,45 @@ Promise.resolve()
       void previewStorage.deleteIfOrphaned(deletedId, 'favorite');
     });
 
-    const defaultIcon = {
-      '16': './assets/icon.png',
-      '128': './assets/icon(128x128).png'
-    };
-
-    const devIcon = {
-      '16': './assets/icon-dev.png',
-      '128': './assets/icon-dev(128x128).png'
-    };
-
     function alertVersion() {
-      getCachedCheckVersion().then(result => {
-        if (result.versionType === 'NEW_VERSION_AVAILABLE') {
-          void chrome.action.setBadgeText({ text: '🔄' });
-          void chrome.action.setBadgeBackgroundColor({ color: '#ff9800' });
-        } else if (result.versionType === 'DEV') {
-          void chrome.action.setBadgeText({ text: '' });
-          void chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
-          void chrome.action.setIcon({ path: devIcon });
-        } else {
-          void chrome.action.setBadgeText({ text: '' });
-          void chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
-          void chrome.action.setIcon({ path: defaultIcon });
-        }
-        console.info(
-          `Version check completed: ${result.installedVersion} (Latest: ${result.latestVersion})`
-        );
-      });
+      const defaultIcon = {
+        '16': './assets/icon.png',
+        '128': './assets/icon(128x128).png'
+      };
+
+      const devIcon = {
+        '16': './assets/icon-dev.png',
+        '128': './assets/icon-dev(128x128).png'
+      };
+
+      getCachedCheckVersion()
+        .then(result => {
+          if (result.versionType === 'NEW_VERSION_AVAILABLE') {
+            void chrome.action.setBadgeText({ text: '🔄' });
+            void chrome.action.setBadgeBackgroundColor({ color: '#ff9800' });
+          } else if (result.versionType === 'DEV') {
+            void chrome.action.setBadgeText({ text: '' });
+            void chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
+            void chrome.action.setIcon({ path: devIcon });
+          } else {
+            void chrome.action.setBadgeText({ text: '' });
+            void chrome.action.setBadgeBackgroundColor({ color: '#4caf50' });
+            void chrome.action.setIcon({ path: defaultIcon });
+          }
+          console.info(
+            `Version check completed: ${result.installedVersion} (Latest: ${result.latestVersion})`
+          );
+        });
     }
 
     chrome.runtime.onStartup.addListener(() => {
       alertVersion();
+
+      storageUsage.usageInfoAll()
+        .then(usageInfos => console.log('Storage usage information:', usageInfos))
+        .catch(error => {
+          console.error('Error retrieving storage usage information:', error);
+        });
     });
 
     chrome.runtime.onInstalled.addListener(details => {
@@ -127,11 +137,4 @@ Promise.resolve()
       console.log(`Update available: ${e.version}`);
       chrome.runtime.reload();
     });
-
-    alertVersion();
-  })
-  .then(() => storageUsage.usageInfoAll())
-  .then(usageInfos => console.log('Storage usage information:', usageInfos))
-  .catch(error => {
-    console.error('Error during background script initialization:', error);
   });
