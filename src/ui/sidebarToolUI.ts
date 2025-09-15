@@ -2,7 +2,7 @@ import * as settingStorage from '../storage/settingStorage';
 import { POE2_CONTENT_WRAPPER_ID, POE2_SIDEBAR_ID } from '../components/sidebar';
 import { getMessage } from '../utils/_locale';
 import * as api from '../utils/api';
-import { showModal } from '../utils/api';
+import { ping, showModal } from '../utils/api';
 
 import '../styles/sidebarTools.scss';
 import 'github-markdown-css/github-markdown-dark.css';
@@ -86,6 +86,11 @@ const sidebarTools: SidebarTool[] = [
       const lang = await settingStorage.getLanguage();
       const url = await noticeUrl(lang);
       const noticeContext = await settingStorage.getNoticeContext(url);
+
+      await ping().catch((error) => {
+        console.warn(error);
+        return;
+      });
 
       await chrome.runtime.sendMessage({ type: 'FETCH_MARKDOWN', url: await noticeUrl() });
       const updatedNoticeContext = await settingStorage.getNoticeContext(url);
@@ -227,6 +232,10 @@ async function noticeDiv(): Promise<HTMLDivElement> {
 
   async function bindNotice(url: string, forceFetch = false): Promise<void> {
     try {
+      await ping().catch((error) => {
+        console.warn(error);
+        return;
+      });
       const response = await chrome.runtime.sendMessage({ type: 'FETCH_MARKDOWN', url, forceFetch });
       if (response.error) {
         throw new Error(response.error);

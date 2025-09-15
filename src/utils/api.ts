@@ -275,3 +275,23 @@ export function showModal(options: ModalOptions): void {
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
 }
+
+export function ping(): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    try {
+      const port = chrome.runtime.connect({ name: 'ping' });
+
+      port.onDisconnect.addListener(() => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+        }
+      });
+      port.disconnect();
+      // console.info("Connection successful");
+      resolve();
+    } catch (error) {
+      console.error("Connection failed:", error);
+      reject(error);
+    }
+  });
+}

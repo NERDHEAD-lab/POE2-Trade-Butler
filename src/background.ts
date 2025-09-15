@@ -12,6 +12,17 @@ Promise.resolve()
   .then(() => legacy.executeLegacyVersionMigrations())
   .then(() => previewStorage.cleanExpiredOrphanSnapshots())
   .then(() => {
+    // ping
+    chrome.runtime.onConnect.addListener(port => {
+      if (port.name === 'ping') {
+        port.onMessage.addListener(msg => {
+          if (msg === 'PING') {
+            port.postMessage('PONG');
+          }
+        });
+      }
+    });
+
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === 'RELOAD_EXTENSION') {
         chrome.runtime.reload();
