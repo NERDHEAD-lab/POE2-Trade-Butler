@@ -215,6 +215,12 @@ export function getPreviewOverlayEnabled(): Promise<boolean> {
   return previewOverlayEnabledConfig.get();
 }
 
+export function addPreviewOverlayEnabledChangeListener(
+  listener: (newValue: boolean, oldValue: boolean) => void
+): void {
+  previewOverlayEnabledConfig.addOnChangeListener(listener);
+}
+
 // NoticeContext
 export type NoticeContext = {
   lastModified: string;

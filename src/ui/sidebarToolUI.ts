@@ -22,6 +22,8 @@ const icon_toggle_left = chrome.runtime.getURL('assets/expand_circle_left_24dp_E
 const icon_toggle_right = chrome.runtime.getURL('assets/expand_circle_right_24dp_E9E5DE.svg');
 const icon_notice = chrome.runtime.getURL('assets/mail_24dp_E9E5DE.svg');
 const icon_notice_unread = chrome.runtime.getURL('assets/mail_asterisk_24dp_E9E5DE.svg');
+const icon_visibility = chrome.runtime.getURL('assets/visibility_24dp_E9E5DE.svg');
+const icon_visibility_off = chrome.runtime.getURL('assets/visibility_off_24dp_E9E5DE.svg');
 const icon_unstar = chrome.runtime.getURL('assets/unstar_24dp_000000.svg');
 const icon_star = chrome.runtime.getURL('assets/star_24dp_FFD700.svg');
 
@@ -107,6 +109,33 @@ const sidebarTools: SidebarTool[] = [
       if (isNoticeUnread) {
         buttonContext.icon.classList.add('start-flash-and-hold');
       }
+    }
+  },
+  {
+    id: 'poe2-tool-preview-toggle-button',
+    iconUrl: icon_visibility,
+    description: getMessage('sidebar_tool_preview_toggle_button_description'),
+    onClick: async (buttonContext) => {
+      const icon = buttonContext.icon;
+
+      const isEnabled = await settingStorage.getPreviewOverlayEnabled();
+      await settingStorage.setPreviewOverlayEnabled(!isEnabled);
+
+      if (isEnabled) {
+        showToast(getMessage('toast_preview_overlay_disabled'));
+      } else {
+        showToast(getMessage('toast_preview_overlay_enabled'));
+      }
+
+      icon.src = isEnabled ? icon_visibility_off : icon_visibility;
+    },
+    onRender: async (buttonContext) => {
+      const isEnabled = await settingStorage.getPreviewOverlayEnabled();
+      buttonContext.icon.src = isEnabled ? icon_visibility : icon_visibility_off;
+
+      settingStorage.addPreviewOverlayEnabledChangeListener((newValue) => {
+        buttonContext.icon.src = newValue ? icon_visibility : icon_visibility_off;
+      });
     }
   },
   {

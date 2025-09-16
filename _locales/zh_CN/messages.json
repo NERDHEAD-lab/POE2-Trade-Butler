@@ -659,5 +659,9 @@
   "sidebar_tool_favorite_add_button_description": {
     "message": "添加到收藏夹",
     "description": "Description for the sidebar tool favorite add button"
+  },
+  "toast_preview_overlay_disabled": {
+    "message": "交易预览已禁用。",
+    "description": "Toast message when trade preview overlay is disabled"
   }
 }

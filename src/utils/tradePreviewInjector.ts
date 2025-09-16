@@ -58,58 +58,73 @@ export class TradePreviewer {
     previewStoragePromise: Promise<Record<string, PreviewPanelSnapshot>>,
     appendPreviewIconTarget?: HTMLElement
   ): void {
-    settings.getPreviewOverlayEnabled()
-      .then(enabled => {
-        if (!enabled) return;
+    TradePreviewer.waitWhileCurrentPanelExists()
+      .then(() => {
+        const previewPromise = previewStorage.getById(id, previewStoragePromise);
 
-        TradePreviewer.waitWhileCurrentPanelExists()
-          .then(() => {
-            const previewPromise = previewStorage.getById(id, previewStoragePromise);
+        target.addEventListener('mouseenter', () => {
+          settings.getPreviewOverlayEnabled()
+            .then(enabled => {
+              if (!enabled) return;
 
-            target.addEventListener('mouseenter', () => {
               target.classList.add('hovered');
               previewPromise.then(previewInfo => {
                 if (!previewInfo) return;
                 TradePreviewer.showAsPreviewPanel(previewInfo);
               });
-            });
+            })
+        });
 
-            target.addEventListener('mouseleave', () => {
+        target.addEventListener('mouseleave', () => {
+          settings.getPreviewOverlayEnabled()
+            .then(enabled => {
+              if (!enabled) return;
+
               target.classList.remove('hovered');
               TradePreviewer.hidePreviewPanel();
             });
+        });
 
-            // currentPanel에 마우스가 들어오면 미리보기 제거
-            // TradePreviewer.currentPanel?.addEventListener('mouseenter', () => {
-            document
-              .querySelector('div#poe2-content-wrapper div.wrapper')
-              ?.addEventListener('mouseenter', () => {
-                target.classList.remove('hovered');
-                TradePreviewer.hidePreviewPanel();
-              });
-
-            previewPromise.then(previewInfo => {
-              if (!appendPreviewIconTarget) return;
-              const icon = document.createElement('span');
-              icon.className = 'preview-icon';
-              icon.textContent = '🔍';
-              icon.style.marginLeft = '1px';
-              icon.style.fontSize = '0.8em';
-              icon.style.verticalAlign = 'middle';
-              if (!previewInfo) {
-                icon.style.opacity = '0.1';
-                icon.style.color = 'gray';
-              }
-
-              appendPreviewIconTarget.insertAdjacentElement('afterend', icon);
-            });
-          })
-          .catch(error => {
-            console.debug(getMessage('error_wait_for_injector', error.toString()));
+        // currentPanel에 마우스가 들어오면 미리보기 제거
+        // TradePreviewer.currentPanel?.addEventListener('mouseenter', () => {
+        document
+          .querySelector('div#poe2-content-wrapper div.wrapper')
+          ?.addEventListener('mouseenter', () => {
+            target.classList.remove('hovered');
+            TradePreviewer.hidePreviewPanel();
           });
-      }
-    )
 
+        previewPromise.then(previewInfo => {
+          if (!appendPreviewIconTarget) return;
+          const icon = document.createElement('span');
+          icon.className = 'preview-icon';
+          icon.textContent = '🔍';
+          icon.style.marginLeft = '1px';
+          icon.style.fontSize = '0.8em';
+          icon.style.verticalAlign = 'middle';
+          if (!previewInfo) {
+            icon.style.opacity = '0.1';
+            icon.style.color = 'gray';
+          }
+
+          settings.addPreviewOverlayEnabledChangeListener((enabled => {
+            if (enabled) {
+              icon.style.display = '';
+            } else {
+              icon.style.display = 'none';
+            }
+          }));
+
+          settings.getPreviewOverlayEnabled().then(enabled => {
+            if (!enabled) icon.style.display = 'none';
+          });
+
+          appendPreviewIconTarget.insertAdjacentElement('afterend', icon);
+        });
+      })
+      .catch(error => {
+        console.debug(getMessage('error_wait_for_injector', error.toString()));
+      });
   }
 
   private static showAsPreviewPanel(snapshot: PreviewPanelSnapshot): void {
