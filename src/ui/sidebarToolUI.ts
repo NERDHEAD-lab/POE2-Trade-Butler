@@ -363,6 +363,7 @@ function openFavoriteModal(): void {
     } else {
       showToast(getMessage('toast_favorite_add_unknown_error'), '#f00');
     }
+    return;
   }
 
   try {
