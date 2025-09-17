@@ -281,14 +281,19 @@ export function ping(): Promise<void> {
     try {
       const port = chrome.runtime.connect({ name: 'ping' });
 
-      port.onDisconnect.addListener(() => {
-        if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message));
+      port.onMessage.addListener((msg) => {
+        if (msg.type === 'PONG') {
+          port.disconnect();
+          console.info("Connection successful");
+          resolve();
         }
       });
-      port.disconnect();
-      // console.info("Connection successful");
-      resolve();
+
+      port.onDisconnect.addListener(() => {
+        if (chrome.runtime.lastError) {
+          reject(new Error("Ping failed: " + chrome.runtime.lastError.message));
+        }
+      });
     } catch (error) {
       console.error("Connection failed:", error);
       reject(error);

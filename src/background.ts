@@ -15,11 +15,7 @@ Promise.resolve()
     // ping
     chrome.runtime.onConnect.addListener(port => {
       if (port.name === 'ping') {
-        port.onMessage.addListener(msg => {
-          if (msg === 'PING') {
-            port.postMessage('PONG');
-          }
-        });
+            port.postMessage({type: 'PONG' });
       }
     });
 

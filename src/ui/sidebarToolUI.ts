@@ -89,11 +89,7 @@ const sidebarTools: SidebarTool[] = [
       const url = await noticeUrl(lang);
       const noticeContext = await settingStorage.getNoticeContext(url);
 
-      await ping().catch((error) => {
-        console.warn(error);
-        return;
-      });
-
+      await ping();
       await chrome.runtime.sendMessage({ type: 'FETCH_MARKDOWN', url: await noticeUrl() });
       const updatedNoticeContext = await settingStorage.getNoticeContext(url);
 
@@ -277,10 +273,7 @@ async function noticeDiv(): Promise<HTMLDivElement> {
 
   async function bindNotice(url: string, forceFetch = false): Promise<void> {
     try {
-      await ping().catch((error) => {
-        console.warn(error);
-        return;
-      });
+      await ping();
       const response = await chrome.runtime.sendMessage({ type: 'FETCH_MARKDOWN', url, forceFetch });
       if (response.error) {
         throw new Error(response.error);
