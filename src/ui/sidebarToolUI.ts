@@ -185,6 +185,22 @@ const sidebarTools: SidebarTool[] = [
         updateFavoriteIcon();
       }).observe(document.body, { childList: true, subtree: true } );
     }
+  },
+  {
+  //   oauth test button
+    id: 'poe2-tool-oauth-test-button',
+    iconUrl: chrome.runtime.getURL('assets/icon.png'),
+    description: 'OAuth Test Button',
+    onClick: async () => {
+      const response = await chrome.runtime.sendMessage({ type: 'GET_AUTH_TOKEN' });
+      if (response.error) {
+        showToast('OAuth Error: ' + response.error, '#f00');
+        return;
+      }
+      const token = response.token as string;
+      showToast('OAuth Token: ' + token, '#0f0');
+      console.log('OAuth Token:', token);
+    }
   }
 ];
 

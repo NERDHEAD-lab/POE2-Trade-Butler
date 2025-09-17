@@ -15,9 +15,16 @@
   "background": {
     "service_worker": "background.js"
   },
+  "oauth2": {
+    "client_id": "81773434404-g7c224o55t7am8n88bcrs6jpem9nl150.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.file"
+    ]
+  },
   "permissions": [
     "storage",
-    "unlimitedStorage"
+    "unlimitedStorage",
+    "identity"
   ],
   "web_accessible_resources": [
     {
