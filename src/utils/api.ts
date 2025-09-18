@@ -276,7 +276,13 @@ export function showModal(options: ModalOptions): void {
   document.body.appendChild(overlay);
 }
 
-export function ping(): Promise<void> {
+export function ping(retryCount?:number): Promise<void> {
+  if (!retryCount) {
+    retryCount = 3;
+  } else if (retryCount <= 0) {
+    return Promise.reject(new Error("Ping failed: Maximum retry attempts reached"));
+  }
+
   return new Promise<void>((resolve, reject) => {
     try {
       const port = chrome.runtime.connect({ name: 'ping' });
@@ -291,12 +297,18 @@ export function ping(): Promise<void> {
 
       port.onDisconnect.addListener(() => {
         if (chrome.runtime.lastError) {
-          reject(new Error("Ping failed: " + chrome.runtime.lastError.message));
+          // reject(new Error("Ping failed: " + chrome.runtime.lastError.message));
+          console.info("Ping failed, retrying...");
+          setTimeout(() => {
+            ping(retryCount! - 1).then(resolve).catch(reject);
+          }, 500);
         }
       });
     } catch (error) {
-      console.error("Connection failed:", error);
-      reject(error);
+      console.error("Ping error:", error);
+      setTimeout(() => {
+        ping(retryCount! - 1).then(resolve).catch(reject);
+      }, 500);
     }
   });
 }
