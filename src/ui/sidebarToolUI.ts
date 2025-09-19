@@ -2,7 +2,8 @@ import * as settingStorage from '../storage/settingStorage';
 import { POE2_CONTENT_WRAPPER_ID, POE2_SIDEBAR_ID } from '../components/sidebar';
 import { getMessage } from '../utils/_locale';
 import * as api from '../utils/api';
-import { ping, showModal } from '../utils/api';
+import { ping } from '../utils/ping';
+import { showModal } from '../utils/api';
 
 import '../styles/sidebarTools.scss';
 import 'github-markdown-css/github-markdown-dark.css';

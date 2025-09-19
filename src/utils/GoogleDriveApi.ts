@@ -1,4 +1,4 @@
-import { ping } from './api';
+import { ping } from './ping';
 
 class GoogleDriveApi {
   private static async getAccessToken(): Promise<string> {
