@@ -12,6 +12,7 @@ import * as favoriteStorage from '../storage/favoriteStorage';
 import * as fs from './fileSystemEntry';
 import { openFavoriteFolderModal } from './newFavoriteModal';
 import { showToast } from '../utils/toast';
+import { GoogleDriveApi } from '../utils/GoogleDriveApi';
 
 const SIDEBAR_TOOL_CLASS = 'poe2-sidebar-tool-button';
 const SIDEBAR_TOOL_ICON_CLASS = 'poe2-sidebar-tool-icon';
@@ -188,89 +189,19 @@ const sidebarTools: SidebarTool[] = [
     iconUrl: chrome.runtime.getURL('assets/icon.png'),
     description: 'OAuth Test Button',
     onClick: async () => {
-      const response = await chrome.runtime.sendMessage({ type: 'GET_AUTH_TOKEN' });
-      if (response.error) {
-        showToast('OAuth Error: ' + response.error, '#f00');
-        return;
-      }
-      const token = response.token as string;
-      showToast('OAuth Token: ' + token, '#0f0');
-      console.log('OAuth Token:', token);
-
-      // Test googleDrive call count each click (get and set)
-      async function findFile(token: string, name: string): Promise<string | null> {
-        const response = await fetch('https://www.googleapis.com/drive/v3/files?q=' + encodeURIComponent(`name='${name}' and trashed=false`), {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        });
-        const data = await response.json();
-        if (data.files && data.files.length > 0) {
-          return data.files[0].id;
-        } else {
-          return null;
-        }
-      }
-
-      async function createFile(token: string, name: string, content: string): Promise<string> {
-        const response = await fetch('https://www.googleapis.com/drive/v3/files', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            name: name,
-            mimeType: 'application/json'
-          })
-        });
-        const data = await response.json();
-        const fileId = data.id;
-        const response_1 = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
-          method: 'PATCH',
-          headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json'
-          },
-          body: content
-        });
-        await response_1.json();
-        return fileId;
-      }
-
-      async function readFile(token: string, fileId: string): Promise<string> {
-        const response = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        });
-        return await response.text();
-      }
-
-      async function updateFile(token: string, fileId: string, content: string): Promise<void> {
-        await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
-          method: 'PATCH',
-          headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json'
-          },
-          body: content
-        });
-      }
-
       const testFileName = 'poe2-trade-butler-test-file.json';
       const testFileContent1 = JSON.stringify({ test: 'This is a test file.', number: 1 });
 
-      let fileId = await findFile(token, testFileName);
+      let fileId = await GoogleDriveApi.findFile(testFileName);
       if (!fileId) {
         console.log('Test file not found. Creating new file.');
-        fileId = await createFile(token, testFileName, testFileContent1);
+        fileId = await GoogleDriveApi.createFile(testFileName, testFileContent1);
         console.log('Test file created with ID:', fileId);
       } else {
         console.log('Test file found with ID:', fileId);
       }
 
-      let content = await readFile(token, fileId);
+      let content = await GoogleDriveApi.readFile(fileId);
       console.log('Test file content:', content);
 
       // content number + 1
@@ -278,10 +209,10 @@ const sidebarTools: SidebarTool[] = [
       const newNumber = (parsedContent.number || 0) + 1;
       const testFileContent2 = JSON.stringify({ test: 'This is a test file.', number: newNumber });
 
-      await updateFile(token, fileId, testFileContent2);
+      await GoogleDriveApi.updateFile(fileId, testFileContent2);
       console.log('Test file updated.');
 
-      content = await readFile(token, fileId);
+      content = await GoogleDriveApi.readFile(fileId);
       console.log('Updated test file content:', content);
     }
 

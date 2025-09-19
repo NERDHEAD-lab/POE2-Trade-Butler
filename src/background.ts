@@ -23,16 +23,29 @@ Promise.resolve()
       if (message.type === 'GET_AUTH_TOKEN') {
         chrome.identity.getAuthToken({ interactive: true }, (token) => {
           if (chrome.runtime.lastError) {
-            // 에러가 발생하면 에러 메시지를 응답으로 보냄
             sendResponse({ error: chrome.runtime.lastError.message });
             return;
           }
-          // 성공하면 토큰을 응답으로 보냄
           sendResponse({ token: token });
         });
 
-        // sendResponse를 비동기적으로 사용하려면 true를 반환해야 합니다.
         return true;
+      } else if (message.type === 'REMOVE_CACHED_ACCESS_TOKEN') {
+        chrome.identity.getAuthToken({ interactive: false }, (token) => {
+          if (chrome.runtime.lastError) {
+            sendResponse({ error: chrome.runtime.lastError.message });
+            return;
+          }
+          if (token) {
+            chrome.identity.removeCachedAuthToken({ token: token }, () => {
+              if (chrome.runtime.lastError) {
+                sendResponse({ error: chrome.runtime.lastError.message });
+                return;
+              }
+            });
+          }
+        });
+        sendResponse({ success: true });
       } else if (message.type === 'RELOAD_EXTENSION') {
         chrome.runtime.reload();
       } else if (message.type === 'FETCH_LSCACHE') {
