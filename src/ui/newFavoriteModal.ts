@@ -38,6 +38,8 @@ export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void
             ctx.cancel();
           }
         });
+
+        nameInput?.focus();
       }
 
       return { favoriteUI, wrapper, onRender: modalConsumer };
