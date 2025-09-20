@@ -41,7 +41,7 @@ class GoogleDriveApi {
     return data.files && data.files.length > 0 ? data.files[0].id : null;
   }
 
-  static async createFile(name: string, content: string): Promise<{ fileId: string, etag: string }> {
+  static async createFile(name: string, content: string): Promise<string> {
     const metaData = { name: name, mimeType: 'application/json' };
     const formData = new FormData();
     formData.append('metadata', new Blob([JSON.stringify(metaData)], { type: 'application/json' }));
@@ -53,24 +53,20 @@ class GoogleDriveApi {
     });
 
     const data = await response.json();
-    return { fileId: data.id, etag: data.etag };
+    return data.id;
   }
 
-  static async readFile(fileId: string): Promise<{ content: string; etag: string | null }> {
+  static async readFile(fileId: string): Promise<string> {
     const response = await this.fetchWithAuth(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`);
-    const content = await response.text();
-    const etag = response.headers.get('ETag');
-    return { content, etag };
+    return response.text();
   }
 
-  static async updateFile(fileId: string, content: string): Promise<{ etag: string | null }> {
-    const response = await this.fetchWithAuth(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media&fields=etag`, {
+  static async updateFile(fileId: string, content: string): Promise<void> {
+    await this.fetchWithAuth(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: content,
     });
-    const data = await response.json();
-    return { etag: data.etag };
   }
 }
 
