@@ -1,4 +1,4 @@
-import { ButtonListener, ModalConsumer, showModal } from '../utils/api';
+import { ButtonListener, OnRenderConsumer, showModal } from '../utils/api';
 import { showToast } from '../utils/toast';
 import * as favoriteStorage from '../storage/favoriteStorage';
 import * as folderUI from './favoriteFileSystemUI';
@@ -25,7 +25,7 @@ export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void
       }
       const favoriteUI = await folderUI.loadFavoriteFileSystemUI(wrapper, false);
 
-      const modalConsumer: ModalConsumer = (ctx) => {
+      const modalConsumer: OnRenderConsumer = (ctx) => {
         nameInput?.addEventListener('keydown', (event) => {
           if (event.key === 'Enter') {
             ctx.confirm();
@@ -40,9 +40,9 @@ export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void
         });
       }
 
-      return { favoriteUI, wrapper, modalConsumer };
+      return { favoriteUI, wrapper, onRender: modalConsumer };
     })
-    .then(({ favoriteUI, wrapper, modalConsumer }) => {
+    .then(({ favoriteUI, wrapper, onRender }) => {
       showModal({
         title: getMessage('modal_add_to_favorite_folder'),
         div: wrapper,
@@ -127,7 +127,7 @@ export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void
             }
           }
         ],
-        consumer: modalConsumer
+        onRender: onRender
       });
     });
 }
