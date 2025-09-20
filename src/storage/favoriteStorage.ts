@@ -61,10 +61,12 @@ export function removeOnChangeListener(
 
 export function addOnDeletedListener(listener: (deletedId: string) => void): void {
   favoriteStorage.addOnChangeListener((newValue, oldValue) => {
-    const newIds = new Set(newValue.map(entry => entry.id));
-    const oldIds = new Set(oldValue.map(entry => entry.id));
+    const newIds = new Set((newValue || []).map(entry => entry.id));
+    const oldIds = new Set((oldValue || []).map(entry => entry.id));
 
     const deletedIds = Array.from(oldIds).filter(id => !newIds.has(id));
-    deletedIds.forEach(deletedId => listener(deletedId));
+    if (deletedIds.length > 0) {
+      deletedIds.forEach(deletedId => listener(deletedId));
+    }
   });
 }
