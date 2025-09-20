@@ -1,4 +1,5 @@
 import { ChunkifyUtil } from '../utils/ChunkifyUtil';
+import { GoogleDriveApi } from '../utils/GoogleDriveApi';
 
 const StorageTypeEnum: Record<'local' | 'sync', StorageTypeInfo> = {
   local: {
@@ -20,7 +21,7 @@ interface StorageTypeInfo {
   description: string;
 }
 
-type StorageStrategyType = 'default' | 'chunkedArray';
+type StorageStrategyType = 'default' | 'chunkedArray' | 'googleDrive';
 
 interface StorageStrategy<ENTITY> {
   set(value: ENTITY): Promise<void>;
@@ -161,6 +162,91 @@ class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
   }
 }
 
+type GoogleDriveStorageHint = { fileId: string; lastModified: string, hash: string };
+
+class GoogleDriveStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
+  private previousEntity : ENTITY | null = null;
+
+  constructor(
+    private type: StorageType,
+    private key: string,
+    private defaultValueSupplier: () => ENTITY
+  ) {}
+
+  private hintKey(key: string): string {
+    return `__gdrive_hint__:${key}`;
+  }
+
+  async set(value: ENTITY): Promise<void> {
+    if (value === null || value === undefined) {
+      throw new Error('Cannot store null or undefined value.');
+    }
+
+    const content = JSON.stringify(value);
+    const newHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(content)).then(buf => {
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    });
+
+    const hint = await get<GoogleDriveStorageHint | null>(this.type, this.hintKey(this.key), null);
+
+    if (hint && hint.hash === newHash) {
+      return;
+    }
+
+
+    let fileId = hint?.fileId;
+    try {
+      if (fileId) {
+        const previousContent = await GoogleDriveApi.readFile(fileId);
+        this.previousEntity = JSON.parse(previousContent) as ENTITY;
+        await GoogleDriveApi.updateFile(fileId, content);
+      } else {
+        fileId = await GoogleDriveApi.createFile(`${this.key}.json`, content);
+      }
+      const newHint: GoogleDriveStorageHint = { fileId, lastModified: new Date().toISOString(), hash: newHash  };
+      await set(this.type, this.hintKey(this.key), newHint);
+    } catch (e) {
+      console.error('Failed to store data to Google Drive:', e);
+      throw e;
+    }
+  }
+
+  async get(): Promise<ENTITY> {
+    const hint = await get<GoogleDriveStorageHint | null>(this.type, this.hintKey(this.key), null);
+    if (!hint || !hint.fileId) {
+      return this.defaultValueSupplier();
+    }
+
+    try {
+      const content = await GoogleDriveApi.readFile(hint.fileId);
+      return JSON.parse(content) as ENTITY;
+    } catch (e) {
+      console.error('Failed to read data from Google Drive:', e);
+      return this.defaultValueSupplier();
+    }
+  }
+
+  private wrappedListenerMap = new WeakMap<
+    (newValue: ENTITY, oldValue: ENTITY) => void,
+    () => void
+  >();
+
+  addOnChangeListener(listener: (newValue: ENTITY, oldValue: ENTITY) => void): void {
+    const listenerWrapper = async () => {
+      const newValue = await this.get();
+      const oldValue = this.previousEntity || this.defaultValueSupplier();
+      listener(newValue, oldValue);
+    }
+    addOnChangeListener(this.type, this.hintKey(this.key), listenerWrapper);
+    this.wrappedListenerMap.set(listener, listenerWrapper);
+  }
+
+  removeOnChangeListener(listener: (newValue: ENTITY, oldValue: ENTITY) => void): void {
+    removeOnChangeListener(this.type, this.wrappedListenerMap.get(listener)!);
+    this.wrappedListenerMap.delete(listener);
+  }
+}
+
 export function createStorageStrategy<ENTITY>(
   type: StorageType,
   key: string,
@@ -173,6 +259,8 @@ export function createStorageStrategy<ENTITY>(
     case 'chunkedArray':
       //Type 'ENTITY' does not satisfy the constraint 'unknown[]'.
       return new ChunkedArrayStorageStrategy<ENTITY>(type, key, defaultValueSupplier);
+    case 'googleDrive':
+      return new GoogleDriveStorageStrategy<ENTITY>(type, key, defaultValueSupplier);
     default:
       throw new Error(`Unknown storage strategy type: ${strategyType}`);
   }

@@ -13,7 +13,7 @@ import * as favoriteStorage from '../storage/favoriteStorage';
 import * as fs from './fileSystemEntry';
 import { openFavoriteFolderModal } from './newFavoriteModal';
 import { showToast } from '../utils/toast';
-import { GoogleDriveApi } from '../utils/GoogleDriveApi';
+import * as testStorage from '../storage/testStorage';
 
 const SIDEBAR_TOOL_CLASS = 'poe2-sidebar-tool-button';
 const SIDEBAR_TOOL_ICON_CLASS = 'poe2-sidebar-tool-icon';
@@ -190,31 +190,17 @@ const sidebarTools: SidebarTool[] = [
     iconUrl: chrome.runtime.getURL('assets/icon.png'),
     description: 'OAuth Test Button',
     onClick: async () => {
-      const testFileName = 'poe2-trade-butler-test-file.json';
-      const testFileContent1 = JSON.stringify({ test: 'This is a test file.', number: 1 });
-
-      let fileId = await GoogleDriveApi.findFile(testFileName);
-      if (!fileId) {
-        console.log('Test file not found. Creating new file.');
-        fileId = await GoogleDriveApi.createFile(testFileName, testFileContent1);
-        console.log('Test file created with ID:', fileId);
-      } else {
-        console.log('Test file found with ID:', fileId);
-      }
-
-      let content = await GoogleDriveApi.readFile(fileId);
-      console.log('Test file content:', content);
-
-      // content number + 1
-      const parsedContent = JSON.parse(content);
-      const newNumber = (parsedContent.number || 0) + 1;
-      const testFileContent2 = JSON.stringify({ test: 'This is a test file.', number: newNumber });
-
-      await GoogleDriveApi.updateFile(fileId, testFileContent2);
-      console.log('Test file updated.');
-
-      content = await GoogleDriveApi.readFile(fileId);
-      console.log('Updated test file content:', content);
+      testStorage.get()
+        .then(data => {
+          console.log('Test storage get:', data)
+          return data;
+        })
+        .then(data => {
+          data.number += 1;
+          return testStorage.set(data);
+        })
+      .then(() => testStorage.get())
+      .then(data => console.log('Test storage after increment:', data));
     }
 
   }
