@@ -162,7 +162,7 @@ class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
   }
 }
 
-type GoogleDriveStorageHint = { fileId: string; lastModified: string, hash: string };
+type GoogleDriveStorageHint = { fileId: string; lastModified: string };
 
 class GoogleDriveStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
   private previousEntity : ENTITY | null = null;
@@ -183,27 +183,21 @@ class GoogleDriveStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
     }
 
     const content = JSON.stringify(value);
-    const newHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(content)).then(buf => {
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-    });
-
     const hint = await get<GoogleDriveStorageHint | null>(this.type, this.hintKey(this.key), null);
-
-    if (hint && hint.hash === newHash) {
-      return;
-    }
-
 
     let fileId = hint?.fileId;
     try {
       if (fileId) {
         const previousContent = await GoogleDriveApi.readFile(fileId);
+        if (previousContent === content) {
+          return;
+        }
         this.previousEntity = JSON.parse(previousContent) as ENTITY;
         await GoogleDriveApi.updateFile(fileId, content);
       } else {
         fileId = await GoogleDriveApi.createFile(`${this.key}.json`, content);
       }
-      const newHint: GoogleDriveStorageHint = { fileId, lastModified: new Date().toISOString(), hash: newHash  };
+      const newHint: GoogleDriveStorageHint = { fileId, lastModified: new Date().toISOString() };
       await set(this.type, this.hintKey(this.key), newHint);
     } catch (e) {
       console.error('Failed to store data to Google Drive:', e);
