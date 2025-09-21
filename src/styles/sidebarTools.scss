@@ -18,6 +18,25 @@
   background-color: #666;
 }
 
+.poe2-sidebar-tool-button .spinner {
+  width: 27px;
+  height: 27px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
 @keyframes flash-and-hold-glow {
   0%   { filter: drop-shadow(0 0 0px yellow); }
   12%  { filter: drop-shadow(0 0 8px yellow); }

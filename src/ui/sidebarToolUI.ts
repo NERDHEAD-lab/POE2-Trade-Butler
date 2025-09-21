@@ -189,7 +189,8 @@ const sidebarTools: SidebarTool[] = [
     id: 'poe2-tool-oauth-test-button',
     iconUrl: chrome.runtime.getURL('assets/icon.png'),
     description: 'OAuth Test Button',
-    onClick: async () => {
+    onClick: async (buttonContext) => {
+      buttonContext.lock(true);
       testStorage.get()
         .then(data => {
           console.log('Test storage get:', data)
@@ -199,10 +200,10 @@ const sidebarTools: SidebarTool[] = [
           data.number += 1;
           return testStorage.set(data);
         })
-      .then(() => testStorage.get())
-      .then(data => console.log('Test storage after increment:', data));
+        .then(() => testStorage.get())
+        .then(data => console.log('Test storage after increment:', data))
+        .finally(() => buttonContext.lock(false));
     }
-
   }
 ];
 
@@ -220,6 +221,7 @@ interface ButtonContext {
   icon: HTMLImageElement;
   sidebar: HTMLDivElement;
   wrapper: HTMLDivElement;
+  lock: (locked: boolean) => void;
 }
 
 export async function renderSidebarTools(): Promise<void> {
@@ -257,14 +259,26 @@ export async function renderSidebarTools(): Promise<void> {
     icon.style.height = '100%';
     icon.style.width = '100%';
 
+    const spinnerElement = document.createElement('div');
+    spinnerElement.className = 'spinner';
+    spinnerElement.style.display = 'none';
+    button.appendChild(spinnerElement);
+
+    const lock = (locked: boolean) => {
+      button.disabled = locked;
+      button.style.cursor = locked ? 'not-allowed' : 'pointer';
+
+      spinnerElement.style.display = locked ? 'block' : 'none';
+    }
+
     button.appendChild(icon);
-    button.onclick = () => sidebarTool.onClick({ button, icon, sidebar, wrapper });
+    button.onclick = () => sidebarTool.onClick({ button, icon, sidebar, wrapper, lock });
 
     sidebar.appendChild(button);
     topPosition += spacing;
 
     if (sidebarTool.onRender) {
-      await sidebarTool.onRender({ button, icon, sidebar, wrapper });
+      await sidebarTool.onRender({ button, icon, sidebar, wrapper, lock });
     }
   }
 }
