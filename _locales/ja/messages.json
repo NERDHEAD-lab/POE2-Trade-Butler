@@ -667,5 +667,25 @@
   "toast_preview_overlay_disabled": {
     "message": "トレードプレビューオーバーレイが無効になりました。",
     "description": "Toast message when trade preview overlay is disabled"
+  },
+  "settings_tab_performance": {
+    "message": "パフォーマンス",
+    "description": "Settings tab for performance options"
+  },
+  "settings_option_enable_favorite_gdrive_sync": {
+    "message": "Googleドライブ同期を有効にする",
+    "description": "Settings option to enable Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_description": {
+    "message": "お気に入りフォルダとアイテムをGoogleドライブに同期します。\nこの機能を使用するには、最初に1回Googleアカウントの認証が必要です。\n拡張機能で提供される同期ストレージは100KBに制限されています。\nお気に入りが多い場合や、お気に入りアイテムにメモが含まれている場合、Googleドライブ同期を使用して保存容量を増やすことができます。",
+    "description": "Description for enabling Google Drive sync for favorites"
+  },
+  "confirm_enable_favorite_gdrive_sync": {
+    "message": "Googleドライブ同期を有効にしますか？\nこの操作は既存のお気に入りデータをGoogleドライブに移行します。",
+    "description": "Confirmation message when enabling Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_cancelled": {
+    "message": "Googleドライブ同期の有効化がキャンセルされました。",
+    "description": "Message shown when enabling Google Drive sync for favorites is cancelled"
   }
 }

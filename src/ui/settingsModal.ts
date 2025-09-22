@@ -14,6 +14,7 @@ import {
   Settings, SliderDetailOption
 } from '../utils/settingManager';
 import * as settingStorage from '../storage/settingStorage';
+import * as favoriteStorage from '../storage/favoriteStorage';
 import * as information from './information';
 import * as storageUsage from '../storage/storageUsage';
 
@@ -94,6 +95,32 @@ const settings: Settings = {
             checked: await settingStorage.getPreviewOverlayEnabled(),
             onChangeListener: (checked: boolean) => settingStorage.setPreviewOverlayEnabled(checked)
           } as CheckboxDetailOption
+        }
+      ]
+    },
+    {
+      name: getMessage('settings_tab_performance'),
+      iconUrl: chrome.runtime.getURL('assets/speed_24dp_E9E5DE.svg'),
+      options: [
+        {
+          id: 'enable-favorite-gdrive-sync',
+          name: getMessage('settings_option_enable_favorite_gdrive_sync'),
+          iconUrl: chrome.runtime.getURL('assets/drive_export_24dp_E9E5DE.svg'),
+          description: getMessage('settings_option_enable_favorite_gdrive_sync_description'),
+          optionDetail: {
+            type: 'checkbox',
+            checked: await settingStorage.isFavoriteGDriveSyncEnabled(),
+            onChangeListener: async (checked: boolean) => {
+              if (!checked) return;
+
+              if (!confirm(getMessage('confirm_enable_favorite_gdrive_sync'))) {
+                showToast(getMessage('settings_option_enable_favorite_gdrive_sync_cancelled'));
+                return;
+              }
+              await favoriteStorage.migrateStorageToGoogleDrive();
+            }
+          },
+
         }
       ]
     },

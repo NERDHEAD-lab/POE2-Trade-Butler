@@ -667,5 +667,25 @@
   "toast_preview_overlay_disabled": {
     "message": "交易预览已禁用。",
     "description": "Toast message when trade preview overlay is disabled"
+  },
+  "settings_tab_performance": {
+    "message": "性能",
+    "description": "Settings tab for performance options"
+  },
+  "settings_option_enable_favorite_gdrive_sync": {
+    "message": "启用Google Drive同步收藏夹",
+    "description": "Settings option to enable Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_description": {
+    "message": "将收藏夹文件夹和项目同步到Google Drive。\n首次使用此功能时需要进行Google账户认证。\n扩展程序提供的默认同步存储限制为100KB。\n如果您有大量收藏夹或收藏夹项目包含备注，可以使用Google Drive同步来增加存储容量。",
+    "description": "Description for enabling Google Drive sync for favorites"
+  },
+  "confirm_enable_favorite_gdrive_sync": {
+    "message": "您确定要启用Google Drive同步吗？\n此操作将把现有的收藏夹数据迁移到Google Drive。",
+    "description": "Confirmation message when enabling Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_cancelled": {
+    "message": "已取消启用Google Drive同步。",
+    "description": "Message shown when enabling Google Drive sync for favorites is cancelled"
   }
 }

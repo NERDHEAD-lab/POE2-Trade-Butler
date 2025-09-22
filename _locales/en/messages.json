@@ -667,5 +667,25 @@
   "toast_preview_overlay_disabled": {
     "message": "Trade preview overlay has been disabled.",
     "description": "Toast message when trade preview overlay is disabled"
+  },
+  "settings_tab_performance": {
+    "message": "Performance",
+    "description": "Settings tab for performance options"
+  },
+  "settings_option_enable_favorite_gdrive_sync": {
+    "message": "Enable Google Drive Sync for Favorites",
+    "description": "Settings option to enable Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_description": {
+    "message": "Sync favorite folders and items to Google Drive.\nThis requires initial Google account authentication.\nThe default shared storage provided by the extension is limited to 100KB.\nIf you have many favorites or if favorite items include notes, you can use Google Drive sync to increase storage capacity.",
+    "description": "Description for enabling Google Drive sync for favorites"
+  },
+  "confirm_enable_favorite_gdrive_sync": {
+    "message": "Are you sure you want to enable Google Drive sync?\nThis will migrate your existing favorite data to Google Drive.",
+    "description": "Confirmation message when enabling Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_cancelled": {
+    "message": "Google Drive sync enabling has been cancelled.",
+    "description": "Message shown when enabling Google Drive sync for favorites is cancelled"
   }
 }

@@ -667,5 +667,25 @@
   "toast_preview_overlay_disabled": {
     "message": "交易預覽覆蓋已禁用。",
     "description": "Toast message when trade preview overlay is disabled"
+  },
+  "settings_tab_performance": {
+    "message": "效能",
+    "description": "Settings tab for performance options"
+  },
+  "settings_option_enable_favorite_gdrive_sync": {
+    "message": "啟用 Google 雲端硬碟同步",
+    "description": "Settings option to enable Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_description": {
+    "message": "將收藏夾和項目同步到 Google 雲端硬碟。\n首次使用此功能需要進行 Google 帳戶認證。\n預設提供的擴展插件共享存儲空間限制為 100KB。\n如果您有大量收藏夾或收藏夾項目包含備註，您可以使用 Google 雲端硬碟同步來增加存儲容量。",
+    "description": "Description for enabling Google Drive sync for favorites"
+  },
+  "confirm_enable_favorite_gdrive_sync": {
+    "message": "您確定要啟用 Google 雲端硬碟同步嗎？\n此操作將把現有的收藏夾數據遷移到 Google 雲端硬碟。",
+    "description": "Confirmation message when enabling Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_cancelled": {
+    "message": "已取消啟用 Google 雲端硬碟同步。",
+    "description": "Message shown when enabling Google Drive sync for favorites is cancelled"
   }
 }
