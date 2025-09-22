@@ -536,6 +536,10 @@
     "message": "擴充功能的最愛資料夾。用於儲存你的最愛項目。",
     "description": "Description for storage favorite folders"
   },
+  "storage_description_favoriteFolders_v2": {
+    "message": "擴充功能的最愛資料夾。用於儲存你的最愛項目。使用 Google 雲端硬碟。",
+    "description": "Description for storage favorite folders"
+  },
   "storage_description_poe2trade_settings_i18n": {
     "message": "擴充功能的翻譯資料快取。",
     "description": "Stores i18n translation data per language"

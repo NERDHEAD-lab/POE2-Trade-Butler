@@ -536,6 +536,10 @@
     "message": "扩展程序的收藏夹文件夹。用于存储你的收藏项目。",
     "description": "Description for storage favorite folders"
   },
+  "storage_description_favoriteFolders_v2": {
+    "message": "扩展程序的收藏夹文件夹。用于存储你的收藏项目。使用Google Drive。",
+    "description": "Description for storage favorite folders"
+  },
   "storage_description_poe2trade_settings_i18n": {
     "message": "扩展程序的翻译数据缓存。",
     "description": "Stores i18n translation data per language"

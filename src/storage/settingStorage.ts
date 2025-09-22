@@ -268,3 +268,19 @@ export function setNoticeUnread(unread: boolean): Promise<void> {
 export function isNoticeUnread(): Promise<boolean> {
   return noticeUnreadConfig.get();
 }
+
+// isFavoriteGDriveSyncEnabled
+const defaultFavoriteGDriveSyncEnabled = false;
+const favoriteGDriveSyncEnabledConfig = createStorageManager<boolean>(
+  'sync',
+  'favoriteGDriveSyncEnabled',
+  defaultFavoriteGDriveSyncEnabled
+);
+
+export function setFavoriteGDriveSyncEnabled(enabled: boolean): Promise<void> {
+  return favoriteGDriveSyncEnabledConfig.set(enabled);
+}
+
+export function isFavoriteGDriveSyncEnabled(): Promise<boolean> {
+  return favoriteGDriveSyncEnabledConfig.get();
+}

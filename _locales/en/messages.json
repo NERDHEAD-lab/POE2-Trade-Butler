@@ -536,6 +536,10 @@
     "message": "Favorite folders for the extension. This is used to store your favorite items.",
     "description": "Description for storage favorite folders"
   },
+  "storage_description_favoriteFolders_v2": {
+    "message": "Favorite folders for the extension. This is used to store your favorite items. Uses Google Drive.",
+    "description": "Description for storage favorite folders"
+  },
   "storage_description_poe2trade_settings_i18n": {
     "message": "Cached translation data for the extension.",
     "description": "Stores i18n translation data per language"

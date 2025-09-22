@@ -536,6 +536,10 @@
     "message": "拡張機能のお気に入りフォルダです。お気に入り項目を保存するために使用されます。",
     "description": "Description for storage favorite folders"
   },
+  "storage_description_favoriteFolders_v2": {
+    "message": "拡張機能のお気に入りフォルダです。お気に入り項目を保存するために使用されます。 Googleドライブを使用します。",
+    "description": "Description for storage favorite folders"
+  },
   "storage_description_poe2trade_settings_i18n": {
     "message": "拡張機能の翻訳データキャッシュです。",
     "description": "Stores i18n translation data per language"

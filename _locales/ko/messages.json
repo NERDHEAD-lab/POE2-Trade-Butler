@@ -536,6 +536,10 @@
     "message": "확장 프로그램의 즐겨찾기 폴더입니다. 즐겨찾기 항목을 저장하는 데 사용됩니다.",
     "description": "Description for storage favorite folders"
   },
+  "storage_description_favoriteFolders_v2": {
+    "message": "확장 프로그램의 즐겨찾기 폴더입니다. 즐겨찾기 항목을 저장하는 데 사용됩니다. 구글 드라이브를 사용합니다.",
+    "description": "Description for storage favorite folders"
+  },
   "storage_description_poe2trade_settings_i18n": {
     "message": "확장 프로그램의 번역 데이터 캐시입니다.",
     "description": "Stores i18n translation data per language"
