@@ -687,5 +687,13 @@
   "settings_option_enable_favorite_gdrive_sync_cancelled": {
     "message": "Google Drive sync enabling has been cancelled.",
     "description": "Message shown when enabling Google Drive sync for favorites is cancelled"
+  },
+  "settings_option_enable_favorite_gdrive_sync_enabled": {
+    "message": "Google Drive sync has been enabled.",
+    "description": "Message shown when Google Drive sync for favorites is enabled"
+  },
+  "storage_description_poe2trade_settings_favoriteGDriveSyncEnabled": {
+    "message": "Whether Google Drive sync for favorites is enabled.",
+    "description": "Whether Google Drive sync for favorites is enabled"
   }
 }

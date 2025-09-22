@@ -687,5 +687,13 @@
   "settings_option_enable_favorite_gdrive_sync_cancelled": {
     "message": "已取消启用Google Drive同步。",
     "description": "Message shown when enabling Google Drive sync for favorites is cancelled"
+  },
+  "settings_option_enable_favorite_gdrive_sync_enabled": {
+    "message": "Google Drive同步已启用。",
+    "description": "Message shown when Google Drive sync for favorites is enabled"
+  },
+  "storage_description_poe2trade_settings_favoriteGDriveSyncEnabled": {
+    "message": "收藏夹的Google Drive同步是否启用",
+    "description": "Whether Google Drive sync for favorites is enabled"
   }
 }

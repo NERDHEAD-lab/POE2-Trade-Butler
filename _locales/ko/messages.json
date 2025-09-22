@@ -699,5 +699,13 @@
   "settings_option_enable_favorite_gdrive_sync_cancelled": {
     "message": "Google 드라이브 동기화 활성화가 취소되었습니다.",
     "description": "Message shown when enabling Google Drive sync for favorites is cancelled"
+  },
+  "settings_option_enable_favorite_gdrive_sync_enabled": {
+    "message": "Google 드라이브 동기화가 활성화되었습니다.",
+    "description": "Message shown when Google Drive sync for favorites is enabled"
+  },
+  "storage_description_poe2trade_settings_favoriteGDriveSyncEnabled": {
+    "message": "즐겨찾기의 Google 드라이브 동기화 활성화 여부 입니다.",
+    "description": "Whether Google Drive sync for favorites is enabled"
   }
 }

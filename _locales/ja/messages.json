@@ -687,5 +687,13 @@
   "settings_option_enable_favorite_gdrive_sync_cancelled": {
     "message": "Googleドライブ同期の有効化がキャンセルされました。",
     "description": "Message shown when enabling Google Drive sync for favorites is cancelled"
+  },
+  "settings_option_enable_favorite_gdrive_sync_enabled": {
+    "message": "Googleドライブ同期が有効になりました。",
+    "description": "Message shown when Google Drive sync for favorites is enabled"
+  },
+  "storage_description_poe2trade_settings_favoriteGDriveSyncEnabled": {
+    "message": "お気に入りのGoogleドライブ同期が有効になっているかどうかです。",
+    "description": "Whether Google Drive sync for favorites is enabled"
   }
 }
