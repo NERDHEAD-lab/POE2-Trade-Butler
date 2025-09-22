@@ -49,6 +49,7 @@ export async function migrateStorageToGoogleDrive() {
       await settingStorage.setFavoriteGDriveSyncEnabled(true);
       resolve();
     } catch (error) {
+      console.error('Failed to migrate favorite storage to Google Drive:', error);
       await settingStorage.setFavoriteGDriveSyncEnabled(false);
       reject(error);
     }

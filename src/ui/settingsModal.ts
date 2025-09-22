@@ -117,10 +117,11 @@ const settings: Settings = {
                 showToast(getMessage('settings_option_enable_favorite_gdrive_sync_cancelled'));
                 return;
               }
-              await favoriteStorage.migrateStorageToGoogleDrive();
+
+              return favoriteStorage.migrateStorageToGoogleDrive()
+                .then(() => showToast(getMessage('settings_option_enable_favorite_gdrive_sync_enabled')));
             }
           },
-
         }
       ]
     },
@@ -196,7 +197,7 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
       cancel: getMessage('button_cancel'),
       onConfirmListener: async (): Promise<boolean> => {
         if (settingManager.hasChanges()) {
-          settingManager.applyChanges();
+          await settingManager.applyChanges();
           showToast(getMessage('settings_changes_applied'));
 
           document.location.reload();
@@ -228,7 +229,7 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
           name: getMessage('button_apply'),
           listener: async (): Promise<boolean> => {
             if (settingManager.hasChanges()) {
-              settingManager.applyChanges();
+              await settingManager.applyChanges();
               showToast(getMessage('settings_changes_applied'));
 
               document.location.reload();
