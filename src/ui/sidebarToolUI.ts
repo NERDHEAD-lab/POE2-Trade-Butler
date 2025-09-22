@@ -13,7 +13,6 @@ import * as favoriteStorage from '../storage/favoriteStorage';
 import * as fs from './fileSystemEntry';
 import { openFavoriteFolderModal } from './newFavoriteModal';
 import { showToast } from '../utils/toast';
-import * as testStorage from '../storage/testStorage';
 
 const SIDEBAR_TOOL_CLASS = 'poe2-sidebar-tool-button';
 const SIDEBAR_TOOL_ICON_CLASS = 'poe2-sidebar-tool-icon';
@@ -182,27 +181,6 @@ const sidebarTools: SidebarTool[] = [
         url = window.location.href;
         updateFavoriteIcon();
       }).observe(document.body, { childList: true, subtree: true } );
-    }
-  },
-  {
-  //   oauth test button
-    id: 'poe2-tool-oauth-test-button',
-    iconUrl: chrome.runtime.getURL('assets/icon.png'),
-    description: 'OAuth Test Button',
-    onClick: async (buttonContext) => {
-      buttonContext.lock(true);
-      testStorage.get()
-        .then(data => {
-          console.log('Test storage get:', data)
-          return data;
-        })
-        .then(data => {
-          data.number += 1;
-          return testStorage.set(data);
-        })
-        .then(() => testStorage.get())
-        .then(data => console.log('Test storage after increment:', data))
-        .finally(() => buttonContext.lock(false));
     }
   }
 ];
