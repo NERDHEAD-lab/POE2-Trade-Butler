@@ -78,7 +78,7 @@ const sidebarTools: SidebarTool[] = [
       showModal({
         title: getMessage('sidebar_tool_notice_button_modal_title'),
         div: await noticeDiv(),
-        confirm: getMessage('sidebar_tool_notice_button_modal_close'),
+        confirm: getMessage('button_close'),
         hideCancel: true
       });
     },

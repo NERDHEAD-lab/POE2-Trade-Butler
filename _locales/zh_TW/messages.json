@@ -255,6 +255,10 @@
     "message": "添加到收藏文件夾",
     "description": "Modal title for adding to favorite folder"
   },
+  "modal_favorite_folders": {
+    "message": "管理收藏文件夾",
+    "description": "Modal title for managing favorite folders"
+  },
   "button_save": {
     "message": "保存",
     "description": "Button text for saving"
@@ -628,9 +632,9 @@
     "message": "設置側邊欄的不透明度。0%表示完全透明，100%表示完全不透明。",
     "description": "Description for sidebar opacity setting"
   },
-  "sidebar_tool_notice_button_modal_close": {
+  "button_close": {
     "message": "關閉",
-    "description": "Button text to close the sidebar tool notice"
+    "description": "Button text to close the modal"
   },
   "storage_description_poe2trade_settings_noticeContext": {
     "message": "已快取的通知內容。",

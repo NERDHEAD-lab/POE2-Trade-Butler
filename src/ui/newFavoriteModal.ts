@@ -42,15 +42,19 @@ export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void
         nameInput?.focus();
       }
 
-      return { favoriteUI, wrapper, onRender: modalConsumer };
+      const hasItem = !!item;
+
+      return { favoriteUI, wrapper, onRender: modalConsumer, hasItem };
     })
-    .then(({ favoriteUI, wrapper, onRender }) => {
+    .then(({ favoriteUI, wrapper, onRender, hasItem }) => {
       showModal({
-        title: getMessage('modal_add_to_favorite_folder'),
+        title: hasItem ? getMessage('modal_add_to_favorite_folder') : getMessage('modal_favorite_folders'),
         div: wrapper,
-        confirm: getMessage('button_save'),
+        confirm: hasItem ? getMessage('button_save') : getMessage('button_close'),
         cancel: getMessage('button_cancel'),
-        onConfirmListener: onConfirmCreateFavoriteModal(wrapper),
+        // onConfirmListener: onConfirmCreateFavoriteModal(wrapper),
+        ...hasItem && { onConfirmListener: onConfirmCreateFavoriteModal(wrapper) },
+        ...!hasItem && { hideCancel: true },
         onCancelListener: async (): Promise<boolean> => {
           favoriteUI.destroy();
           return true;
