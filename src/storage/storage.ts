@@ -165,7 +165,8 @@ class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
 type GoogleDriveStorageHint = { fileId: string; lastModified: string };
 
 class GoogleDriveStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
-  private previousEntity : ENTITY | null = null;
+  private cachedEntity: ENTITY | null = null;
+  private cachedTimestamp: string | null = null;
 
   constructor(
     private type: StorageType,
@@ -185,22 +186,28 @@ class GoogleDriveStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
     const content = JSON.stringify(value);
     const hint = await get<GoogleDriveStorageHint | null>(this.type, this.hintKey(this.key), null);
 
+    if (this.cachedEntity && this.cachedTimestamp === hint?.lastModified && content === JSON.stringify(this.cachedEntity)) {
+      return;
+    }
+
     let fileId = hint?.fileId;
     try {
       if (fileId) {
-        const previousContent = await GoogleDriveApi.readFile(fileId);
-        if (previousContent === content) {
-          return;
-        }
-        this.previousEntity = JSON.parse(previousContent) as ENTITY;
         await GoogleDriveApi.updateFile(fileId, content);
       } else {
         fileId = await GoogleDriveApi.createFile(`${this.key}.json`, content);
       }
-      const newHint: GoogleDriveStorageHint = { fileId, lastModified: new Date().toISOString() };
+
+      const newTimestamp = new Date().toISOString();
+      const newHint: GoogleDriveStorageHint = { fileId, lastModified: newTimestamp };
       await set(this.type, this.hintKey(this.key), newHint);
+
+      this.cachedEntity = value;
+      this.cachedTimestamp = newTimestamp;
     } catch (e) {
       console.error('Failed to store data to Google Drive:', e);
+      this.cachedEntity = null;
+      this.cachedTimestamp = null;
       throw e;
     }
   }
@@ -211,11 +218,22 @@ class GoogleDriveStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
       return this.defaultValueSupplier();
     }
 
+    if (this.cachedEntity && this.cachedTimestamp === hint.lastModified) {
+      return this.cachedEntity;
+    }
+
     try {
       const content = await GoogleDriveApi.readFile(hint.fileId);
-      return JSON.parse(content) as ENTITY;
+      const entity = JSON.parse(content) as ENTITY;
+
+      this.cachedEntity = entity;
+      this.cachedTimestamp = hint.lastModified;
+
+      return entity;
     } catch (e) {
       console.error('Failed to read data from Google Drive:', e);
+      this.cachedEntity = null;
+      this.cachedTimestamp = null;
       return this.defaultValueSupplier();
     }
   }
@@ -227,17 +245,24 @@ class GoogleDriveStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
 
   addOnChangeListener(listener: (newValue: ENTITY, oldValue: ENTITY) => void): void {
     const listenerWrapper = async () => {
+      const oldValue = this.cachedEntity ?? this.defaultValueSupplier();
+
       const newValue = await this.get();
-      const oldValue = this.previousEntity || this.defaultValueSupplier();
-      listener(newValue, oldValue);
+
+      if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
+        listener(newValue, oldValue);
+      }
     }
     addOnChangeListener(this.type, this.hintKey(this.key), listenerWrapper);
     this.wrappedListenerMap.set(listener, listenerWrapper);
   }
 
   removeOnChangeListener(listener: (newValue: ENTITY, oldValue: ENTITY) => void): void {
-    removeOnChangeListener(this.type, this.wrappedListenerMap.get(listener)!);
-    this.wrappedListenerMap.delete(listener);
+    const listenerWrapper = this.wrappedListenerMap.get(listener);
+    if (listenerWrapper) {
+      removeOnChangeListener(this.type, listenerWrapper);
+      this.wrappedListenerMap.delete(listener);
+    }
   }
 }
 
