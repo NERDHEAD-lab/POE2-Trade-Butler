@@ -632,6 +632,18 @@
     "message": "設置側邊欄的不透明度。0%表示完全透明，100%表示完全不透明。",
     "description": "Description for sidebar opacity setting"
   },
+  "storage_description_poe2trade_settings_previewOverlayEnabled": {
+    "message": "交易預覽覆蓋是否啟用",
+    "description": "Whether the trade preview overlay is enabled"
+  },
+  "settings_option_configure_preview_overlay": {
+    "message": "啟用/禁用預覽覆蓋",
+    "description": "Settings option to configure the trade preview overlay"
+  },
+  "settings_option_configure_preview_overlay_description": {
+    "message": "啟用或禁用交易預覽覆蓋。\n禁用後，當您將鼠標懸停在歷史記錄和收藏夾列表中的項目上時，將不會顯示預覽。",
+    "description": "Description for configuring the trade preview overlay"
+  },
   "button_close": {
     "message": "關閉",
     "description": "Button text to close the modal"
@@ -681,7 +693,7 @@
     "description": "Settings option to enable Google Drive sync for favorites"
   },
   "settings_option_enable_favorite_gdrive_sync_description": {
-    "message": "將收藏夾和項目同步到 Google 雲端硬碟。\n首次使用此功能需要進行 Google 帳戶認證。\n預設提供的擴展插件共享存儲空間限制為 100KB。\n如果您有大量收藏夾或收藏夾項目包含備註，您可以使用 Google 雲端硬碟同步來增加存儲容量。",
+    "message": "將收藏夾和項目同步到 Google 雲端硬碟。\n首次使用此功能需要進行 Google 帳戶驗證。\n預設的擴展插件共享存儲空間限制為 100KB。\n如果您有大量收藏，可以使用 Google 雲端硬碟同步來增加存儲容量。",
     "description": "Description for enabling Google Drive sync for favorites"
   },
   "confirm_enable_favorite_gdrive_sync": {

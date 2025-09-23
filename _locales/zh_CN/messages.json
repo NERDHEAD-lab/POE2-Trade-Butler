@@ -632,6 +632,18 @@
     "message": "设置侧边栏的不透明度。0%表示完全透明，100%表示完全不透明。",
     "description": "Description for sidebar opacity setting"
   },
+  "storage_description_poe2trade_settings_previewOverlayEnabled": {
+    "message": "交易预览覆盖启用状态。",
+    "description": "Whether the trade preview overlay is enabled"
+  },
+  "settings_option_configure_preview_overlay": {
+    "message": "启用/禁用交易预览覆盖",
+    "description": "Settings option to configure the trade preview overlay"
+  },
+  "settings_option_configure_preview_overlay_description": {
+    "message": "启用或禁用交易预览覆盖。\n禁用后，鼠标悬停在历史和收藏列表中将不会显示预览。",
+    "description": "Description for configuring the trade preview overlay"
+  },
   "button_close": {
     "message": "关闭",
     "description": "Button text to close the modal"
@@ -681,7 +693,7 @@
     "description": "Settings option to enable Google Drive sync for favorites"
   },
   "settings_option_enable_favorite_gdrive_sync_description": {
-    "message": "将收藏夹文件夹和项目同步到Google Drive。\n首次使用此功能时需要进行Google账户认证。\n扩展程序提供的默认同步存储限制为100KB。\n如果您有大量收藏夹或收藏夹项目包含备注，可以使用Google Drive同步来增加存储容量。",
+    "message": "将收藏夹文件夹和项目同步到Google Drive。\n首次使用此功能时需要进行Google账户认证。\n如果您有大量收藏夹或收藏夹项目包含备注，可以使用Google Drive同步来增加存储容量。",
     "description": "Description for enabling Google Drive sync for favorites"
   },
   "confirm_enable_favorite_gdrive_sync": {

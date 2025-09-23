@@ -641,7 +641,7 @@
     "description": "Settings option to configure the trade preview overlay"
   },
   "settings_option_configure_preview_overlay_description": {
-    "message": "거래 미리보기 오버레이를 활성화하거나 비활성화합니다. 비활성화하면 기록 및 즐겨찾기 목록에 마우스 오버 시 미리보기가 표시되지 않습니다.",
+    "message": "거래 미리보기 오버레이를 활성화하거나 비활성화합니다.\n비활성화하면 기록 및 즐겨찾기 목록에 마우스 오버 시 미리보기가 표시되지 않습니다.",
     "description": "Description for configuring the trade preview overlay"
   },
   "button_close": {
@@ -693,7 +693,7 @@
     "description": "Settings option to enable Google Drive sync for favorites"
   },
   "settings_option_enable_favorite_gdrive_sync_description": {
-    "message": "즐겨찾기 폴더와 항목을 Google 드라이브에 동기화합니다.\n이 기능을 사용하려면 최초 1회 Google 계정 인증이 필요합니다.\n기본적으로 제공되는 확장 플러그인 공유 저장소는 100KB로 제한되어 있습니다.\n즐겨찾기가 많거나, 즐겨찾기 항목에 메모가 포함된 경우, Google 드라이브 동기화를 사용하여 저장 용량을 늘릴 수 있습니다.",
+    "message": "즐겨찾기 폴더와 항목을 Google 드라이브에 동기화합니다.\n이 기능을 사용하려면 최초 1회 Google 계정 인증이 필요합니다.\n기본적으로 제공되는 확장 플러그인 공유 저장소는 100KB로 제한되어 있습니다.\n즐겨찾기가 많을 경우, Google 드라이브 동기화를 사용하여 저장 용량을 늘릴 수 있습니다.",
     "description": "Description for enabling Google Drive sync for favorites"
   },
   "confirm_enable_favorite_gdrive_sync": {

@@ -632,6 +632,18 @@
     "message": "Set the opacity of the sidebar. 0% is fully transparent, 100% is fully opaque.",
     "description": "Description for sidebar opacity setting"
   },
+  "storage_description_poe2trade_settings_previewOverlayEnabled": {
+    "message": "Trade preview overlay enabled state.",
+    "description": "Whether the trade preview overlay is enabled"
+  },
+  "settings_option_configure_preview_overlay": {
+    "message": "Enable/Disable Trade Preview Overlay",
+    "description": "Settings option to configure the trade preview overlay"
+  },
+  "settings_option_configure_preview_overlay_description": {
+    "message": "Enable or disable the trade preview overlay.\nWhen disabled, hovering over items in the history and favorites list will not show a preview.",
+    "description": "Description for configuring the trade preview overlay"
+  },
   "button_close": {
     "message": "Close",
     "description": "Button text to close the modal"
@@ -681,7 +693,7 @@
     "description": "Settings option to enable Google Drive sync for favorites"
   },
   "settings_option_enable_favorite_gdrive_sync_description": {
-    "message": "Sync favorite folders and items to Google Drive.\nThis requires initial Google account authentication.\nThe default shared storage provided by the extension is limited to 100KB.\nIf you have many favorites or if favorite items include notes, you can use Google Drive sync to increase storage capacity.",
+    "message": "Sync your favorite folders and items to Google Drive.\nThis requires one-time Google account authentication.\nThe default shared storage provided by the extension is limited to 100KB.\nIf you have many favorites, you can use Google Drive sync to increase storage capacity.",
     "description": "Description for enabling Google Drive sync for favorites"
   },
   "confirm_enable_favorite_gdrive_sync": {
