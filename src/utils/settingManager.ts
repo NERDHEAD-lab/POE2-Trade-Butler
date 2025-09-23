@@ -36,6 +36,7 @@ export interface CheckboxDetailOption extends DetailOption<boolean> {
   type: 'checkbox';
   checked: boolean;
   onChangeListener: onOptionChangeListener<boolean>;
+  onRender?: (checkbox: HTMLInputElement) => void;
 }
 
 export interface SelectDetailOption extends DetailOption<SelectEntity> {
@@ -213,6 +214,9 @@ export class SettingManager {
             // right margin at description
             const description = optionHeader.querySelector('.poe2-settings-option-description') as HTMLParagraphElement;
             description.style.marginRight = '35px';
+          }
+          if (opt.onRender) {
+            opt.onRender(optionElement as HTMLInputElement);
           }
           break;
         }
