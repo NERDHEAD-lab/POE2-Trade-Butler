@@ -711,5 +711,9 @@
   "storage_description_poe2trade_settings_favoriteGDriveSyncEnabled": {
     "message": "收藏夹的Google Drive同步是否启用",
     "description": "Whether Google Drive sync for favorites is enabled"
+  },
+  "error_entry_name_exists": {
+    "message": "已存在同名条目: $1",
+    "description": "Error message when trying to create or rename an entry to a name that already exists"
   }
 }

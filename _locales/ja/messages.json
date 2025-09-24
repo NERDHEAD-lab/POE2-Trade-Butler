@@ -711,5 +711,9 @@
   "storage_description_poe2trade_settings_favoriteGDriveSyncEnabled": {
     "message": "お気に入りのGoogleドライブ同期が有効になっているかどうかです。",
     "description": "Whether Google Drive sync for favorites is enabled"
+  },
+  "error_entry_name_exists": {
+    "message": "同じ名前のエントリが既に存在します: $1",
+    "description": "Error message when trying to create or rename an entry to a name that already exists"
   }
 }

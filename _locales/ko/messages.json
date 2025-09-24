@@ -711,5 +711,9 @@
   "storage_description_poe2trade_settings_favoriteGDriveSyncEnabled": {
     "message": "즐겨찾기의 Google 드라이브 동기화 활성화 여부 입니다.",
     "description": "Whether Google Drive sync for favorites is enabled"
+  },
+  "error_entry_name_exists": {
+    "message": "같은 이름의 항목이 이미 존재합니다: $1",
+    "description": "Error message when trying to create or rename an entry to a name that already exists"
   }
 }
