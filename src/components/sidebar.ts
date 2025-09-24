@@ -1,4 +1,4 @@
-import '../styles/sidebar.css';
+import '../styles/sidebar.scss';
 import * as api from '../utils/api';
 import { getCurrentServerRegion, getServerRegion } from '../utils/api';
 import { showToast} from '../utils/toast';

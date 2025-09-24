@@ -1,6 +1,6 @@
 import './storage/initStorage';
 import { renderSidebar } from './components/sidebar';
-import './styles/sidebar.css';
+import './styles/sidebar.scss';
 import { getMessage } from './utils/_locale';
 import * as butlerGuide from './support/butlerGuide';
 import { registerExtensionContextAutoReload } from './utils/extensionContextWatcher';

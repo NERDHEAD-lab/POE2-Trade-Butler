@@ -17,6 +17,28 @@
   max-height: calc(100vh - 20px);
   border-radius: 10px 0 0 10px;
   will-change: transform;
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #555 transparent;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #555;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #777;
+    }
+  }
 }
 
 #poe2-sidebar.collapsed {
@@ -208,7 +230,7 @@
 }
 
 #history-list {
-  max-height: calc(100vh - 180px); /* 최대 높이 설정 TODO: 정밀하게 */
+  max-height: calc(100vh - 180px);
   overflow-y: auto;
   margin-top: 10px;
   padding-left: 0;
