@@ -8,6 +8,7 @@ import { TradePreviewer } from '../utils/tradePreviewInjector';
 import { showToast } from '../utils/toast';
 import { getMessage } from '../utils/_locale';
 import { PreviewPanelSnapshot } from '../storage/previewStorage';
+import { LoadingOverlay } from '../utils/LoadingOverlay';
 
 /**
  * 즐겨찾기 파일 시스템 UI를 로드하고 생성합니다.
@@ -35,6 +36,9 @@ class FavoriteFileSystemUILoader {
   }
 
   public async load(parent: HTMLDivElement, showFile: boolean = true): Promise<FileSystemUI> {
+    const overlay = new LoadingOverlay(parent);
+    overlay.show();
+
     return this.favoriteStoragePromise
       .then(entries => fs.sortEntries(entries))
       .then(sortedEntries => {
@@ -54,6 +58,9 @@ class FavoriteFileSystemUILoader {
         favorite.addOnChangeListener(onChangeListener);
         fileSystemUI.addOnDestroyed(() => favorite.removeOnChangeListener(onChangeListener));
         return fileSystemUI;
+      })
+      .finally(() => {
+        overlay.hide();
       });
   }
 
@@ -243,6 +250,8 @@ class FavoriteFileSystemUILoader {
     iconElement.addEventListener('click', e => {
       e.stopPropagation();
       if (!confirm(getMessage('confirm_delete_favorite', entry.name))) return;
+      const loadingOverlays = getAllLoadingOverlays();
+      loadingOverlays.forEach(overlay => overlay.show());
 
       this.favoriteStoragePromise
         .then(favorites => {
@@ -255,6 +264,9 @@ class FavoriteFileSystemUILoader {
         .catch(err => {
           console.error(getMessage('error_delete_favorite', err.toString()));
           alert(getMessage('error_delete_favorite', err.toString()));
+        })
+        .finally(() => {
+          loadingOverlays.forEach(overlay => overlay.hide());
         });
     });
 
@@ -358,6 +370,9 @@ class FavoriteFileSystemUILoader {
         return;
       }
 
+      const loadingOverlays = getAllLoadingOverlays();
+      loadingOverlays.forEach(overlay => overlay.show());
+
       this.favoriteStoragePromise
         .then(favorites => {
           return fs.moveEntry(favorites, draggedEntry.id, entry.id);
@@ -366,6 +381,9 @@ class FavoriteFileSystemUILoader {
         .then(() => showToast(getMessage('toast_item_moved', draggedEntry.name, entry.name)))
         .catch(err => {
           console.error(getMessage('error_drag_drop', err.toString()));
+        })
+        .finally(() => {
+          loadingOverlays.forEach(overlay => overlay.hide());
         });
     });
   }
@@ -391,6 +409,8 @@ class FavoriteFileSystemUILoader {
       } else if (exceptionCheck(newName)) {
         alert('이름에 사용할 수 없는 문자가 포함되어 있습니다. (/, \\, :, *, ?, ", <, >, |)');
       } else {
+        const loadingOverlays = getAllLoadingOverlays();
+        loadingOverlays.forEach(overlay => overlay.show());
         this.favoriteStoragePromise
           .then(favorites => {
             const updatedFavorites = favorites.map(fav => {
@@ -405,12 +425,26 @@ class FavoriteFileSystemUILoader {
           .catch(err => {
             console.error(getMessage('error_rename_favorite', err.toString()));
             alert(getMessage('error_rename_favorite', err.toString()));
+          })
+          .finally(() => {
+            loadingOverlays.forEach(overlay => overlay.hide());
           });
       }
 
       clickTimerEntity.preventClick = true;
     });
   }
+}
+
+function getAllLoadingOverlays(): LoadingOverlay[] {
+  const parents = document.getElementsByClassName(favoriteFileSystemClassName);
+  const loadingOverlays: LoadingOverlay[] = [];
+  for (let i = 0; i < parents.length; i++) {
+    const parent = parents[i] as HTMLDivElement;
+    const overlay = new LoadingOverlay(parent);
+    loadingOverlays.push(overlay);
+  }
+  return loadingOverlays;
 }
 
 export async function getSelectedFolder(parent: HTMLDivElement): Promise<FolderEntry> {
