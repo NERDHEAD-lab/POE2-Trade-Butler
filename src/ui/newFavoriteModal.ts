@@ -167,45 +167,56 @@ export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void
  */
 export function onConfirmCreateFavoriteModal(wrapper: HTMLDivElement): ButtonListener {
   return async (modal): Promise<boolean> => {
-    const nameInput = modal.querySelector('input.favorite-name') as HTMLInputElement;
+    const modalElement = document.querySelector('.poe2-modal') as HTMLDivElement;
+    const overlay = new LoadingOverlay(modalElement);
+    overlay.show();
 
-    if (!nameInput || !nameInput.dataset.id) {
-      // throw new Error('즐겨찾기 이름 입력란이 없거나 잘못된 형식입니다.');
-      alert(getMessage('alert_favorite_name_invalid'));
-      return false;
-    }
+    try {
+      const nameInput = modal.querySelector('input.favorite-name') as HTMLInputElement;
 
-    const name = nameInput.value.trim() || nameInput.dataset.id;
-    const id = nameInput.dataset.id;
-    const url = nameInput.dataset.url;
-
-    if (!url) {
-      // throw new Error('즐겨찾기 URL이 정의되지 않았습니다.');
-      alert(getMessage('alert_favorite_url_undefined'));
-      return false;
-    }
-
-    // 폴더 선택 여부 확인 필요
-    return favoriteStorage
-      .getAll()
-      .then(async favorites => {
-        const selectedFolder = await folderUI.getSelectedFolder(wrapper);
-        const newEntry: Omit<FileEntry, 'id' | 'createdAt' | 'modifiedAt' | 'parentId'> = {
-          name: name,
-          type: 'file',
-          metadata: { id: id, url: url }
-        };
-
-        return fs.addEntry(favorites, newEntry, selectedFolder.id);
-      })
-      .then(newEntry => favoriteStorage.saveAll(newEntry))
-      .then(() => {
-        showToast(getMessage('toast_favorite_added', name));
-        return true;
-      })
-      .catch(error => {
-        console.error(getMessage('error_add_favorite', error.message));
+      if (!nameInput || !nameInput.dataset.id) {
+        // throw new Error('즐겨찾기 이름 입력란이 없거나 잘못된 형식입니다.');
+        alert(getMessage('alert_favorite_name_invalid'));
         return false;
-      });
+      }
+
+      const name = nameInput.value.trim() || nameInput.dataset.id;
+      const id = nameInput.dataset.id;
+      const url = nameInput.dataset.url;
+
+      if (!url) {
+        // throw new Error('즐겨찾기 URL이 정의되지 않았습니다.');
+        alert(getMessage('alert_favorite_url_undefined'));
+        return false;
+      }
+
+      // 폴더 선택 여부 확인 필요
+      return favoriteStorage
+        .getAll()
+        .then(async favorites => {
+          const selectedFolder = await folderUI.getSelectedFolder(wrapper);
+          const newEntry: Omit<FileEntry, 'id' | 'createdAt' | 'modifiedAt' | 'parentId'> = {
+            name: name,
+            type: 'file',
+            metadata: { id: id, url: url }
+          };
+
+          return fs.addEntry(favorites, newEntry, selectedFolder.id);
+        })
+        .then(newEntry => favoriteStorage.saveAll(newEntry))
+        .then(() => {
+          showToast(getMessage('toast_favorite_added', name));
+          return true;
+        })
+        .catch(error => {
+          console.error(getMessage('error_add_favorite', error.message));
+          return false;
+        })
+        .finally(() => overlay.hide());
+    } catch (error) {
+      console.error('Error adding favorite:', error);
+      overlay.hide();
+      return false;
+    }
   };
 }
