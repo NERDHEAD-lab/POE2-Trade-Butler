@@ -324,6 +324,18 @@
     "message": "このボタンをクリックしてサイドバーを開閉します。",
     "description": "Guide: sidebar toggle button"
   },
+  "butler_guide_notice_button": {
+    "message": "このボタンをクリックしてお知らせを確認できます。",
+    "description": "Guide: notice button"
+  },
+  "butler_guide_preview_toggle_button": {
+    "message": "このボタンをクリックして取引プレビューオーバーレイ機能を有効または無効にします。",
+    "description": "Guide: trade preview overlay toggle button"
+  },
+  "butler_guide_add_favorite_button": {
+    "message": "このボタンをクリックして現在のページをお気に入りに追加します。",
+    "description": "Guide: add current page to favorites button"
+  },
   "butler_guide_switch_tab": {
     "message": "「履歴」または「お気に入り」タブをクリックして切り替えます。",
     "description": "Guide: switch between history/favorites tab"
@@ -356,9 +368,9 @@
     "message": "このボタンをクリックしてすべての検索履歴をクリアします。",
     "description": "Guide: clear search history button"
   },
-  "butler_guide_add_favorite_button": {
-    "message": "このボタンをクリックして現在のページをお気に入りに追加します。",
-    "description": "Guide: add current page to favorites button"
+  "butler_guide_manage_favorite_folder": {
+    "message": "このボタンをクリックしてお気に入りフォルダを管理します。",
+    "description": "Guide: manage favorite folders button"
   },
   "butler_guide_favorite_folder_list": {
     "message": "これはお気に入りフォルダのリストです。",

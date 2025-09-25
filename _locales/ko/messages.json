@@ -324,6 +324,18 @@
     "message": "이 버튼을 눌러 사이드바를 열거나 닫을 수 있습니다.",
     "description": "Guide: sidebar toggle button"
   },
+  "butler_guide_notice_button": {
+    "message": "이 버튼을 눌러 공지사항을 확인할 수 있습니다.",
+    "description": "Guide: notice button"
+  },
+  "butler_guide_preview_toggle_button": {
+    "message": "이 버튼을 눌러 거래 미리보기 오버레이 기능을 켜거나 끌 수 있습니다.",
+    "description": "Guide: trade preview overlay toggle button"
+  },
+  "butler_guide_add_favorite_button": {
+    "message": "현재 거래 페이지를 즐겨찾기에 추가하려면 이 버튼을 클릭하세요.",
+    "description": "Guide: add current page to favorites button"
+  },
   "butler_guide_switch_tab": {
     "message": "\"기록\" 또는 \"즐겨찾기\" 탭을 눌러 탭을 전환할 수 있습니다.",
     "description": "Guide: switch between history/favorites tab"
@@ -356,9 +368,9 @@
     "message": "검색 기록을 모두 삭제하려면 이 버튼을 클릭하세요.",
     "description": "Guide: clear search history button"
   },
-  "butler_guide_add_favorite_button": {
-    "message": "현재 거래 페이지를 즐겨찾기에 추가하려면 이 버튼을 클릭하세요.",
-    "description": "Guide: add current page to favorites button"
+  "butler_guide_manage_favorite_folder": {
+    "message": "즐겨찾기 폴더를 관리하려면 이 버튼을 클릭하세요.",
+    "description": "Guide: manage favorite folders button"
   },
   "butler_guide_favorite_folder_list": {
     "message": "즐겨찾기 폴더 목록입니다.",

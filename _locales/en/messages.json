@@ -324,6 +324,18 @@
     "message": "Click this button to open or close the sidebar.",
     "description": "Guide: sidebar toggle button"
   },
+  "butler_guide_notice_button": {
+    "message": "Click this button to view notices.",
+    "description": "Guide: notice button"
+  },
+  "butler_guide_preview_toggle_button": {
+    "message": "Click this button to enable or disable the trade preview overlay feature.",
+    "description": "Guide: trade preview overlay toggle button"
+  },
+  "butler_guide_add_favorite_button": {
+    "message": "Click this button to add the current page to your favorites.",
+    "description": "Guide: add current page to favorites button"
+  },
   "butler_guide_switch_tab": {
     "message": "Click on the \"History\" or \"Favorites\" tab to switch between them.",
     "description": "Guide: switch between history/favorites tab"
@@ -356,9 +368,9 @@
     "message": "Click this button to clear all search history.",
     "description": "Guide: clear search history button"
   },
-  "butler_guide_add_favorite_button": {
-    "message": "Click this button to add the current page to your favorites.",
-    "description": "Guide: add current page to favorites button"
+  "butler_guide_manage_favorite_folder": {
+    "message": "Click this button to manage your favorite folders.",
+    "description": "Guide: manage favorite folders button"
   },
   "butler_guide_favorite_folder_list": {
     "message": "This is the list of favorite folders.",

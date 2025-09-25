@@ -52,7 +52,7 @@ const sidebarHtml = `
         ${getMessage('favorites')}
         <img src="${chrome.runtime.getURL('assets/warning_24dp_F19E39.svg')}" class="favorite-warning-icon" alt="!" style="display:none;"/>
       </span>
-      <button id="add-favorite">${getMessage('manage_favorites')}</button>
+      <button id="manage-favorite">${getMessage('manage_favorites')}</button>
     </h3>
     <div id="favorites-list-wrapper"></div>
 <!--    <div id="favorite-import-export" class="favorite-import-export-bottom">-->
@@ -176,7 +176,7 @@ export function renderSidebar(container: HTMLElement): void {
   })();
 
   const addFavoriteButton = sidebar.querySelector<HTMLButtonElement>(
-    '#add-favorite'
+    '#manage-favorite'
   ) as HTMLButtonElement;
 
   addFavoriteButton.addEventListener('click', e => {

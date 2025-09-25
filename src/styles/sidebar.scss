@@ -189,7 +189,7 @@
 }
 
 /* Favorite button */
-#add-favorite {
+#manage-favorite {
   background-color: #007bff;
   color: white;
   border: none;
@@ -203,12 +203,12 @@
   margin-bottom: 10px;
 }
 
-#add-favorite:hover {
+#manage-favorite:hover {
   background-color: #0056b3; /* 호버 시 색상 */
   transform: scale(1.05); /* 약간 확대 효과 */
 }
 
-#add-favorite:active {
+#manage-favorite:active {
   background-color: #003f7f; /* 클릭 시 색상 */
   transform: scale(0.95); /* 클릭 시 약간 축소 */
 }
