@@ -621,7 +621,7 @@
     "description": "Settings option to enable Google Account sync for storage"
   },
   "settings_option_storage_sync_description": {
-    "message": "Googleアカウント同期を利用して設定とデータを保存します。\n同じアカウントでログインしているすべてのデバイスで同期されます。",
+    "message": "Googleアカウント同期を使用して設定とデータを保存します。(最大100KB)\n同じアカウントでログインしているすべてのデバイスで同期されます。",
     "description": "Description for Google Account sync storage option in settings"
   },
   "log_migration_skip_remove": {

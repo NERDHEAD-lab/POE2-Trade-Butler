@@ -621,7 +621,7 @@
     "description": "Settings option to enable Google Account sync for storage"
   },
   "settings_option_storage_sync_description": {
-    "message": "使用 Google 帳戶同步來保存您的設定和資料。\n將在所有登入相同帳戶的裝置上同步。",
+    "message": "使用 Google 帳戶同步來保存您的設定和資料。 (最多 100KB)\n會在所有登入相同帳戶的裝置間同步。",
     "description": "Description for Google Account sync storage option in settings"
   },
   "log_migration_skip_remove": {

@@ -621,7 +621,7 @@
     "description": "Settings option to enable Google Account sync for storage"
   },
   "settings_option_storage_sync_description": {
-    "message": "Use Google Account sync to save your settings and data.\nThis will sync across all devices where you are logged in with the same account.",
+    "message": "Use Google Account sync storage to save your settings and data. (Up to 100KB)\nThis will sync across all devices logged in with the same account.",
     "description": "Description for Google Account sync storage option in settings"
   },
   "log_migration_skip_remove": {
