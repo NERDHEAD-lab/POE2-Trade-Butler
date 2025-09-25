@@ -3,8 +3,7 @@
 
 ## Notice
 
-> [!IMPORTANT]
-> A major update (3.0.0) with many changes has been released!
+### A major update (3.0.0) with many changes has been released!
 
 Accessibility and usability for several features have been improved.
 ```
