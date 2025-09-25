@@ -715,5 +715,9 @@
   "error_entry_name_exists": {
     "message": "같은 이름의 항목이 이미 존재합니다: $1",
     "description": "Error message when trying to create or rename an entry to a name that already exists"
+  },
+  "favorite_storage_warning": {
+    "message": "사용량 경고! ($1 / $2) - 즐겨찾기 저장소가 거의 가득 찼습니다. 불필요한 항목을 삭제하거나 \"설정 -> 성능 -> Google 드라이브 동기화 활성화\"를 사용하여 사용량 제한을 해제하세요.",
+    "description": "Warning message when favorite storage is nearing its limit"
   }
 }

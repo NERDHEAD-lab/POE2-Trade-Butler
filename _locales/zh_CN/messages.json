@@ -715,5 +715,9 @@
   "error_entry_name_exists": {
     "message": "已存在同名条目: $1",
     "description": "Error message when trying to create or rename an entry to a name that already exists"
+  },
+  "favorite_storage_warning": {
+    "message": "使用量警告！($1 / $2) - 收藏夹存储空间即将满。请删除不必要的项目，或通过“设置 -> 性能 -> 启用Google Drive同步”来解除存储限制。",
+    "description": "Warning message when favorite storage is nearing its limit"
   }
 }

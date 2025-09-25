@@ -715,5 +715,9 @@
   "error_entry_name_exists": {
     "message": "同じ名前のエントリが既に存在します: $1",
     "description": "Error message when trying to create or rename an entry to a name that already exists"
+  },
+  "favorite_storage_warning": {
+    "message": "使用量警告！ ($1 / $2) - お気に入りの保存容量がほぼ満杯です。不要なアイテムを削除するか、「設定 -> パフォーマンス -> Googleドライブ同期を有効にする」を使用して容量制限を解除してください。",
+    "description": "Warning message when favorite storage is nearing its limit"
   }
 }

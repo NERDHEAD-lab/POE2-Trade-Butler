@@ -715,5 +715,9 @@
   "error_entry_name_exists": {
     "message": "An entry with the same name already exists: $1",
     "description": "Error message when trying to create or rename an entry to a name that already exists"
+  },
+  "favorite_storage_warning": {
+    "message": "Storage Warning! ($1 / $2) - Your favorite storage is nearing its limit. Please delete unnecessary items or enable 'Settings -> Performance -> Enable Google Drive Sync' to lift the usage limit.",
+    "description": "Warning message when favorite storage is nearing its limit"
   }
 }

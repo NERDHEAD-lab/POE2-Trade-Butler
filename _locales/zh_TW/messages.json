@@ -715,5 +715,9 @@
   "error_entry_name_exists": {
     "message": "已存在同名項目: $1",
     "description": "Error message when trying to create or rename an entry to a name that already exists"
+  },
+  "favorite_storage_warning": {
+    "message": "使用量警告！($1 / $2) - 收藏夾存儲空間即將滿。請刪除不必要的項目或啟用「設定 -> 效能 -> 啟用 Google 雲端硬碟同步」以解除使用量限制。",
+    "description": "Warning message when favorite storage is nearing its limit"
   }
 }

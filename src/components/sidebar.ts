@@ -15,6 +15,7 @@ import { openFavoriteFolderModal } from '../ui/newFavoriteModal';
 import { PreviewPanelSnapshot } from '../storage/previewStorage';
 import { FileSystemEntry } from '../ui/fileSystemEntry';
 import { renderSidebarTools } from '../ui/sidebarToolUI';
+import * as storageUsage from '../storage/storageUsage';
 // import { buildSimplifiedTree } from '../utils/shareFavorites';
 
 export const POE2_SIDEBAR_ID = 'poe2-sidebar';
@@ -29,7 +30,6 @@ const sidebarHtml = `
 <div id="sidebar-menu">
   <button class="menu-tab active" data-tab="history">${getMessage('history_tab')}</button>
   <button class="menu-tab" data-tab="favorites">${getMessage('favorites_tab')}</button>
-  
 </div>
 
 <div id="sidebar-content">
@@ -48,7 +48,10 @@ const sidebarHtml = `
   </div>
   <div id="favorites" class="tab-content">
     <h3>
-      <span>${getMessage('favorites')}</span>
+      <span>
+        ${getMessage('favorites')}
+        <img src="${chrome.runtime.getURL('assets/warning_24dp_F19E39.svg')}" class="favorite-warning-icon" alt="!" style="display:none;"/>
+      </span>
       <button id="add-favorite">${getMessage('manage_favorites')}</button>
     </h3>
     <div id="favorites-list-wrapper"></div>
@@ -185,6 +188,9 @@ export function renderSidebar(container: HTMLElement): void {
 
   const favoriteWrapper = document.getElementById('favorites-list-wrapper') as HTMLDivElement;
 
+  // 저장소 사용량 경고 기능
+  void attachSyncStorageUsageWarning(sidebar);
+
   // import/export 버튼 이벤트 연결 (탭 하단 고정)
   Promise.resolve()
     .then(() => loadHistoryList(searchHistoryStorage.getAll()))
@@ -194,7 +200,9 @@ export function renderSidebar(container: HTMLElement): void {
         loadHistoryList(Promise.resolve(newValue))
       );
       previewStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
-      favoriteStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
+      void favoriteStorage.addOnChangeListener(() => loadHistoryList(searchHistoryStorage.getAll()));
+
+
 
       // const importBtn = document.getElementById('favorite-import-btn') as HTMLButtonElement | null;
       // const exportBtn = document.getElementById('favorite-export-btn') as HTMLButtonElement | null;
@@ -630,3 +638,85 @@ export function attachCreateFavoriteEvent(
     }
   });
 }
+
+
+async function attachSyncStorageUsageWarning(sidebar: HTMLElement): Promise<void> {
+  const favoriteWarningIcon = sidebar.querySelector<HTMLImageElement>('.favorite-warning-icon');
+  if (!favoriteWarningIcon) {
+    console.error(getMessage('error_favorite_warning_icon_not_found'));
+    return;
+  }
+  const isFavoriteGDriveSyncEnabled = await settingStorage.isFavoriteGDriveSyncEnabled();
+  if (isFavoriteGDriveSyncEnabled) {
+    favoriteWarningIcon.style.display = 'none';
+    return;
+  }
+
+  async function updateWarningIcon(): Promise<void> {
+    if (!favoriteWarningIcon) return;
+
+    const usage = await storageUsage.usageInfoAll();
+    const syncUsage = usage['sync'];
+    if (!syncUsage) {
+      favoriteWarningIcon.style.display = 'none';
+      return;
+    }
+
+    const maxChromeSyncStorage = 100 * 1024; // 100KB
+    const currentUsage = syncUsage.totalSize;
+    const warningThreshold = maxChromeSyncStorage * 0.9;
+
+    console.info(`Favorite storage usage: ${(currentUsage / 1024).toFixed(2)}KB`);
+
+    if (currentUsage >= warningThreshold) {
+      const message = getMessage(
+        'favorite_storage_warning',
+        (currentUsage / 1024).toFixed(2) + 'KB',
+        '100KB'
+      );
+
+      favoriteWarningIcon.style.display = 'inline';
+      favoriteWarningIcon.title = message;
+      favoriteWarningIcon.style.cursor = 'pointer';
+      favoriteWarningIcon.onclick = () => alert(message);
+    } else {
+      favoriteWarningIcon.style.display = 'none';
+      favoriteWarningIcon.title = '';
+      favoriteWarningIcon.style.cursor = 'default';
+      favoriteWarningIcon.onclick = null;
+    }
+  }
+
+  await updateWarningIcon();
+  await favoriteStorage.addOnChangeListener(() => {
+    void updateWarningIcon();
+  });
+}
+
+/*
+storageUsage.usageInfoAll()
+          .then(async usage => {
+            const isFavoriteGDriveSyncEnabled = await settingStorage.isFavoriteGDriveSyncEnabled();
+
+            const maxChromeSyncStorage = 100 * 1024; // 100KB
+            const currentUsage = usage['sync']?.totalSize || 0;
+            const warningThreshold = maxChromeSyncStorage * 0.9; // 90% 경고 임계값
+
+
+            if (currentUsage >= warningThreshold) {
+              favoriteWarningIcon.style.display = 'inline';
+              const message = getMessage('favorite_storage_warning', (currentUsage / 1024).toFixed(2) + 'KB', '100KB');
+              favoriteWarningIcon.title = message;
+              // onclick 시 경고 메시지 표시
+              favoriteWarningIcon.onclick = () => {
+                alert(message);
+              };
+            } else {
+              // for test
+              console.info(`Favorite storage usage is within safe limits: ${(currentUsage / 1024).toFixed(2)}KB`);
+              favoriteWarningIcon.style.display = 'none';
+              favoriteWarningIcon.title = '';
+              favoriteWarningIcon.onclick = null;
+            }
+          });
+ */
