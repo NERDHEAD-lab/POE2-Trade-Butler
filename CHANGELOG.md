@@ -1,5 +1,68 @@
 # CHANGE LOG
 
+## [3.0.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.12.0...3.0.0) (2025-09-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* release 3.0.0
+
+### Features
+
+* background 성능 개선 ([b844862](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/b844862f0745e379df2e33989514ca803024390b))
+* changelog 및 공지 확인 기능 추가 ([34cad12](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/34cad12da38691aa12b8e9381397d1366074c755))
+* chrome extension 개발환경에 client_id 통일을 위한 pem, pub key 추가 로직 개발 ([7bcf56e](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/7bcf56e8f4fbbe0abd2093fd98b370632c9957ce))
+* chrome sync storage에 대한 설명 보강 ([a0ea809](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/a0ea809209a99e8cd864c4184c16f165e20a0385))
+* gdrive api 고도화 ([5a770f8](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/5a770f83b7665381a1cc278cea5daee163c49403))
+* gdrive etag cache 정책 테스트 ([46f4d9c](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/46f4d9c65fb0a25dc3f2a10aaae849f7b12542c8))
+* gdrive recache 방식 변경 ([3a80f3d](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/3a80f3d72d26d33ec4f78b0278e4150ac371bae6))
+* gdrive 기능 StorageManager 구조에 통합 ([f7987e9](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f7987e990f3fabf173ed397e9f8d881b3acf8dae))
+* gdrive 테스트 ([b6c0f9b](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/b6c0f9b6470b65d247b805d7b5dc8cdb34e10b7b))
+* gdrive로 전환 시 sync storage 정리 로직 추가 ([fc3ba11](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/fc3ba11e7a20a9d2b13a9234d9d36d2f23423ce1))
+* GoogleDriveStorageStrategy 최적화 ([94dfce4](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/94dfce4cc5e3f324ace6fcc717203db302b22179))
+* LoadingOverlay 코드 분리 및 parent에 append 하도록 변경 ([e20544d](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/e20544d4d1d22aff181db4f859929d2625d6e43d))
+* service worker가 30초 까지만 살아 있어서 이후에 sendMessage를 받지 못하는 문제 수정 ([7509119](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/75091191cd5d9f218209b61e389ce3e0768ae06e))
+* showModal consumer를 명확한 동작인 onRender로 변경 및 render 이후 동작하도록 변경 ([08f1e88](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/08f1e8850038294bf0e46f89459e99ee39ad95f5))
+* sidebar toggle button 코드 분리 후 바뀐 id로 인해 guide 기능이 동작하지 않는 문제 수정 ([15cdf40](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/15cdf401174437dc6a7b2f60807b0358ab447682))
+* sidebar 도구 모음에서 버튼 잠금 기능 추가 및 테스트 적용 ([23253b0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/23253b0854909fe02e43f5f343059eea90d9a771))
+* sidebar 도구에 미리보기 기능 활성화/비활성화 추가 ([8c1f131](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/8c1f131d64d586c7aeb8b88e94f35f6fafb1d609))
+* sidebar 도구에 즐겨찾기 추가 ([583538d](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/583538d28b6f9f85e691420075ddc00a52ad3284))
+* sidebar와 연계 되는 버튼 들의 투명도도 설정의 영향을 받도록 개선 ([ea5668f](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/ea5668f2aed2de7b803403bb313c199dd382e792))
+* 가이드 내용 최신화 ([c547e46](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/c547e463e373e908640bcb9ccb17d9fe2b3b123b))
+* 계정 저장소의 용량이 90% 이상 일 경우 경고 추가 ([862dce5](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/862dce591a437a56f09e10a740268fb66d1b81b8))
+* 설정 적용 중에 조작이 불가능하도록 개선 ([b73d5dd](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/b73d5dd7780b24b3d8f673b0cc3d6b84d10c2449))
+* 설정 화면의 가시성 개선 ([81a66f3](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/81a66f37cab376059af00ff970e367fdbf2eba52))
+* 스크롤 UI가 어울리도록 개선 및 favorite에서도 스크롤이 동작하도록 개선 ([7188728](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/71887288dcd7e28238bc799f0b981023d07f446b))
+* 즐겨찾기 용량 제한 극복(key 당 8kb, sync 전체 100kb 제한)을 위한 google oauth 추가 ([169f0ae](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/169f0aef62a0bded8510c1ea7488109b650d0a8f))
+* 즐겨찾기 저장소를 google drive를 사용 할 수 있는 기능 추가 ([7813b7a](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/7813b7ad065cb8cdc3595f0df7f23d9fcac13af6))
+* 즐겨찾기 추가 시 이름 입력에 focus 기능 추가 ([f55844d](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f55844d94b40ad0b691133237819cb30a6cfd237))
+* 즐겨찾기 추가 시 중복된 이름으로 인한 실패일 경우 toast를 띄우도록 개선 ([bf7beed](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/bf7beedb9f1e76b19364013d49501e498c65094c))
+* 즐겨찾기 추가/삭제/변경 시 작업이 완료되기 전 다른 작업을 지시 하지 못하도록 안정성 강화 ([1060004](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/106000441720dae8dcabae2ed3d88044480a229b))
+* 즐겨찾기 추가/삭제/변경 시 작업이 완료되기 전 다른 작업을 지시 하지 못하도록 안정성 강화 - 2 ([6b31cb6](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/6b31cb62ff6d5530d557bc0b680bdf79ae4cd6c3))
+* 즐겨찾기 추가와 관리를 분리함에 따라, 관련 modal 구성 수정 ([c0b323d](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/c0b323d9e512d5c183fcbdecef2f7e97c6c45945))
+* 즐겨찾기 폴더 추가/삭제 시 로딩바를 표시하도록 수정 ([9b5fe33](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/9b5fe33f5c7d4a6968506b0dc63cf6e19bebf8f1))
+* 즐겨찾기를 gdrive로 사용하는 설정 추가 ([048c947](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/048c947f21ecb5054c824813de40c4019a215d81))
+
+
+### Bug Fixes
+
+* api의 다른 기능으로 인해 발생하는 circular ref 이슈 조치를 위한 ping 기능 분리 ([e1d75d2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/e1d75d2124b30a7f237d448d06fd4fae82be16c8))
+* preview 기능 비활성화 시 가이드가 스킵되는 문제 수정 ([d60d41b](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/d60d41b5b20539d1a6a9f8579c3c73568de16e72))
+* service worker를 깨우기 위한 ping 기능이 정상적으로 동작하지 않는 문제 개선 ([b2d67ec](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/b2d67ec08f0cdf628043da8ef0ecbea83c3b027f))
+* service worker를 깨우기 위한 ping 기능이 정상적으로 동작하지 않는 문제 개선 - 2 ([8e16fa1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/8e16fa18b018532b522b4b75a7ee76c0e2aeaac1))
+* 가이드 종료 후 overlay blur 효과가 정상적으로 제거되지않는 문제 수정 ([17c94b1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/17c94b1a6c7a02c033e7beff71a5dc1e045cce0e))
+* 누락된 storgaeManager description 추가 ([196d904](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/196d9044914509b9f15b62768a45afb98be31884))
+* 누락된 미리보기 설정 관련 i18n 추가 ([abac6ec](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/abac6ec73d8c7216ab748c9e37e423f99d091c10))
+* 설정 적용이 완료되기 전에 새로고침 되는 문제 수정 ([ba59c01](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/ba59c01c5f97aeae286f384284381859aef4bd44))
+* 유효하지 않은 페이지에서 즐겨찾기 추가 시  modal이 열리는 문제 수정 ([3003df2](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/3003df24beadc74e75c864fc71f6f585c2ff3206))
+* 저장소 사용량에서 undefined에 즐겨찾기가 표시되는 문제 수정 ([c36acd0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/c36acd0e5947b2930220ead755c5ceef9dc922b0))
+* 즐겨찾기 저장소 예외처리 강화 ([0866821](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/08668216a5a7e937f59f37036ca9b4b0275e15c9))
+
+
+### Chores
+
+* release 3.0.0 ([6da5297](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/6da5297dfe9669db3e44df46ca5d24b03ba07de3))
+
 ## [2.12.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.11.3...2.12.0) (2025-09-12)
 
 
