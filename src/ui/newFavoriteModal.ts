@@ -5,6 +5,7 @@ import * as folderUI from './favoriteFileSystemUI';
 import * as fs from './fileSystemEntry';
 import { FileEntry } from './fileSystemEntry';
 import { getMessage } from '../utils/_locale';
+import { LoadingOverlay } from '../utils/LoadingOverlay';
 
 type FavoriteItem = { id: string; url: string };
 
@@ -67,69 +68,91 @@ export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void
           {
             name: getMessage('button_new_folder'),
             listener: async (): Promise<boolean> => {
-              const selectedFolder = await folderUI.getSelectedFolder(wrapper);
-              const parentId = selectedFolder?.id || null;
-              const name = prompt(getMessage('prompt_enter_folder_name'))?.trim();
-              const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
+              const modalElement = document.querySelector('.poe2-modal') as HTMLDivElement;
+              const overlay = new LoadingOverlay(modalElement);
+              overlay.show();
 
-              if (!name) {
-                showToast(getMessage('toast_folder_name_empty'), '#f66');
-                return false;
-              } else if (name.length > 20) {
-                showToast(getMessage('toast_folder_name_too_long'), '#f66');
-                return false;
-              } else if (exceptions.some(exception => name.includes(exception))) {
-                showToast(
-                  getMessage('toast_folder_name_invalid_chars', exceptions.join(', ')),
-                  '#f66'
-                );
+              try {
+                const selectedFolder = await folderUI.getSelectedFolder(wrapper);
+                const parentId = selectedFolder?.id || null;
+                const name = prompt(getMessage('prompt_enter_folder_name'))?.trim();
+                const exceptions = ['/', '\\', ':', '*', '?', '"', '<', '>', '|'];
+
+                if (!name) {
+                  showToast(getMessage('toast_folder_name_empty'), '#f66');
+                  return false;
+                } else if (name.length > 20) {
+                  showToast(getMessage('toast_folder_name_too_long'), '#f66');
+                  return false;
+                } else if (exceptions.some(exception => name.includes(exception))) {
+                  showToast(
+                    getMessage('toast_folder_name_invalid_chars', exceptions.join(', ')),
+                    '#f66'
+                  );
+                  return false;
+                }
+
+                return favoriteStorage
+                  .getAll()
+                  .then(async favorites =>
+                    fs.addEntry(favorites, { name: name, type: 'folder' }, parentId)
+                  )
+                  .then(newEntry => favoriteStorage.saveAll(newEntry))
+                  .then(() => {
+                    showToast(getMessage('toast_folder_created', name));
+                    return false;
+                  })
+                  .catch(error => {
+                    console.error(getMessage('error_create_folder', error.message));
+                    return false;
+                  })
+                  .finally(() => overlay.hide());
+              } catch (error) {
+                console.error('Error creating folder:', error);
+                overlay.hide();
                 return false;
               }
-
-              return favoriteStorage
-                .getAll()
-                .then(async favorites =>
-                  fs.addEntry(favorites, { name: name, type: 'folder' }, parentId)
-                )
-                .then(newEntry => favoriteStorage.saveAll(newEntry))
-                .then(() => {
-                  showToast(getMessage('toast_folder_created', name));
-                  return false;
-                })
-                .catch(error => {
-                  console.error(getMessage('error_create_folder', error.message));
-                  return false;
-                });
             }
           },
           {
             name: getMessage('button_delete_folder'),
             listener: async (): Promise<boolean> => {
-              const favoriteEntries = await favoriteStorage.getAll();
-              const selectedFolder = await folderUI.getSelectedFolder(wrapper);
-              if (!selectedFolder) {
-                showToast(getMessage('toast_no_folder_selected'), '#f66');
-                return false;
-              } else if (selectedFolder.id === 'root') {
-                showToast(getMessage('toast_cannot_delete_root'), '#f66');
-                return false;
-              } else if (favoriteEntries.some(entry => entry.parentId === selectedFolder.id)) {
-                if (!confirm(getMessage('confirm_delete_folder_with_items'))) {
-                  return false;
-                }
-              }
+              const modalElement = document.querySelector('.poe2-modal') as HTMLDivElement;
+              const overlay = new LoadingOverlay(modalElement);
+              overlay.show();
 
-              return favoriteStorage
-                .saveAll(favoriteEntries.filter(entry => entry.id !== selectedFolder.id))
-                .then(() => {
-                  showToast(getMessage('toast_folder_deleted', selectedFolder.name));
+              try {
+                const favoriteEntries = await favoriteStorage.getAll();
+                const selectedFolder = await folderUI.getSelectedFolder(wrapper);
+                if (!selectedFolder) {
+                  showToast(getMessage('toast_no_folder_selected'), '#f66');
                   return false;
-                })
-                .catch(error => {
-                  console.error(getMessage('error_delete_folder', error.message));
-                  showToast(getMessage('toast_folder_delete_failed', error.message), '#f66');
+                } else if (selectedFolder.id === 'root') {
+                  showToast(getMessage('toast_cannot_delete_root'), '#f66');
                   return false;
-                });
+                } else if (favoriteEntries.some(entry => entry.parentId === selectedFolder.id)) {
+                  if (!confirm(getMessage('confirm_delete_folder_with_items'))) {
+                    return false;
+                  }
+                }
+
+                return favoriteStorage
+                  .saveAll(favoriteEntries.filter(entry => entry.id !== selectedFolder.id))
+                  .then(() => {
+                    showToast(getMessage('toast_folder_deleted', selectedFolder.name));
+                    return false;
+                  })
+                  .catch(error => {
+                    console.error(getMessage('error_delete_folder', error.message));
+                    showToast(getMessage('toast_folder_delete_failed', error.message), '#f66');
+                    return false;
+                  })
+                  .finally(() => overlay.hide());
+              } catch (error) {
+                console.error('Error deleting folder:', error);
+                overlay.hide();
+                return false;
+              }
             }
           }
         ],
