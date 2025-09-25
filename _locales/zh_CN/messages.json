@@ -148,7 +148,7 @@
     "description": "Toast message for history auto-add toggle"
   },
   "toast_favorite_add_error": {
-    "message": "添加到收藏夹失败: $1",
+    "message": "添加到收藏夹失败。请在搜索结果页面尝试。",
     "description": "Toast message for favorite add error"
   },
   "toast_favorite_add_unknown_error": {
@@ -255,6 +255,10 @@
     "message": "添加到收藏文件夹",
     "description": "Modal title for adding to favorite folder"
   },
+  "modal_favorite_folders": {
+    "message": "管理收藏文件夹",
+    "description": "Modal title for managing favorite folders"
+  },
   "button_save": {
     "message": "保存",
     "description": "Button text for saving"
@@ -320,6 +324,18 @@
     "message": "点击此按钮打开或关闭侧边栏。",
     "description": "Guide: sidebar toggle button"
   },
+  "butler_guide_notice_button": {
+    "message": "点击此按钮查看公告。",
+    "description": "Guide: notice button"
+  },
+  "butler_guide_preview_toggle_button": {
+    "message": "点击此按钮启用或禁用交易预览覆盖功能。",
+    "description": "Guide: trade preview overlay toggle button"
+  },
+  "butler_guide_add_favorite_button": {
+    "message": "点击此按钮将当前页面添加到收藏夹。",
+    "description": "Guide: add current page to favorites button"
+  },
   "butler_guide_switch_tab": {
     "message": "点击\"历史\"或\"收藏夹\"标签在它们之间切换。",
     "description": "Guide: switch between history/favorites tab"
@@ -352,9 +368,9 @@
     "message": "点击此按钮清除所有搜索历史。",
     "description": "Guide: clear search history button"
   },
-  "butler_guide_add_favorite_button": {
-    "message": "点击此按钮将当前页面添加到收藏夹。",
-    "description": "Guide: add current page to favorites button"
+  "butler_guide_manage_favorite_folder": {
+    "message": "点击此按钮管理收藏文件夹。",
+    "description": "Guide: manage favorite folders button"
   },
   "butler_guide_favorite_folder_list": {
     "message": "这是收藏文件夹列表。",
@@ -536,6 +552,10 @@
     "message": "扩展程序的收藏夹文件夹。用于存储你的收藏项目。",
     "description": "Description for storage favorite folders"
   },
+  "storage_description_favoriteFolders_v2": {
+    "message": "扩展程序的收藏夹文件夹。用于存储你的收藏项目。使用Google Drive。",
+    "description": "Description for storage favorite folders"
+  },
   "storage_description_poe2trade_settings_i18n": {
     "message": "扩展程序的翻译数据缓存。",
     "description": "Stores i18n translation data per language"
@@ -601,7 +621,7 @@
     "description": "Settings option to enable Google Account sync for storage"
   },
   "settings_option_storage_sync_description": {
-    "message": "使用Google账户同步来保存您的设置和数据。\n将在所有登录同一账户的设备上同步。",
+    "message": "通过Google账户同步保存您的设置和数据。（最大100KB）\n在所有登录同一账户的设备上同步。",
     "description": "Description for Google Account sync storage option in settings"
   },
   "log_migration_skip_remove": {
@@ -623,5 +643,93 @@
   "settings_option_sidebar_opacity_description": {
     "message": "设置侧边栏的不透明度。0%表示完全透明，100%表示完全不透明。",
     "description": "Description for sidebar opacity setting"
+  },
+  "storage_description_poe2trade_settings_previewOverlayEnabled": {
+    "message": "交易预览覆盖启用状态。",
+    "description": "Whether the trade preview overlay is enabled"
+  },
+  "settings_option_configure_preview_overlay": {
+    "message": "启用/禁用交易预览覆盖",
+    "description": "Settings option to configure the trade preview overlay"
+  },
+  "settings_option_configure_preview_overlay_description": {
+    "message": "启用或禁用交易预览覆盖。\n禁用后，鼠标悬停在历史和收藏列表中将不会显示预览。",
+    "description": "Description for configuring the trade preview overlay"
+  },
+  "button_close": {
+    "message": "关闭",
+    "description": "Button text to close the modal"
+  },
+  "storage_description_poe2trade_settings_noticeContext": {
+    "message": "缓存的通知内容。",
+    "description": "The content of the cached notices"
+  },
+  "storage_description_poe2trade_settings_noticeUnread": {
+    "message": "未读通知状态。",
+    "description": "Whether the user has unread notices"
+  },
+  "sidebar_tool_notice_button_modal_error_no_content": {
+    "message": "无法加载公告内容。请稍后再试。",
+    "description": "Error message when notice content cannot be loaded"
+  },
+  "sidebar_tool_notice_button_modal_error_fetch_failed": {
+    "message": "获取公告内容时出错: $1",
+    "description": "Error message when fetching notice content fails"
+  },
+  "sidebar_tool_sidebar_toggle_button_description": {
+    "message": "打开/关闭侧边栏",
+    "description": "Description for the sidebar toggle button"
+  },
+  "sidebar_tool_notice_button_description": {
+    "message": "打开公告",
+    "description": "Description for the sidebar tool notice button"
+  },
+  "sidebar_tool_notice_button_modal_title": {
+    "message": "公告",
+    "description": "Title for the sidebar tool notice modal"
+  },
+  "sidebar_tool_favorite_add_button_description": {
+    "message": "添加到收藏夹",
+    "description": "Description for the sidebar tool favorite add button"
+  },
+  "toast_preview_overlay_disabled": {
+    "message": "交易预览已禁用。",
+    "description": "Toast message when trade preview overlay is disabled"
+  },
+  "settings_tab_performance": {
+    "message": "性能",
+    "description": "Settings tab for performance options"
+  },
+  "settings_option_enable_favorite_gdrive_sync": {
+    "message": "启用Google Drive同步收藏夹",
+    "description": "Settings option to enable Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_description": {
+    "message": "将收藏夹文件夹和项目同步到Google Drive。\n首次使用此功能时需要进行Google账户认证。\n如果您有大量收藏夹或收藏夹项目包含备注，可以使用Google Drive同步来增加存储容量。",
+    "description": "Description for enabling Google Drive sync for favorites"
+  },
+  "confirm_enable_favorite_gdrive_sync": {
+    "message": "您确定要启用Google Drive同步吗？\n此操作将把现有的收藏夹数据迁移到Google Drive。",
+    "description": "Confirmation message when enabling Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_cancelled": {
+    "message": "已取消启用Google Drive同步。",
+    "description": "Message shown when enabling Google Drive sync for favorites is cancelled"
+  },
+  "settings_option_enable_favorite_gdrive_sync_enabled": {
+    "message": "Google Drive同步已启用。",
+    "description": "Message shown when Google Drive sync for favorites is enabled"
+  },
+  "storage_description_poe2trade_settings_favoriteGDriveSyncEnabled": {
+    "message": "收藏夹的Google Drive同步是否启用",
+    "description": "Whether Google Drive sync for favorites is enabled"
+  },
+  "error_entry_name_exists": {
+    "message": "已存在同名条目: $1",
+    "description": "Error message when trying to create or rename an entry to a name that already exists"
+  },
+  "favorite_storage_warning": {
+    "message": "使用量警告！($1 / $2) - 收藏夹存储空间即将满。请删除不必要的项目，或通过“设置 -> 性能 -> 启用Google Drive同步”来解除存储限制。",
+    "description": "Warning message when favorite storage is nearing its limit"
   }
 }

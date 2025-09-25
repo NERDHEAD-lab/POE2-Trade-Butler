@@ -14,8 +14,10 @@ import {
   Settings, SliderDetailOption
 } from '../utils/settingManager';
 import * as settingStorage from '../storage/settingStorage';
+import * as favoriteStorage from '../storage/favoriteStorage';
 import * as information from './information';
 import * as storageUsage from '../storage/storageUsage';
+import { LoadingOverlay } from '../utils/LoadingOverlay';
 
 const settings: Settings = {
   tabs: [
@@ -98,6 +100,39 @@ const settings: Settings = {
       ]
     },
     {
+      name: getMessage('settings_tab_performance'),
+      iconUrl: chrome.runtime.getURL('assets/speed_24dp_E9E5DE.svg'),
+      options: [
+        {
+          id: 'enable-favorite-gdrive-sync',
+          name: getMessage('settings_option_enable_favorite_gdrive_sync'),
+          iconUrl: chrome.runtime.getURL('assets/drive_export_24dp_E9E5DE.svg'),
+          description: getMessage('settings_option_enable_favorite_gdrive_sync_description'),
+          optionDetail: {
+            type: 'checkbox',
+            checked: await settingStorage.isFavoriteGDriveSyncEnabled(),
+            onChangeListener: async (checked: boolean) => {
+              if (!checked) return;
+
+              if (!confirm(getMessage('confirm_enable_favorite_gdrive_sync'))) {
+                // 테스트용 5초 대기
+                const timer = (ms: number) => new Promise(res => setTimeout(res, ms));
+                await timer(5000);
+                showToast(getMessage('settings_option_enable_favorite_gdrive_sync_cancelled'));
+                return;
+              }
+
+              return favoriteStorage.migrateStorageToGoogleDrive()
+                .then(() => showToast(getMessage('settings_option_enable_favorite_gdrive_sync_enabled')));
+            },
+            onRender: checkbox => {
+              if (checkbox.checked) checkbox.disabled = true;
+            }
+          },
+        }
+      ]
+    },
+    {
       name: getMessage('settings_tab_display'),
       iconUrl: chrome.runtime.getURL('assets/view_sidebar_24dp_E9E5DE.svg'),
       options: [
@@ -169,10 +204,17 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
       cancel: getMessage('button_cancel'),
       onConfirmListener: async (): Promise<boolean> => {
         if (settingManager.hasChanges()) {
-          settingManager.applyChanges();
-          showToast(getMessage('settings_changes_applied'));
+          const loadingOverlay = new LoadingOverlay();
+          try {
+            loadingOverlay.show();
 
-          document.location.reload();
+            await settingManager.applyChanges();
+            showToast(getMessage('settings_changes_applied'));
+
+            document.location.reload();
+          } finally {
+            loadingOverlay.hide();
+          }
         }
         return true;
       },
@@ -201,10 +243,16 @@ export async function attachSettingOnClick(parent: HTMLElement): Promise<void> {
           name: getMessage('button_apply'),
           listener: async (): Promise<boolean> => {
             if (settingManager.hasChanges()) {
-              settingManager.applyChanges();
-              showToast(getMessage('settings_changes_applied'));
+              const loadingOverlay = new LoadingOverlay();
+              try {
+                loadingOverlay.show();
+                await settingManager.applyChanges();
+                showToast(getMessage('settings_changes_applied'));
 
-              document.location.reload();
+                document.location.reload();
+              } finally {
+                loadingOverlay.hide();
+              }
             } else {
               showToast(getMessage('settings_no_changes'));
             }

@@ -17,9 +17,9 @@ trading experience.
 |------------------------------------------------------------------------------|----------------------------------------------------------------------------------|----------------------------------------------------------------|
 | [![Chrome Web Store][chrome-web-store-version-badge]][chrome-web-store-link] | [![Chrome Web Store Users][chrome-web-store-users-badge]][chrome-web-store-link] | [![GitHub release][github-release-badge]][github-release-link] |
 
-| Build Status                                             | License                                                        | Privacy Policy                                                        |
-|----------------------------------------------------------|----------------------------------------------------------------|-----------------------------------------------------------------------|
-| [![Build Status][build-status-badge]][build-status-link] | [![GitHub license][github-license-badge]][github-license-link] | [![GitHub privacy-policy][privacy-policy-badge]][privacy-policy-link] |
+| Build Status                                             | License                                                        | Privacy Policy                                                                                                                                                                                 |
+|----------------------------------------------------------|----------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![Build Status][build-status-badge]][build-status-link] | [![GitHub license][github-license-badge]][github-license-link] | [![Chrome Extension privacy-policy][extension-privacy-policy-badge]][extension-privacy-policy-link]<br>[![OAuth Client privacy-policy][oauth-privacy-policy-badge]][oauth-privacy-policy-link] |
 
 | Sponsors                                                          | Buy Me a Coffee                                                   |
 |-------------------------------------------------------------------|-------------------------------------------------------------------|
@@ -34,7 +34,8 @@ trading experience.
 [github-release-badge]: https://img.shields.io/github/v/release/NERDHEAD-lab/POE2-Trade-Butler?logo=github
 [build-status-badge]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions/workflows/release-please.yml/badge.svg
 [github-license-badge]: https://img.shields.io/github/license/NERDHEAD-lab/POE2-Trade-Butler
-[privacy-policy-badge]: https://img.shields.io/badge/Privacy%20Policy-Read%20Here-blue
+[extension-privacy-policy-badge]: https://img.shields.io/badge/Privacy%20Policy-Chrome%20Extension-blue
+[oauth-privacy-policy-badge]: https://img.shields.io/badge/Privacy%20Policy-OAuth%20Client-blue
 [github-sponsors-badge]: https://img.shields.io/github/sponsors/NERDHEAD-lab?logo=github&logoColor=white
 [buy-me-a-coffee-badge]: https://img.shields.io/badge/Buy%20Me%20a%20Coffee-yellow?logo=buymeacoffee&logoColor=white
 
@@ -44,7 +45,8 @@ trading experience.
 [github-release-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/releases
 [build-status-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/actions
 [github-license-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/LICENSE
-[privacy-policy-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/privacy-policy.md
+[extension-privacy-policy-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/privacy-policy.md
+[oauth-privacy-policy-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/oauth-client-privacy.md
 [github-sponsors-link]: https://github.com/sponsors/NERDHEAD-lab
 [buy-me-a-coffee-link]: https://coff.ee/nerdhead_lab
 

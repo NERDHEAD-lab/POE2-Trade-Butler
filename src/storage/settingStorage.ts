@@ -214,3 +214,73 @@ export function setPreviewOverlayEnabled(enabled: boolean): Promise<void> {
 export function getPreviewOverlayEnabled(): Promise<boolean> {
   return previewOverlayEnabledConfig.get();
 }
+
+export function addPreviewOverlayEnabledChangeListener(
+  listener: (newValue: boolean, oldValue: boolean) => void
+): void {
+  previewOverlayEnabledConfig.addOnChangeListener(listener);
+}
+
+// NoticeContext
+export type NoticeContext = {
+  lastModified: string;
+  content: string;
+};
+
+type NoticeContextMap = Record<string, NoticeContext>;
+
+const defaultNoticeContext: NoticeContext = {
+  lastModified: '',
+  content: ''
+};
+
+const defaultNoticeContextMap: NoticeContextMap = {};
+
+const noticeContextConfig = createStorageManager<NoticeContextMap>(
+  'local',
+  'noticeContext',
+  defaultNoticeContextMap
+);
+
+export async function setNoticeContext(url: string, context: NoticeContext): Promise<void> {
+  const map = await noticeContextConfig.get();
+  map[url] = context;
+  return await noticeContextConfig.set(map);
+}
+
+export async function getNoticeContext(url: string): Promise<NoticeContext> {
+  const map = await noticeContextConfig.get();
+  return map[url] || { ...defaultNoticeContext };
+}
+
+// Notice Unread
+const defaultNoticeUnread = false;
+const noticeUnreadConfig = createStorageManager<boolean>(
+  'local',
+  'noticeUnread',
+  defaultNoticeUnread
+);
+
+export function setNoticeUnread(unread: boolean): Promise<void> {
+  return noticeUnreadConfig.set(unread);
+}
+
+export function isNoticeUnread(): Promise<boolean> {
+  return noticeUnreadConfig.get();
+}
+
+// isFavoriteGDriveSyncEnabled
+const defaultFavoriteGDriveSyncEnabled = false;
+const favoriteGDriveSyncEnabledConfig = createStorageManager<boolean>(
+  'sync',
+  'favoriteGDriveSyncEnabled',
+  defaultFavoriteGDriveSyncEnabled
+);
+
+export function setFavoriteGDriveSyncEnabled(enabled: boolean): Promise<void> {
+  return favoriteGDriveSyncEnabledConfig.set(enabled);
+}
+
+export function isFavoriteGDriveSyncEnabled(): Promise<boolean> {
+  return favoriteGDriveSyncEnabledConfig.get();
+}

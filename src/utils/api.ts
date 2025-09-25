@@ -82,7 +82,7 @@ export function getServerRegion(url: URL): string {
  */
 export type ButtonListener = (modal: HTMLDivElement) => Promise<boolean>;
 
-export type ModalConsumer = (ctx: ModalButtonContext) => void;
+export type OnRenderConsumer = (ctx: ModalButtonContext) => void;
 
 export interface ModalButtonContext {
   root: HTMLDivElement;
@@ -124,7 +124,7 @@ export interface ModalOptions {
     listener: ButtonListener;
   }[];
   hideCancel?: boolean;
-  consumer?: ModalConsumer;
+  onRender?: OnRenderConsumer;
 }
 
 export function showModal(options: ModalOptions): void {
@@ -138,7 +138,7 @@ export function showModal(options: ModalOptions): void {
     onOverlayClickListener = () => Promise.resolve(true),
     etcButtons = [],
     hideCancel = false,
-    consumer
+    onRender
   } = options;
 
   const overlay = document.createElement('div');
@@ -261,17 +261,17 @@ export function showModal(options: ModalOptions): void {
     });
   }
 
-  consumer?.({
-    root: overlay,
-    confirm: () => confirmBtn.click(),
-    cancel: () => cancelBtn.click(),
-    etc: (name) => etcButtonElements[name]?.click()
-  });
-
   btnWrapper.appendChild(leftBtnGroup);
   btnWrapper.appendChild(rightBtnGroup);
 
   modal.appendChild(btnWrapper);
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
+
+  onRender?.({
+    root: overlay,
+    confirm: () => confirmBtn.click(),
+    cancel: () => cancelBtn.click(),
+    etc: (name) => etcButtonElements[name]?.click()
+  });
 }

@@ -1,4 +1,5 @@
 import { ChunkifyUtil } from '../utils/ChunkifyUtil';
+import { GoogleDriveApi } from '../utils/GoogleDriveApi';
 
 const StorageTypeEnum: Record<'local' | 'sync', StorageTypeInfo> = {
   local: {
@@ -20,7 +21,7 @@ interface StorageTypeInfo {
   description: string;
 }
 
-type StorageStrategyType = 'default' | 'chunkedArray';
+type StorageStrategyType = 'default' | 'chunkedArray' | 'googleDrive';
 
 interface StorageStrategy<ENTITY> {
   set(value: ENTITY): Promise<void>;
@@ -161,6 +162,110 @@ class ChunkedArrayStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
   }
 }
 
+type GoogleDriveStorageHint = { fileId: string; lastModified: string };
+
+class GoogleDriveStorageStrategy<ENTITY> implements StorageStrategy<ENTITY> {
+  private cachedEntity: ENTITY | null = null;
+  private cachedTimestamp: string | null = null;
+
+  constructor(
+    private type: StorageType,
+    private key: string,
+    private defaultValueSupplier: () => ENTITY
+  ) {}
+
+  private hintKey(key: string): string {
+    return `__gdrive_hint__:${key}`;
+  }
+
+  async set(value: ENTITY): Promise<void> {
+    if (value === null || value === undefined) {
+      throw new Error('Cannot store null or undefined value.');
+    }
+
+    const content = JSON.stringify(value);
+    const hint = await get<GoogleDriveStorageHint | null>(this.type, this.hintKey(this.key), null);
+
+    if (this.cachedEntity && this.cachedTimestamp === hint?.lastModified && content === JSON.stringify(this.cachedEntity)) {
+      return;
+    }
+
+    let fileId = hint?.fileId;
+    try {
+      if (fileId) {
+        await GoogleDriveApi.updateFile(fileId, content);
+      } else {
+        fileId = await GoogleDriveApi.createFile(`${this.key}.json`, content);
+      }
+
+      const newTimestamp = new Date().toISOString();
+      const newHint: GoogleDriveStorageHint = { fileId, lastModified: newTimestamp };
+      await set(this.type, this.hintKey(this.key), newHint);
+
+      this.cachedEntity = value;
+      this.cachedTimestamp = newTimestamp;
+    } catch (e) {
+      console.error('Failed to store data to Google Drive:', e);
+      this.cachedEntity = null;
+      this.cachedTimestamp = null;
+      throw e;
+    }
+  }
+
+  async get(): Promise<ENTITY> {
+    const hint = await get<GoogleDriveStorageHint | null>(this.type, this.hintKey(this.key), null);
+    if (!hint || !hint.fileId) {
+      return this.defaultValueSupplier();
+    }
+
+    if (this.cachedEntity && this.cachedTimestamp === hint.lastModified) {
+      return this.cachedEntity;
+    }
+
+    try {
+      const content = await GoogleDriveApi.readFile(hint.fileId);
+      const entity = JSON.parse(content) as ENTITY;
+
+      this.cachedEntity = entity;
+      this.cachedTimestamp = hint.lastModified;
+
+      return entity;
+    } catch (e) {
+      console.error('Failed to read data from Google Drive:', e);
+      this.cachedEntity = null;
+      this.cachedTimestamp = null;
+      return this.defaultValueSupplier();
+    }
+  }
+
+  private wrappedListenerMap = new WeakMap<
+    (newValue: ENTITY, oldValue: ENTITY) => void,
+    () => void
+  >();
+
+  addOnChangeListener(listener: (newValue: ENTITY, oldValue: ENTITY) => void): void {
+    const listenerWrapper = async () => {
+      const oldValue = this.cachedEntity ?? this.defaultValueSupplier();
+
+      const newValue = await this.get();
+
+      if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
+        listener(newValue, oldValue);
+      }
+    }
+    addOnChangeListener(this.type, this.hintKey(this.key), listenerWrapper);
+    this.wrappedListenerMap.set(listener, listenerWrapper);
+  }
+
+  removeOnChangeListener(listener: (newValue: ENTITY, oldValue: ENTITY) => void): void {
+    const listenerWrapper = this.wrappedListenerMap.get(listener);
+    if (listenerWrapper) {
+      removeOnChangeListener(this.type, listenerWrapper);
+      this.wrappedListenerMap.delete(listener);
+    }
+  }
+}
+
 export function createStorageStrategy<ENTITY>(
   type: StorageType,
   key: string,
@@ -173,6 +278,8 @@ export function createStorageStrategy<ENTITY>(
     case 'chunkedArray':
       //Type 'ENTITY' does not satisfy the constraint 'unknown[]'.
       return new ChunkedArrayStorageStrategy<ENTITY>(type, key, defaultValueSupplier);
+    case 'googleDrive':
+      return new GoogleDriveStorageStrategy<ENTITY>(type, key, defaultValueSupplier);
     default:
       throw new Error(`Unknown storage strategy type: ${strategyType}`);
   }

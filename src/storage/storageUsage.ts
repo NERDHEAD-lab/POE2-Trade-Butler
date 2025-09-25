@@ -54,7 +54,7 @@ export async function usageInfoAll(): Promise<UsageInfoFormatted> {
     let totalSize = 0;
     const formattedEntities: StorageEntryUsage[] = [];
 
-    for (const key in entities) {
+    for (let key in entities) {
       let entity: unknown;
 
       function isChunkStorage(key: string): boolean {
@@ -70,10 +70,10 @@ export async function usageInfoAll(): Promise<UsageInfoFormatted> {
       if (isChunkStorage(key)) {
         continue; // Skip chunk keys
       } else if(isChunkMilestone(key)) {
-        const keyBase = key
+        key = key
           .replace(/^__chunk__:/, '')
           .replace(/::__meta$/, '');
-        entity = await createStorageStrategy(type, keyBase, () => ({}), 'chunkedArray').get();
+        entity = await createStorageStrategy(type, key, () => ({}), 'chunkedArray').get();
       } else {
         entity = entities[key];
       }

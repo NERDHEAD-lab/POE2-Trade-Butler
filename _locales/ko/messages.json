@@ -148,7 +148,7 @@
     "description": "Toast message for history auto-add toggle"
   },
   "toast_favorite_add_error": {
-    "message": "즐겨찾기 추가 실패: $1",
+    "message": "즐겨찾기 추가 실패. 검색 결과 페이지에서 시도해주세요.",
     "description": "Toast message for favorite add error"
   },
   "toast_favorite_add_unknown_error": {
@@ -255,6 +255,10 @@
     "message": "즐겨찾기 폴더에 추가",
     "description": "Modal title for adding to favorite folder"
   },
+  "modal_favorite_folders": {
+    "message": "즐겨찾기 폴더 관리",
+    "description": "Modal title for managing favorite folders"
+  },
   "button_save": {
     "message": "저장",
     "description": "Button text for saving"
@@ -320,6 +324,18 @@
     "message": "이 버튼을 눌러 사이드바를 열거나 닫을 수 있습니다.",
     "description": "Guide: sidebar toggle button"
   },
+  "butler_guide_notice_button": {
+    "message": "이 버튼을 눌러 공지사항을 확인할 수 있습니다.",
+    "description": "Guide: notice button"
+  },
+  "butler_guide_preview_toggle_button": {
+    "message": "이 버튼을 눌러 거래 미리보기 오버레이 기능을 켜거나 끌 수 있습니다.",
+    "description": "Guide: trade preview overlay toggle button"
+  },
+  "butler_guide_add_favorite_button": {
+    "message": "현재 거래 페이지를 즐겨찾기에 추가하려면 이 버튼을 클릭하세요.",
+    "description": "Guide: add current page to favorites button"
+  },
   "butler_guide_switch_tab": {
     "message": "\"기록\" 또는 \"즐겨찾기\" 탭을 눌러 탭을 전환할 수 있습니다.",
     "description": "Guide: switch between history/favorites tab"
@@ -352,9 +368,9 @@
     "message": "검색 기록을 모두 삭제하려면 이 버튼을 클릭하세요.",
     "description": "Guide: clear search history button"
   },
-  "butler_guide_add_favorite_button": {
-    "message": "현재 거래 페이지를 즐겨찾기에 추가하려면 이 버튼을 클릭하세요.",
-    "description": "Guide: add current page to favorites button"
+  "butler_guide_manage_favorite_folder": {
+    "message": "즐겨찾기 폴더를 관리하려면 이 버튼을 클릭하세요.",
+    "description": "Guide: manage favorite folders button"
   },
   "butler_guide_favorite_folder_list": {
     "message": "즐겨찾기 폴더 목록입니다.",
@@ -536,6 +552,10 @@
     "message": "확장 프로그램의 즐겨찾기 폴더입니다. 즐겨찾기 항목을 저장하는 데 사용됩니다.",
     "description": "Description for storage favorite folders"
   },
+  "storage_description_favoriteFolders_v2": {
+    "message": "확장 프로그램의 즐겨찾기 폴더입니다. 즐겨찾기 항목을 저장하는 데 사용됩니다. 구글 드라이브를 사용합니다.",
+    "description": "Description for storage favorite folders"
+  },
   "storage_description_poe2trade_settings_i18n": {
     "message": "확장 프로그램의 번역 데이터 캐시입니다.",
     "description": "Stores i18n translation data per language"
@@ -601,7 +621,7 @@
     "description": "Settings option to enable Google Account sync for storage"
   },
   "settings_option_storage_sync_description": {
-    "message": "Google 계정 동기화를 통해 설정과 데이터를 저장합니다.\n같은 계정으로 로그인된 모든 기기에서 동기화됩니다.",
+    "message": "Google 계정 동기화를 통해 설정과 데이터를 저장합니다. (최대 100KB)\n같은 계정으로 로그인된 모든 기기에서 동기화됩니다.",
     "description": "Description for Google Account sync storage option in settings"
   },
   "log_migration_skip_remove": {
@@ -633,7 +653,83 @@
     "description": "Settings option to configure the trade preview overlay"
   },
   "settings_option_configure_preview_overlay_description": {
-    "message": "거래 미리보기 오버레이를 활성화하거나 비활성화합니다. 비활성화하면 기록 및 즐겨찾기 목록에 마우스 오버 시 미리보기가 표시되지 않습니다.",
+    "message": "거래 미리보기 오버레이를 활성화하거나 비활성화합니다.\n비활성화하면 기록 및 즐겨찾기 목록에 마우스 오버 시 미리보기가 표시되지 않습니다.",
     "description": "Description for configuring the trade preview overlay"
+  },
+  "button_close": {
+    "message": "닫기",
+    "description": "Button text to close the modal"
+  },
+  "storage_description_poe2trade_settings_noticeContext": {
+    "message": "캐시된 공지사항의 내용입니다.",
+    "description": "The content of the cached notices"
+  },
+  "storage_description_poe2trade_settings_noticeUnread": {
+    "message": "공지사항 확인 여부입니다.",
+    "description": "Whether the user has unread notices"
+  },
+  "sidebar_tool_notice_button_modal_error_no_content": {
+    "message": "공지사항 내용을 불러올 수 없습니다. 나중에 다시 시도해주세요.",
+    "description": "Error message when notice content cannot be loaded"
+  },
+  "sidebar_tool_notice_button_modal_error_fetch_failed": {
+    "message": "공지사항을 불러오는 중 오류가 발생했습니다: $1",
+    "description": "Error message when fetching notice content fails"
+  },
+  "sidebar_tool_sidebar_toggle_button_description": {
+    "message": "사이드바 열기/닫기",
+    "description": "Description for the sidebar toggle button"
+  },
+  "sidebar_tool_notice_button_description": {
+    "message": "공지사항 열기",
+    "description": "Description for the sidebar tool notice button"
+  },
+  "sidebar_tool_notice_button_modal_title": {
+    "message": "공지사항",
+    "description": "Title for the sidebar tool notice modal"
+  },
+  "sidebar_tool_favorite_add_button_description": {
+    "message": "즐겨찾기 추가",
+    "description": "Description for the sidebar tool favorite add button"
+  },
+  "toast_preview_overlay_disabled": {
+    "message": "검색기록 미리보기가 비활성화되었습니다.",
+    "description": "Toast message when trade preview overlay is disabled"
+  },
+  "settings_tab_performance": {
+    "message": "성능",
+    "description": "Settings tab for performance options"
+  },
+  "settings_option_enable_favorite_gdrive_sync": {
+    "message": "Google 드라이브 동기화 활성화",
+    "description": "Settings option to enable Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_description": {
+    "message": "즐겨찾기 폴더와 항목을 Google 드라이브에 동기화합니다.\n이 기능을 사용하려면 최초 1회 Google 계정 인증이 필요합니다.\n기본적으로 제공되는 확장 플러그인 공유 저장소는 100KB로 제한되어 있습니다.\n즐겨찾기가 많을 경우, Google 드라이브 동기화를 사용하여 저장 용량을 늘릴 수 있습니다.",
+    "description": "Description for enabling Google Drive sync for favorites"
+  },
+  "confirm_enable_favorite_gdrive_sync": {
+    "message": "Google 드라이브 동기화를 활성화하시겠습니까?\n이 작업은 기존 즐겨찾기 데이터를 Google 드라이브로 마이그레이션합니다.",
+    "description": "Confirmation message when enabling Google Drive sync for favorites"
+  },
+  "settings_option_enable_favorite_gdrive_sync_cancelled": {
+    "message": "Google 드라이브 동기화 활성화가 취소되었습니다.",
+    "description": "Message shown when enabling Google Drive sync for favorites is cancelled"
+  },
+  "settings_option_enable_favorite_gdrive_sync_enabled": {
+    "message": "Google 드라이브 동기화가 활성화되었습니다.",
+    "description": "Message shown when Google Drive sync for favorites is enabled"
+  },
+  "storage_description_poe2trade_settings_favoriteGDriveSyncEnabled": {
+    "message": "즐겨찾기의 Google 드라이브 동기화 활성화 여부 입니다.",
+    "description": "Whether Google Drive sync for favorites is enabled"
+  },
+  "error_entry_name_exists": {
+    "message": "같은 이름의 항목이 이미 존재합니다: $1",
+    "description": "Error message when trying to create or rename an entry to a name that already exists"
+  },
+  "favorite_storage_warning": {
+    "message": "사용량 경고! ($1 / $2) - 즐겨찾기 저장소가 거의 가득 찼습니다. 불필요한 항목을 삭제하거나 \"설정 -> 성능 -> Google 드라이브 동기화 활성화\"를 사용하여 사용량 제한을 해제하세요.",
+    "description": "Warning message when favorite storage is nearing its limit"
   }
 }

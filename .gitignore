@@ -15,3 +15,7 @@ release_notes_*.md
 
 # Ignore schema json files
 SimplifiedFolder.schema.json
+
+# for fixed client_id of build:dev
+dev_key.pem
+dev_key.pub

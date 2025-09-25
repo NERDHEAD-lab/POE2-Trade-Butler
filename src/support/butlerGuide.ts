@@ -6,6 +6,8 @@ import * as favoriteUI from '../ui/favoriteFileSystemUI';
 import * as fs from '../ui/fileSystemEntry';
 import * as settingStorage from '../storage/settingStorage';
 
+let previewOverlayEnabled = false;
+
 interface ButlerGuide {
   guideTarget: string; // 가이드 대상
   description: string; // 가이드 설명
@@ -16,13 +18,13 @@ interface ButlerGuide {
 
 const butlerGuides: ButlerGuide[] = [
   {
-    guideTarget: '#poe2-sidebar #poe2-sidebar-toggle-button',
+    guideTarget: '#poe2-sidebar #poe2-tool-sidebar-toggle-button',
     description: getMessage('butler_guide_toggle_sidebar'),
     focusTarget: ['#poe2-sidebar'],
     onBefore: () => {
       const sidebarElement = document.querySelector('#poe2-sidebar') as HTMLElement;
       const buttonElement = document.querySelector(
-        '#poe2-sidebar #poe2-sidebar-toggle-button'
+        '#poe2-sidebar #poe2-tool-sidebar-toggle-button'
       ) as HTMLButtonElement;
       if (!buttonElement) {
         return;
@@ -34,7 +36,7 @@ const butlerGuides: ButlerGuide[] = [
     },
     onAfter: () => {
       const element = document.querySelector(
-        '#poe2-sidebar #poe2-sidebar-toggle-button'
+        '#poe2-sidebar #poe2-tool-sidebar-toggle-button'
       ) as HTMLButtonElement;
       if (!element) {
         console.error('Toggle button not found in the sidebar.');
@@ -45,12 +47,12 @@ const butlerGuides: ButlerGuide[] = [
     }
   },
   {
-    guideTarget: '#poe2-sidebar #poe2-sidebar-toggle-button',
+    guideTarget: '#poe2-sidebar #poe2-tool-sidebar-toggle-button',
     description: getMessage('butler_guide_toggle_sidebar'),
     focusTarget: ['#poe2-sidebar'],
     onAfter: () => {
       const element = document.querySelector(
-        '#poe2-sidebar #poe2-sidebar-toggle-button'
+        '#poe2-sidebar #poe2-tool-sidebar-toggle-button'
       ) as HTMLButtonElement;
       if (!element) {
         console.error('Toggle button not found in the sidebar.');
@@ -59,6 +61,21 @@ const butlerGuides: ButlerGuide[] = [
       // 사이드 바를 닫는다.
       element.click();
     }
+  },
+  {
+    guideTarget: '#poe2-sidebar #poe2-tool-notice-button',
+    description: getMessage('butler_guide_notice_button'),
+    focusTarget: ['#poe2-sidebar']
+  },
+  {
+    guideTarget: '#poe2-sidebar #poe2-tool-preview-toggle-button',
+    description: getMessage('butler_guide_preview_toggle_button'),
+    focusTarget: ['#poe2-sidebar']
+  },
+  {
+    guideTarget: '#poe2-sidebar #poe2-tool-favorite-add-button',
+    description: getMessage('butler_guide_add_favorite_button'),
+    focusTarget: ['#poe2-sidebar']
   },
   {
     guideTarget: '#sidebar-menu button[data-tab="history"]',
@@ -118,7 +135,9 @@ const butlerGuides: ButlerGuide[] = [
     guideTarget: '#sidebar-content #history-list li.history-item',
     description: getMessage('butler_guide_history_item'),
     focusTarget: ['#sidebar-content'],
-    onBefore: () => {
+    onBefore: async () => {
+      previewOverlayEnabled = await settingStorage.getPreviewOverlayEnabled();
+      await settingStorage.setPreviewOverlayEnabled(true);
       loadHistoryList(
         Promise.resolve([
           {
@@ -145,7 +164,10 @@ const butlerGuides: ButlerGuide[] = [
     guideTarget: '#sidebar-content #history-list li.history-item .remove-history',
     description: getMessage('butler_guide_remove_history'),
     focusTarget: ['#sidebar-content'],
-    onAfter: () => loadHistoryList(history.getAll())
+    onAfter: () => {
+      void settingStorage.setPreviewOverlayEnabled(previewOverlayEnabled);
+      loadHistoryList(history.getAll())
+    }
   },
   {
     guideTarget: '#sidebar-content button#clear-history',
@@ -153,8 +175,8 @@ const butlerGuides: ButlerGuide[] = [
     focusTarget: ['#sidebar-content']
   },
   {
-    guideTarget: '#sidebar-content button#add-favorite',
-    description: getMessage('butler_guide_add_favorite_button'),
+    guideTarget: '#sidebar-content button#manage-favorite',
+    description: getMessage('butler_guide_manage_favorite_folder'),
     focusTarget: ['#sidebar-content'],
     onBefore: () => {
       const favoritesTab = document.querySelector(
@@ -412,28 +434,45 @@ export async function runButlerGuides() {
           }
         });
       } finally {
-        if (descDiv) descDiv.remove();
-        if (nextBtn) nextBtn.remove();
-        if (overlay) overlay.remove();
-        if (highlightBox) highlightBox.remove();
+        document.getElementById('butler-guide-desc')?.remove();
+        document.getElementById('butler-guide-next-btn')?.remove();
+        document.getElementById('butler-guide-blur-overlay')?.remove();
+        document.getElementById('butler-guide-highlight-box')?.remove();
         running = false;
-        if (frameHandle !== null) {
-          cancelAnimationFrame(frameHandle);
-        }
+
+        if (frameHandle) cancelAnimationFrame(frameHandle);
       }
     }
   } catch (e) {
     console.error('Error during Butler guides:', e);
     throw e;
   } finally {
-    if (descDiv) descDiv.remove();
-    if (nextBtn) nextBtn.remove();
-    if (overlay) overlay.remove();
-    if (highlightBox) highlightBox.remove();
-    if (frameHandle !== null) {
-      cancelAnimationFrame(frameHandle);
-    }
+    document.getElementById('butler-guide-desc')?.remove();
+    document.getElementById('butler-guide-next-btn')?.remove();
+    document.getElementById('butler-guide-blur-overlay')?.remove();
+    document.getElementById('butler-guide-highlight-box')?.remove();
+
+    if (frameHandle) cancelAnimationFrame(frameHandle);
+
     await settingStorage.setButlerGuideShown(true);
     console.log('Butler guides completed.');
   }
 }
+// function waitForElement(selector: string, timeout: number = 10000): Promise<HTMLElement> {
+//   return new Promise((resolve, reject) => {
+//     const interval = 100;
+//     let elapsed = 0;
+//
+//     const checkExist = setInterval(() => {
+//       const element = document.querySelector<HTMLElement>(selector);
+//       if (element) {
+//         clearInterval(checkExist);
+//         resolve(element);
+//       } else if (elapsed >= timeout) {
+//         clearInterval(checkExist);
+//         reject(new Error(`Element ${selector} not found within ${timeout}ms`));
+//       }
+//       elapsed += interval;
+//     }, interval);
+//   });
+// }

@@ -36,6 +36,7 @@ export interface CheckboxDetailOption extends DetailOption<boolean> {
   type: 'checkbox';
   checked: boolean;
   onChangeListener: onOptionChangeListener<boolean>;
+  onRender?: (checkbox: HTMLInputElement) => void;
 }
 
 export interface SelectDetailOption extends DetailOption<SelectEntity> {
@@ -204,10 +205,19 @@ export class SettingManager {
           optionElement.onchange = () => {
             this.addToApplyQueue(option, () => {
               if (option.optionDetail.onChangeListener) {
-                opt.onChangeListener((optionElement as HTMLInputElement).checked);
+                return opt.onChangeListener((optionElement as HTMLInputElement).checked);
               }
+              return Promise.resolve();
             });
           };
+          if (option.description) {
+            // right margin at description
+            const description = optionHeader.querySelector('.poe2-settings-option-description') as HTMLParagraphElement;
+            description.style.marginRight = '35px';
+          }
+          if (opt.onRender) {
+            opt.onRender(optionElement as HTMLInputElement);
+          }
           break;
         }
         case 'select': {
@@ -222,11 +232,12 @@ export class SettingManager {
           optionElement.onchange = () => {
             this.addToApplyQueue(option, () => {
               if (option.optionDetail.onChangeListener) {
-                selectOpt.onChangeListener({
+                return selectOpt.onChangeListener({
                   options: selectOpt.options,
                   selectedIndex: (optionElement as HTMLSelectElement).selectedIndex
                 });
               }
+              return Promise.resolve();
             });
           };
           break;
@@ -245,8 +256,9 @@ export class SettingManager {
             switchInput.onchange = () => {
               this.addToApplyQueue(option, () => {
                 if (option.optionDetail.onChangeListener) {
-                  switchOpt.onChangeListener(switchInput.checked);
+                  return switchOpt.onChangeListener(switchInput.checked);
                 }
+                return Promise.resolve();
               });
             };
           }
@@ -334,8 +346,9 @@ export class SettingManager {
             this.addToApplyQueue(option, () => {
               if (option.optionDetail.onChangeListener) {
                 const val = parseFloat((optionElement as HTMLInputElement).value);
-                sliderOpt.onChangeListener(val);
+                return sliderOpt.onChangeListener(val);
               }
+              return Promise.resolve();
             });
           };
           break;
@@ -386,8 +399,12 @@ export class SettingManager {
     });
   }
 
-  public applyChanges(): void {
-    Object.values(this.applyChangedQueue).forEach(callback => callback());
+  public async applyChanges(): Promise<void> {
+    // Object.values(this.applyChangedQueue).forEach(callback => callback());
+    const promises = Object.values(this.applyChangedQueue).map(callback => callback());
+    await Promise.all(promises).catch(err => {
+      console.error('Error applying settings changes:', err);
+    });
     this.applyChangedQueue = {};
   }
 

@@ -1,3 +1,6 @@
+import { showToast } from '../utils/toast';
+import { getMessage } from '../utils/_locale';
+
 export type FileSystemEntry = FileEntry | FolderEntry;
 type SortType = 'name' | 'createdAt' | 'modifiedAt';
 
@@ -177,6 +180,7 @@ export function addEntry(
 
   // 동일 parentId를 가진 기존 항목과 이름이 중복되는지 확인
   if (entries.some(e => e.parentId === parentId && e.name === entry.name)) {
+    showToast(getMessage('error_entry_name_exists', entry.name), '#f00');
     throw new Error(`An entry with the name "${entry.name}" already exists in this folder.`);
   }
 

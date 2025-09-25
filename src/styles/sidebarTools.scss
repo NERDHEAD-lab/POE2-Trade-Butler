@@ -1,0 +1,56 @@
+.poe2-sidebar-tool-button {
+  position: absolute;
+  top: 10px;
+  left: -50px;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  z-index: 10001;
+}
+
+.poe2-sidebar-tool-button:hover {
+  background-color: #666;
+}
+
+.poe2-sidebar-tool-button .spinner {
+  width: 27px;
+  height: 27px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes flash-and-hold-glow {
+  0%   { filter: drop-shadow(0 0 0px yellow); }
+  12%  { filter: drop-shadow(0 0 8px yellow); }
+  25%  { filter: drop-shadow(0 0 0px yellow); }
+  37%  { filter: drop-shadow(0 0 8px yellow); }
+  50%  { filter: drop-shadow(0 0 0px yellow); }
+  62%  { filter: drop-shadow(0 0 8px yellow); }
+  75%  { filter: drop-shadow(0 0 0px yellow); }
+  87%  { filter: drop-shadow(0 0 8px yellow); }
+  100% { filter: drop-shadow(0 0 8px yellow); }
+}
+
+.start-flash-and-hold {
+  animation-name: flash-and-hold-glow;
+  animation-duration: 5s;
+  animation-fill-mode: forwards;
+}
