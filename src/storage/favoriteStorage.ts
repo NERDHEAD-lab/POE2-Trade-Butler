@@ -47,12 +47,37 @@ export async function migrateStorageToGoogleDrive() {
       const currentFavorites = await favoriteStorageSync.get();
       await favoriteStorageGoogleDrive.set(currentFavorites);
       await settingStorage.setFavoriteGDriveSyncEnabled(true);
+      await removeLegacyStorage();
       resolve();
     } catch (error) {
       console.error('Failed to migrate favorite storage to Google Drive:', error);
       await settingStorage.setFavoriteGDriveSyncEnabled(false);
       reject(error);
     }
+  });
+}
+
+async function removeLegacyStorage(): Promise<void> {
+  return new Promise<void>(async (resolve, reject) => {
+    try {
+      const key = 'favoriteFolders';
+      const meta_key = `__chunk__:${key}::__meta`;
+      const chunkKey = `__chunk__:${key}::_part_0`;
+
+      const legacyFavorites = await favoriteStorageSync.get();
+      if (!(legacyFavorites.length > 1 || (legacyFavorites.length === 1 && legacyFavorites[0].id !== 'root'))) {
+        resolve();
+        return;
+      }
+
+      await favoriteStorageSync.set([]);
+      await chrome.storage.sync.remove([meta_key, chunkKey]);
+    } catch (error) {
+      console.error('Failed to remove legacy favorite storage:', error);
+      reject(error);
+    }
+
+    resolve();
   });
 }
 
