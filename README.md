@@ -1,7 +1,6 @@
 # POE2-Trade-Butler
 
-A Chrome extension that adds a sidebar to the POE2 Trade page and provides a history management feature for enhanced
-trading experience.
+A Chrome extension that adds a sidebar to the POE2 Trade page and provides a history management feature for enhanced trading experience.
 
 <img src="src/assets/icon.png" alt="icon" align="left" style="margin-right: 12px;"/>
 
@@ -49,6 +48,11 @@ trading experience.
 [oauth-privacy-policy-link]: https://github.com/NERDHEAD-lab/POE2-Trade-Butler/blob/master/oauth-client-privacy.md
 [github-sponsors-link]: https://github.com/sponsors/NERDHEAD-lab
 [buy-me-a-coffee-link]: https://coff.ee/nerdhead_lab
+
+---
+
+![poe2 trade butler guide.gif](docs/poe2%20trade%20butler%20guide.gif)
+![poe2 trade butler usage.gif](docs/poe2%20trade%20butler%20usage.gif)
 
 ---
 
