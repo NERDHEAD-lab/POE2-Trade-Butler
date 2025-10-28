@@ -70,7 +70,6 @@ export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void
             listener: async (): Promise<boolean> => {
               const modalElement = document.querySelector('.poe2-modal') as HTMLDivElement;
               const overlay = new LoadingOverlay(modalElement);
-              overlay.show();
 
               try {
                 const selectedFolder = await folderUI.getSelectedFolder(wrapper);
@@ -92,6 +91,7 @@ export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void
                   return false;
                 }
 
+                overlay.show();
                 return favoriteStorage
                   .getAll()
                   .then(async favorites =>
@@ -119,7 +119,6 @@ export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void
             listener: async (): Promise<boolean> => {
               const modalElement = document.querySelector('.poe2-modal') as HTMLDivElement;
               const overlay = new LoadingOverlay(modalElement);
-              overlay.show();
 
               try {
                 const favoriteEntries = await favoriteStorage.getAll();
@@ -136,6 +135,7 @@ export async function openFavoriteFolderModal(item?: FavoriteItem): Promise<void
                   }
                 }
 
+                overlay.show();
                 return favoriteStorage
                   .saveAll(favoriteEntries.filter(entry => entry.id !== selectedFolder.id))
                   .then(() => {
