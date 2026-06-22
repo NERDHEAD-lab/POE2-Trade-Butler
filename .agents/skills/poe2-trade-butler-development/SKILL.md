@@ -1,6 +1,6 @@
 ---
 name: poe2-trade-butler-development
-description: Use before making code changes in the POE2-Trade-Butler Chrome extension, especially domain migration, manifest permissions, content scripts, storage, favorites/history, Korean translation cache, build tooling, or tests. This skill gives project-specific structure hints and the safest files to inspect before editing.
+description: Use before making code changes in the POE2-Trade-Butler Chrome extension, especially domain migration, manifest permissions, content scripts, storage, favorites/history, Korean translation cache, Chrome manual regression checks, build tooling, or tests. This skill gives project-specific structure hints and the safest files to inspect before editing.
 ---
 
 # POE2 Trade Butler Development Hints
@@ -127,6 +127,59 @@ Use `npm run build:dev` to verify key injection. The log should include:
 
 `Development key added to manifest.json from public key.`
 
+## Chrome Debugging And Migration Checks
+
+Use Windows Chrome for manual extension checks. Keep two workflows separate:
+
+- Logged-in site checks use the user's real Chrome profile.
+- Deterministic migration checks use a clean temporary Chrome profile.
+
+Before launching a profile with remote debugging, close existing Chrome windows
+for that profile. If Chrome is already running, it can reuse the old browser
+process and ignore the new debugging flags.
+
+For logged-in Kakao checks:
+
+1. Confirm the intended Chrome profile directory from `chrome://version` >
+   `Profile Path`. Do not infer it from the profile display name alone.
+2. Start Chrome from Windows PowerShell with remote debugging and that profile,
+   then open `chrome://extensions/`:
+   ```powershell
+   $chrome = "${env:ProgramFiles}\Google\Chrome\Application\chrome.exe"
+   & $chrome --remote-debugging-port=9222 --profile-directory="Profile X" "chrome://extensions/"
+   ```
+3. Turn on Developer Mode, load the unpacked extension from
+   `D:\project\POE2-Trade-Butler-origin\dist`, and verify the extension ID is
+   `ipnemofnhodcgcplnnfekbfpmngeeocm`.
+4. If the extension is missing, check the loaded folder is `dist`, `npm run
+   build:dev` completed, Developer Mode is enabled, and the browser was started
+   with the intended profile.
+5. Open the target trade page, for example
+   `https://poe.kakaogames.com/trade2/search/poe2/Runes%20of%20Aldur`, and let
+   the user handle any required site login.
+
+For migration regression checks:
+
+1. Use a clean temporary Chrome user data directory so the starting storage
+   state is known:
+   ```powershell
+   $chrome = "${env:ProgramFiles}\Google\Chrome\Application\chrome.exe"
+   & $chrome --remote-debugging-port=9222 --user-data-dir="$env:TEMP\poe2tb-migration-profile" "chrome://extensions/"
+   ```
+2. Build and load the previous version first, using the same `dev_key.pub` so
+   the extension ID stays stable. Seed legacy Daum data through the UI or
+   extension storage: search history entries, favorite folder metadata URLs, and
+   Google Drive favorite data when testing Drive sync.
+3. Build the migration branch with `npm run build:dev`, reload the unpacked
+   extension, and verify storage version advances only after successful
+   migration.
+4. Confirm old `https://poe.game.daum.net/trade2/...` URLs are rewritten to
+   `https://poe.kakaogames.com/trade2/...` in local/sync storage and, when Drive
+   sync is enabled and the Drive hint exists, in the Drive favorite file.
+5. Also verify the no-Drive path: if the Drive hint key is absent or Drive sync
+   is disabled, migration must not require Google Drive login or call Drive
+   migration code.
+
 ## Verification
 
 Run package scripts from Windows PowerShell, not WSL, when using the shared
@@ -146,4 +199,3 @@ Typical verification order:
 If `npm install` changes `package-lock.json` only by npm metadata churn, do not
 commit it unless dependency versions actually changed or the task is explicitly
 about dependency setup.
-
