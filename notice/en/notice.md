@@ -3,24 +3,33 @@
 
 ## Notice
 
-### A major update (3.0.0) with many changes has been released!
+### 3.0.1 Update - Kakao Games trade domain support
 
-Accessibility and usability for several features have been improved.
-```
-A convenience toolbar has been added beneath the existing sidebar collapse/expand toggle.
-Announcements/notices can now be viewed.
-The preview feature—intended to quickly review search criteria—could sometimes be distracting. It can now be disabled. The option is available in Settings and is also accessible from the toolbar.
-An "Add to Favorites" button has been added to the toolbar.
-```
+POE2 Trade Butler has been maintained in a stable state after the 3.0.0 release, with no major feature changes recently.
 
-Because the Chrome Extension’s account storage is limited to 100 KB by default, the Favorites feature can be constrained.
+This 3.0.1 update is a maintenance release for the Korean POE2 trade site's move to the Kakao Games domain.
 ```
-An option to switch to "Google Drive" is available.
-Location: Settings → Performance.
+Previous Daum trade URL:
+https://poe.game.daum.net/trade2/...
+
+New Kakao Games trade URL:
+https://poe.kakaogames.com/trade2/...
 ```
 
-## Roadmap (Next Update)
+This update includes the following changes.
 
-- Saving of the expanded/collapsed state of the Favorites list is planned. (3.1.0)
-- A feature to share favorites is under development; simple link- or value-based sharing is being considered. (3.2.0)
+```
+The extension now works on the Kakao Games trade domain.
+Saved search history URLs using the old Daum trade domain are migrated to the new URL.
+Saved favorite URLs using the old Daum trade domain are migrated to the new URL.
+Favorite URLs synced through Google Drive are migrated as well.
+```
+
+## Upcoming overhaul
+
+The previous Roadmap items are being reviewed again from the current codebase state.
+
+A larger improvement pass is planned for July 2026, focused on usability, stability, favorites/history management, and trade page compatibility.
+
+If you run into issues after this domain migration update, please report them through [GitHub Issues](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/issues) or `nerdlab.kr@gmail.com`.
 
