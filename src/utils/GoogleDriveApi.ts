@@ -2,6 +2,10 @@ import { ping } from './ping';
 
 class GoogleDriveApi {
   private static async getAccessToken(): Promise<string> {
+    if (this.isBackgroundContext()) {
+      return this.getAccessTokenDirect({ interactive: true });
+    }
+
     await ping();
     const response = await chrome.runtime.sendMessage({ type: 'GET_AUTH_TOKEN' });
     if (response.error) {
@@ -11,11 +15,59 @@ class GoogleDriveApi {
   }
 
   private static async removeCachedAccessToken(): Promise<void> {
+    if (this.isBackgroundContext()) {
+      await this.removeCachedAccessTokenDirect();
+      return;
+    }
+
     await ping();
     const response = await chrome.runtime.sendMessage({ type: 'REMOVE_CACHED_ACCESS_TOKEN' });
     if (response.error) {
       throw new Error(`Error removing cached auth token: ${response.error}`);
     }
+  }
+
+  private static isBackgroundContext(): boolean {
+    return typeof window === 'undefined';
+  }
+
+  private static getAccessTokenDirect(details: chrome.identity.TokenDetails): Promise<string> {
+    return new Promise((resolve, reject) => {
+      chrome.identity.getAuthToken(details, token => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+          return;
+        }
+        if (!token) {
+          reject(new Error('No auth token returned.'));
+          return;
+        }
+        resolve(token);
+      });
+    });
+  }
+
+  private static removeCachedAccessTokenDirect(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      chrome.identity.getAuthToken({ interactive: false }, token => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+          return;
+        }
+        if (!token) {
+          resolve();
+          return;
+        }
+
+        chrome.identity.removeCachedAuthToken({ token }, () => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError.message));
+            return;
+          }
+          resolve();
+        });
+      });
+    });
   }
 
   private static async fetchWithAuth(url: string, options: RequestInit = {}, retry: boolean = true): Promise<Response> {
