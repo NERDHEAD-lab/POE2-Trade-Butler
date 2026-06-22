@@ -12,6 +12,21 @@ jest.unstable_mockModule('../storageUsage', () => ({
   }))
 }));
 
+const googleDriveFiles = new Map<string, string>();
+
+jest.unstable_mockModule('../../utils/GoogleDriveApi', () => ({
+  GoogleDriveApi: {
+    createFile: jest.fn(async (name: string, content: string) => {
+      googleDriveFiles.set(name, content);
+      return name;
+    }),
+    readFile: jest.fn(async (fileId: string) => googleDriveFiles.get(fileId) ?? '[]'),
+    updateFile: jest.fn(async (fileId: string, content: string) => {
+      googleDriveFiles.set(fileId, content);
+    })
+  }
+}));
+
 type StorageStore = Record<string, unknown>;
 type StorageGetKeys = string | string[] | Record<string, unknown> | null;
 type StorageGetCallback = (items: StorageStore) => void;
@@ -70,6 +85,7 @@ function createStorageArea(store: StorageStore): chrome.storage.StorageArea {
 describe('executeLegacyVersionMigrations', () => {
   afterEach(() => {
     Reflect.deleteProperty(globalThis, 'chrome');
+    googleDriveFiles.clear();
     jest.resetModules();
   });
 
@@ -144,6 +160,85 @@ describe('executeLegacyVersionMigrations', () => {
     );
     expect(favoritePart[1].metadata?.url).toBe(
       'https://poe.kakaogames.com/trade2/search/poe2/Runes%20of%20Aldur/abc123'
+    );
+    expect(localStore.poe2trade_storage_version).toBe(6);
+  });
+
+  test('migrates stored Daum trade URLs in Google Drive synced favorites', async () => {
+    const favoriteEntries = [
+      {
+        id: 'root',
+        type: 'folder',
+        name: '/',
+        parentId: null,
+        createdAt: '2026-06-22T00:00:00.000Z',
+        modifiedAt: '2026-06-22T00:00:00.000Z'
+      },
+      {
+        id: 'favorite-daum',
+        type: 'file',
+        name: 'Daum legacy favorite',
+        parentId: 'root',
+        createdAt: '2026-06-22T00:00:00.000Z',
+        modifiedAt: '2026-06-22T00:00:00.000Z',
+        metadata: {
+          id: 'abc123',
+          url: 'https://poe.game.daum.net/trade2/search/poe2/Runes%20of%20Aldur/abc123'
+        }
+      },
+      {
+        id: 'favorite-ggg',
+        type: 'file',
+        name: 'GGG favorite',
+        parentId: 'root',
+        createdAt: '2026-06-22T00:00:00.000Z',
+        modifiedAt: '2026-06-22T00:00:00.000Z',
+        metadata: {
+          id: 'ggg123',
+          url: 'https://www.pathofexile.com/trade2/search/poe2/Runes%20of%20Aldur/ggg123'
+        }
+      }
+    ];
+    googleDriveFiles.set('favoriteFolders_v2-file-id', JSON.stringify(favoriteEntries));
+
+    const localStore: StorageStore = {
+      poe2trade_storage_version: 5,
+      searchHistory: []
+    };
+    const syncStore: StorageStore = {
+      poe2trade_settings_favoriteGDriveSyncEnabled: true,
+      '__gdrive_hint__:favoriteFolders_v2': {
+        fileId: 'favoriteFolders_v2-file-id',
+        lastModified: '2026-06-22T00:00:00.000Z'
+      }
+    };
+
+    Object.defineProperty(globalThis, 'chrome', {
+      configurable: true,
+      value: {
+        runtime: {
+          lastError: undefined
+        },
+        storage: {
+          local: createStorageArea(localStore),
+          sync: createStorageArea(syncStore)
+        }
+      }
+    });
+
+    const { executeLegacyVersionMigrations } = await import('./legacyVersionManager');
+
+    await executeLegacyVersionMigrations();
+
+    const migratedFavorites = JSON.parse(
+      googleDriveFiles.get('favoriteFolders_v2-file-id')!
+    ) as Array<{ id: string; metadata?: { url: string } }>;
+
+    expect(migratedFavorites.find(entry => entry.id === 'favorite-daum')?.metadata?.url).toBe(
+      'https://poe.kakaogames.com/trade2/search/poe2/Runes%20of%20Aldur/abc123'
+    );
+    expect(migratedFavorites.find(entry => entry.id === 'favorite-ggg')?.metadata?.url).toBe(
+      'https://www.pathofexile.com/trade2/search/poe2/Runes%20of%20Aldur/ggg123'
     );
     expect(localStore.poe2trade_storage_version).toBe(6);
   });

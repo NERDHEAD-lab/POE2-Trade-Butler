@@ -228,6 +228,23 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
       await storage.set(migrateFavoriteDaumUrls(favorites));
     },
     description: 'Migrate Daum trade URLs in favorite folders to Kakao Games URLs.'
+  },
+  {
+    key: '__gdrive_hint__:favoriteFolders_v2',
+    storageType: 'sync',
+    version: 5,
+    migrate: async () => {
+      const storage = createStorageStrategy<FileSystemEntry_2[]>(
+        'sync',
+        'favoriteFolders_v2',
+        () => [DEFAULT_FAVORITE_ROOT()],
+        'googleDrive'
+      );
+
+      const favorites = await storage.get();
+      await storage.set(migrateFavoriteDaumUrls(favorites));
+    },
+    description: 'Migrate Daum trade URLs in Google Drive favorite folders to Kakao Games URLs.'
   }
 ] satisfies LegacyVersionMigrator<any>[];
 
