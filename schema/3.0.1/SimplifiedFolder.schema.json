@@ -1,0 +1,107 @@
+{
+  "$ref": "#/definitions/SimplifiedFolder",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "FavoriteItem": {
+      "additionalProperties": false,
+      "description": "Represents a favorite search item. This contains the core data for a saved trade query.",
+      "properties": {
+        "id": {
+          "description": "The unique key for the trade search result. This value is the key returned by the POE2 trade page API for a specific search query.",
+          "examples": [
+            "9v7P3qmCK"
+          ],
+          "maxLength": 9,
+          "minLength": 9,
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the favorite, typically representing the saved search query.",
+          "examples": [
+            "Headhunter Heavy Belt"
+          ],
+          "type": "string"
+        },
+        "region": {
+          "$ref": "#/definitions/TradeRegion",
+          "description": "The region code for the POE2 trade page. Must be one of the defined TradeRegion values."
+        },
+        "type": {
+          "const": "item",
+          "description": "The type of the entity. Always 'item' for favorite items.",
+          "examples": [
+            "item"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "name",
+        "id",
+        "region"
+      ],
+      "type": "object"
+    },
+    "SimplifiedEntry": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/FavoriteItem"
+        },
+        {
+          "$ref": "#/definitions/SimplifiedFolder"
+        }
+      ],
+      "description": "A simplified entry that can be either a folder for an organization or a favorite item."
+    },
+    "SimplifiedFolder": {
+      "additionalProperties": false,
+      "description": "Represents a folder used to organize favorite items. It can contain other favorite items or subfolders.",
+      "properties": {
+        "children": {
+          "description": "An array of child entries (favorite items or subfolders) contained within this folder.",
+          "items": {
+            "$ref": "#/definitions/SimplifiedEntry"
+          },
+          "type": "array"
+        },
+        "name": {
+          "description": "The name of the folder.",
+          "examples": [
+            "My Searches"
+          ],
+          "type": "string"
+        },
+        "type": {
+          "const": "folder",
+          "description": "The type of the entity. Always 'folder' for folders.",
+          "examples": [
+            "folder"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "name",
+        "children"
+      ],
+      "type": "object"
+    },
+    "TradeRegion": {
+      "description": "Defines the set of possible POE2 trade page regions based on server hostnames.",
+      "enum": [
+        "kr",
+        "jp",
+        "br",
+        "ru",
+        "th",
+        "de",
+        "fr",
+        "es",
+        "global"
+      ],
+      "type": "string"
+    }
+  }
+}
