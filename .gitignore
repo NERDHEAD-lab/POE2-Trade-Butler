@@ -4,6 +4,12 @@ node_modules
 npm-debug.log
 yarn-error.log
 
+# local environment
+.env
+.env.local
+.env.test
+.env.*.local
+
 # intellij
 .idea
 
