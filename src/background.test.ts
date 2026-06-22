@@ -171,4 +171,29 @@ describe('background maintenance startup', () => {
     expect(executeLegacyVersionMigrations).toHaveBeenCalledTimes(1);
     expect(cleanExpiredOrphanSnapshots).toHaveBeenCalledTimes(1);
   });
+
+  test('does not start duplicate maintenance while initial maintenance is pending', async () => {
+    const { onInstalledListeners } = installChromeMock();
+
+    await import('./background');
+
+    expect(onInstalledListeners).toHaveLength(1);
+    expect(flushI18n).toHaveBeenCalledTimes(1);
+
+    onInstalledListeners[0]({
+      reason: 'update' as chrome.runtime.OnInstalledReason,
+      previousVersion: '3.0.0',
+      id: 'ipnemofnhodcgcplnnfekbfpmngeeocm'
+    });
+    await flushMicrotasks();
+
+    expect(flushI18n).toHaveBeenCalledTimes(1);
+    expect(executeLegacyVersionMigrations).not.toHaveBeenCalled();
+
+    flushDeferred.resolve();
+    await flushMicrotasks();
+
+    expect(executeLegacyVersionMigrations).toHaveBeenCalledTimes(1);
+    expect(cleanExpiredOrphanSnapshots).toHaveBeenCalledTimes(1);
+  });
 });

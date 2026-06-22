@@ -1,6 +1,7 @@
 import { createStorageStrategy, resolveStorageArea, StorageManager, StorageType } from '../storage';
 import { getMessage } from '../../utils/_locale';
 import * as storageUsage from '../storageUsage';
+import { GoogleDriveApi } from '../../utils/GoogleDriveApi';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const CURRENT_STORAGE_VERSION_KEY = 'poe2trade_storage_version';
@@ -233,16 +234,22 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
     key: '__gdrive_hint__:favoriteFolders_v2',
     storageType: 'sync',
     version: 5,
-    migrate: async () => {
-      const storage = createStorageStrategy<FileSystemEntry_2[]>(
-        'sync',
-        'favoriteFolders_v2',
-        () => [DEFAULT_FAVORITE_ROOT()],
-        'googleDrive'
-      );
+    migrate: async (legacy: GoogleDriveStorageHint_v1) => {
+      if (!legacy?.fileId) return;
 
-      const favorites = await storage.get();
-      await storage.set(migrateFavoriteDaumUrls(favorites));
+      const content = await GoogleDriveApi.readFile(legacy.fileId);
+      const favorites = JSON.parse(content) as FileSystemEntry_2[];
+      if (!Array.isArray(favorites)) {
+        throw new Error('Invalid Google Drive favoriteFolders_v2 data.');
+      }
+
+      await GoogleDriveApi.updateFile(legacy.fileId, JSON.stringify(migrateFavoriteDaumUrls(favorites)));
+      await chrome.storage.sync.set({
+        ['__gdrive_hint__:favoriteFolders_v2']: {
+          ...legacy,
+          lastModified: new Date().toISOString()
+        }
+      });
     },
     description: 'Migrate Daum trade URLs in Google Drive favorite folders to Kakao Games URLs.'
   }
@@ -291,6 +298,7 @@ export async function executeLegacyVersionMigrations(): Promise<void> {
   }
 
   legacyVersionMigrators.sort((a, b) => a.version - b.version);
+  let migrationFailed = false;
 
   console.log(
     getMessage('log_migration_start', currentVersion.toString(), CURRENT_STORAGE_VERSION.toString())
@@ -309,9 +317,14 @@ export async function executeLegacyVersionMigrations(): Promise<void> {
         } else {
           msg = JSON.stringify(error);
         }
+        migrationFailed = true;
         console.error(getMessage('error_migration_failed', migrator.version.toString(), msg));
       }
     }
+  }
+
+  if (migrationFailed) {
+    return;
   }
 
   // 마이그레이션 완료 후 현재 버전 업데이트
@@ -446,6 +459,11 @@ interface FileEntry_2 extends BaseEntry_2 {
 
 interface FolderEntry_2 extends BaseEntry_2 {
   readonly type: 'folder';
+}
+
+interface GoogleDriveStorageHint_v1 {
+  fileId: string;
+  lastModified: string;
 }
 
 const DEFAULT_FAVORITE_ROOT: () => FolderEntry_2 = () => {
