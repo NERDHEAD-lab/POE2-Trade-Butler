@@ -132,6 +132,7 @@ function getServerRegion(url: URL): string {
   const hostname = url.hostname;
 
   if (hostname === 'poe.game.daum.net') return 'kr';
+  if (hostname === 'poe.kakaogames.com') return 'kr';
   if (hostname === 'jp.pathofexile.com') return 'jp';
   if (hostname === 'br.pathofexile.com') return 'br';
   if (hostname === 'ru.pathofexile.com') return 'ru';
