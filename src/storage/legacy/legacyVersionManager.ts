@@ -4,7 +4,9 @@ import * as storageUsage from '../storageUsage';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const CURRENT_STORAGE_VERSION_KEY = 'poe2trade_storage_version';
-const CURRENT_STORAGE_VERSION = 5;
+const CURRENT_STORAGE_VERSION = 6;
+const DAUM_TRADE_HOST = 'poe.game.daum.net';
+const KAKAO_TRADE_HOST = 'poe.kakaogames.com';
 
 const versionStorage: StorageManager<number> = new StorageManager(
   'local',
@@ -198,8 +200,71 @@ const legacyVersionMigrators: LegacyVersionMigrator<any>[] = [
     description:
     // sync 8kb 제한으로 인해 chunking 전략을 사용하므로, 기존 데이터를 chunk 방식으로 이전
       'Migrate favoriteFolders from sync to chunk storage strategy to handle larger data sizes.',
+  },
+  {
+    key: 'searchHistory',
+    storageType: 'local',
+    version: 5,
+    migrate: async (legacy: SearchHistoryEntity_v2[]) => {
+      if (!Array.isArray(legacy)) return;
+
+      await chrome.storage.local.set({ ['searchHistory']: migrateSearchHistoryDaumUrls(legacy) });
+    },
+    description: 'Migrate Daum trade URLs in search history to Kakao Games URLs.'
+  },
+  {
+    key: '__chunk__:favoriteFolders::__meta',
+    storageType: 'sync',
+    version: 5,
+    migrate: async () => {
+      const storage = createStorageStrategy<FileSystemEntry_2[]>(
+        'sync',
+        'favoriteFolders',
+        () => [DEFAULT_FAVORITE_ROOT()],
+        'chunkedArray'
+      );
+
+      const favorites = await storage.get();
+      await storage.set(migrateFavoriteDaumUrls(favorites));
+    },
+    description: 'Migrate Daum trade URLs in favorite folders to Kakao Games URLs.'
   }
 ] satisfies LegacyVersionMigrator<any>[];
+
+function migrateSearchHistoryDaumUrls(history: SearchHistoryEntity_v2[]): SearchHistoryEntity_v2[] {
+  return history.map(entry => ({
+    ...entry,
+    url: migrateDaumTradeUrl(entry.url)
+  }));
+}
+
+function migrateFavoriteDaumUrls(entries: FileSystemEntry_2[]): FileSystemEntry_2[] {
+  return entries.map(entry => {
+    if (entry.type !== 'file' || typeof entry.metadata.url !== 'string') {
+      return entry;
+    }
+
+    return {
+      ...entry,
+      metadata: {
+        ...entry.metadata,
+        url: migrateDaumTradeUrl(entry.metadata.url)
+      }
+    };
+  });
+}
+
+function migrateDaumTradeUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname !== DAUM_TRADE_HOST) return url;
+
+    parsed.hostname = KAKAO_TRADE_HOST;
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
 
 // CURRENT_STORAGE_VERSION 보다 작은 버전의 마이그레이터를 순서대로 실행
 export async function executeLegacyVersionMigrations(): Promise<void> {
