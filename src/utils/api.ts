@@ -1,13 +1,17 @@
 import { getMessage } from './_locale';
 
+const CURRENT_TRADE_HOST_PATTERN =
+  '((www|jp|br|ru|th|de|fr|es)\\.pathofexile\\.com|poe\\.kakaogames\\.com)';
+const KAKAO_TRADE_HOST = 'poe.kakaogames.com';
+const LEGACY_DAUM_TRADE_HOST = 'poe.game.daum.net';
+
 /*
   http(s)://(www|jp|br|ru|th|de|fr|es).pathofexile.com/trade2/search/poe2/{serverName}/{id}
-  http(s)://poe.game.daum.net/trade2/search/poe2/{serverName}/{id}
   http(s)://poe.kakaogames.com/trade2/search/poe2/{serverName}/{id}
  */
 export function parseSearchUrl(url: string): { serverName: string; id: string } | null {
   const regex =
-    /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net|poe\.kakaogames\.com)\/trade2\/search\/poe2\/([^/]+)\/([^/]+)$/;
+    new RegExp(`^https?:\\/\\/${CURRENT_TRADE_HOST_PATTERN}\\/trade2\\/search\\/poe2\\/([^/]+)\\/([^/]+)$`);
   const match = url.match(regex);
   if (!match) return null;
 
@@ -40,7 +44,7 @@ export function getUrlFromSearchHistory(
   currentUrl: string = window.location.href
 ): string {
   const regex =
-    /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net|poe\.kakaogames\.com)\/trade2\/search\/poe2\/([^/]+)(?:\/[^/]+)?\/?$/;
+    new RegExp(`^https?:\\/\\/${CURRENT_TRADE_HOST_PATTERN}\\/trade2\\/search\\/poe2\\/([^/]+)(?:\\/[^/]+)?\\/?$`);
 
   const match = currentUrl.match(regex);
   if (!match) {
@@ -54,7 +58,7 @@ export function getUrlFromSearchHistory(
 
 export function isKoreanServer(): boolean {
   const currentUrl = new URL(window.location.href);
-  return currentUrl.hostname === 'poe.game.daum.net' || currentUrl.hostname === 'poe.kakaogames.com';
+  return currentUrl.hostname === KAKAO_TRADE_HOST;
 }
 
 export function getCurrentServerRegion(): string {
@@ -64,8 +68,8 @@ export function getCurrentServerRegion(): string {
 export function getServerRegion(url: URL): string {
   const hostname = url.hostname;
 
-  if (hostname === 'poe.game.daum.net') return 'kr';
-  if (hostname === 'poe.kakaogames.com') return 'kr';
+  if (hostname === LEGACY_DAUM_TRADE_HOST) return 'kr';
+  if (hostname === KAKAO_TRADE_HOST) return 'kr';
   if (hostname === 'jp.pathofexile.com') return 'jp';
   if (hostname === 'br.pathofexile.com') return 'br';
   if (hostname === 'ru.pathofexile.com') return 'ru';
