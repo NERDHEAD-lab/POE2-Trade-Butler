@@ -22,6 +22,10 @@ release_notes_*.md
 # Ignore schema json files
 SimplifiedFolder.schema.json
 
+# Playwright
+playwright-report
+test-results
+
 # for fixed client_id of build:dev
 dev_key.pem
 dev_key.pub

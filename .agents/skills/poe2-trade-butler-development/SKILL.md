@@ -127,6 +127,24 @@ Use `npm run build:dev` to verify key injection. The log should include:
 
 `Development key added to manifest.json from public key.`
 
+## Playwright Extension Checks
+
+Prefer Playwright's bundled Chromium for deterministic extension regression
+checks. Branded Chrome 137+ can ignore or block the old `--load-extension`
+command-line flow; if that happens, do not keep debugging the flag. Use
+`npm run test:e2e` instead.
+
+The E2E suite builds `dist/` with `npm run build:dev`, launches a persistent
+Chromium context with:
+
+- `--disable-extensions-except=<repo>\dist`
+- `--load-extension=<repo>\dist`
+
+For migration checks, seed legacy storage through the extension service worker,
+close the context, relaunch the same profile, and then inspect
+`chrome.storage.local` and `chrome.storage.sync`. This avoids relying on the old
+Daum page still being reachable or the user being logged in.
+
 ## Chrome Debugging And Migration Checks
 
 Use Windows Chrome for manual extension checks. Keep two workflows separate:
