@@ -7,6 +7,8 @@ This file is the Codex entry point for project rules.
 
 ## Project Context
 
+- Before code changes, use `.agents/skills/poe2-trade-butler-development/SKILL.md`
+  for the project structure map and task-specific hotspots.
 - `src/manifest.json` is copied into `dist/` by `webpack.config.js`.
 - `webpack.config.js` injects `manifest.key` only in development builds when
   `dev_key.pem` or `dev_key.pub` exists at the repo root.
