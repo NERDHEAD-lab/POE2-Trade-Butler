@@ -1,4 +1,5 @@
 import { FileSystemEntry } from '../ui/fileSystemEntry';
+import { getServerRegion } from './tradeRegion';
 
 /**
  * Defines the set of possible POE2 trade page regions based on server hostnames.
@@ -125,20 +126,4 @@ export function buildSimplifiedTree(
     name: rootFolderEntry.name,
     children: buildChildrenFor(rootFolderEntry.id),
   };
-}
-
-
-function getServerRegion(url: URL): string {
-  const hostname = url.hostname;
-
-  if (hostname === 'poe.game.daum.net') return 'kr';
-  if (hostname === 'jp.pathofexile.com') return 'jp';
-  if (hostname === 'br.pathofexile.com') return 'br';
-  if (hostname === 'ru.pathofexile.com') return 'ru';
-  if (hostname === 'th.pathofexile.com') return 'th';
-  if (hostname === 'de.pathofexile.com') return 'de';
-  if (hostname === 'fr.pathofexile.com') return 'fr';
-  if (hostname === 'es.pathofexile.com') return 'es';
-  if (hostname === 'www.pathofexile.com') return 'global';
-  return 'global'; // Default for www.pathofexile.com
 }

@@ -4,6 +4,12 @@ node_modules
 npm-debug.log
 yarn-error.log
 
+# local environment
+.env
+.env.local
+.env.test
+.env.*.local
+
 # intellij
 .idea
 
@@ -15,6 +21,10 @@ release_notes_*.md
 
 # Ignore schema json files
 SimplifiedFolder.schema.json
+
+# Playwright
+playwright-report
+test-results
 
 # for fixed client_id of build:dev
 dev_key.pem

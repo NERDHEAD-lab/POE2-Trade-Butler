@@ -3,10 +3,10 @@ import { showToast } from '../utils/toast';
 import * as cacheData from '../storage/cacheData';
 import { getMessage } from '../utils/_locale';
 
-const LSCACHE_TRADE2ITEMS = 'https://poe.game.daum.net/api/trade2/data/items';
-const LSCACHE_TRADE2FILTERS = 'https://poe.game.daum.net/api/trade2/data/filters';
-const LSCACHE_TRADE2STATS = 'https://poe.game.daum.net/api/trade2/data/stats';
-const LSCACHE_TRADE2DATA = 'https://poe.game.daum.net/api/trade2/data/static';
+const LSCACHE_TRADE2ITEMS = 'https://poe.kakaogames.com/api/trade2/data/items';
+const LSCACHE_TRADE2FILTERS = 'https://poe.kakaogames.com/api/trade2/data/filters';
+const LSCACHE_TRADE2STATS = 'https://poe.kakaogames.com/api/trade2/data/stats';
+const LSCACHE_TRADE2DATA = 'https://poe.kakaogames.com/api/trade2/data/static';
 
 export async function applyKoreanTranslate() {
   if (isKoreanServer()) {

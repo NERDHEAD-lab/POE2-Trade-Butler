@@ -1,12 +1,19 @@
 import { getMessage } from './_locale';
+import { getServerRegion } from './tradeRegion';
+
+export { getServerRegion } from './tradeRegion';
+
+const CURRENT_TRADE_HOST_PATTERN =
+  '((www|jp|br|ru|th|de|fr|es)\\.pathofexile\\.com|poe\\.kakaogames\\.com)';
+const KAKAO_TRADE_HOST = 'poe.kakaogames.com';
 
 /*
   http(s)://(www|jp|br|ru|th|de|fr|es).pathofexile.com/trade2/search/poe2/{serverName}/{id}
-  http(s)://poe.game.daum.net/trade2/search/poe2/{serverName}/{id}
+  http(s)://poe.kakaogames.com/trade2/search/poe2/{serverName}/{id}
  */
 export function parseSearchUrl(url: string): { serverName: string; id: string } | null {
   const regex =
-    /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)\/([^/]+)$/;
+    new RegExp(`^https?:\\/\\/${CURRENT_TRADE_HOST_PATTERN}\\/trade2\\/search\\/poe2\\/([^/]+)\\/([^/]+)$`);
   const match = url.match(regex);
   if (!match) return null;
 
@@ -39,7 +46,7 @@ export function getUrlFromSearchHistory(
   currentUrl: string = window.location.href
 ): string {
   const regex =
-    /^https?:\/\/((www|jp|br|ru|th|de|fr|es)\.pathofexile\.com|poe\.game\.daum\.net)\/trade2\/search\/poe2\/([^/]+)(?:\/[^/]+)?\/?$/;
+    new RegExp(`^https?:\\/\\/${CURRENT_TRADE_HOST_PATTERN}\\/trade2\\/search\\/poe2\\/([^/]+)(?:\\/[^/]+)?\\/?$`);
 
   const match = currentUrl.match(regex);
   if (!match) {
@@ -53,26 +60,11 @@ export function getUrlFromSearchHistory(
 
 export function isKoreanServer(): boolean {
   const currentUrl = new URL(window.location.href);
-  return currentUrl.hostname === 'poe.game.daum.net';
+  return currentUrl.hostname === KAKAO_TRADE_HOST;
 }
 
 export function getCurrentServerRegion(): string {
   return getServerRegion(new URL(window.location.href));
-}
-
-export function getServerRegion(url: URL): string {
-  const hostname = url.hostname;
-
-  if (hostname === 'poe.game.daum.net') return 'kr';
-  if (hostname === 'jp.pathofexile.com') return 'jp';
-  if (hostname === 'br.pathofexile.com') return 'br';
-  if (hostname === 'ru.pathofexile.com') return 'ru';
-  if (hostname === 'th.pathofexile.com') return 'th';
-  if (hostname === 'de.pathofexile.com') return 'de';
-  if (hostname === 'fr.pathofexile.com') return 'fr';
-  if (hostname === 'es.pathofexile.com') return 'es';
-  if (hostname === 'www.pathofexile.com') return 'global';
-  return 'global'; // Default for www.pathofexile.com
 }
 
 /**
