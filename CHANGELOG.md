@@ -1,5 +1,25 @@
 # CHANGE LOG
 
+## [3.0.1](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/3.0.0...3.0.1) (2026-06-22)
+
+
+### Bug Fixes
+
+* Daum 거래소 URL을 Kakao Games로 마이그레이션 ([b9bd535](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/b9bd535b3aafc9ff3a0d75cf2739fa3b6606f883))
+* Drive 즐겨찾기 마이그레이션 실패 시 기존 데이터 보존 ([f6e5e12](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/f6e5e12060d27b613c9f7281e83c2bad3e7bc65f))
+* Kakao Games 거래소 URL 지원 ([09737c7](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/09737c7f1940bfadcfa88d3b4eb499f912e5fee5))
+* Kakao Games 거래소 매니페스트 지원 ([bdc6f35](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/bdc6f35eaa4dac75273032a05b523b04b0abacc7))
+* Kakao Games 즐겨찾기를 한국 지역으로 매핑 ([65cc092](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/65cc0929fae55944495d04d505145192a6aa386a))
+* 백그라운드에서 Drive 인증 직접 처리 ([2a8fb70](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/2a8fb709bd252350cc190d5c675f14c25e5ccf16))
+* 업데이트 시 Google Drive 즐겨찾기 URL 마이그레이션 ([498ea33](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/498ea33827e3bb39d5cd70624ad74e3abf912091))
+* 한국 거래소 데이터 URL을 Kakao Games로 변경 ([110bd44](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/110bd44d4bf1b48d067292c50c8b09107c1cc570))
+* 현재 URL 처리에서 Daum 거래소 제외 ([6cf4e50](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/6cf4e50581fd89050a395b2f22f6e0843b7a6d9e))
+
+
+### Code Refactoring
+
+* 거래소 지역 판별 로직 공통화 ([29bbc6c](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/commit/29bbc6c1a4fd0684a7c3b3152cba018cad52a66d))
+
 ## [3.0.0](https://github.com/NERDHEAD-lab/POE2-Trade-Butler/compare/2.12.0...3.0.0) (2025-09-25)
 
 
