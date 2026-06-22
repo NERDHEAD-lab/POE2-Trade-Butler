@@ -1,9 +1,11 @@
 import { getMessage } from './_locale';
+import { getServerRegion } from './tradeRegion';
+
+export { getServerRegion } from './tradeRegion';
 
 const CURRENT_TRADE_HOST_PATTERN =
   '((www|jp|br|ru|th|de|fr|es)\\.pathofexile\\.com|poe\\.kakaogames\\.com)';
 const KAKAO_TRADE_HOST = 'poe.kakaogames.com';
-const LEGACY_DAUM_TRADE_HOST = 'poe.game.daum.net';
 
 /*
   http(s)://(www|jp|br|ru|th|de|fr|es).pathofexile.com/trade2/search/poe2/{serverName}/{id}
@@ -63,22 +65,6 @@ export function isKoreanServer(): boolean {
 
 export function getCurrentServerRegion(): string {
   return getServerRegion(new URL(window.location.href));
-}
-
-export function getServerRegion(url: URL): string {
-  const hostname = url.hostname;
-
-  if (hostname === LEGACY_DAUM_TRADE_HOST) return 'kr';
-  if (hostname === KAKAO_TRADE_HOST) return 'kr';
-  if (hostname === 'jp.pathofexile.com') return 'jp';
-  if (hostname === 'br.pathofexile.com') return 'br';
-  if (hostname === 'ru.pathofexile.com') return 'ru';
-  if (hostname === 'th.pathofexile.com') return 'th';
-  if (hostname === 'de.pathofexile.com') return 'de';
-  if (hostname === 'fr.pathofexile.com') return 'fr';
-  if (hostname === 'es.pathofexile.com') return 'es';
-  if (hostname === 'www.pathofexile.com') return 'global';
-  return 'global'; // Default for www.pathofexile.com
 }
 
 /**
